@@ -1,0 +1,11 @@
+# Michael Zijlstra 11/14/2014
+
+# Enable Rewriting
+RewriteEngine on 
+
+ReWriteCond %{REQUEST_FILENAME} !-f
+ReWriteRule .*/res/(.+) res/$1 [NC,L]
+
+# send everything else to the front controller
+RewriteCond %{REQUEST_FILENAME} !-f 
+RewriteRule .* frontController.php

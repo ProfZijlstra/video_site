@@ -1,0 +1,19 @@
+body {
+	text-align: center;
+}
+div.error {
+	margin-top: 10em;
+	font-size: 20pt;
+}
+div.emoticon {
+	margin: 0.5em;
+	font-weight: bold;
+	font-size: 40pt;
+}
+div.msg {
+	margin-top: 2em;
+}
+div.url {
+	font-weight: bold;
+	margin-top: 1em;
+}
