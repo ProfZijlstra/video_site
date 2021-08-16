@@ -5,7 +5,7 @@
 /* ******************************
  * Configuration variables
  * **************************** */
-define("DEVELOPMENT", false);
+define("DEVELOPMENT", true);
 define("DSN", "mysql:dbname=cs472;host=mysql.manalabs.org");
 define("DB_USER", "cs472dbuser");
 define("DB_PASS", "WAP Passwd");

@@ -81,9 +81,11 @@ window.addEventListener("load", () => {
 			for (const tab of tabs) {
 				const props = json[tab.dataset.show]
 				const container = tab.getElementsByClassName('info')[0];
-				console.log(props);
 				ReactDOM.render(e(INFO.Info, props), container);
 			}
+			ReactDOM.render(e("div", null, 
+				"Total: ", e(INFO.Info, json['total'])), 
+				document.getElementById('total'));
 		});
 	};
 

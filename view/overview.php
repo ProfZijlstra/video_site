@@ -6,65 +6,32 @@ $now = mktime();
     <head>
         <title><?= $course ?> Videos</title>
         <meta charset="utf-8" />
-        <style>
-            body {
-                position: absolute;
-                margin: 0px;
-                width: 100%;
-                height: 100%;
-            }
-            h1 {
-                margin-top: 75px;
-                text-align: center;
-            }
-            table {
-                border-collapse: collapse;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            td {
-                cursor: pointer;
-                border: 1px solid black;
-                height: 150px;
-                width: 150px;
-                padding: 15px;
-                text-align: center;
-                position: relative;
-                background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); 
-            }
-            .done {
-                background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
-            }
-            .curr {
-                background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
-            }
-            time {
-                display: block;
-                margin-top: 10px;
-                font-size: 75%;
-                position: absolute;
-                bottom: 3px;
-                width: 130px;
-                text-align: center;
-            }
-            a {
-                text-decoration: none;
-                color: black;
-            }
-        </style>
-         <script>
-            window.onload = function() {
-                document.getElementById("days").onclick = function(e) {
-                    if (e.target.tagName == "TD") {
-                        e.target.querySelector("a").click();
-                    }
-                }
-            };
-         </script>
+		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
+		<link rel="stylesheet" href="res/css/overview.css">
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="res/js/info.js"></script>
+        <script src="res/js/overview.js"></script>
     </head>
     <body>
         <header>
-            <h1><?= $course ?>: <?= $title ?></h1>
+			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
+				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
+					<i class="far fa-copy" style="color: lightgray"></i>
+					<i id="info-btn" class="fas fa-info-circle"></i>
+					<a href="/videos/user"><i class="fas fa-users"></i></a>
+				<?php endif; ?>
+				<a href="logout"><i class="fas fa-power-off"></i></a>
+			</div>
+            <h1>
+                <span class="title" data-id="<?= $offering['id']?>">
+					<?= $title ?> 
+				</span>
+				<div id="course">
+					<a href=".."><?= strtoupper($course) ?></a>
+					<?= $offering['block'] ?> 
+				</div>
+            </h1>
         </header>
         <main>
             <table id="days">
@@ -73,8 +40,10 @@ $now = mktime();
                 <tr>
                 <?php for ($d = 1; $d <= 7; $d++): ?>
                     <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
-                    <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>">
-                        <a href="W<?= $w ?>D<?= $d ?>">
+                    <td id="<?= "W{$w}D{$d}" ?>" 
+                            class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>">
+                        <div class="info"></div>
+                        <a href="W<?= $w ?>D<?= $d ?>/">
                             <?= $days["W{$w}D{$d}"]["desc"] ?>
                             <time><?= date("M j Y", $date);?></time>
                         </a>
@@ -83,6 +52,7 @@ $now = mktime();
                 </tr>
             <?php endfor ?>
             </table>
+			<div id="total"><div class="info"></div></div>
         </main>
     </body>
 </html>

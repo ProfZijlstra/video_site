@@ -11,9 +11,8 @@
         <style>
             body {
                 background-color: white;
-                font-family: monospace;
                 font-size: 12px;
-                color: #336; 
+                background-color: #eee;
             }
             .central {
                 position: absolute;
@@ -21,6 +20,10 @@
                 left: 50%;
                 width: 400px;
                 margin-left: -200px;
+                border: 1px solid black;
+                padding: 15px;
+                box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, 0.2), -4px -4px 8px 1px rgba(0, 0, 0, 0.2), 6px -6px 20px 0px rgba(0, 0, 0, 0.19), -6px 6px 20px 0px rgba(0, 0, 0, 0.19);
+                background-color: #FFF;
             }
             h1 {
                 font-size: 450%;
@@ -43,14 +46,21 @@
             }
             input[type=text], input[type=password] { 
                 background-color: white;
-                color: #336;
-                font-family: inherit;
                 margin-bottom: 5px;
                 width: 375px;
                 border: 1px solid #336;
             }
             #lgn_right {
                 text-align: right;
+            }
+            input[type=submit] {
+                border: 1px solid black;
+                position: relative;
+                padding: 2px 5px;
+                left: 4px;
+            }
+            input:focus {
+                box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, 0.2), -4px -4px 8px 1px rgba(0, 0, 0, 0.2);
             }
         </style>
     </head>

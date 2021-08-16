@@ -20,10 +20,14 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'UserCtrl@addUser'],
 		'|^/(cs\d{3})?/?$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@loggedIn'],
-		'|^/(cs\d{3})/(20\d{2}-\d{2})/?$|' => 
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@overview'],
-		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/?$|' => 
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/info/?$|' => 
+			['sec' => 'admin', 'route' => 'VideoCtrl@overview_info'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@videos'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/info/?$|' => 
+			['sec' => 'admin', 'route' => 'VideoCtrl@videos_info'],
 		'|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?start.*$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@start'],
 	),

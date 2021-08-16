@@ -50,7 +50,7 @@ class VideoCtrl {
     }
 
 	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/?$|", sec="user");
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/$|", sec="user");
 	 */
 	public function overview() {
         global $URI_PARAMS;
@@ -61,10 +61,12 @@ class VideoCtrl {
 
 		$course_detail = $this->courseDao->getCourse($course_num);
 		$offering_detail = $this->offeringDao->getOfferingByCourse($course_num, $block);
+		$offering_id = $offering_detail['id'];
+
 		if (!$course_detail || !$offering_detail) {
 			return "error/404.php";
 		}
-		$days_info = $this->dayDao->getDays($offering_detail['id']);
+		$days_info = $this->dayDao->getDays($offering_id);
 
 		// Make days associative array for calendar
 		$days = array();
@@ -74,15 +76,38 @@ class VideoCtrl {
 
 		$VIEW_DATA["course"] = strtoupper($course_num);
 		$VIEW_DATA["title"] = $course_detail["name"];
+		$VIEW_DATA["offering"] = $offering_detail;
 		$VIEW_DATA["start"] = strtotime($offering_detail['start']);
 		$VIEW_DATA["days"] = $days;
 
         return "overview.php";
 	}
 
+	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/info/?$|", sec="admin");
+	 */
+	public function overview_info() {
+        global $URI_PARAMS;
+		global $VIEW_DATA;
+
+		$course_num = $URI_PARAMS[1];
+		$block = $URI_PARAMS[2];
+	
+		$offering_detail = $this->offeringDao->getOfferingByCourse($course_num, $block);
+		$offering_id = $offering_detail['id'];
+		$view_info = $this->viewDao->overview($offering_id);
+
+		$days = array();
+		foreach ($view_info as $day) {
+			$days[$day["abbr"]] = $day;
+		}
+		$days['total'] = $this->viewDao->overview_total($offering_id);
+		return $days; // array automatically json encodes 
+	}
+
 
 	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/?$|", sec="user")
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|", sec="user")
 	 */
 	public function videos() {
         global $URI_PARAMS;
@@ -164,6 +189,20 @@ class VideoCtrl {
 		$VIEW_DATA["totalTime"] = $totalTime;
 
 		return "videos.php";
+	}
+
+	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/info/?$|", sec="admin")
+	 */
+	public function videos_info() {
+		$day_id = filter_input(INPUT_GET, "day_id");
+		$videos_info = $this->viewDao->day_views($day_id);
+		$videos = array();
+		foreach ($videos_info as $video) {
+			$videos[$video["video"]] = $video;
+		}
+		$videos['total'] = $this->viewDao->day_total($day_id);
+		return $videos; // array automatically json encodes 
 	}
 
 	/**

@@ -7,14 +7,9 @@ a {
 }
 #user {
     position: absolute;
-    top: 0px;
-    right: 0px;
-    margin-right: 5px; 
-	font-size: 15px;
-}
-#user a {
-	text-decoration: underline;
-	color: blue;
+    top: 25px;
+    right: 30px;
+	font-size: 24px;
 }
 h1 {
     text-align: center;
@@ -64,26 +59,30 @@ nav#videos {
     min-height: 100%;
     background-color: #EEEEEE;
 }
-nav#videos > div {
+nav#videos > div.video_link {
     text-align: center;
     border-bottom: 1px solid black;
     padding: 5px;
 }
-nav#videos > div:hover {
+nav#videos > div.video_link:hover {
     font-weight: bold;
 }
-nav#videos > div.selected { 
+nav#videos > div.video_link.selected { 
     cursor: default;
     background-color: white;
     color: black;
     position: relative;
     left: 1px;
-    margin-left: 5px;
+    margin-left: 1px;
     border-left: 1px solid black;
     border-bottom-left-radius: 10px;
 }
-nav#videos > div.selected:hover {
+nav#videos > div.video_link.selected:hover {
     font-weight: normal;
+}
+div#total {
+	margin-top: 15px;
+	text-align: center;
 }
 nav > nav {
     cursor: default;
@@ -118,6 +117,8 @@ main {
 	position: relative;
     border-top: 1px solid black;
     margin-left: 20%;
+    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 0 -6px 20px 0 rgba(0, 0, 0, 0.19);
+    min-height: 100vh;
 }
 main > article {
     display: none;

@@ -1,0 +1,94 @@
+
+body {
+    position: absolute;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+#controls {
+    position: absolute;
+    top: 27px;
+    right: 70px;
+	font-size: 24px;
+    cursor: pointer;
+}
+#controls a {
+	text-decoration: none;
+	color: black;
+}
+h1 {
+    text-align: center;
+}
+h1 > span.title {
+    font-size: 90%;
+}
+h1 > #course {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 20%;
+    margin-top: 20px;
+	font-size: 90%;
+}
+main {
+	border-top: 1px solid black;
+    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 
+                0 -6px 20px 0 rgba(0, 0, 0, 0.19);
+	height: 100vh;
+	background-color: #EEE;
+}
+table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+td {
+    cursor: pointer;
+    border: 1px solid black;
+    height: 150px;
+    width: 150px;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); 
+}
+.done {
+    background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
+}
+.curr {
+    background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
+}
+time {
+    display: block;
+    margin-top: 10px;
+    font-size: 75%;
+    position: absolute;
+    bottom: 3px;
+    width: 130px;
+    text-align: center;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+td .users {
+    position: absolute;
+    top: 5px;
+    left: 16px;
+}
+td .time {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+td .views {
+    position: absolute;
+    top: 25px;
+	left: 13px;
+    
+}
+div#total {
+	margin-top: 15px;
+	text-align: center;
+}

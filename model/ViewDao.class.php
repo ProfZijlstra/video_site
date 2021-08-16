@@ -38,5 +38,50 @@ class ViewDao {
 			WHERE id = :id");
 		return $stmt->execute(array("id" => $id));
 	}
+
+
+	public function overview($offering_id) {
+		$stmt = $this->db->prepare(
+			"SELECT d.abbr, d.desc, COUNT(DISTINCT v.user_id) AS users, ". 
+			"COUNT(v.id) AS views, ".
+			"FORMAT(SUM(v.stop - v.start)/3600, 2) AS time ".
+			"FROM view AS v JOIN day AS d ON v.day_id = d.id ".
+			"WHERE d.offering_id = :offering_id GROUP BY d.id");
+		$stmt->execute(array("offering_id" =>  $offering_id));
+		return $stmt->fetchAll();
+	}
+
+	public function overview_total($offering_id) {
+		$stmt = $this->db->prepare(
+			"SELECT COUNT(DISTINCT v.user_id) AS users, ".
+			"FORMAT(COUNT(v.id), 0) AS views, ".
+			"FORMAT(SUM(stop - start)/3600, 2) AS time ".
+			"FROM view as v JOIN day AS d ON v.day_id = d.id ".
+			"WHERE d.offering_id = :offering_id GROUP BY d.offering_id;"
+		);
+        $stmt->execute(array(":offering_id" => $offering_id));
+        return $stmt->fetch();
+	}
+
+	public function day_views($day_id) {
+		$stmt = $this->db->prepare(
+			"SELECT video, COUNT(DISTINCT user_id) AS users, ".
+			"COUNT(id) AS views, ".
+			"FORMAT(SUM(stop - start)/3600, 2) AS time ".
+			"FROM view WHERE day_id = :day_id GROUP BY video"
+		);
+		$stmt->execute(array("day_id" =>  $day_id));
+		return $stmt->fetchAll();
+	}
+
+	public function day_total($day_id) {
+		$stmt = $this->db->prepare(
+			"SELECT COUNT(DISTINCT user_id) AS users, COUNT(id) AS views, ".
+			"FORMAT(SUM(stop - start)/3600, 2) AS time ".
+			"FROM view WHERE day_id = :day_id GROUP BY day_id"
+		);
+        $stmt->execute(array(":day_id" => $day_id));
+        return $stmt->fetch();
+	}
 }
 
