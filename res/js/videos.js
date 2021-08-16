@@ -68,25 +68,28 @@ window.addEventListener("load", () => {
 		video.addEventListener('pause', pauseHandler);
 	}
 
-	document.getElementById("info-btn").onclick = function() {
+	const info = document.getElementById("info-btn");
+	if (info) {
+		info.onclick = function() {
 
-		fetch(`info?day_id=${day_id}`)
-		.then(function(response) {
-			return response.json();
-		})
-		.then(function(json) {
-			const e = React.createElement;
-			const tabs = document.getElementById("videos")
-				.getElementsByClassName('video_link');
-			for (const tab of tabs) {
-				const props = json[tab.dataset.show]
-				const container = tab.getElementsByClassName('info')[0];
-				ReactDOM.render(e(INFO.Info, props), container);
-			}
-			ReactDOM.render(e("div", null, 
-				"Total: ", e(INFO.Info, json['total'])), 
-				document.getElementById('total'));
-		});
-	};
+			fetch(`info?day_id=${day_id}`)
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(json) {
+				const e = React.createElement;
+				const tabs = document.getElementById("videos")
+					.getElementsByClassName('video_link');
+				for (const tab of tabs) {
+					const props = json[tab.dataset.show]
+					const container = tab.getElementsByClassName('info')[0];
+					ReactDOM.render(e(INFO.Info, props), container);
+				}
+				ReactDOM.render(e("div", null, 
+					"Total: ", e(INFO.Info, json['total'])), 
+					document.getElementById('total'));
+			});
+		};
+	}
 
 });
