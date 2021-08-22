@@ -49,6 +49,21 @@ class VideoCtrl {
 
     }
 
+    /**
+     * Gets the enrollemnt for a given offering
+     * It may be good to move this function in a different class
+     * @GET(uri="|.+/enrollment$|")
+     */
+    public function enrollemnt() {
+		$offering_id = filter_input(INPUT_GET, "offering_id");
+        $result = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
+        $ids = [];
+        foreach ($result as $row) {
+            $ids[$row["id"]] = true;
+        }
+        return $ids;
+    }
+
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/$|", sec="user");
 	 */
@@ -105,6 +120,14 @@ class VideoCtrl {
 		return $days; // array automatically json encodes 
 	}
 
+	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/viewers$|", sec="admin")
+	 */
+	public function offering_viewers() {
+		$offering_id = filter_input(INPUT_GET, "offering_id");
+		return $this->viewDao->offering_viewers($offering_id);
+	}
+
 
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|", sec="user")
@@ -132,7 +155,7 @@ class VideoCtrl {
 
 		// more calendar related data
 		$start = strtotime($offering_detail['start']);
-		$now = mktime();
+		$now = time();
 		$days_passed = floor(($now - $start) / (60 * 60 * 24));
 		$page_w = $day[1];
 		$page_d = $day[3];

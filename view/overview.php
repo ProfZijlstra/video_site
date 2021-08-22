@@ -1,5 +1,5 @@
 <?php
-$now = mktime();
+$now = time();
 ?>
 <!DOCTYPE html>
 <html>
@@ -8,8 +8,8 @@ $now = mktime();
         <meta charset="utf-8" />
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
 		<link rel="stylesheet" href="res/css/overview.css">
-        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="res/js/info.js"></script>
         <script src="res/js/overview.js"></script>
     </head>
@@ -23,14 +23,14 @@ $now = mktime();
 				<?php endif; ?>
 				<a href="logout"><i class="fas fa-power-off"></i></a>
 			</div>
+            <div id="course">
+                <a href=".."><?= strtoupper($course) ?></a>
+                <span data-id="<?= $offering['id']?>" id="offering"> <?= $offering['block'] ?> </span>
+            </div>
             <h1>
-                <span class="title" data-id="<?= $offering['id']?>">
+                <span class="title" >
 					<?= $title ?> 
 				</span>
-				<div id="course">
-					<a href=".."><?= strtoupper($course) ?></a>
-					<?= $offering['block'] ?> 
-				</div>
             </h1>
         </header>
         <main>
@@ -54,5 +54,9 @@ $now = mktime();
             </table>
 			<div id="total"><div class="info"></div></div>
         </main>
+        <div id="overlay">
+            <i id="close-overlay" class="fas fa-times-circle"></i>
+            <div id="tables"></div>
+        </div>
     </body>
 </html>

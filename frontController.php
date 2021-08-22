@@ -6,7 +6,7 @@
  * Configuration variables
  * **************************** */
 define("DEVELOPMENT", true);
-define("DSN", "mysql:dbname=cs472;host=mysql.manalabs.org");
+define("DSN", "mysql:dbname=cs472;host=localhost");
 define("DB_USER", "cs472dbuser");
 define("DB_PASS", "WAP Passwd");
 $SEC_LVLS = array("none", "user", "admin");

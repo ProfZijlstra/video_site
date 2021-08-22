@@ -5,8 +5,12 @@ body {
     width: 100%;
     height: 100%;
 }
+header {
+    height: 80px;
+}
 #controls {
-    position: absolute;
+    position: fixed;
+    z-index: 0;
     top: 27px;
     right: 70px;
 	font-size: 24px;
@@ -16,34 +20,43 @@ body {
 	text-decoration: none;
 	color: black;
 }
-h1 {
-    text-align: center;
-}
 h1 > span.title {
-    font-size: 90%;
+    position: fixed;
+    left: 55%;
+    top: 0px;
+    z-index: 0;
+    width: 600px;
+    margin-left: -300px;
+    margin-top: 20px;
+    font-size: 20pt;
 }
-h1 > #course {
-    position: absolute;
-    top: 1px;
-    left: 1px;
+header #course {
+    text-align: center;
+    position: fixed;
+    z-index: 0;
+    top: 0px;
+    left: 0px;
     width: 20%;
     margin-top: 20px;
-	font-size: 90%;
+	font-size: 20pt;
+    font-weight: bold;
 }
 main {
+    position: relative;
+    z-index: 10;
 	border-top: 1px solid black;
     box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 
                 0 -6px 20px 0 rgba(0, 0, 0, 0.19);
 	height: 100vh;
 	background-color: #EEE;
 }
-table {
+table#days {
     margin-top: 20px;
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
 }
-td {
+table#days td {
     cursor: pointer;
     border: 1px solid black;
     height: 150px;
@@ -91,4 +104,55 @@ td .views {
 div#total {
 	margin-top: 15px;
 	text-align: center;
+}
+.fa-user {
+    cursor: pointer;
+}
+#overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #FFFD;
+    display: none;
+    z-index: 100;
+    overflow: auto;
+}
+#overlay.visible {
+    display: block;
+}
+#close-overlay {
+    position: fixed;
+    top: 25px;
+    right: 90px;
+    font-size: 50px;;
+    cursor: pointer;
+}
+#tables {
+    margin: 50px 0px;
+    width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#tables table {
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+#tables caption {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 25px;
+}
+#tables th {
+    cursor: pointer;
+}
+#tables td, #tables th {
+    border: 1px solid black;
+    padding: 3px;
+}
+#tables tr:nth-child(2n+1) {
+    background-color: #DDD;
 }

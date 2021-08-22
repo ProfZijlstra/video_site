@@ -19,8 +19,9 @@ class EnrollmentDao {
 	 * @return array of offering data
 	 */
 	public function getEnrollmentForOffering($offering_id) {
-		$stmt = $this->db->prepare("SELECT * FROM enrollment
-			WHERE offering_id = :offering_id");
+		$stmt = $this->db->prepare("SELECT u.id 
+            FROM enrollment e JOIN user u ON e.user_id = u.id 
+            WHERE offering_id = :offering_id");
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
 	}

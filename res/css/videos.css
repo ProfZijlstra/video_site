@@ -6,7 +6,7 @@ a {
     color: black;
 }
 #user {
-    position: absolute;
+    position: fixed;
     top: 25px;
     right: 30px;
 	font-size: 24px;
@@ -114,6 +114,7 @@ td.curr {
     background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
 }
 main {
+    background-color: white;
 	position: relative;
     border-top: 1px solid black;
     margin-left: 20%;

@@ -20,10 +20,14 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'UserCtrl@addUser'],
 		'|^/(cs\d{3})?/?$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@loggedIn'],
+		'|.+/enrollment$|' => 
+			['sec' => 'none', 'route' => 'VideoCtrl@enrollemnt'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@overview'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/info/?$|' => 
 			['sec' => 'admin', 'route' => 'VideoCtrl@overview_info'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/viewers$|' => 
+			['sec' => 'admin', 'route' => 'VideoCtrl@offering_viewers'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@videos'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/info/?$|' => 
@@ -46,7 +50,7 @@ class Context {
     private $objects = array();
     
     public function __construct() {
-        $db = new PDO("mysql:dbname=cs472;host=mysql.manalabs.org", "cs472dbuser", "WAP Passwd");
+        $db = new PDO("mysql:dbname=cs472;host=localhost", "cs472dbuser", "WAP Passwd");
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->objects["DB"] = $db;
     }
