@@ -97,5 +97,17 @@ class ViewDao {
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
 	}
+
+	public function day_viewers($day_id) {
+		$stmt = $this->db->prepare("SELECT u.id, u.firstname, u.lastname, 
+			SUM(v.stop - v.start)/3600 as hours 
+			from view as v join user as u on v.user_id = u.id 
+			join  day as d on v.day_id = d.id 
+			where d.id = :day_id 
+			group by u.id order by hours desc"
+		);
+		$stmt->execute(array("day_id" => $day_id));
+		return $stmt->fetchAll();
+	}
 }
 

@@ -59,7 +59,7 @@ class VideoCtrl {
         $result = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
         $ids = [];
         foreach ($result as $row) {
-            $ids[$row["id"]] = true;
+            $ids[$row["id"]] = $row;
         }
         return $ids;
     }
@@ -226,6 +226,14 @@ class VideoCtrl {
 		}
 		$videos['total'] = $this->viewDao->day_total($day_id);
 		return $videos; // array automatically json encodes 
+	}
+
+	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/viewers$|", sec="admin")
+	 */
+	public function day_viewers() {
+		$day_id = filter_input(INPUT_GET, "day_id");
+		return $this->viewDao->day_viewers($day_id);
 	}
 
 	/**

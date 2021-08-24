@@ -56,7 +56,7 @@ const INFO = (function () {
 			super(props);
 			this.state = {
 				sorted: "byHours",
-				desc: true,
+				desc: false,
 			};
 		}
 
@@ -114,19 +114,19 @@ const INFO = (function () {
 			const lastIcon = e('i', { class: lastSort });
 			const hourIcon = e('i', { class: hourSort });
 
-			headers.push(e('th', { onClick: firstClick }, 'Given Names', firstIcon));
-			headers.push(e('th', { onClick: lastClick }, 'Family Names', lastIcon));
-			headers.push(e('th', { onClick: hoursClick }, 'Hours', hourIcon));
+			headers.push(e('th', { key: "th_first", onClick: firstClick }, 'Given Names', firstIcon));
+			headers.push(e('th', { key: "th_last", onClick: lastClick }, 'Family Names', lastIcon));
+			headers.push(e('th', { key: "th_hours", onClick: hoursClick }, 'Hours', hourIcon));
 			return e('tr', null, headers);
 		}
 	}
 
 	function ViewersRow(props) {
 		const cols = [];
-		cols.push(e('td', null, props.firstname));
-		cols.push(e('td', null, props.lastname));
-		cols.push(e('td', null, props.hours));
-		return e('tr', null, cols);
+		cols.push(e('td', {key: `${props.id}-first`}, props.firstname));
+		cols.push(e('td', {key: `${props.id}-last`}, props.lastname));
+		cols.push(e('td', {key: `${props.id}-hours`, class: "hours" }, props.hours));
+		return e('tr', {key: `${props.id}-row`}, cols);
 	}
 
 	class ViewersTable extends React.Component {
@@ -136,9 +136,12 @@ const INFO = (function () {
 		}
 
 		sort(order) {
-			console.log("sorting");
 			const sorted = this.state.users.sort(order);
 			this.setState({ users: sorted });
+		}
+
+		newRows(users) {
+			this.setState({ users: users});
 		}
 
 		render() {
@@ -146,6 +149,7 @@ const INFO = (function () {
 			const rows = [
 				e(ViewersHeader, {
 					sort: this.sort.bind(this),
+					key: "header-row"
 				}),
 			];
 			for (const user of this.state.users) {
@@ -156,6 +160,18 @@ const INFO = (function () {
 		}
 	}
 
-	return { Users, Views, Time, Info, ViewersTable };
-})();
+	class Header extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = { title: props.title };
+		}
+		setTitle(title) {
+			this.setState({title: title});
+		}
+		render() {
+			return e('h2', null, this.state.title);
+		}
+	}
 
+	return { Users, Views, Time, Info, ViewersTable, Header };
+})();

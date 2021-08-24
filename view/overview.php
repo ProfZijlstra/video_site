@@ -10,7 +10,10 @@ $now = time();
 		<link rel="stylesheet" href="res/css/overview.css">
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-        <script src="res/js/info.js"></script>
+        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <script src="res/js/info.js"></script>
+            <script src="res/js/adm_overview.js"></script>
+        <?php endif; ?>
         <script src="res/js/overview.js"></script>
     </head>
     <body>
@@ -24,7 +27,7 @@ $now = time();
 				<a href="logout"><i class="fas fa-power-off"></i></a>
 			</div>
             <div id="course">
-                <a href=".."><?= strtoupper($course) ?></a>
+                <a href=".." id="course_num"><?= strtoupper($course) ?></a>
                 <span data-id="<?= $offering['id']?>" id="offering"> <?= $offering['block'] ?> </span>
             </div>
             <h1>
@@ -41,12 +44,13 @@ $now = time();
                 <?php for ($d = 1; $d <= 7; $d++): ?>
                     <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
                     <td id="<?= "W{$w}D{$d}" ?>" 
-                            class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>">
+                            class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+                            data-id="<?= $days["W{$w}D{$d}"]["id"] ?>">
                         <div class="info"></div>
                         <a href="W<?= $w ?>D<?= $d ?>/">
                             <?= $days["W{$w}D{$d}"]["desc"] ?>
-                            <time><?= date("M j Y", $date);?></time>
                         </a>
+                        <time><?= date("M j Y", $date);?></time>
                     </td>
                 <?php endfor ?>
                 </tr>
@@ -54,9 +58,12 @@ $now = time();
             </table>
 			<div id="total"><div class="info"></div></div>
         </main>
-        <div id="overlay">
-            <i id="close-overlay" class="fas fa-times-circle"></i>
-            <div id="tables"></div>
-        </div>
+        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <div id="overlay">
+                <i id="close-overlay" class="fas fa-times-circle"></i>
+                <div id="tables"></div>
+            </div>
+        <?php endif; ?>
+
     </body>
 </html>
