@@ -24,5 +24,18 @@ class DayDao {
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
 	}
+
+	public function getDayId($course, $block, $day) {
+		$stmt = this->db->prepare("SELECT d.id 
+			from day as d 
+			JOIN offering as o on d.offering_id = o.id 
+			where o.course_number = :course 
+			and o.block = :block 
+			and d.abbr = :day ");
+		$stmt->execute(
+			array("course" => $course, "block" => $block, "day" => $day)
+		);
+		return $stmt->fetch();		
+	}
 }
 
