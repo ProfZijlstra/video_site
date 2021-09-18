@@ -63,9 +63,21 @@ window.addEventListener("load", () => {
 			});
 		}
 	}
+	function pdfHandler(evt) {
+		const file = this.dataset.file;
+		const href = this.href;
+		let url=`./pdf?day_id=${day_id}&file=${file}`;
+		fetch(url, { cache: 'no-cache' })
+			.then(() => { window.location = href});
+		evt.preventDefault();
+	}
 	for (const video of videos) {
 		video.addEventListener('play', playHandler);
 		video.addEventListener('pause', pauseHandler);
+	}
+	const pdfs = document.getElementsByClassName("pdf")
+	for (const pdf of pdfs) {
+		pdf.addEventListener('click', pdfHandler);
 	}
 
 	const info = document.getElementById("info-btn");

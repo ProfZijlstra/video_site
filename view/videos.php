@@ -81,14 +81,19 @@ foreach($files as $file => $info) {
     <article id="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>" 
             class='<?= $first ? "selected" : "" ?>'>
         <h2><?= $info["parts"][1]?></h2>
+        <a class="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>.pdf"
+            href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
+            <i class="far fa-file-pdf"></i>
+        </a>
         <video controls>
-            <source src="<?= "res/vid/${course}/${block}/${day}/${file}" ?>" type="video/mp4"/>
+            <source src="<?= "res/${course}/${block}/${day}/vid/${file}" ?>" type="video/mp4"/>
         </video>
         <div class="progress">
             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
             <div class="passed"  style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
             <div class="time"><?= $totalTime ?></div>
         </div>
+
 <?php
     if ($first) {
         $first = false;

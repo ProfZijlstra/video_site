@@ -4,6 +4,12 @@
  *
  * @author mzijlstra 06/04/2021
  * @Repository
+ * 
+ * 
+ * ALTER TABLE view ADD `type` CHAR(3) AFTER `id`;
+ * CREATE INDEX on_view_type ON view(type);
+ * UPDATE view SET type='vid';
+ * 
  */
 class ViewDao {
 
@@ -22,7 +28,7 @@ class ViewDao {
 	 */
 	public function start($user_id, $day_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, :user_id, :day_id, :video, NOW(), NULL)");
+			VALUES(NULL, 'vid', :user_id, :day_id, :video, NOW(), NULL)");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video));
 		return $this->db->lastInsertId();
@@ -37,6 +43,13 @@ class ViewDao {
 		$stmt = $this->db->prepare("UPDATE view SET `stop` = NOW() 
 			WHERE id = :id");
 		return $stmt->execute(array("id" => $id));
+	}
+
+	public function pdf($user_id, $day_id, $video) {
+		$stmt = $this->db->prepare("INSERT INTO view 
+			VALUES(NULL, 'pdf', :user_id, :day_id, :video, NOW(), NOW())");
+		$stmt->execute(array("user_id" => $user_id, 
+			"day_id" => $day_id, "video" => $video));
 	}
 
 

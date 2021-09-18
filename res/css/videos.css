@@ -156,3 +156,8 @@ main > article > .progress > .time {
 main > article > video {
     width: 80%;
 }
+.pdf {
+    position: absolute;
+    right: 50px;
+    font-size: 50px;
+}

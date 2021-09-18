@@ -163,7 +163,7 @@ class VideoCtrl {
 		$curr_d = ($days_passed % 7) + 1;
 
 		// get video related data from filesystem
-		chdir("res/vid/${course_num}/${block}/${day}/");
+		chdir("res/${course_num}/${block}/${day}/vid/");
 		$files = glob("*.mp4");
 		$file_info = array();
 		$totalDuration = 0;
@@ -252,6 +252,16 @@ class VideoCtrl {
 	public function stop() {
 		$view_id = filter_input(INPUT_POST, "view_id");
 		return $this->viewDao->stop($view_id);
+	}
+
+	/**
+	 * @GET(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?pdf.*$|", sec="user")
+	 */
+	public function pdf() {
+		$user_id = $_SESSION['user']['id'];
+		$day_id = filter_input(INPUT_GET, "day_id");
+		$file = filter_input(INPUT_GET, "file");
+		return intval($this->viewDao->pdf($user_id, $day_id, $file));
 	}
 }
 
