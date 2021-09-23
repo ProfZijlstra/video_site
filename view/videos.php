@@ -82,7 +82,7 @@ foreach($files as $file => $info) {
             class='<?= $first ? "selected" : "" ?>'>
         <h2><?= $info["parts"][1]?></h2>
         <a class="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>.pdf"
-            href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] ?>'>
+            href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
             <i class="far fa-file-pdf"></i>
         </a>
         <video controls>

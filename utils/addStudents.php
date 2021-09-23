@@ -7,7 +7,7 @@ offering id that you want to add these students to
 
 php addStudents.php -a 5 extraStudents.csv
 
-It's save to add existing students a second time, it checks to see if a 
+It's safe to add existing students a second time, it checks to see if a 
 student is already in the database. It also checks to see if the student is
 already enrolled in the offering.";
 
