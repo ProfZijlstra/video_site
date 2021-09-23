@@ -26,7 +26,7 @@ class DayDao {
 	}
 
 	public function getDayId($course, $block, $day) {
-		$stmt = this->db->prepare("SELECT d.id 
+		$stmt = $this->db->prepare("SELECT d.id 
 			from day as d 
 			JOIN offering as o on d.offering_id = o.id 
 			where o.course_number = :course 
