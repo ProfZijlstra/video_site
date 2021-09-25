@@ -3,12 +3,14 @@
     <head>
         <title><?= strtoupper($course) ?> <?= $day ?> Videos</title>
         <meta charset="utf-8" />
-		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-        <link rel="stylesheet" type="text/css" href="res/css/videos.css">
+		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/videos.css" />
+        <link rel="stylesheet" href="res/css/prism.css" />
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
         <script src="res/js/info.js"></script>
         <script src="res/js/videos.js"></script>
+        <script src="res/js/prism.js"></script>
     </head>
     <body>
         <header>
@@ -30,39 +32,32 @@
                 <table id="days">
                     <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
 <?php 
-    for ($w = 1; $w <= 4; $w++) {
+    for ($w = 1; $w <= 4; $w++) :
 ?>
                     <tr>
 <?php 
-        for ($d = 1; $d <= 7; $d++) {
+        for ($d = 1; $d <= 7; $d++) :
 ?>
                         <td class="<?= $w < $curr_w || $w == $curr_w && $d <= $curr_d ? "done": ""?>
                             <?= $w == $page_w && $d == $page_d ? "curr": ""?>">
                             <a href="../W<?=$w?>D<?=$d?>/">&nbsp;</a></td>
 <?php
-        } // end td for loop
+        endfor; // td loop
 ?>
                     </tr>
 <?php
-    } // end tr for loop
+    endfor; // tr loop
 ?>
                 </table>
             </nav>
-<?php
-$first = true;
-foreach($files as $file => $info) {
-?>
-            <div class='video_link <?= $first ? "selected" : ""?>'
-                data-show="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>">
-                <div><?= $info["parts"][1] ?></div>
+<?php foreach($files as $file => $info) : ?>
+            <div class='video_link <?= $info["parts"][0] == $video ? "selected" : ""?>'
+                data-show="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
+                id="<?= $info["parts"][0] ?>">
+                <div><a href="<?= $info["parts"][0]?>"><?= $info["parts"][1] ?></a></div>
 				<div class="info"></div>
             </div>
-<?php
-    if ($first) {
-        $first = false;
-    }
-} // end foreach loop
-?>
+<?php endforeach; ?>
 			<div id="total"></div>
         </nav>
         <main>
@@ -72,14 +67,14 @@ foreach($files as $file => $info) {
 				<span id="faster">+</span>
 			</div>
 <?php 
-$first = true;
 $passed = 0;
-foreach($files as $file => $info) {
+foreach($files as $file => $info) :
     $passedPercent = ($passed / $totalDuration)*100;
     $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration)*100);
+    if ($info["parts"][0] == $video) :
 ?>
     <article id="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>" 
-            class='<?= $first ? "selected" : "" ?>'>
+            class="selected">
         <h2><?= $info["parts"][1]?></h2>
         <a class="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>.pdf"
             href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
@@ -93,16 +88,44 @@ foreach($files as $file => $info) {
             <div class="passed"  style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
             <div class="time"><?= $totalTime ?></div>
         </div>
-
-<?php
-    if ($first) {
-        $first = false;
-    }
-    $passed += $info["duration"];
-?>
+        <div id="questions">
+            <h2>Questions & Comments</h2>
+            <?php foreach ($questions as $question) : ?>
+                <div class="asked">
+                    <?= $question["firstname"]?> <?= $question["lastname"]?>  
+                    <span class="date">created: <?= $question["created"]?></span>
+                    <?php if ($question["edited"]) : ?>
+                        <span class="date">edited: <?= $question["edited"]?></span>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['id'] == $question["user_id"]) : ?>
+                        <form method="post" action="delQuestion">
+                            <input type="hidden" name="id" value="<?= $question['id']?>" />
+                            <input type="hidden" name="tab" value="<?= $video ?>" />
+                            <i class="far fa-trash-alt" data-id=""></i>
+                        </form>
+                        <i class="far fa-edit" data-id="<?= $question['id']?>"></i>
+                    <?php endif; ?>
+                </div>
+                <div class="question" id="q<?= $question['id'] ?>"><?= $parsedown->text($question["question"]) ?></div>
+            <?php endforeach; // question ?>
+            <?php if (count($questions) == 0) : ?>
+                <div>No questions or comments yet</div>
+            <?php endif; ?>
+            <h3>Add a question or comment:</h3>
+            <form method="post" action="question" id="questionForm">
+                <input type="hidden" name="video" value="<?= $info["parts"][2] ?>" />
+                <input type="hidden" name="tab" id="tab" value="<?= $info["parts"][0] ?>" />
+                <textarea name="question" class="questionText" 
+                    placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
+                <button class="textAction">Add</button>
+            </form>
+        </div> 
     </article>
 <?php
-} // end foreach loop 
+        break; // no need to continue after the requested video
+    endif; 
+    $passed += $info["duration"];
+endforeach;
 ?>
         </main>
     </body>

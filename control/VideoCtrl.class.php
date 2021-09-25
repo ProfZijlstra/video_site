@@ -1,4 +1,5 @@
 <?php
+require "lib/Parsedown.php";
 
 /**
  * Video Controller Class
@@ -28,6 +29,10 @@ class VideoCtrl {
 	 * @Inject("ViewDao")
 	 */
 	public $viewDao;
+	/**
+	 * @Inject("QuestionDao")
+	 */
+	public $questionDao;
 
     /**
      * Redirects a successful login to overview
@@ -132,12 +137,19 @@ class VideoCtrl {
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|", sec="user")
 	 */
-	public function videos() {
+	public function only_day() {
+		return "Location: 01";
+	}
+	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/(\d{2})$|", sec="user")
+	 */
+	public function video() {
         global $URI_PARAMS;
 		global $VIEW_DATA;
 		$course_num = $URI_PARAMS[1];
 		$block = $URI_PARAMS[2];
 		$day = $URI_PARAMS[3];
+		$video = $URI_PARAMS[4];
 
 		// retrieve course and offering data from db
 		$course_detail = $this->courseDao->getCourse($course_num);
@@ -180,6 +192,9 @@ class VideoCtrl {
 			$file_info[$file] = array();
 			$file_info[$file]["duration"] = $duration;
 			$file_info[$file]["parts"] = explode("_", $file);
+			if ($file_info[$file]["parts"][0] == $video) {
+				$video_file = $file;
+			}
 		}
 		$totalHours = floor($totalDuration / (60 * 60 * 100));
 		$totalMinutes = floor($totalDuration / (60*100) % 60);
@@ -190,6 +205,9 @@ class VideoCtrl {
 		}
 		$totalTime .= str_pad($totalMinutes, 2, "0", STR_PAD_LEFT) . ":";
 		$totalTime .= str_pad($totalSeconds, 2, "0", STR_PAD_LEFT);
+
+		// get questions for selected video
+		$questions = $this->questionDao->getAllFor($file_info[$video_file]["parts"][2]);
 
 		// general course related
 		$VIEW_DATA["course"] = $course_num;
@@ -207,9 +225,14 @@ class VideoCtrl {
 		$VIEW_DATA["curr_d"] = ($days_passed % 7) + 1;
 
 		// videos related
+		$VIEW_DATA["video"] = $video;
 		$VIEW_DATA["files"] = $file_info;
 		$VIEW_DATA["totalDuration"] = $totalDuration;
 		$VIEW_DATA["totalTime"] = $totalTime;
+
+		// questions related
+		$VIEW_DATA["parsedown"] = new Parsedown();
+		$VIEW_DATA["questions"] = $questions;
 
 		return "videos.php";
 	}

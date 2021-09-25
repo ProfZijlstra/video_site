@@ -3,20 +3,9 @@ window.addEventListener("load", () => {
     const videos = document.getElementsByTagName("video");
 	let view_id = false;
 	const day_id = document.getElementById("day").dataset.id;
-    function tabclick(e) {
-        const tab = this;
-		for (const video of videos) {
-			video.pause();
-		}
-
-		tab.parentNode
-			.getElementsByClassName("selected")[0]
-			.classList.remove("selected");
-        tab.classList.add("selected");
-
-        document.querySelectorAll("main > article.selected")[0]
-            .classList.remove("selected");
-        document.getElementById(tab.dataset.show).classList.add("selected");
+    function tabclick() {
+		const links = this.getElementsByTagName("a");
+		window.location = links[0].href;
     }
 	const tabs = nav.getElementsByClassName('video_link');
 	for (const tab of tabs) {
@@ -63,6 +52,10 @@ window.addEventListener("load", () => {
 			});
 		}
 	}
+	for (const video of videos) {
+		video.addEventListener('play', playHandler);
+		video.addEventListener('pause', pauseHandler);
+	}
 	function pdfHandler(evt) {
 		const file = this.dataset.file;
 		const href = this.href;
@@ -71,13 +64,53 @@ window.addEventListener("load", () => {
 			.then(() => { window.location = href});
 		evt.preventDefault();
 	}
-	for (const video of videos) {
-		video.addEventListener('play', playHandler);
-		video.addEventListener('pause', pauseHandler);
-	}
 	const pdfs = document.getElementsByClassName("pdf")
 	for (const pdf of pdfs) {
 		pdf.addEventListener('click', pdfHandler);
+	}
+	function delHandler() {
+		this.parentNode.submit();
+	}
+	const dels = document.getElementsByClassName("fa-trash-alt");
+	for (const del of dels) {
+		del.addEventListener('click', delHandler);
+	}
+	function editHandler() {
+		const id = this.dataset.id;
+		fetch(`getQuestion?qid=${id}`)
+		.then(response => response.json() )
+		.then(json => {
+			const form = document.createElement("form");
+			form.setAttribute("method", "post");
+			form.setAttribute("action", "updQuestion");
+			form.style.position = "relative";
+			const qid = document.createElement("input");
+			qid.setAttribute("type", "hidden");
+			qid.setAttribute("name", "id");
+			qid.setAttribute("value", id);
+			form.append(qid);
+			const tab = document.createElement("input");
+			tab.setAttribute("type", "hidden");
+			tab.setAttribute("name", "tab");
+			tab.setAttribute("value", document.getElementById("tab").value);
+			form.append(tab);
+			const text = document.createElement("textarea");
+			text.setAttribute("name", "text");
+			text.classList.add("questionText");
+			text.append(json.question);
+			form.append(text);
+			const submit = document.createElement("input");
+			submit.setAttribute("type", "submit");
+			submit.setAttribute("value", "Update");
+			submit.classList.add("textAction");
+			form.append(submit);
+			this.parentNode.after(form);
+			form.nextSibling.nextSibling.style.display = "none";
+		});
+	}
+	const edits = document.getElementsByClassName("fa-edit");
+	for (const edit of edits) {
+		edit.addEventListener('click', editHandler);
 	}
 
 	const info = document.getElementById("info-btn");
