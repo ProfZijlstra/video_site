@@ -26,7 +26,7 @@ class UserCtrl {
 
     /**
      * Simple mapping to get the add user page
-     * @Get(uri="|^/user/add$|", sec="admin")
+     * @GET(uri="|^/user/add$|", sec="admin")
      */
     public function getAddUser() {
         return "userDetails.php";
