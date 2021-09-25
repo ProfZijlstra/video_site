@@ -77,7 +77,9 @@ window.addEventListener("load", () => {
 		pdf.addEventListener('click', pdfHandler);
 	}
 	function delHandler() {
-		this.parentNode.submit();
+		if (window.confirm("Do you really want to delete?")) {
+			this.parentNode.submit();
+		}
 	}
 	const dels = document.getElementsByClassName("fa-trash-alt");
 	for (const del of dels) {
