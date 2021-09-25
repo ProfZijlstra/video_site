@@ -182,6 +182,14 @@ main > article > video {
     padding: 5px;
     margin-bottom: 20px;
 }
+.question.selected {
+    background-color: #ffd;
+    transition: background-color 2s ease-in;
+}
+.question.selectDone {
+    background-color: #fff;
+    transition: background-color 2s ease-in;
+}
 .question p {
     margin: 5px 0px;
 }

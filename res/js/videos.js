@@ -1,4 +1,12 @@
 window.addEventListener("load", () => {
+	const hash = window.location.hash;
+	if (hash && hash != "questionForm" && hash[1] == "q") {
+		const elm = document.getElementById(hash.substring(1));
+		elm.classList.add("selected");
+		setTimeout(() => {
+			elm.classList.add("selectDone")
+		}, 2500)
+	}
     const nav = document.getElementById("videos");
     const videos = document.getElementsByTagName("video");
 	let view_id = false;
