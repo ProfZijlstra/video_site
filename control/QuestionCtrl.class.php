@@ -26,12 +26,13 @@ class QuestionCtrl {
 		$video = filter_input(INPUT_POST, "video");
         // using the capabilities of filter_input changes all html entities, 
         // breaking markdown syntax -- so we fall back to htmlspecialchars()
-        $question = htmlspecialchars(filter_input(INPUT_POST, "question"));
+        $question = htmlspecialchars(filter_input(INPUT_POST, "question"), ENT_NOQUOTES);
         $tab = filter_input(INPUT_POST, "tab");
         $id = $this->questionDao->add($question, $user_id, $video);
 
-        $message = "See question at: http://manalabs.org/${course}/${block}/${tab}#${id}";
-        mail("mzijlstra@miu.edu", "${course} Question or Comment", $message);
+        $message = "See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#$q{id}";
+        $headers ='FROM: "Manalabs Video System" <videos@manalabs.org>';
+        mail("mzijlstra@miu.edu", "${course} Question or Comment", $message, $headers);
 
         return "Location: ${tab}#q${id}";
 	}
@@ -66,7 +67,7 @@ class QuestionCtrl {
 		$id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         // see comment inside add method about why htmlspecialchars()
-        $text = htmlspecialchars(filter_input(INPUT_POST, "text"));
+        $text = htmlspecialchars(filter_input(INPUT_POST, "text"), ENT_NOQUOTES);
         $question = $this->questionDao->get($id);
         if ($_SESSION['user']['type'] === 'admin' || $question['user_id'] == $_SESSION['user']['id']) {
             $this->questionDao->update($id, $text);
