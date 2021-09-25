@@ -150,6 +150,7 @@ class VideoCtrl {
 		$block = $URI_PARAMS[2];
 		$day = $URI_PARAMS[3];
 		$video = $URI_PARAMS[4];
+		$user_id = $_SESSION['user']['id'];
 
 		// retrieve course and offering data from db
 		$course_detail = $this->courseDao->getCourse($course_num);
@@ -207,7 +208,7 @@ class VideoCtrl {
 		$totalTime .= str_pad($totalSeconds, 2, "0", STR_PAD_LEFT);
 
 		// get questions for selected video
-		$questions = $this->questionDao->getAllFor($file_info[$video_file]["parts"][2]);
+		$questions = $this->questionDao->getAllFor($file_info[$video_file]["parts"][2], $user_id);
 
 		// general course related
 		$VIEW_DATA["course"] = $course_num;

@@ -212,6 +212,32 @@ main > article > video {
 .asked .date {
     margin-left: 20px;
 }
+.asked i.fa-angle-up, .asked i.fa-angle-down {
+    position: absolute;
+    left: -25px;
+    top: 10px;
+    cursor: pointer;
+    font-size: 20pt;
+    color: white;
+    text-shadow:     1px  1px #000,
+                    -1px -1px #000,
+                     1px -1px #000,
+                    -1px  1px #000;
+}
+.asked i.fa-angle-down {
+    top: 30px;
+}
+.asked i.fa-angle-up.selected {
+    color: orange;
+}
+.asked i.fa-angle-down.selected {
+    color: lightseagreen;
+}
+.asked i.fa-angle-up:hover, .asked i.fa-angle-down:hover {
+    color: grey;
+    transition: color 1s ease-in;
+}
+
 textarea.questionText {
     width: 100%;
     min-height: 75px;

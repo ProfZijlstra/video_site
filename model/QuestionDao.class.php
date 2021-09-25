@@ -13,13 +13,20 @@ class QuestionDao {
 	 */
 	public $db;
 
-    public function getAllFor($video) {
+    public function getAllFor($video, $user_id) {
         $stmt = $this->db->prepare(
-			"SELECT q.id, q.question, q.user_id, u.firstname, u.lastname, q.created, q.edited 
-            FROM question q JOIN user u ON q.user_id = u.id
-            WHERE video = :video"
+			"SELECT q.id, q.question, q.user_id, q.created, q.edited, 
+			u.firstname, u.lastname, v.id AS vote_id, v.vote AS vote, 
+			SUM(v2.vote) AS vote_total
+            FROM question q 
+			JOIN user u ON q.user_id = u.id
+			LEFT JOIN question_vote v ON q.id = v.question_id AND v.user_id = :user_id 
+			LEFT JOIN question_vote v2 ON q.id = v2.question_id
+            WHERE q.video = :video
+			GROUP BY q.id
+			ORDER BY vote_total DESC"
 		);
-		$stmt->execute(array("video" =>  $video));
+		$stmt->execute(array("video" =>  $video, "user_id" => $user_id));
 		return $stmt->fetchAll();
     }
 
@@ -42,6 +49,18 @@ class QuestionDao {
 	}
 
     public function del($id) {
+		$stmt = $this->db->prepare(
+			"DELETE
+            FROM question_vote 
+            WHERE question_id = :id"
+		);
+		$stmt->execute(array("id" =>  $id));
+		$stmt = $this->db->prepare(
+			"DELETE
+            FROM reply 
+            WHERE question_id = :id"
+		);
+		$stmt->execute(array("id" =>  $id));
         $stmt = $this->db->prepare(
 			"DELETE
             FROM question 

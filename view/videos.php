@@ -105,6 +105,17 @@ foreach($files as $file => $info) :
                         </form>
                         <i class="far fa-edit" data-id="<?= $question['id']?>"></i>
                     <?php endif; ?>
+                    <div class="vote" data-qid="<?= $question['id'] ?>"
+                        <?php if($question["vote_id"]) : ?>  
+                            data-vid="<?= $question["vote_id"] ?>"
+                        <?php endif; ?>
+                        <?php if($question["vote"]) : ?>  
+                            data-type="<?= $question["vote"] > 0 ? "up" : "down" ?>"
+                        <?php endif; ?>
+                    >
+                        <i class="fas fa-angle-up <?= $question["vote"] > 0 ? 'selected' : "" ?>"></i> 
+                        <i class="fas fa-angle-down <?= $question["vote"] < 0 ? 'selected' : "" ?>"></i>
+                    </div>
                 </div>
                 <div class="question" id="q<?= $question['id'] ?>"><?= $parsedown->text($question["question"]) ?></div>
             <?php endforeach; // question ?>
