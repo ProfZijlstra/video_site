@@ -15,7 +15,7 @@ class QuestionDao {
 
     public function getAllFor($video, $user_id) {
         $stmt = $this->db->prepare(
-			"SELECT q.id, q.question, q.user_id, q.created, q.edited, 
+			"SELECT q.id, q.text, q.user_id, q.created, q.edited, 
 			u.firstname, u.lastname, v.id AS vote_id, v.vote AS vote, 
 			SUM(v2.vote) AS vote_total
             FROM question q 
@@ -55,6 +55,22 @@ class QuestionDao {
             WHERE question_id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
+		// deleting the reply votes related to this question takes more work 
+		$stmt = $this->db->prepare("SELECT id FROM reply WHERE question_id = :qid");
+		$stmt->execute(array("qid" => $id));
+		$rids_data = $stmt->fetchAll();
+		$rids = array();
+		foreach ($rids_data as $row) {
+			$rids[] = $row['id'];
+		}
+		$inject = implode(",", $rids);
+		$stmt = $this->db->prepare(
+			"DELETE
+            FROM reply_vote 
+            WHERE reply_id IN (${inject})"
+		);
+		$stmt->execute();
+
 		$stmt = $this->db->prepare(
 			"DELETE
             FROM reply 
@@ -72,10 +88,9 @@ class QuestionDao {
     public function update($id, $text) {
         $stmt = $this->db->prepare(
 			"UPDATE question 
-            SET question = :question, edited = NOW()
+            SET `text` = :question, edited = NOW()
             WHERE id = :id"
 		);
 		$stmt->execute(array("id" =>  $id, "question" => $text));
-
     }
 }

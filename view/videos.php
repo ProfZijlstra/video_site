@@ -93,7 +93,7 @@ foreach($files as $file => $info) :
         <div id="questions">
             <h2>Questions & Comments</h2>
             <?php foreach ($questions as $question) : ?>
-                <div class="asked">
+                <div class="author">
                     <?= $question["firstname"]?> <?= $question["lastname"]?>  
                     <span class="date">created: <?= $question["created"]?></span>
                     <?php if ($question["edited"]) : ?>
@@ -107,7 +107,7 @@ foreach($files as $file => $info) :
                         </form>
                         <i class="far fa-edit" data-id="<?= $question['id']?>"></i>
                     <?php endif; ?>
-                    <div class="vote" data-qid="<?= $question['id'] ?>"
+                    <div class="vote" data-id="<?= $question['id'] ?>"
                         <?php if($question["vote_id"]) : ?>  
                             data-vid="<?= $question["vote_id"] ?>"
                         <?php endif; ?>
@@ -119,7 +119,39 @@ foreach($files as $file => $info) :
                         <i class="fas fa-angle-down <?= $question["vote"] < 0 ? 'selected' : "" ?>"></i>
                     </div>
                 </div>
-                <div class="question" id="q<?= $question['id'] ?>"><?= $parsedown->text($question["question"]) ?></div>
+                <div class="question mdBox" id="q<?= $question['id'] ?>">
+                    <div class="qText"><?= $parsedown->text($question["text"]) ?></div>
+                    <?php foreach ($replies[$question['id']] as $reply) : ?>
+                        <div class="author">
+                            <?= $reply["firstname"]?> <?= $reply["lastname"]?>  
+                            <span class="date">created: <?= $reply["created"]?></span>
+                            <?php if ($reply["edited"]) : ?>
+                                <span class="date">edited: <?= $reply["edited"]?></span>
+                            <?php endif; ?>
+                            <?php if ($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['id'] == $reply["user_id"]) : ?>
+                                <form method="post" action="delReply">
+                                    <input type="hidden" name="id" value="<?= $reply['id']?>" />
+                                    <input type="hidden" name="tab" value="<?= $video ?>" />
+                                    <i class="far fa-trash-alt" data-id=""></i>
+                                </form>
+                                <i class="far fa-edit" data-id="<?= $reply['id']?>"></i>
+                            <?php endif; ?>
+                            <div class="vote" data-id="<?= $reply['id'] ?>"
+                                <?php if($reply["vote_id"]) : ?>  
+                                    data-vid="<?= $reply["vote_id"] ?>"
+                                <?php endif; ?>
+                                <?php if($reply["vote"]) : ?>  
+                                    data-type="<?= $reply["vote"] > 0 ? "up" : "down" ?>"
+                                <?php endif; ?>
+                            >
+                                <i class="fas fa-angle-up <?= $reply["vote"] > 0 ? 'selected' : "" ?>"></i> 
+                                <i class="fas fa-angle-down <?= $reply["vote"] < 0 ? 'selected' : "" ?>"></i>
+                            </div>
+                        </div>
+                        <div class="reply mdBox" id="r<?= $reply['id'] ?>"><?= $parsedown->text($reply["text"]) ?></div>
+                    <?php endforeach; ?>
+                    <div class="addReply">add reply</div>
+                </div>
             <?php endforeach; // question ?>
             <?php if (count($questions) == 0) : ?>
                 <div>No questions or comments yet</div>

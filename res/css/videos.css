@@ -177,45 +177,31 @@ main article video {
 }
 .textAction {
     position: absolute;
-    top:  7px;
+    top:  5px;
     right: 0px;
+    z-index: 100;
 }
-.question {
-    border: 1px solid gray;
-    padding: 5px;
-    margin-bottom: 20px;
-}
-.question.selected {
-    background-color: #ffd;
-    transition: background-color 2s ease-in;
-}
-.question.selectDone {
-    background-color: #fff;
-    transition: background-color 2s ease-in;
-}
-.question p {
-    margin: 5px 0px;
-}
-.asked {
+.author {
     color: grey;
     font-size: 10pt;
     font-family: sans-serif;
     position: relative;
 }
-.asked i.fa-trash-alt, .asked i.fa-edit {
+.author i.fa-trash-alt, .author i.fa-edit {
     position: absolute;
     right: 10px;
     top: 22px;
     color: black;
     cursor: pointer;
+    z-index: 10;
 }
-.asked i.fa-edit {
+.author i.fa-edit {
     right: 30px;
 }
-.asked .date {
+.author .date {
     margin-left: 20px;
 }
-.asked i.fa-angle-up, .asked i.fa-angle-down {
+.author i.fa-angle-up, .author i.fa-angle-down {
     position: absolute;
     left: -25px;
     top: 10px;
@@ -227,26 +213,67 @@ main article video {
                      1px -1px #000,
                     -1px  1px #000;
 }
-.asked i.fa-angle-down {
+.author i.fa-angle-down {
     top: 30px;
 }
-.asked i.fa-angle-up.selected {
+.author i.fa-angle-up.selected {
     color: orange;
 }
-.asked i.fa-angle-down.selected {
+.author i.fa-angle-down.selected {
     color: lightseagreen;
 }
-.asked i.fa-angle-up:hover  {
+.author i.fa-angle-up:hover  {
     color: orange;
     transition: color 1s ease-in;
 }
-.asked i.fa-angle-down:hover {
+.author i.fa-angle-down:hover {
     color: lightseagreen;
     transition: color 1s ease-in;
 }
-
+.question, .reply {
+    position: relative;
+    border: 1px solid gray;
+    padding: 5px;
+}
+.question {
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+.reply {
+    margin-bottom: 5px;
+    margin-left: 30px;
+}
+.question .author {
+    margin-left: 30px;
+}
+.question .addReply {
+    position: absolute;
+    bottom: 0px;
+    right: 5px;
+    color: grey;
+    font-size: 10pt;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+.mdBox.selected {
+    background-color: #ffd;
+    transition: background-color 2s ease-in;
+}
+.mdBox.selectDone {
+    background-color: transparent;
+    transition: background-color 2s ease-in;
+}
+.mdBox p {
+    margin: 5px 0px;
+}
 textarea.questionText {
     width: 100%;
     min-height: 75px;
     margin-bottom: 25px;
+}
+.question textarea.questionText {
+    margin-bottom: 5px;
+}
+.replyContainer {
+    padding: 0px 5px;
 }

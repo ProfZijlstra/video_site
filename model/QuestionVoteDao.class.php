@@ -1,6 +1,6 @@
 <?php
 /**
- * Question DAO Class
+ * QuestionVote DAO Class
  *
  * @author mzijlstra 09/25/2021
  * @Repository

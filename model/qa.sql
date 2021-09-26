@@ -51,3 +51,6 @@ create table `reply_vote` (
 
 ALTER TABLE `question_vote` ADD UNIQUE `unique_question_user` (`question_id`, `user_id`);
 ALTER TABLE `reply_vote` ADD UNIQUE `unique_reply_user` (`reply_id`, `user_id`);
+
+ALTER TABLE `question` CHANGE `question` `text` TEXT NOT NULL;
+ALTER TABLE `reply` CHANGE `answer` `text` TEXT NOT NULL;

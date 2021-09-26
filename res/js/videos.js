@@ -5,10 +5,16 @@ window.addEventListener('load', () => {
 
     // highlight url selected question
     const hash = window.location.hash;
-    if (hash && hash != 'questionForm' && hash[1] == 'q') {
+    if (hash && hash != 'questionForm' && (hash[1] == 'q' || hash[1] == 'r')) {
         const elm = document.getElementById(hash.substring(1));
-        elm.classList.add('selected');
-        setTimeout(() => {elm.classList.add('selectDone')}, 2500)
+        if (elm) {
+            elm.classList.add('selected');
+            setTimeout(() => {
+                elm.classList.remove('selected');
+                elm.classList.add('selectDone');
+            }, 2500)
+            setTimeout(() => elm.classList.remove('selectDone'), 5000);
+        }
     }
 
     // video speed controls
@@ -51,7 +57,7 @@ window.addEventListener('load', () => {
     video.addEventListener('play', playHandler)
     video.addEventListener('pause', pauseHandler);
 
-    // make clicking on the PDF icon work while communicating with the server
+    // make clicking on the PDF icon work while communicating with server
     document.getElementById('pdf').onclick = function(evt) {
         const file = this.dataset.file;
         const href = this.href;
@@ -60,7 +66,7 @@ window.addEventListener('load', () => {
         evt.preventDefault();
     };
 
-    // make clicking on delete question work
+    // make clicking on delete question and delete reply work
     function delHandler() {
         if (window.confirm('Do you really want to delete?')) {
             this.parentNode.submit();
@@ -71,11 +77,11 @@ window.addEventListener('load', () => {
         del.addEventListener('click', delHandler);
     }
 
-    // make clicking on edit question work
-    function createEditBox(json, id, parent) {
+    // make clicking on edit question and edit reply work
+    function createEditBox(action, btn, id, content, placeholder) {
         const form = document.createElement('form');
         form.setAttribute('method', 'post');
-        form.setAttribute('action', 'updQuestion');
+        form.setAttribute('action', action);
         form.style.position = 'relative';
         const qid = document.createElement('input');
         qid.setAttribute('type', 'hidden');
@@ -89,37 +95,48 @@ window.addEventListener('load', () => {
         form.append(tab);
         const text = document.createElement('textarea');
         text.setAttribute('name', 'text');
+        text.setAttribute('placeholder', placeholder);
         text.classList.add('questionText');
-        text.append(json.question);
+        text.append(content);
         form.append(text);
         const submit = document.createElement('input');
         submit.setAttribute('type', 'submit');
-        submit.setAttribute('value', 'Update');
+        submit.setAttribute('value', btn);
         submit.classList.add('textAction');
         form.append(submit);
-        parent.after(form);
-        form.nextSibling.nextSibling.style.display = 'none';
+        return form;
     }
-    function editHandler() {
-        const id = this.dataset.id;
-        fetch(`getQuestion?qid=${id}`)
+    function editHandler(type, evt) {
+        const id = evt.target.dataset.id;
+        fetch(`get${type}?id=${id}`)
             .then(response => response.json())
-            .then(json => createEditBox(json, id, this.parentNode));
+            .then(json => {
+                const form =
+                    createEditBox(`upd${type}`, "Update", id, json.text, "");
+                evt.target.parentNode.after(form);
+                form.nextSibling.nextSibling.style.display = 'none';
+            });
     }
-    const edits = document.getElementsByClassName('fa-edit');
-    for (const edit of edits) {
-        edit.addEventListener('click', editHandler);
+    const question_edits =
+        document.querySelectorAll('#questions > .author > .fa-edit');
+    for (const edit of question_edits) {
+        edit.addEventListener('click', editHandler.bind(null, "Question"));
     }
-
-    // make clicking on upvote and downvote question work
+    const reply_edits =
+        document.querySelectorAll('.question > .author > .fa-edit');
+    for (const edit of reply_edits) {
+        edit.addEventListener('click', editHandler.bind(null, "Reply"));
+    }
+    // make clicking on upvote and downvote question and reply work
     function voteHandler(url, evt) {
         const parent = evt.target.parentNode;
-        const qid = parent.dataset.qid;
-        const vid = parent.dataset.vid;
+        const id = parent.dataset.id; // either question_id or reply_id
+        const vid =
+            parent.dataset.vid; // vote id (in question_vote or reply_vote)
         const type = parent.dataset.type;
         fetch(`./${url}`, {
             method : 'POST',
-            body : `qid=${qid}&vid=${vid}&type=${type}`,
+            body : `id=${id}&vid=${vid}&type=${type}`,
             headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
         })
             .then(response => response.json())
@@ -140,15 +157,44 @@ window.addEventListener('load', () => {
                 }
             });
     }
-    const upHandler = voteHandler.bind(null, 'upvote');
-    const downHandler = voteHandler.bind(null, 'downvote');
-    const ups = document.getElementsByClassName('fa-angle-up');
-    const downs = document.getElementsByClassName('fa-angle-down');
-    for (const up of ups) {
-        up.addEventListener('click', upHandler);
+    const question_ups = document.querySelectorAll(
+        '#questions > .author > .vote > .fa-angle-up');
+    const question_downs = document.querySelectorAll(
+        '#questions > .author > .vote > .fa-angle-down');
+    for (const up of question_ups) {
+        up.addEventListener('click', voteHandler.bind(null, 'upvote'));
     }
-    for (const down of downs) {
-        down.addEventListener('click', downHandler);
+    for (const down of question_downs) {
+        down.addEventListener('click', voteHandler.bind(null, 'downvote'));
+    }
+    const reply_ups =
+        document.querySelectorAll('.question > .author > .vote > .fa-angle-up');
+    const reply_downs = document.querySelectorAll(
+        '.question > .author > .vote > .fa-angle-down');
+    for (const up of reply_ups) {
+        up.addEventListener('click', voteHandler.bind(null, 'upreply'));
+    }
+    for (const down of reply_downs) {
+        down.addEventListener('click', voteHandler.bind(null, 'downreply'));
+    }
+
+    function createReply() {
+        const qid = this.parentNode.id.substring(1);
+        const placeholder = `Use **markdown** syntax in your text like: 
+
+\`\`\`javascript
+const code = "highlighted";
+\`\`\``;
+        const form = createEditBox("addReply", "Reply", qid, "", placeholder);
+        const container = document.createElement("div");
+        container.classList.add("replyContainer");
+        container.append(form);
+        this.after(container);
+        this.style.display = "none";
+    }
+    const replies = document.getElementsByClassName("addReply");
+    for (const reply of replies) {
+        reply.addEventListener('click', createReply);
     }
 
     // Admin info

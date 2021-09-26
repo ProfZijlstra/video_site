@@ -33,6 +33,10 @@ class VideoCtrl {
 	 * @Inject("QuestionDao")
 	 */
 	public $questionDao;
+	/**
+	 * @Inject("ReplyDao")
+	 */
+	public $replyDao;
 
     /**
      * Redirects a successful login to overview
@@ -209,6 +213,19 @@ class VideoCtrl {
 
 		// get questions for selected video
 		$questions = $this->questionDao->getAllFor($file_info[$video_file]["parts"][2], $user_id);
+		// get the replies for those questions
+		if ($questions) {
+			$qids = array();
+			$replies = array();
+			foreach ($questions as $question) {
+				$qids[] = $question["id"];
+				$replies[$question["id"]] = array();
+			}
+			$replies_data = $this->replyDao->getAllFor($qids, $user_id);
+			foreach ($replies_data as $reply) {
+				$replies[$reply["question_id"]][] = $reply;
+			}	
+		}
 
 		// general course related
 		$VIEW_DATA["course"] = $course_num;
@@ -234,6 +251,7 @@ class VideoCtrl {
 		// questions related
 		$VIEW_DATA["parsedown"] = new Parsedown();
 		$VIEW_DATA["questions"] = $questions;
+		$VIEW_DATA["replies"] = $replies;
 
 		return "videos.php";
 	}
