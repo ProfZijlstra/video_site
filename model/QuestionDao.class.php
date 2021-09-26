@@ -59,17 +59,19 @@ class QuestionDao {
 		$stmt = $this->db->prepare("SELECT id FROM reply WHERE question_id = :qid");
 		$stmt->execute(array("qid" => $id));
 		$rids_data = $stmt->fetchAll();
-		$rids = array();
-		foreach ($rids_data as $row) {
-			$rids[] = $row['id'];
+		if ($rids_data) {
+			$rids = array();
+			foreach ($rids_data as $row) {
+				$rids[] = $row['id'];
+			}
+			$inject = implode(",", $rids);
+			$stmt = $this->db->prepare(
+				"DELETE
+				FROM reply_vote 
+				WHERE reply_id IN (${inject})"
+			);
+			$stmt->execute();	
 		}
-		$inject = implode(",", $rids);
-		$stmt = $this->db->prepare(
-			"DELETE
-            FROM reply_vote 
-            WHERE reply_id IN (${inject})"
-		);
-		$stmt->execute();
 
 		$stmt = $this->db->prepare(
 			"DELETE
