@@ -27,7 +27,7 @@
 				<div id="course"><a href=".."><?= strtoupper($course) ?> <?= $block ?></a></div>
             </h1>
         </header>
-        <nav id ="videos">
+        <nav id="videos">
             <nav>
                 <table id="days">
                     <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
@@ -50,15 +50,17 @@
 ?>
                 </table>
             </nav>
+            <div id="tabs">
 <?php foreach($files as $file => $info) : ?>
-            <div class='video_link <?= $info["parts"][0] == $video ? "selected" : ""?>'
-                data-show="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
-                id="<?= $info["parts"][0] ?>">
-                <div><a href="<?= $info["parts"][0]?>"><?= $info["parts"][1] ?></a></div>
-				<div class="info"></div>
-            </div>
+                <div class='video_link <?= $info["parts"][0] == $video ? "selected" : ""?>'
+                    data-show="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
+                    id="<?= $info["parts"][0] ?>">
+                    <div><a href="<?= $info["parts"][0]?>"><?= $info["parts"][1] ?></a></div>
+                    <div class="info"></div>
+                </div>
 <?php endforeach; ?>
-			<div id="total"></div>
+            </div>
+            <div id="total"></div>
         </nav>
         <main>
 			<div id="playSpeed">
@@ -76,7 +78,7 @@ foreach($files as $file => $info) :
     <article id="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>" 
             class="selected">
         <h2><?= $info["parts"][1]?></h2>
-        <a class="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>.pdf"
+        <a id="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>.pdf"
             href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
             <i class="far fa-file-pdf"></i>
         </a>
