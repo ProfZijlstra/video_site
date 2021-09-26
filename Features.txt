@@ -1,0 +1,10 @@
+- Replies to Questions on Vidoes
+- Fix / Finish view stats to include PDF
+- Autoplay next video
+- clone offering
+- GeoIP constraints
+- Improve user system
+    - My Profile page with passwd and image
+    - Auto scrape image from infosys
+- Add Quiz system
+- Add Assignment system
