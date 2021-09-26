@@ -26,25 +26,24 @@ window.addEventListener("load", () => {
 
         const header = React.createElement('h2', null, title);
         const enrolTable = React.createElement(INFO.ViewersTable, {
-            title: "Enrolled Users",
-            users: enrolled,
-        }, null);
+            title : "Enrolled Users",
+            users : enrolled,
+        },
+                                               null);
         const enrnvTable = React.createElement(INFO.ViewersTable, {
-            title: "Enrolled No View",
-            users: enrol_nv,
-        }, null);
+            title : "Enrolled No View",
+            users : enrol_nv,
+        },
+                                               null);
         const non_enrTable = React.createElement(INFO.ViewersTable, {
-            title: "Non-Enrolled Users",
-            users: non_enrol,
-        }, null);
-        const combined = React.createElement(
-            'div', null, header, enrolTable, enrnvTable, non_enrTable
-        );
+            title : "Non-Enrolled Users",
+            users : non_enrol,
+        },
+                                                 null);
+        const combined = React.createElement('div', null, header, enrolTable,
+                                             enrnvTable, non_enrTable);
 
-        ReactDOM.render(
-            combined,
-            tables
-        );
+        ReactDOM.render(combined, tables);
     }
 
     function offeringViewers() {
@@ -72,23 +71,20 @@ window.addEventListener("load", () => {
         overlay.classList.add("visible");
     }
 
-    function hideViewers() {
-        overlay.classList.remove("visible");
-    }
+    function hideViewers() { overlay.classList.remove("visible"); }
 
     document.getElementById("close-overlay").onclick = hideViewers;
 
-    document.getElementById("info-btn").onclick = function () {
+    document.getElementById("info-btn").onclick = function() {
         const e = React.createElement;
 
         fetch('info')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (json) {
+            .then(function(response) { return response.json(); })
+            .then(function(json) {
                 for (const day in json) {
-                    const elm = document.getElementById(day)
-                        .getElementsByClassName("info")[0];
+                    const elm =
+                        document.getElementById(day).getElementsByClassName(
+                            "info")[0];
                     const props = json[day];
 
                     if (day == "total") {
@@ -102,8 +98,6 @@ window.addEventListener("load", () => {
             });
         fetch(`enrollment?offering_id=${offering_id}`)
             .then(response => response.json())
-            .then(function (json) {
-                enrollment = json;
-            });
+            .then(json => enrollment = json);
     };
 });
