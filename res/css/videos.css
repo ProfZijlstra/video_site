@@ -233,8 +233,12 @@ main > article > video {
 .asked i.fa-angle-down.selected {
     color: lightseagreen;
 }
-.asked i.fa-angle-up:hover, .asked i.fa-angle-down:hover {
-    color: grey;
+.asked i.fa-angle-up:hover  {
+    color: orange;
+    transition: color 1s ease-in;
+}
+.asked i.fa-angle-down:hover {
+    color: lightseagreen;
     transition: color 1s ease-in;
 }
 
