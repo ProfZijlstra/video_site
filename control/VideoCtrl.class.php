@@ -185,6 +185,7 @@ class VideoCtrl {
 		$VIEW_DATA["title"] = $course_detail['name'];
 		$VIEW_DATA["block"] = $block;
 		$VIEW_DATA["day"] = $day;
+		$VIEW_DATA["offering_id"] = $offering_detail['id'];
 
 		// calendar related
 		$VIEW_DATA["days"] = $days;

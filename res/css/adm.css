@@ -1,0 +1,59 @@
+.fa-user, .fa-info-circle {
+    cursor: pointer;
+}
+#overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #FFFD;
+    display: none;
+    z-index: 100;
+    overflow: auto;
+}
+#overlay.visible {
+    display: block;
+}
+#close-overlay {
+    position: fixed;
+    top: 25px;
+    right: 90px;
+    font-size: 50px;;
+    cursor: pointer;
+}
+#tables {
+    margin: 50px 0px;
+    width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#tables h2 {
+    text-align: center;
+    font-size: 45px;
+    margin-bottom: 0px;
+}
+#tables table {
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+#tables caption {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 25px;
+}
+#tables th {
+    cursor: pointer;
+}
+#tables td, #tables th {
+    border: 1px solid black;
+    padding: 3px;
+}
+#tables td.hours {
+    text-align: right;
+}
+#tables tr:nth-child(2n+1) {
+    background-color: #DDD;
+}

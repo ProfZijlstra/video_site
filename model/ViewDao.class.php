@@ -121,12 +121,25 @@ class ViewDao {
 			SUM(v.pdf) as pdf
 			from view as v 
 			join user as u on v.user_id = u.id 
-			join  day as d on v.day_id = d.id 
-			where d.id = :day_id 
+			where v.day_id = :day_id 
 			group by u.id 
 			order by hours desc"
 		);
 		$stmt->execute(array("day_id" => $day_id));
+		return $stmt->fetchAll();
+	}
+
+	public function video_viewers($day_id, $video) {
+		$stmt = $this->db->prepare("SELECT u.id, u.firstname, u.lastname, 
+			SUM(v.stop - v.start)/3600 as hours, 
+			SUM(v.pdf) as pdf
+			from view as v 
+			join user as u on v.user_id = u.id 
+			where v.day_id = :day_id AND v.video = :video 
+			group by u.id 
+			order by hours desc"
+		);
+		$stmt->execute(array("day_id" => $day_id, "video" => $video));
 		return $stmt->fetchAll();
 	}
 }

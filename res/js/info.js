@@ -2,6 +2,10 @@
 // React components related to admin info
 const INFO = (function() {
     const e = React.createElement;
+
+    let enrollment = false;
+    function setEnrollment(enr) { enrollment = enr; }
+
     function Users(props) {
         if (props.users) {
             return e('span', {'class' : 'users', 'onClick' : props.showUsers},
@@ -189,5 +193,101 @@ const INFO = (function() {
         render() { return e('h2', null, this.state.title); }
     }
 
-    return {Users, Views, Time, Info, ViewersTable, Header};
+    function showTables(title, users) {
+        const tables = document.getElementById("tables");
+        const overlay = document.getElementById("overlay");
+        ReactDOM.unmountComponentAtNode(tables);
+
+        const enrolled = [];
+        const enrol_nv = [];
+        const non_enrol = [];
+        for (const user of users) {
+            if (enrollment[user.id]) {
+                enrolled.push(user);
+                enrollment[user.id].seen = true;
+            } else {
+                non_enrol.push(user);
+            }
+        }
+        for (const id in enrollment) {
+            const user = enrollment[id];
+            if (!user.seen) {
+                enrol_nv.push(user);
+            }
+        }
+
+        const header = React.createElement('h2', null, title);
+        const enrolTable = React.createElement(ViewersTable, {
+            title : "Enrolled Users",
+            users : enrolled,
+        },
+                                               null);
+        const enrnvTable = React.createElement(ViewersTable, {
+            title : "Enrolled No View",
+            users : enrol_nv,
+        },
+                                               null);
+        const non_enrTable = React.createElement(ViewersTable, {
+            title : "Non-Enrolled Users",
+            users : non_enrol,
+        },
+                                                 null);
+        const combined = React.createElement('div', null, header, enrolTable,
+                                             enrnvTable, non_enrTable);
+
+        ReactDOM.render(combined, tables);
+        overlay.classList.add("visible");
+    }
+
+    function hideTables() {
+        document.getElementById("overlay").classList.remove("visible");
+    }
+
+    function offeringViewers() {
+        const offering_id = document.getElementById('offering').dataset.id;
+        const course = document.getElementById("course_num").textContent;
+        const offering = document.getElementById("offering").textContent;
+        const title = `${course} ${offering}`;
+        fetch(`viewers?offering_id=${offering_id}`)
+            .then(response => response.json())
+            .then(json => showTables(title, json));
+    }
+
+    function dayViewers(evt) {
+        let elm = evt.target.parentNode;
+        while (!elm.dataset.day) {
+            elm = elm.parentNode;
+        }
+        const day = elm.dataset.day;
+        const day_id = elm.dataset.day_id;
+        const text = elm.dataset.text;
+        const title = `${day} ${text}`;
+        fetch(`${day}/viewers?day_id=${day_id}`)
+            .then(response => response.json())
+            .then(json => showTables(title, json));
+    }
+
+    function videoViewers(evt) {
+        const day_id = document.getElementById('day').dataset.id;
+        let elm = evt.target.parentNode;
+        while (!elm.dataset.show) {
+            elm = elm.parentNode;
+        }
+        const video = elm.dataset.show;
+        const title = video.substring(3);
+        const num = video.substring(0, 2);
+        fetch(`${num}/viewers?day_id=${day_id}&video=${
+                  encodeURIComponent(video)}`)
+            .then(response => response.json())
+            .then(json => showTables(title, json));
+    }
+
+    return {
+        setEnrollment,
+        Info,
+        offeringViewers,
+        dayViewers,
+        videoViewers,
+        hideTables,
+    };
 })();

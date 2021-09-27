@@ -94,12 +94,22 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/viewers$|", sec="admin")
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7]/)+viewers$|", sec="admin")
 	 */
 	public function day_viewers() {
 		$day_id = filter_input(INPUT_GET, "day_id");
 		return $this->viewDao->day_viewers($day_id);
 	}
+
+	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/\d{2}/viewers$|", sec="admin")
+	 */
+	public function video_viewers() {
+		$day_id = filter_input(INPUT_GET, "day_id");
+		$video = filter_input(INPUT_GET, "video");
+		return $this->viewDao->video_viewers($day_id, $video);
+	}
+
 
     /**
      * @GET(uri="|.+/enrollment$|")

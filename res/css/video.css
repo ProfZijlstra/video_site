@@ -94,25 +94,25 @@ nav nav {
     padding-bottom: 10px;
     border-bottom: 1px solid black;
 }
-table {
+#videos table {
     cursor: pointer;
     border-collapse: collapse;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
 }
-td,th {
+#videos td,th {
     border: 1px solid black;
     width: 20px;
 }
-td {
+#videos td {
     background: linear-gradient(to bottom, #eee 0%,#ccc 100%); 
 }
-td.done {
+#videos td.done {
     /* background-color: #BBB; */
     background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
 }
-td.curr {
+#videos td.curr {
     /* background-color: #FF0; */
     background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
 }

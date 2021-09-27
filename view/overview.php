@@ -8,13 +8,14 @@ $now = time();
         <meta charset="utf-8" />
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
 		<link rel="stylesheet" href="res/css/overview.css">
-        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="res/js/overview.js"></script>
         <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <link rel="stylesheet" href="res/css/adm.css">
+            <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
             <script src="res/js/info.js"></script>
             <script src="res/js/adm_overview.js"></script>
         <?php endif; ?>
-        <script src="res/js/overview.js"></script>
     </head>
     <body>
         <header>
@@ -43,9 +44,11 @@ $now = time();
                 <tr>
                 <?php for ($d = 1; $d <= 7; $d++): ?>
                     <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
-                    <td id="<?= "W{$w}D{$d}" ?>" 
-                            class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
-                            data-id="<?= $days["W{$w}D{$d}"]["id"] ?>">
+                    <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+                            id="<?= "W{$w}D{$d}" ?>"
+                            data-day="<?= "W{$w}D{$d}" ?>" 
+                            data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
+                            data-text="<?= $days["W{$w}D{$d}"]["desc"] ?>">
                         <div class="info"></div>
                         <a href="W<?= $w ?>D<?= $d ?>/">
                             <?= $days["W{$w}D{$d}"]["desc"] ?>

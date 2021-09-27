@@ -6,11 +6,15 @@
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
         <link rel="stylesheet" type="text/css" href="res/css/video.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
-        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
-        <script src="res/js/info.js"></script>
         <script src="res/js/video.js"></script>
         <script src="res/js/prism.js"></script>
+        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <link rel="stylesheet" href="res/css/adm.css">
+            <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+            <script src="res/js/info.js"></script>
+            <script src="res/js/adm_video.js"></script>
+        <?php endif; ?>
     </head>
     <body>
         <header>
@@ -24,7 +28,9 @@
             <h1>
 				<span id="day" data-id="<?= $days[$day]["id"] ?>"><?= $day ?></span> - 
 				<span class="title"><?= $days[$day]["desc"] ?></span>
-				<div id="course"><a href=".."><?= strtoupper($course) ?> <?= $block ?></a></div>
+				<div id="course" data-oid="<?= $offering_id ?>">
+                    <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
+                </div>
             </h1>
         </header>
         <nav id="videos">
@@ -60,7 +66,10 @@
                 </div>
 <?php endforeach; ?>
             </div>
-            <div id="total"></div>
+            <div id="total" 
+                data-day="<?= $day ?>" 
+                data-day_id="<?= $days[$day]["id"] ?>" 
+                data-text="<?= $days[$day]["desc"] ?>"></div>
         </nav>
         <main>
 			<div id="playSpeed">
@@ -78,7 +87,7 @@ foreach($files as $file => $info) :
     <article id="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>" 
             class="selected">
         <h2><?= $info["parts"][1]?></h2>
-        <a id="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>.pdf"
+        <a id="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
             href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
             <i class="far fa-file-pdf"></i>
         </a>
@@ -173,6 +182,13 @@ foreach($files as $file => $info) :
 endforeach;
 ?>
         </main>
+        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <div id="overlay">
+                <i id="close-overlay" class="fas fa-times-circle"></i>
+                <div id="tables"></div>
+            </div>
+        <?php endif; ?>
+
     </body>
 </html>
 
