@@ -28,7 +28,7 @@ class ViewDao {
 	 */
 	public function start($user_id, $day_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 'vid', :user_id, :day_id, :video, NOW(), NULL)");
+			VALUES(NULL, 0, :user_id, :day_id, :video, NOW(), NULL)");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video));
 		return $this->db->lastInsertId();
@@ -47,7 +47,7 @@ class ViewDao {
 
 	public function pdf($user_id, $day_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 'pdf', :user_id, :day_id, :video, NOW(), NOW())");
+			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW())");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video));
 	}
@@ -99,13 +99,17 @@ class ViewDao {
 	}
 
 	public function offering_viewers($offering_id) {
-		$stmt = $this->db->prepare("SELECT u.id, u.firstname, u.lastname, 
-			SUM(v.stop - v.start)/3600 as hours 
-			from view as v join user as u on v.user_id = u.id 
+		$stmt = $this->db->prepare(
+			"SELECT u.id, u.firstname, u.lastname, 
+			SUM(v.stop - v.start)/3600 as `hours`,
+			SUM(v.pdf) as pdf
+			from view as v 
+			join user as u on v.user_id = u.id 
 			join  day as d on v.day_id = d.id 
 			join offering as o on d.offering_id = o.id 
 			where o.id = :offering_id 
-			group by u.id order by hours desc"
+			group by u.id 
+			order by `hours` desc"
 		);
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
@@ -113,11 +117,14 @@ class ViewDao {
 
 	public function day_viewers($day_id) {
 		$stmt = $this->db->prepare("SELECT u.id, u.firstname, u.lastname, 
-			SUM(v.stop - v.start)/3600 as hours 
-			from view as v join user as u on v.user_id = u.id 
+			SUM(v.stop - v.start)/3600 as hours, 
+			SUM(v.pdf) as pdf
+			from view as v 
+			join user as u on v.user_id = u.id 
 			join  day as d on v.day_id = d.id 
 			where d.id = :day_id 
-			group by u.id order by hours desc"
+			group by u.id 
+			order by hours desc"
 		);
 		$stmt->execute(array("day_id" => $day_id));
 		return $stmt->fetchAll();

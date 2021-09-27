@@ -4,12 +4,12 @@
         <title><?= strtoupper($course) ?> <?= $day ?> Videos</title>
         <meta charset="utf-8" />
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/css/videos.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/video.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
         <script src="res/js/info.js"></script>
-        <script src="res/js/videos.js"></script>
+        <script src="res/js/video.js"></script>
         <script src="res/js/prism.js"></script>
     </head>
     <body>

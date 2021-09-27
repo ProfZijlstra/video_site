@@ -54,3 +54,8 @@ ALTER TABLE `reply_vote` ADD UNIQUE `unique_reply_user` (`reply_id`, `user_id`);
 
 ALTER TABLE `question` CHANGE `question` `text` TEXT NOT NULL;
 ALTER TABLE `reply` CHANGE `answer` `text` TEXT NOT NULL;
+
+alter table view change `start` `start` timestamp not null default current_timestamp;
+UPDATE view set type = 0 where type = 'vid';
+UPDATE view set type = 1 where type = 'pdf';
+alter table view change `type` `pdf` tinyint;

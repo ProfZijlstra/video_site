@@ -26,10 +26,6 @@ class VideoCtrl {
 	 */
 	public $enrollmentDao;
 	/**
-	 * @Inject("ViewDao")
-	 */
-	public $viewDao;
-	/**
 	 * @Inject("QuestionDao")
 	 */
 	public $questionDao;
@@ -58,20 +54,14 @@ class VideoCtrl {
 
     }
 
-    /**
-     * Gets the enrollemnt for a given offering
-     * It may be good to move this function in a different class
-     * @GET(uri="|.+/enrollment$|")
-     */
-    public function enrollemnt() {
-		$offering_id = filter_input(INPUT_GET, "offering_id");
-        $result = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
-        $ids = [];
-        foreach ($result as $row) {
-            $ids[$row["id"]] = $row;
-        }
-        return $ids;
-    }
+	/**
+	 * If the URL doesn't contain a video selection, just a day
+	 * 
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|", sec="user")
+	 */
+	public function only_day() {
+		return "Location: 01";
+	}
 
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/$|", sec="user");
@@ -107,43 +97,6 @@ class VideoCtrl {
         return "overview.php";
 	}
 
-	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/info/?$|", sec="admin");
-	 */
-	public function overview_info() {
-        global $URI_PARAMS;
-		global $VIEW_DATA;
-
-		$course_num = $URI_PARAMS[1];
-		$block = $URI_PARAMS[2];
-	
-		$offering_detail = $this->offeringDao->getOfferingByCourse($course_num, $block);
-		$offering_id = $offering_detail['id'];
-		$view_info = $this->viewDao->overview($offering_id);
-
-		$days = array();
-		foreach ($view_info as $day) {
-			$days[$day["abbr"]] = $day;
-		}
-		$days['total'] = $this->viewDao->overview_total($offering_id);
-		return $days; // array automatically json encodes 
-	}
-
-	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/viewers$|", sec="admin")
-	 */
-	public function offering_viewers() {
-		$offering_id = filter_input(INPUT_GET, "offering_id");
-		return $this->viewDao->offering_viewers($offering_id);
-	}
-
-
-	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|", sec="user")
-	 */
-	public function only_day() {
-		return "Location: 01";
-	}
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/(\d{2})$|", sec="user")
 	 */
@@ -253,57 +206,7 @@ class VideoCtrl {
 		$VIEW_DATA["questions"] = $questions;
 		$VIEW_DATA["replies"] = $replies;
 
-		return "videos.php";
-	}
-
-	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/info/?$|", sec="admin")
-	 */
-	public function videos_info() {
-		$day_id = filter_input(INPUT_GET, "day_id");
-		$videos_info = $this->viewDao->day_views($day_id);
-		$videos = array();
-		foreach ($videos_info as $video) {
-			$videos[$video["video"]] = $video;
-		}
-		$videos['total'] = $this->viewDao->day_total($day_id);
-		return $videos; // array automatically json encodes 
-	}
-
-	/**
-	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/viewers$|", sec="admin")
-	 */
-	public function day_viewers() {
-		$day_id = filter_input(INPUT_GET, "day_id");
-		return $this->viewDao->day_viewers($day_id);
-	}
-
-	/**
-	 * @GET(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?start.*$|", sec="user")
-	 */
-	public function start() {
-		$user_id = $_SESSION['user']['id'];
-		$day_id = filter_input(INPUT_GET, "day_id");
-		$video = filter_input(INPUT_GET, "video");
-		return intval($this->viewDao->start($user_id, $day_id, $video));
-	}
-
-	/**
-	 * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?stop$|", sec="user")
-	 */
-	public function stop() {
-		$view_id = filter_input(INPUT_POST, "view_id");
-		return $this->viewDao->stop($view_id);
-	}
-
-	/**
-	 * @GET(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?pdf.*$|", sec="user")
-	 */
-	public function pdf() {
-		$user_id = $_SESSION['user']['id'];
-		$day_id = filter_input(INPUT_GET, "day_id");
-		$file = filter_input(INPUT_GET, "file");
-		return intval($this->viewDao->pdf($user_id, $day_id, $file));
+		return "video.php";
 	}
 }
 

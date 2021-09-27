@@ -42,6 +42,8 @@ const INFO = (function() {
 
     function byLast(a, b) { return a.lastname.localeCompare(b.lastname); }
 
+    function byPdf(a, b) { return a.pdf - b.pdf; }
+
     function byHours(a, b) { return a.hours - b.hours; }
 
     function reverse(func, a, b) { return -func(a, b); }
@@ -78,11 +80,14 @@ const INFO = (function() {
                 this.click.bind(this, 'byFirst', this.props.sort, byFirst);
             let lastClick =
                 this.click.bind(this, 'byLast', this.props.sort, byLast);
+            let pdfClick =
+                this.click.bind(this, 'byPdf', this.props.sort, byPdf);
             let hoursClick =
                 this.click.bind(this, "byHours", this.props.sort, byHours);
 
             let firstSort = "fas fa-sort";
             let lastSort = "fas fa-sort";
+            let pdfSort = "fas fa-sort";
             let hourSort = "fas fa-sort";
 
             if (this.state.sorted == "byFirst") {
@@ -102,6 +107,14 @@ const INFO = (function() {
                 } else {
                     lastSort = "fas fa-sort-down";
                 }
+            } else if (this.state.sorted == "byPdf") {
+                if (this.state.desc) {
+                    pdfSort = "fas fa-sort-up";
+                    pdfClick = this.click.bind(this, 'byPdf', this.props.sort,
+                                               reverse.bind(null, byPdf));
+                } else {
+                    pdfSort = "fas fa-sort-down";
+                }
             } else if (this.state.sorted == "byHours") {
                 if (this.state.desc) {
                     hourSort = "fas fa-sort-up";
@@ -115,12 +128,15 @@ const INFO = (function() {
 
             const firstIcon = e('i', {class : firstSort});
             const lastIcon = e('i', {class : lastSort});
+            const pdfIcon = e('i', {class : pdfSort});
             const hourIcon = e('i', {class : hourSort});
 
             headers.push(e('th', {key : "th_first", onClick : firstClick},
                            'Given Names', firstIcon));
             headers.push(e('th', {key : "th_last", onClick : lastClick},
                            'Family Names', lastIcon));
+            headers.push(e('th', {key : "th_pdf", onClick : pdfClick},
+                           'PDF Views', pdfIcon));
             headers.push(e('th', {key : "th_hours", onClick : hoursClick},
                            'Hours', hourIcon));
             return e('tr', null, headers);
@@ -131,6 +147,7 @@ const INFO = (function() {
         const cols = [];
         cols.push(e('td', {key : `${props.id}-first`}, props.firstname));
         cols.push(e('td', {key : `${props.id}-last`}, props.lastname));
+        cols.push(e('td', {key : `${props.id}-pdf`}, props.pdf));
         cols.push(
             e('td', {key : `${props.id}-hours`, class : "hours"}, props.hours));
         return e('tr', {key : `${props.id}-row`}, cols);
