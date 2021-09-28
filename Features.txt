@@ -1,4 +1,3 @@
-- Autoplay next video
 - clone offering
 - GeoIP constraints
 - Improve user system
@@ -10,3 +9,4 @@
 DONE:
 - Replies to Questions on Vidoes
 - Fix / Finish view stats to include PDF
+- Autoplay next video

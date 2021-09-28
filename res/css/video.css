@@ -124,16 +124,13 @@ main {
     box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 0 -6px 20px 0 rgba(0, 0, 0, 0.19);
     min-height: 100vh;
 }
-main article {
-    display: none;
-}
-main article.selected {
-    display: block;
-}
 #pdf {
     position: absolute;
     right: 50px;
     font-size: 50px;
+}
+main article video {
+    width: 80%;
 }
 main article .progress {
     position: relative;
@@ -161,8 +158,20 @@ main article .progress .time {
 	position: absolute;
 	right: 10px;
 }
-main article video {
-    width: 80%;
+.progress #autoplay {
+    position: absolute;
+    color: grey;
+    font-size: 10pt;
+    font-family: sans-serif;
+    bottom: -25px;
+    right: 5px;
+}
+#autoplay .fa-toggle-off, #autoplay .fa-toggle-on {
+    color: #555;
+    cursor: pointer;
+    font-size: 12pt;
+    position: relative;
+    top: 2px;
 }
 #questions {
     width: 80%;

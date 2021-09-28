@@ -98,6 +98,7 @@ foreach($files as $file => $info) :
             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
             <div class="passed"  style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
             <div class="time"><?= $totalTime ?></div>
+            <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $_SESSION['user']["autoplay"] ?>"></i></div>
         </div>
         <div id="questions">
             <h2>Questions & Comments</h2>

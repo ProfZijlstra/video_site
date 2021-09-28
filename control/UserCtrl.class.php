@@ -59,7 +59,8 @@ class UserCtrl {
                 "id" => $row['id'],
                 "first" => $row['firstname'],
                 "last" => $row['lastname'],
-                "type" => $row['type']
+                "type" => $row['type'],
+                "autoplay" => "off"
             );
 
             // update the last accessed time

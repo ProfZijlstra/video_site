@@ -17,6 +17,12 @@ window.addEventListener('load', () => {
         }
     }
 
+    // start video of autoplay is on
+    if (document.getElementById("auto_toggle")
+            .classList.contains("fa-toggle-on")) {
+        document.querySelector('video').play();
+    }
+
     // video speed controls
     const curSpeed = document.getElementById('curSpeed');
     const numOpts = {minimumFractionDigits : 1, minimumFractionDigits : 1};
@@ -43,7 +49,7 @@ window.addEventListener('load', () => {
             .then(response => response.text())
             .then(text => view_id = text);
     }
-    function pauseHandler(evt) {
+    function pauseHandler() {
         if (view_id) {
             // post view_id to url: stop
             fetch('./stop', {
@@ -54,8 +60,17 @@ window.addEventListener('load', () => {
             });
         }
     }
-    video.addEventListener('play', playHandler)
+    function endedHandler() {
+        const toggle = document.getElementById("auto_toggle");
+        if (toggle.classList.contains("fa-toggle-on")) {
+            const tab = document.querySelector(".video_link.selected");
+            const nextTab = tab.nextElementSibling.querySelector('a');
+            nextTab.click();
+        }
+    }
+    video.addEventListener('play', playHandler);
     video.addEventListener('pause', pauseHandler);
+    video.addEventListener('ended', endedHandler);
 
     // make clicking on the PDF icon work while communicating with server
     document.getElementById('pdf').onclick = function(evt) {
@@ -66,13 +81,30 @@ window.addEventListener('load', () => {
         evt.preventDefault();
     };
 
+    // make clicking on autoplay work
+    document.getElementById("autoplay").onclick =
+        function() {
+        const toggle = document.getElementById("auto_toggle");
+        toggle.classList.toggle("fa-toggle-off");
+        toggle.classList.toggle("fa-toggle-on");
+        let state = 'off';
+        if (toggle.classList.contains('fa-toggle-on')) {
+            state = 'on';
+        }
+        fetch('./autoplay', {
+            method : 'POST',
+            body : `toggle=${state}`,
+            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+        });
+    }
+
     // make clicking on delete question and delete reply work
-    function delHandler() {
+    function
+    delHandler() {
         if (window.confirm('Do you really want to delete?')) {
             this.parentNode.submit();
         }
-    }
-    const dels = document.getElementsByClassName('fa-trash-alt');
+    } const dels = document.getElementsByClassName('fa-trash-alt');
     for (const del of dels) {
         del.addEventListener('click', delHandler);
     }
