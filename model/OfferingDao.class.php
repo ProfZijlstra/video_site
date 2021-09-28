@@ -37,4 +37,16 @@ class OfferingDao {
 		$stmt->execute(array("id" => $id));
 		return $stmt->fetch();
 	}
+
+	public function getLatest() {
+		$stmt = $this->db->prepare(
+			"SELECT * 
+			FROM offering AS o
+			JOIN course AS c ON o.course_number = c.number
+			ORDER BY o.id DESC
+			LIMIT 1
+			");
+		$stmt->execute(array("id" => $id));
+		return $stmt->fetch();
+	}
 }

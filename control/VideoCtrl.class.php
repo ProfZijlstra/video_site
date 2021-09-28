@@ -48,8 +48,9 @@ class VideoCtrl {
 			$block = $offering['block'];
 			return "Location: /videos/${course}/${block}/";
 		} else {
-			// I guess we'll default to 
-			return "Location: /videos/cs472/2021-08/";
+			// default to latest offering
+			$data = $this->offeringDao->getLatest(); 
+			return "Location: /videos/${data['number']}/${data['block']}/";
 		}
 
     }
