@@ -66,10 +66,10 @@ table#days td {
     position: relative;
     background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); 
 }
-.done {
+table#days td.done {
     background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
 }
-.curr {
+table#days td.curr {
     background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
 }
 time {
