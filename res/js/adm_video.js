@@ -29,4 +29,9 @@ window.addEventListener('load', () => {
     };
 
     document.getElementById("close-overlay").onclick = INFO.hideTables;
+    document.getElementById("overlay").onclick = function(evt) {
+        if (evt.target == this) {
+            INFO.hideTables();
+        }
+    };
 });

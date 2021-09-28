@@ -175,11 +175,14 @@ main article video {
 #questionForm {
     position: relative;
 }
-.textAction {
+.textAction, .cancel {
     position: absolute;
     top:  5px;
     right: 0px;
     z-index: 100;
+}
+.cancel {
+    right: 70px;
 }
 .author {
     color: grey;

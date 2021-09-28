@@ -216,24 +216,32 @@ const INFO = (function() {
             }
         }
 
+        const items = [];
         const header = React.createElement('h2', null, title);
-        const enrolTable = React.createElement(ViewersTable, {
-            title : "Enrolled Users",
-            users : enrolled,
-        },
-                                               null);
-        const enrnvTable = React.createElement(ViewersTable, {
-            title : "Enrolled No View",
-            users : enrol_nv,
-        },
-                                               null);
-        const non_enrTable = React.createElement(ViewersTable, {
-            title : "Non-Enrolled Users",
-            users : non_enrol,
-        },
-                                                 null);
-        const combined = React.createElement('div', null, header, enrolTable,
-                                             enrnvTable, non_enrTable);
+        items.push(header);
+
+        if (enrolled.length) {
+            items.push(React.createElement(ViewersTable, {
+                title : "Enrolled Users",
+                users : enrolled,
+            },
+                                           null));
+        }
+        if (enrol_nv.length) {
+            items.push(React.createElement(ViewersTable, {
+                title : "Enrolled No View",
+                users : enrol_nv,
+            },
+                                           null));
+        }
+        if (non_enrol.length) {
+            items.push(React.createElement(ViewersTable, {
+                title : "Non-Enrolled Users",
+                users : non_enrol,
+            },
+                                           null));
+        }
+        const combined = React.createElement('div', null, items);
 
         ReactDOM.render(combined, tables);
         overlay.classList.add("visible");

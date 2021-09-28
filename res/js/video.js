@@ -78,7 +78,7 @@ window.addEventListener('load', () => {
     }
 
     // make clicking on edit question and edit reply work
-    function createEditBox(action, btn, id, content, placeholder) {
+    function createEditBox(action, btn, id, content, placeholder, cancelFn) {
         const form = document.createElement('form');
         form.setAttribute('method', 'post');
         form.setAttribute('action', action);
@@ -104,6 +104,15 @@ window.addEventListener('load', () => {
         submit.setAttribute('value', btn);
         submit.classList.add('textAction');
         form.append(submit);
+        const cancel = document.createElement('button');
+        cancel.setAttribute('type', 'button');
+        cancel.append("Cancel");
+        cancel.classList.add('cancel');
+        cancel.onclick = function() {
+            form.remove();
+            cancelFn();
+        };
+        form.append(cancel);
         return form;
     }
     function editHandler(type, evt) {
@@ -111,10 +120,12 @@ window.addEventListener('load', () => {
         fetch(`get${type}?id=${id}`)
             .then(response => response.json())
             .then(json => {
+                const initial = evt.target.parentNode.nextSibling.nextSibling;
                 const form =
-                    createEditBox(`upd${type}`, "Update", id, json.text, "");
+                    createEditBox(`upd${type}`, "Update", id, json.text, "",
+                                  () => initial.style.display = 'block');
                 evt.target.parentNode.after(form);
-                form.nextSibling.nextSibling.style.display = 'none';
+                initial.style.display = 'none';
             });
     }
     const question_edits =
@@ -185,7 +196,8 @@ window.addEventListener('load', () => {
 \`\`\`javascript
 const code = "highlighted";
 \`\`\``;
-        const form = createEditBox("addReply", "Reply", qid, "", placeholder);
+        const form = createEditBox("addReply", "Reply", qid, "", placeholder,
+                                   () => this.style.display = "block");
         const container = document.createElement("div");
         container.classList.add("replyContainer");
         container.append(form);
