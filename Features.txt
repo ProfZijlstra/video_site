@@ -3,6 +3,7 @@
 - Improve user system
     - My Profile page with passwd and image
     - Auto scrape image from infosys
+    - Auto load upcoming offerings to clone from infosys
 - Add Quiz system
 - Add Assignment system
 
