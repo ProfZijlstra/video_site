@@ -105,3 +105,6 @@ div#total {
 	margin-top: 15px;
 	text-align: center;
 }
+#tables td.num {
+    text-align: right;
+}

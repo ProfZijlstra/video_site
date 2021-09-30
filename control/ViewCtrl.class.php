@@ -32,7 +32,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?stop$|", sec="user")
+	 * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?stop$|", sec="none")
 	 */
 	public function stop() {
 		$view_id = filter_input(INPUT_POST, "view_id");

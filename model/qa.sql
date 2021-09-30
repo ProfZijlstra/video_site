@@ -59,3 +59,7 @@ alter table view change `start` `start` timestamp not null default current_times
 UPDATE view set type = 0 where type = 'vid';
 UPDATE view set type = 1 where type = 'pdf';
 alter table view change `type` `pdf` tinyint;
+
+ALTER TABLE view ADD too_long TINYINT(1) default 0 AFTER stop; 
+UPDATE view as v set v.too_long = 1 where v.stop - v.start > 1800;
+UPDATE view as v set v.too_long = 0 where v.too_long IS NULL;

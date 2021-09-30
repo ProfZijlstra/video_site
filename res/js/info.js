@@ -48,7 +48,13 @@ const INFO = (function() {
 
     function byPdf(a, b) { return a.pdf - b.pdf; }
 
+    function byVideo(a, b) { return a.video - b.video; }
+
     function byHours(a, b) { return a.hours - b.hours; }
+
+    function byLong(a, b) { return a.too_long - b.too_long; }
+
+    function byHoursLong(a, b) { return a.hours_long - b.hours_long; }
 
     function reverse(func, a, b) { return -func(a, b); }
 
@@ -86,13 +92,22 @@ const INFO = (function() {
                 this.click.bind(this, 'byLast', this.props.sort, byLast);
             let pdfClick =
                 this.click.bind(this, 'byPdf', this.props.sort, byPdf);
+            let videoClick =
+                this.click.bind(this, 'byVideo', this.props.sort, byVideo);
             let hoursClick =
                 this.click.bind(this, "byHours", this.props.sort, byHours);
+            let longClick =
+                this.click.bind(this, "byLong", this.props.sort, byLong);
+            let hoursLongClick = this.click.bind(this, "byHoursLong",
+                                                 this.props.sort, byHoursLong);
 
             let firstSort = "fas fa-sort";
             let lastSort = "fas fa-sort";
             let pdfSort = "fas fa-sort";
-            let hourSort = "fas fa-sort";
+            let videoSort = "fas fa-sort";
+            let hoursSort = "fas fa-sort";
+            let longSort = "fas fa-sort";
+            let hoursLongSort = "fas fa-sort";
 
             if (this.state.sorted == "byFirst") {
                 if (this.state.desc) {
@@ -119,30 +134,66 @@ const INFO = (function() {
                 } else {
                     pdfSort = "fas fa-sort-down";
                 }
+            } else if (this.state.sorted == "byVideo") {
+                if (this.state.desc) {
+                    videoSort = "fas fa-sort-up";
+                    videoClick =
+                        this.click.bind(this, 'byVideo', this.props.sort,
+                                        reverse.bind(null, byVideo));
+                } else {
+                    videoSort = "fas fa-sort-down";
+                }
             } else if (this.state.sorted == "byHours") {
                 if (this.state.desc) {
-                    hourSort = "fas fa-sort-up";
+                    hoursSort = "fas fa-sort-up";
                     hoursClick =
                         this.click.bind(this, "byHours", this.props.sort,
                                         reverse.bind(null, byHours));
                 } else {
-                    hourSort = "fas fa-sort-down";
+                    hoursSort = "fas fa-sort-down";
+                }
+            } else if (this.state.sorted == "byLong") {
+                if (this.state.desc) {
+                    longSort = "fas fa-sort-up";
+                    longClick = this.click.bind(this, "byLong", this.props.sort,
+                                                reverse.bind(null, byLong));
+                } else {
+                    longSort = "fas fa-sort-down";
+                }
+            } else if (this.state.sorted == "byHoursLong") {
+                if (this.state.desc) {
+                    hoursLongSort = "fas fa-sort-up";
+                    hoursLongClick =
+                        this.click.bind(this, "byHoursLong", this.props.sort,
+                                        reverse.bind(null, byHoursLong));
+                } else {
+                    hoursLongSort = "fas fa-sort-down";
                 }
             }
 
             const firstIcon = e('i', {class : firstSort});
             const lastIcon = e('i', {class : lastSort});
             const pdfIcon = e('i', {class : pdfSort});
-            const hourIcon = e('i', {class : hourSort});
+            const videoIcon = e('i', {class : videoSort});
+            const hoursIcon = e('i', {class : hoursSort});
+            const longIcon = e('i', {class : longSort});
+            const hoursLongIcon = e('i', {class : hoursLongClick});
 
             headers.push(e('th', {key : "th_first", onClick : firstClick},
                            'Given Names', firstIcon));
             headers.push(e('th', {key : "th_last", onClick : lastClick},
                            'Family Names', lastIcon));
-            headers.push(e('th', {key : "th_pdf", onClick : pdfClick},
-                           'PDF Views', pdfIcon));
+            headers.push(
+                e('th', {key : "th_pdf", onClick : pdfClick}, 'PDF', pdfIcon));
+            headers.push(e('th', {key : "th_video", onClick : videoClick},
+                           'Video', videoIcon));
             headers.push(e('th', {key : "th_hours", onClick : hoursClick},
-                           'Hours', hourIcon));
+                           'Hours', hoursIcon));
+            headers.push(e('th', {key : "th_long", onClick : longClick},
+                           'Too Long', longIcon));
+            headers.push(e('th',
+                           {key : "th_hoursLong", onClick : hoursLongClick},
+                           'Inc Long', hoursLongIcon));
             return e('tr', null, headers);
         }
     }
@@ -151,9 +202,15 @@ const INFO = (function() {
         const cols = [];
         cols.push(e('td', {key : `${props.id}-first`}, props.firstname));
         cols.push(e('td', {key : `${props.id}-last`}, props.lastname));
-        cols.push(e('td', {key : `${props.id}-pdf`}, props.pdf));
+        cols.push(e('td', {key : `${props.id}-pdf`, class : "num"}, props.pdf));
         cols.push(
-            e('td', {key : `${props.id}-hours`, class : "hours"}, props.hours));
+            e('td', {key : `${props.id}-video`, class : "num"}, props.video));
+        cols.push(
+            e('td', {key : `${props.id}-hours`, class : "num"}, props.hours));
+        cols.push(
+            e('td', {key : `${props.id}-long`, class : "num"}, props.too_long));
+        cols.push(e('td', {key : `${props.id}-hoursLong`, class : "num"},
+                    props.hours_long));
         return e('tr', {key : `${props.id}-row`}, cols);
     }
 
