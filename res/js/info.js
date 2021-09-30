@@ -177,7 +177,7 @@ const INFO = (function() {
             const videoIcon = e('i', {class : videoSort});
             const hoursIcon = e('i', {class : hoursSort});
             const longIcon = e('i', {class : longSort});
-            const hoursLongIcon = e('i', {class : hoursLongClick});
+            const hoursLongIcon = e('i', {class : hoursLongSort});
 
             headers.push(e('th', {key : "th_first", onClick : firstClick},
                            'Given Names', firstIcon));
