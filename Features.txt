@@ -1,4 +1,5 @@
 - clone offering
+- Make responsive / mobile friendly UI
 - GeoIP constraints
 - Improve user system
     - My Profile page with passwd and image
