@@ -65,7 +65,9 @@ window.addEventListener('load', () => {
         if (toggle.classList.contains("fa-toggle-on")) {
             const tab = document.querySelector(".video_link.selected");
             const nextTab = tab.nextElementSibling.querySelector('a');
-            nextTab.click();
+            // wait half a second to make sure that the pause handler
+            // reports the video stop event to the server
+            setTimeout(() => nextTab.click(), 500);
         }
     }
     video.addEventListener('play', playHandler);
