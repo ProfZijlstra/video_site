@@ -184,15 +184,6 @@ const INFO = (function() {
         }
     }
 
-    class Header extends React.Component {
-        constructor(props) {
-            super(props);
-            this.state = {title : props.title};
-        }
-        setTitle(title) { this.setState({title : title}); }
-        render() { return e('h2', null, this.state.title); }
-    }
-
     function showTables(title, users) {
         const tables = document.getElementById("tables");
         const overlay = document.getElementById("overlay");
