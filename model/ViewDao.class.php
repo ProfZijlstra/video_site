@@ -44,8 +44,8 @@ class ViewDao {
 			WHERE id = :id");
 		$stmt->execute(array("id" => $id));
 		// mark views over 30 minutes as too long
-		$stmt = $this->db->prepare("UPDATE view AS V SET `v.too_long` = 1 
-			WHERE id = :id AND v.stop - v.start > 1800");
+		$stmt = $this->db->prepare("UPDATE view AS v SET too_long = 1 
+			WHERE id = :id AND `stop` - `start` > 1800");
 		$stmt->execute(array("id" => $id));
 	}
 
