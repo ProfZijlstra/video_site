@@ -42,9 +42,11 @@ window.addEventListener('load', () => {
     // play and pause events are communicated to the server
     let view_id = false;
     function playHandler(evt) {
-        let video = encodeURIComponent(evt.target.parentNode.id);
+        const video_name = encodeURIComponent(evt.target.parentNode.id);
+        // invalidate any old id that may have still been in the system
+        view_id = false;
         // get view_id by posting to start: day_id, video
-        let url = `./start?day_id=${day_id}&video=${video}`;
+        const url = `./start?day_id=${day_id}&video=${video_name}`;
         fetch(url, {cache : 'no-cache'})
             .then(response => response.text())
             .then(text => view_id = text);
@@ -78,7 +80,7 @@ window.addEventListener('load', () => {
     document.getElementById('pdf').onclick = function(evt) {
         const file = this.dataset.file;
         const href = this.href;
-        let url = `./pdf?day_id=${day_id}&file=${file}`;
+        const url = `./pdf?day_id=${day_id}&file=${file}`;
         fetch(url, {cache : 'no-cache'}).then(() => {window.location = href});
         evt.preventDefault();
     };
