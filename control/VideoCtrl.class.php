@@ -94,6 +94,7 @@ class VideoCtrl {
 		$VIEW_DATA["offering"] = $offering_detail;
 		$VIEW_DATA["start"] = strtotime($offering_detail['start']);
 		$VIEW_DATA["days"] = $days;
+		$VIEW_DATA["now"] = time();
 
         return "overview.php";
 	}

@@ -1,6 +1,3 @@
-<?php
-$now = time();
-?>
 <!DOCTYPE html>
 <html>
     <head>
