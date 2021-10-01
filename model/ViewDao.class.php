@@ -155,7 +155,6 @@ class ViewDao {
 			from view as v 
 			join user as u on v.user_id = u.id 
 			where v.day_id = :day_id 
-			and v.too_long = 0
 			group by u.id 
 			order by hours desc"
 		);
@@ -180,7 +179,6 @@ class ViewDao {
 			join user as u on v.user_id = u.id 
 			where v.day_id = :day_id 
 			and v.video = :video 
-			and v.too_long = 0
 			group by u.id 
 			order by hours desc"
 		);
