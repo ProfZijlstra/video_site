@@ -12,3 +12,4 @@ DONE:
 - Replies to Questions on Vidoes
 - Fix / Finish view stats to include PDF
 - Autoplay next video
+- User view report (in addition to offering and day reports)
