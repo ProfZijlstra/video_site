@@ -79,7 +79,7 @@
 			</div>
 <?php 
 $passed = 0;
-foreach($files as $file => $info) :
+foreach($files as $info) :
     $passedPercent = ($passed / $totalDuration)*100;
     $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration)*100);
     if ($info["parts"][0] == $video) :
@@ -92,7 +92,7 @@ foreach($files as $file => $info) :
             <i class="far fa-file-pdf"></i>
         </a>
         <video controls>
-            <source src="<?= "res/${course}/${block}/${day}/vid/${file}" ?>" type="video/mp4"/>
+            <source src="<?= "res/${course}/${block}/${day}/vid/${info["file"]}" ?>" type="video/mp4"/>
         </video>
         <div class="progress">
             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>

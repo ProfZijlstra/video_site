@@ -19,6 +19,22 @@ class ViewCtrl {
 	 * @Inject("OfferingDao")
 	 */
 	public $offeringDao;
+   	/**
+	 * @Inject("CourseDao")
+	 */
+	public $courseDao;
+   	/**
+	 * @Inject("DayDao")
+	 */
+	public $dayDao;
+	/**
+	 * @Inject("UserDao")
+	 */
+	public $userDao;
+	/**
+	 * @Inject("VideoDao")
+	 */
+	public $videoDao;
 
 
    	/**
@@ -50,11 +66,58 @@ class ViewCtrl {
 	}
 
 	/**
+	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W\dD\d/)?views/(\d+)?$|", sec="admin");
+	 */
+	public function views() {
+        global $URI_PARAMS;
+		global $VIEW_DATA;
+
+		$course_num = $URI_PARAMS[1];
+		$block = $URI_PARAMS[2];
+		$user_id = $URI_PARAMS[4];
+
+		$course_detail = $this->courseDao->getCourse($course_num);
+		$offering_detail = $this->offeringDao->getOfferingByCourse($course_num, $block);
+		$offering_id = $offering_detail['id'];
+
+		if (!$course_detail || !$offering_detail) {
+			return "error/404.php";
+		}
+		$days_info = $this->dayDao->getDays($offering_id);
+		$views = $this->viewDao->person_views($offering_id, $user_id);
+		$videos = $this->videoDao->forOffering($course_num, $block);
+		$user = $this->userDao->retrieve($user_id);
+
+		// Make days associative array
+		$days = array();
+		foreach ($days_info as $day) {
+			$days[$day["abbr"]] = array("day" => $day);
+		}
+		foreach ($videos as $day => $day_videos) {
+			$days[$day]["video"] = $day_videos;
+		}
+		foreach ($views as $view) {
+			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["hours"] = $view["hours"];
+			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["video_views"] = $view["video_views"];
+			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["pdf"] = $view["pdf"];
+			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["too_long"] = $view["too_long"];
+			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["hours_long"] = $view["hours_long"];
+		}
+
+		$VIEW_DATA["user"] = $user;
+		$VIEW_DATA["course"] = strtoupper($course_num);
+		$VIEW_DATA["title"] = $course_detail["name"];
+		$VIEW_DATA["offering"] = $offering_detail;
+		$VIEW_DATA["days"] = $days;
+
+		return "views.php";
+	}
+
+	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/info/?$|", sec="admin");
 	 */
 	public function overview_info() {
         global $URI_PARAMS;
-		global $VIEW_DATA;
 
 		$course_num = $URI_PARAMS[1];
 		$block = $URI_PARAMS[2];

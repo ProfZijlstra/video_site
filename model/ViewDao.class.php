@@ -4,12 +4,6 @@
  *
  * @author mzijlstra 06/04/2021
  * @Repository
- * 
- * 
- * ALTER TABLE view ADD `type` CHAR(3) AFTER `id`;
- * CREATE INDEX on_view_type ON view(type);
- * UPDATE view SET type='vid';
- * 
  */
 class ViewDao {
 
@@ -184,6 +178,32 @@ class ViewDao {
 		);
 		$stmt->execute(array("day_id" => $day_id, "video" => $video));
 		return $stmt->fetchAll();
+	}
+
+	public function person_views($offering_id, $user_id) {
+		$stmt = $this->db->prepare(
+			"SELECT d.abbr as abbr, v.video as video,
+			SUM(CASE WHEN v.too_long = 0 
+				THEN v.stop - v.start 
+				ELSE 0 
+				END)/3600 as `hours`,
+			SUM(v.stop - v.start)/3600 as hours_long,
+			SUM(CASE WHEN v.pdf = 0 
+				THEN 1
+				ELSE 0 END) as video_views,
+			SUM(v.pdf) as pdf,
+			SUM(v.too_long) as too_long
+			from view as v 
+			join user as u on v.user_id = u.id 
+			join day as d on v.day_id = d.id
+			where u.id = :user_id
+			and d.offering_id = :offering_id
+			group by v.video 
+			order by d.id, v.video
+		");
+		$stmt->execute(array("user_id" => $user_id, "offering_id" => $offering_id));
+		return $stmt->fetchAll();
+
 	}
 }
 

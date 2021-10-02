@@ -33,6 +33,10 @@ class VideoCtrl {
 	 * @Inject("ReplyDao")
 	 */
 	public $replyDao;
+	/**
+	 * @Inject("VideoDao")
+	 */
+	public $videoDao;
 
     /**
      * Redirects a successful login to overview
@@ -134,37 +138,14 @@ class VideoCtrl {
 		$curr_w = floor($days_passed / 7) + 1;
 		$curr_d = ($days_passed % 7) + 1;
 
-		// get video related data from filesystem
-		chdir("res/${course_num}/${block}/${day}/vid/");
-		$files = glob("*.mp4");
-		$file_info = array();
-		$totalDuration = 0;
-		foreach ($files as $file) {
-			$matches = array();
-			preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $file, $matches);
-			$hours = $matches[1];
-			$minutes = $matches[2];
-			$seconds = $matches[3];
-			$hundreth = $matches[4];
-			// duration in hundreth of a second
-			$duration = $hundreth + ($seconds * 100) + ($minutes * 60 * 100) + ($hours * 60 * 60 * 100);
-			$totalDuration += $duration;
-			$file_info[$file] = array();
-			$file_info[$file]["duration"] = $duration;
-			$file_info[$file]["parts"] = explode("_", $file);
+		// get video related data
+		$videos = $this->videoDao->forDay($course_num, $block, $day);
+		$file_info = $videos["file_info"];
+		foreach ($file_info as $file) {
 			if ($file_info[$file]["parts"][0] == $video) {
 				$video_file = $file;
 			}
 		}
-		$totalHours = floor($totalDuration / (60 * 60 * 100));
-		$totalMinutes = floor($totalDuration / (60*100) % 60);
-		$totalSeconds = floor($totalDuration / 100 % 60);
-		$totalTime = "";
-		if ($totalHours > 0) {
-			$totalTime .= $totalHours . ":";
-		}
-		$totalTime .= str_pad($totalMinutes, 2, "0", STR_PAD_LEFT) . ":";
-		$totalTime .= str_pad($totalSeconds, 2, "0", STR_PAD_LEFT);
 
 		// get questions for selected video
 		$questions = $this->questionDao->getAllFor($file_info[$video_file]["parts"][2], $user_id);
@@ -201,8 +182,8 @@ class VideoCtrl {
 		// videos related
 		$VIEW_DATA["video"] = $video;
 		$VIEW_DATA["files"] = $file_info;
-		$VIEW_DATA["totalDuration"] = $totalDuration;
-		$VIEW_DATA["totalTime"] = $totalTime;
+		$VIEW_DATA["totalDuration"] = $videos["totalDuration"];
+		$VIEW_DATA["totalTime"] = $videos["totalTime"];
 
 		// questions related
 		$VIEW_DATA["parsedown"] = new Parsedown();

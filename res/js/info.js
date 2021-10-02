@@ -2,6 +2,11 @@
 // React components related to admin info
 const INFO = (function() {
     const e = React.createElement;
+    const loc = window.location + "";
+    let day = false;
+    if (day = loc.match(/W\dD\d/)) {
+        day = day[0];
+    }
 
     let enrollment = false;
     function setEnrollment(enr) { enrollment = enr; }
@@ -200,8 +205,14 @@ const INFO = (function() {
 
     function ViewersRow(props) {
         const cols = [];
-        cols.push(e('td', {key : `${props.id}-first`}, props.firstname));
-        cols.push(e('td', {key : `${props.id}-last`}, props.lastname));
+        cols.push(
+            e('td', {key : `${props.id}-first`},
+              e('a', {href : `views/${props.id}` + (day ? `#${day}` : '')},
+                props.firstname)));
+        cols.push(
+            e('td', {key : `${props.id}-last`},
+              e('a', {href : `views/${props.id}` + (day ? `#${day}` : '')},
+                props.lastname)));
         cols.push(e('td', {key : `${props.id}-pdf`, class : "num"}, props.pdf));
         cols.push(
             e('td', {key : `${props.id}-video`, class : "num"}, props.video));
