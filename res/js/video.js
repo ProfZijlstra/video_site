@@ -84,6 +84,10 @@ window.addEventListener('load', () => {
         fetch(url, {cache : 'no-cache'}).then(() => {window.location = href});
         evt.preventDefault();
     };
+    // disable right-clicking on PDF (no download without view)
+    document.getElementById('pdf').oncontextmenu = function(evt) {
+        evt.preventDefault();
+    }
 
     // make clicking on autoplay work
     document.getElementById("autoplay").onclick =
