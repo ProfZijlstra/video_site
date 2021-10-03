@@ -142,13 +142,14 @@ class VideoCtrl {
 		$videos = $this->videoDao->forDay($course_num, $block, $day);
 		$file_info = $videos["file_info"];
 		foreach ($file_info as $file) {
-			if ($file_info[$file]["parts"][0] == $video) {
+			if ($file["parts"][0] == $video) {
 				$video_file = $file;
+				break;
 			}
 		}
 
 		// get questions for selected video
-		$questions = $this->questionDao->getAllFor($file_info[$video_file]["parts"][2], $user_id);
+		$questions = $this->questionDao->getAllFor($video_file["parts"][2], $user_id);
 		// get the replies for those questions
 		if ($questions) {
 			$qids = array();
