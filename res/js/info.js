@@ -257,19 +257,20 @@ const INFO = (function() {
         const overlay = document.getElementById("overlay");
         ReactDOM.unmountComponentAtNode(tables);
 
+        const myEnrollment = {...enrollment};
         const enrolled = [];
         const enrol_nv = [];
         const non_enrol = [];
         for (const user of users) {
-            if (enrollment[user.id]) {
+            if (myEnrollment[user.id]) {
                 enrolled.push(user);
-                enrollment[user.id].seen = true;
+                myEnrollment[user.id].seen = true;
             } else {
                 non_enrol.push(user);
             }
         }
-        for (const id in enrollment) {
-            const user = enrollment[id];
+        for (const id in myEnrollment) {
+            const user = myEnrollment[id];
             if (!user.seen) {
                 enrol_nv.push(user);
             }
