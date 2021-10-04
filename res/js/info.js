@@ -257,7 +257,8 @@ const INFO = (function() {
         const overlay = document.getElementById("overlay");
         ReactDOM.unmountComponentAtNode(tables);
 
-        const myEnrollment = {...enrollment};
+        // deep clone enrollment object
+        const myEnrollment = JSON.parse(JSON.stringify(enrollment));
         const enrolled = [];
         const enrol_nv = [];
         const non_enrol = [];
