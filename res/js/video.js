@@ -26,18 +26,51 @@ window.addEventListener('load', () => {
     // video speed controls
     const curSpeed = document.getElementById('curSpeed');
     const numOpts = {minimumFractionDigits : 1, minimumFractionDigits : 1};
-    document.getElementById('faster').onclick = function(e) {
+    function faster(e) {
         let speed = parseFloat(curSpeed.innerHTML)
         speed += 0.1
+        if (speed > 4) {
+            speed = 4;
+        }
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
         video.playbackRate = speed;
     };
-    document.getElementById('slower').onclick = function(e) {
+    function slower(e) {
         let speed = parseFloat(curSpeed.innerHTML)
         speed -= 0.1
+        if (speed < 0.3) {
+            speed = 0.3;
+        }
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
         video.playbackRate = speed;
     };
+    document.getElementById('faster').onclick = faster;
+    document.getElementById('slower').onclick = slower;
+
+    video.focus();
+    video.addEventListener('keydown', (e) => {
+        switch (e.code) {
+        case "KeyK":
+            if (video.paused) {
+                video.play()
+            } else {
+                video.pause();
+            }
+            break;
+        case "KeyJ":
+            video.currentTime -= 5;
+            break;
+        case "KeyL":
+            video.currentTime += 5;
+            break;
+        case "BracketLeft":
+            slower();
+            break;
+        case "BracketRight":
+            faster();
+            break;
+        }
+    });
 
     // play and pause events are communicated to the server
     let view_id = false;
@@ -85,13 +118,13 @@ window.addEventListener('load', () => {
         evt.preventDefault();
     };
     // disable right-clicking on PDF (no download without view)
-    document.getElementById('pdf').oncontextmenu = function(evt) {
-        evt.preventDefault();
-    }
+    document.getElementById('pdf').oncontextmenu =
+        function(evt) { evt.preventDefault(); }
 
-    // make clicking on autoplay work
-    document.getElementById("autoplay").onclick =
-        function() {
+        // make clicking on autoplay work
+        document.getElementById("autoplay")
+            .onclick =
+            function() {
         const toggle = document.getElementById("auto_toggle");
         toggle.classList.toggle("fa-toggle-off");
         toggle.classList.toggle("fa-toggle-on");

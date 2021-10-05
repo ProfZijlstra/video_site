@@ -13,3 +13,4 @@ DONE:
 - Fix / Finish view stats to include PDF
 - Autoplay next video
 - User view report (in addition to offering and day reports)
+- keyboard video controls
