@@ -44,6 +44,7 @@ div#playSpeed {
     display: inline-block;
     width: 21px;
     border-radius: 20px;
+    cursor: pointer;
 }
 article {
     text-align: center;
