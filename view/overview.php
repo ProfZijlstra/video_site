@@ -3,6 +3,7 @@
     <head>
         <title><?= $course ?> Videos</title>
         <meta charset="utf-8" />
+        <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
 		<link rel="stylesheet" href="res/css/overview.css">
         <script src="res/js/overview.js"></script>
@@ -48,7 +49,7 @@
                             data-text="<?= $days["W{$w}D{$d}"]["desc"] ?>">
                         <div class="info"></div>
                         <a href="W<?= $w ?>D<?= $d ?>/">
-                            <?= $days["W{$w}D{$d}"]["desc"] ?>
+                            <span class="text"><?= $days["W{$w}D{$d}"]["desc"] ?></span>
                         </a>
                         <time><?= date("M j Y", $date);?></time>
                     </td>

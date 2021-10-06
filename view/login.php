@@ -7,7 +7,7 @@
     <head>
         <title>CS472</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
+        <meta name=viewport content="width=device-width, initial-scale=1">
         <style>
             body {
                 background-color: white;
@@ -61,6 +61,16 @@
             }
             input:focus {
                 box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, 0.2), -4px -4px 8px 1px rgba(0, 0, 0, 0.2);
+            }
+            @media screen and (max-width: 900px) {
+                .central {
+                    width: 90%;
+                    margin-left: 0px;
+                    left: 2px;
+                }
+                input[type=text], input[type=password] {  
+                    width: 100%;
+                }
             }
         </style>
     </head>

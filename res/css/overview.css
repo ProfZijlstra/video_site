@@ -106,3 +106,26 @@ div#total {
 #tables td.num {
     text-align: right;
 }
+@media screen and (max-width: 900px) {
+    #days span.text, time {
+        display: none;
+    }
+    table#days td {
+        width: 20px;
+        height: 20px;
+    }
+    header h1 {
+        display: none;
+    }
+    header {
+        height: 120px;
+    }
+    header #course {
+        top: 50px;
+        left: 30px;
+        width: 90%; 
+    }
+    #controls {
+        right: 30px;
+    }
+}

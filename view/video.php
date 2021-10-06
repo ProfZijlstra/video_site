@@ -3,6 +3,7 @@
     <head>
         <title><?= strtoupper($course) ?> <?= $day ?> Videos</title>
         <meta charset="utf-8" />
+        <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
         <link rel="stylesheet" type="text/css" href="res/css/video.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
@@ -18,6 +19,7 @@
     </head>
     <body>
         <header>
+            <i id="bars" class="fas fa-bars"></i>
 			<div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
 				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
 					<i id="info-btn" class="fas fa-info-circle"></i>
@@ -26,15 +28,16 @@
 				<a href="logout"><i class="fas fa-power-off"></i></a>
 			</div>
             <h1>
-				<span id="day" data-id="<?= $days[$day]["id"] ?>"><?= $day ?></span> - 
+				<span id="day" data-id="<?= $days[$day]["id"] ?>"><?= $day ?> - </span> 
 				<span class="title"><?= $days[$day]["desc"] ?></span>
-				<div id="course" data-oid="<?= $offering_id ?>">
-                    <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
-                </div>
             </h1>
         </header>
+        <div id="container">
         <nav id="videos">
             <nav>
+                <div id="course" data-oid="<?= $offering_id ?>">
+                    <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
+                </div>
                 <table id="days">
                     <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
 <?php 
@@ -183,6 +186,8 @@ foreach($files as $info) :
 endforeach;
 ?>
         </main>
+        </div> <!-- close container-->
+
         <?php if ($_SESSION['user']['type'] === 'admin') : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>

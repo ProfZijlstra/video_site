@@ -281,4 +281,10 @@ const code = "highlighted";
     for (const reply of replies) {
         reply.addEventListener('click', createReply);
     }
+
+    // for mobile view, clicking bars shows nav
+    document.getElementById("bars").onclick = function() {
+        const container = document.getElementById("container");
+        container.classList.toggle("mobile_nav");
+    }
 });

@@ -9,10 +9,20 @@ a:hover {
     text-decoration: underline;
 }
 #user {
-    position: fixed;
+    position: absolute;
     top: 25px;
     right: 30px;
 	font-size: 24px;
+}
+header {
+    height: 80px;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+}
+header #bars {
+    display: none;
 }
 h1 {
     text-align: center;
@@ -21,12 +31,13 @@ h1 {
 h1 span.title {
     font-size: 90%;
 }
-h1 #course {
+#course {
     position: fixed;
-    top: 1px;
-    left: 1px;
-    width: 20%;
-    margin-top: 20px;
+    top: 20px;
+    left: 60px;
+    font-size: 35px;
+    font-weight: bold;
+    z-index: -10;
 }
 div#playSpeed {
     font-family: "monospace";
@@ -53,14 +64,17 @@ p.solution {
     color: red;
     font-weight: bold;
 }
+div#container {
+    margin-top: 80px;
+    display: flex;
+    background-color: #eee;
+    position: relative;
+}
 nav#videos {
     cursor: pointer;
     border-top: 1px solid black;
     border-right: 1px solid black;
-    position: absolute;
     width: 20%;
-    left: 0px;
-    min-height: 100%;
     background-color: #EEEEEE;
 }
 nav#videos div.video_link {
@@ -124,9 +138,9 @@ main {
     background-color: white;
 	position: relative;
     border-top: 1px solid black;
-    margin-left: 20%;
     box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 0 -6px 20px 0 rgba(0, 0, 0, 0.19);
     min-height: 100vh;
+    width: 100%;
 }
 video:focus {
     outline: none;
@@ -298,4 +312,49 @@ textarea.questionText {
 }
 #tables td.num {
     text-align: right;
+}
+
+@media screen and (max-width: 900px) {
+    #videos, #day {
+        display: none;
+    }
+    #videos {
+        height: 100vh;
+    }
+    div#container {
+        margin-top: 120px;
+    }
+    header #bars {
+        display: block;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+    h1 {
+        margin-left: inherit;
+        margin-top: 60px;
+    }
+    article {
+        margin-top: 60px;
+    }
+    #course {
+        top: 100px;
+    }
+    #pdf {
+        font-size: 16px;
+        top: 60px;
+        right: 30px;
+    }
+    #container.mobile_nav {
+        margin-top: 150px;
+    }
+    #container.mobile_nav #videos {
+        display: block;
+        width: 100%;
+    }
+    #container.mobile_nav main {
+        display: none;
+    }
 }
