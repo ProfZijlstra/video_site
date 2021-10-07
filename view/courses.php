@@ -3,6 +3,7 @@
     <head>
         <title><?= $course ?> Videos</title>
         <meta charset="utf-8" />
+        <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
 		<link rel="stylesheet" href="res/css/offering.css">
 		<link rel="stylesheet" href="res/css/adm.css">
@@ -41,6 +42,14 @@
                 margin-left: 5px;
                 background: linear-gradient(to bottom, #eee 0%,#ccc 100%) 
             }
+            @media screen and (max-width: 900px) {
+                #tables {
+                    width: 100%;
+                }
+                #course_name {
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body>
@@ -57,7 +66,10 @@
             <div id="tables">
             <?php foreach ($courses as $course) : ?>
             <div class="course" id="<?= $course["number"] ?>">
-                <div class="title"><?= strtoupper($course["number"]) ?>: <?= $course["name"] ?></div>
+                <div class="title">
+                    <?= strtoupper($course["number"]) ?>
+                    <span id="course_name">: <?= $course["name"] ?></span>
+                </div>
                 <div class="latest">
                     <label>Latest:</label> 
                     <a class="offering" href="<?= $course["number"]?>/<?= $latest[$course["number"]] ?>/">
@@ -66,7 +78,7 @@
                 </div>
                 <div class="offerings">
                     <label>Other:</label> 
-                <?php foreach($offerings as $offering) : ?>
+                <?php foreach($course_offerings[$course["number"]] as $offering) : ?>
                     <?php if ($latest[$course["number"]] != $offering["block"]) : ?>
                     <a class="offering" href="<?= $offering["course_number"]?>/<?= $offering["block"]?>/">
                         <?= $offering["block"]?>

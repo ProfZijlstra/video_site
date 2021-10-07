@@ -82,6 +82,13 @@ class OfferingDao {
 		return $stmt->fetchAll();
 	}
 
+	public function allForCourse($course_num) {
+		$stmt = $this->db->prepare("SELECT * FROM offering 
+		WHERE course_number = :course_num ORDER BY `block`");
+		$stmt->execute(["course_num" => $course_num]);
+		return $stmt->fetchAll();
+	}
+
 	/**
 	 * Gets the latest offering for each course in the db
 	 * @return array of offering records

@@ -26,9 +26,18 @@ class CourseCtrl {
         foreach ($latests as $latest) {
             $newest[$latest['course_number']] = $latest['block'];
         }
+        $offerings = $this->offeringDao->all();
+        $courses = $this->courseDao->all();
+        $course_offering = [];
+        foreach ($courses as $course) {
+            $course_offering[$course["number"]] = [];
+        }
+        foreach ($offerings as $offering) {
+            $course_offering[$offering["course_number"]][] = $offering;
+        }
 
-        $VIEW_DATA["courses"] = $this->courseDao->all();
-        $VIEW_DATA["offerings"] = $this->offeringDao->all();
+        $VIEW_DATA["courses"] = $courses;
+        $VIEW_DATA["course_offerings"] = $course_offering;
         $VIEW_DATA["latest"] = $newest;
         return "courses.php";
     }
