@@ -1,5 +1,6 @@
-- clone offering
-- Make responsive / mobile friendly UI
+- see raw view data for day and date
+- UI for clone offering
+- UI for changing day descriptions
 - GeoIP constraints
 - Improve user system
     - My Profile page with passwd and image
@@ -14,3 +15,5 @@ DONE:
 - Autoplay next video
 - User view report (in addition to offering and day reports)
 - keyboard video controls
+- Make responsive / mobile friendly UI
+- clone offering
