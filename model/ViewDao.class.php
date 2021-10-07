@@ -51,7 +51,7 @@ class ViewDao {
 	}
 
 
-	public function overview($offering_id) {
+	public function offering($offering_id) {
 		$stmt = $this->db->prepare(
 			"SELECT d.abbr, d.desc, COUNT(DISTINCT v.user_id) AS users, 
 			COUNT(v.id) AS views, 
@@ -66,7 +66,7 @@ class ViewDao {
 		return $stmt->fetchAll();
 	}
 
-	public function overview_total($offering_id) {
+	public function offering_total($offering_id) {
 		$stmt = $this->db->prepare(
 			"SELECT COUNT(DISTINCT v.user_id) AS users, 
 			FORMAT(COUNT(v.id), 0) AS views, 

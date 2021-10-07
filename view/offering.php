@@ -5,14 +5,14 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/overview.css">
-        <script src="res/js/overview.js"></script>
+		<link rel="stylesheet" href="res/css/offering.css">
+        <script src="res/js/offering.js"></script>
         <?php if ($_SESSION['user']['type'] === 'admin') : ?>
             <link rel="stylesheet" href="res/css/adm.css">
             <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
             <script src="res/js/info.js"></script>
-            <script src="res/js/adm_overview.js"></script>
+            <script src="res/js/adm_offering.js"></script>
         <?php endif; ?>
     </head>
     <body>

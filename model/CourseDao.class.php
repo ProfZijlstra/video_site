@@ -24,4 +24,10 @@ class CourseDao {
 		$stmt->execute(array("number" => $number));
 		return $stmt->fetch();
 	}
+
+	public function all() {
+		$stmt = $this->db->prepare("SELECT * FROM course ORDER BY `number`");
+		$stmt->execute();
+		return $stmt->fetchAll();
+	}
 }

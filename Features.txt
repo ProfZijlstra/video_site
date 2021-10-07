@@ -1,5 +1,5 @@
-- see raw view data for day and date
 - UI for clone offering
+- see raw view data for day and date
 - UI for changing day descriptions
 - GeoIP constraints
 - Improve user system
@@ -17,3 +17,4 @@ DONE:
 - keyboard video controls
 - Make responsive / mobile friendly UI
 - clone offering
+- All courses in system page

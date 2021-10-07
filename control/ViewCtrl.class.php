@@ -116,7 +116,7 @@ class ViewCtrl {
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/info/?$|", sec="admin");
 	 */
-	public function overview_info() {
+	public function offering_info() {
         global $URI_PARAMS;
 
 		$course_num = $URI_PARAMS[1];
@@ -124,13 +124,13 @@ class ViewCtrl {
 	
 		$offering_detail = $this->offeringDao->getOfferingByCourse($course_num, $block);
 		$offering_id = $offering_detail['id'];
-		$view_info = $this->viewDao->overview($offering_id);
+		$view_info = $this->viewDao->offering($offering_id);
 
 		$days = array();
 		foreach ($view_info as $day) {
 			$days[$day["abbr"]] = $day;
 		}
-		$days['total'] = $this->viewDao->overview_total($offering_id);
+		$days['total'] = $this->viewDao->offering_total($offering_id);
 		return $days; // array automatically json encodes 
 	}
 

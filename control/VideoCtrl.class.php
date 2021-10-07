@@ -39,11 +39,13 @@ class VideoCtrl {
 	public $videoDao;
 
     /**
-     * Redirects a successful login to overview
-     * @GET(uri="|^/(cs\d{3})?/?$|", sec="user")
+     * Redirects to latest offering for a course
+     * @GET(uri="|^/(cs\d{3})/?$|", sec="user")
      */
     public function loggedIn() {
+        global $URI_PARAMS;
 
+		$course_num = $URI_PARAMS[1];
 		$user_id = $_SESSION['user']['id'];
 		$enrolled = $this->enrollmentDao->getEnrollmentForStudent($user_id);
 		if ($enrolled) {
@@ -53,7 +55,7 @@ class VideoCtrl {
 			return "Location: /videos/${course}/${block}/";
 		} else {
 			// default to latest offering
-			$data = $this->offeringDao->getLatest(); 
+			$data = $this->offeringDao->getLatestForCourse($course_num); 
 			return "Location: /videos/${data['number']}/${data['block']}/";
 		}
 
@@ -71,7 +73,7 @@ class VideoCtrl {
 	/**
 	 * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/$|", sec="user");
 	 */
-	public function overview() {
+	public function offering() {
         global $URI_PARAMS;
 		global $VIEW_DATA;
 
@@ -100,7 +102,7 @@ class VideoCtrl {
 		$VIEW_DATA["days"] = $days;
 		$VIEW_DATA["now"] = time();
 
-        return "overview.php";
+        return "offering.php";
 	}
 
 	/**

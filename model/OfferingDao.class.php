@@ -29,7 +29,7 @@ class OfferingDao {
 	/**
 	 * Gets Offering based on id
 	 * @param int id of offering
-	 * @returns offering record
+	 * @return offering record
 	 */
 	public function getOfferingById($id) {
 		$stmt = $this->db->prepare("SELECT * FROM offering
@@ -38,6 +38,10 @@ class OfferingDao {
 		return $stmt->fetch();
 	}
 
+	/**
+	 * Gets the single latest offering
+	 * @return offering record
+	 */
 	public function getLatest() {
 		$stmt = $this->db->prepare(
 			"SELECT * 
@@ -46,7 +50,50 @@ class OfferingDao {
 			ORDER BY o.block DESC
 			LIMIT 1
 			");
-		$stmt->execute(array("id" => $id));
+		$stmt->execute();
 		return $stmt->fetch();
+	}
+
+	/**
+	 * Gets the latest offering for a specific course
+	 * @param $course_num string like "cs472"
+	 * @return offering record
+	 */
+	public function getLatestForcourse($course_num) {
+		$stmt = $this->db->prepare(
+			"SELECT * 
+			FROM offering AS o
+			JOIN course AS c ON o.course_number = c.number
+			WHERE o.course_number = :course_number
+			ORDER BY o.block DESC
+			LIMIT 1
+			");
+		$stmt->execute(array("course_number" => $course_num));
+		return $stmt->fetch();
+	}
+
+	/**
+	 * Gets all offerings in the database
+	 * @return array of offering records
+	 */
+	public function all() {
+		$stmt = $this->db->prepare("SELECT * FROM offering");
+		$stmt->execute();
+		return $stmt->fetchAll();
+	}
+
+	/**
+	 * Gets the latest offering for each course in the db
+	 * @return array of offering records
+	 */
+	public function allLatest() {
+		$stmt = $this->db->prepare(
+			"SELECT MAX(id) AS id, course_number, MAX(`block`) AS `block`, 
+			MAX(`start`) AS start, MAX(`stop`) as `stop` 
+			FROM offering
+			GROUP BY course_number
+		");
+		$stmt->execute();
+		return $stmt->fetchAll();
 	}
 }

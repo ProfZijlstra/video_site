@@ -5,7 +5,7 @@
         <title><?= $course ?> Videos</title>
         <meta charset="utf-8" />
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/overview.css">
+		<link rel="stylesheet" href="res/css/offering.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             th.name, td.name {

@@ -2,6 +2,13 @@
 body {
     margin: 0px;
 }
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+    text-decoration: underline;
+}
 header {
     height: 80px;
 }
@@ -78,10 +85,6 @@ time {
     bottom: 3px;
     width: 130px;
     text-align: center;
-}
-a {
-    text-decoration: none;
-    color: black;
 }
 td .users {
     position: absolute;
