@@ -4,6 +4,7 @@
     <head>
         <title><?= $course ?> Videos</title>
         <meta charset="utf-8" />
+        <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
 		<link rel="stylesheet" href="res/css/offering.css">
 		<link rel="stylesheet" href="res/css/adm.css">
@@ -19,9 +20,6 @@
     <body>
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-                <i class="far fa-copy" style="color: lightgray"></i>
-                <i id="info-btn" class="fas fa-info-circle"></i>
-                <a href="/videos/user"><i class="fas fa-users"></i></a>
 				<a href="logout"><i class="fas fa-power-off"></i></a>
 			</div>
             <div id="course">

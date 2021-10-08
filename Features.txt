@@ -17,4 +17,4 @@ DONE:
 - keyboard video controls
 - Make responsive / mobile friendly UI
 - clone offering
-- All courses in system page
+- Page displaying all courses with offerings in system 

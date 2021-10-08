@@ -101,6 +101,7 @@ class UserCtrl {
     public function all() {
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
+        $VIEW_DATA['title'] = "Users";
         return "users.php";
     }
 
