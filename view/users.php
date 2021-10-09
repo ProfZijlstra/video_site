@@ -18,7 +18,24 @@
             h1 {
                 text-align: center;
             }
+            td {
+                cursor: pointer;
+            }
+            #tables th {
+                cursor: default;
+            }
         </style>
+        <script>
+            window.addEventListener("load", () => {
+                document.querySelector("table").addEventListener("click", (evt) => {
+                    const target = evt.target;
+                    const link = target.parentNode.querySelector("a");
+                    if (link) {
+                        link.click();
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
         <header>
