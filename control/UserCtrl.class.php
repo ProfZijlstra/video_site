@@ -141,6 +141,8 @@ class UserCtrl {
      * @POST(uri="|^/user$|", sec="admin")
      */
     public function create() {
+        global $VIEW_DATA;
+
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
@@ -148,21 +150,22 @@ class UserCtrl {
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
 
-        $error = "";
+        $error = [];
         if (!$first) {
-            $error .= "first ";
+            $error[] = "first name";
         }
         if (!last) {
-            $error .= "last ";
+            $error[] = "last name";
         }
         if (!$email) {
-            $error .= "email ";
+            $error[] = "email address";
         }
         if (!$pass) {
-            $error .= "pass ";
+            $error[] = "password";
         }
         if ($error) {
-            return "Location: user/add?error=" . urlencode("Incorrect $error");
+            $VIEW_DATA["msg"] = "Missing: " . json_encode($error);
+            return "Location: user/add";
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
@@ -171,9 +174,18 @@ class UserCtrl {
             $actv = 0;
         }
 
-        $uid = $this->userDao->insert($first, $last, $email, $hash, $type, $actv);
+        try {
+            $uid = $this->userDao->insert($first, $last, $email, $hash, $type, $actv);
+        } catch (Exception $e) {
+            $error = true;
+        }
 
-        return "Location: user";
+        if ($error) {
+            $VIEW_DATA["msg"] = "Error: email address already in db";
+            return "Location: user/add";
+        } else {
+            return "Location: user";            
+        }
     }
 
     /**

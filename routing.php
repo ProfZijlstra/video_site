@@ -45,8 +45,7 @@ function view($data) {
 }
 
 // check for redirect flash attributes
-if ($MY_METHOD === "GET" && isset($_SESSION['redirect']) 
-                         && $_SESSION['redirect'] == $MY_URI) {
+if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
 
     foreach ($_SESSION['flash_data'] as $key => $val) {
         $VIEW_DATA[$key] = $val;

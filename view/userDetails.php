@@ -1,95 +1,81 @@
+<!--
+ Created on : August 30, 2014, 7:30:00 PM
+ Author     : mzijlstra
+-->
 <?php 
 if (!isset($user)) {
     $user = false;
 }
 ?>
 <!DOCTYPE html>
-<!--
- Created on : August 30, 2014, 7:30:00 PM
- Author     : mzijlstra
--->
 <html>
     <head>
         <title>User Details</title>
+        <meta name=viewport content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-        <style>
-            h1 {
-                margin-bottom: 5px;
-            }
-            div.fields span {
-                display: inline-block;
-                width: 100px;
-            }
-            table {
-                border-collapse: collapse;
-            }
-            th, td {
-                border: 1px solid black;
-            }
-            th.name {
-                min-width: 400px;
-            }
-            th.date {
-                width: 175px;
-            }
-            div.error {
-                color: red;
-            }
-        </style>
-        <script>
-            window.onload = function () {
-                var tr = document.getElementsByTagName("TR");
-                for (var i = 0; i < tr.length; i++) {
-                    tr[i].onclick = function () {
-                        var pid = this.getAttribute("id");
-                        if (!pid) {
-                            return false;
-                        }
-                        window.location = window.location + "/project/" + pid;
-                    };
-                }
-                document.getElementById("back").onclick = function () {
-                    window.location.assign("../user");
-                    return false;
-                };
-            };
-        </script>
+        <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
+		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/user.css">
     </head>
     <body>
-        <?php if ($_GET['error']) : ?>
-            <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
-        <?php endif; ?>
-        <h1>User Details:</h1>
+        <header>
+			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
+				<a href="logout"><i class="fas fa-power-off"></i></a>
+			</div>
+            <h1>User Details:</h1>
+        </header>
+        <main>
+        <div class="error"><?= $msg ?></div>
+        <form method="post" action="<?= $user ? $user['id'] : "../user" ?>">
         <div class="fields">
-            <form method="post" action="<?= $user ? $user['id'] : "../user" ?>">
-                <span>First Name:</span>
+            <div id="label_first">
+                <span >Given Name(s):</span>
+            </div>
+            <div id="first" class="text">
                 <input type="text" name="first" value="<?= $user ? $user['firstname'] : "" ?>" /> <br />
-
-                <span>Last Name:</span>
+            </div>
+            <div id="label_last" >
+                <span>Family Name(s):</span>
+                </div>
+            <div id="last" class="text">
                 <input type="text" name="last"  value="<?= $user ? $user['lastname'] : "" ?>"/> <br />
-
+                </div>
+            <div id="label_email" >
                 <span>Email:</span>
+                </div>
+            <div id="email" class="text">
                 <input type="text" name="email"  value="<?= $user ? $user['email'] : "" ?>"/> <br />
-
+                </div>
+            <div id="label_pass" >
                 <span>Password:</span>
+                </div>
+            <div id="pass" class="text">
                 <input type="password" name="pass" /> <br />
-
+                </div>
+            <div id="label_type" >
                 <span>Type:</span>
+                </div>
+            <div id="type">
                 <select name="type">
                     <option>student</option>
                     <option <?= $user && $user['type'] === "admin" ? 'selected="selected"' : '' ?>>
                         admin</option>
                 </select> <br />
-
+                </div>
+            <div id="label_active" >
                 <span>Active:</span>
-                <input type="checkbox" name="active" <?= $user && !$user['active'] ? "" : "checked" ?> /> <br />
-
-                <input type="submit" value='<?= $user ? 'Update' : 'Add' ?>'/> 
-                <a href="../user">
-                    <button id="back">Back</button>
-                </a>
-            </form>
+                </div>
+            <div id="active">
+                <select name="active">
+                    <option value="true">Yes</option>
+                    <option value="" <?= $user && $user['active']==1 ? "" : "selected" ?>>No</option>
+                </select>
+                </div>
+                <div id="btn">
+                    <button><?= $user ? 'Update' : 'Add' ?></button> 
+                </div>
         </div>
+        </form>
+        </main>
     </body>
 </html>

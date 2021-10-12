@@ -9,6 +9,11 @@
 		<link rel="stylesheet" href="res/css/offering.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
+            #add_btn {
+                text-align: right;
+                position: relative;
+                bottom: 25px;
+            }
             #tables {
                 width: 70%;
             }
@@ -46,6 +51,9 @@
         </header>
         <main>
             <div id="tables">
+                <div id="add_btn">
+                    <a href="user/add"><button>Add User</button></a>
+                </div>
 
         <table>
             <thead>

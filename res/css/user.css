@@ -1,0 +1,88 @@
+h1 {
+    text-align: center;
+}
+.error {
+    font-size: 25px;
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+.fields {
+    margin: 30px auto;
+    width: 450px;
+    display: grid;
+    grid-row-gap: 15px;
+    grid-column-gap: 0px;
+    grid-template-areas:
+        'label_first first'
+        'label_last last'
+        'label_email email'
+        'label_pass pass'
+        'label_type type'
+        'label_active active'
+        'btn btn';
+    grid-template-columns: 110px auto;
+}
+input, select {
+    width: 100%;
+}
+select {
+    background-color: white;
+    border: 1px solid black;
+}
+#btn {
+    text-align: right;
+}
+.text {
+    padding-right: 8px;
+}
+#label_first {
+    grid-area: label_first;
+}
+#first {
+    grid-area: first;
+}
+#label_last {
+    grid-area: label_last;
+}
+#last {
+    grid-area: last;
+}
+#label_email {
+    grid-area: label_email;
+}
+#email {
+    grid-area: email;
+}
+#label_pass {
+    grid-area: label_pass;
+}
+#pass {
+    grid-area: pass;
+}
+#label_active {
+    grid-area: label_active;
+}
+#active {
+    grid-area: active;
+}
+#btn {
+    grid-area: btn;
+}
+grid-column
+select {
+    background-color: white;
+    border: 1px solid black;
+    padding-right: 10px;
+}
+@media screen and (max-width: 900px) {
+    .fields {
+        width: auto;
+    }
+    header {
+        height: 80px;
+    }
+    header h1 {
+        display: block;
+    }
+}
