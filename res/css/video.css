@@ -37,7 +37,6 @@ h1 span.title {
     left: 60px;
     font-size: 35px;
     font-weight: bold;
-    z-index: -10;
 }
 div#playSpeed {
     font-family: "monospace";

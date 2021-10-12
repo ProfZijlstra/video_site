@@ -34,10 +34,10 @@
         </header>
         <div id="container">
         <nav id="videos">
+            <div id="course" data-oid="<?= $offering_id ?>">
+                <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
+            </div>
             <nav>
-                <div id="course" data-oid="<?= $offering_id ?>">
-                    <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
-                </div>
                 <table id="days">
                     <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
 <?php 
