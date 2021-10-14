@@ -32,7 +32,7 @@
             .offerings {
                 border-bottom: none;
             }
-            #tables a {
+            #content a {
                 display: inline-block;
                 border: 1px solid black;
                 border-radius: 5px;
@@ -43,7 +43,7 @@
                 background: linear-gradient(to bottom, #eee 0%,#ccc 100%) 
             }
             @media screen and (max-width: 900px) {
-                #tables {
+                #content {
                     width: 100%;
                 }
                 #course_name {
@@ -63,7 +63,7 @@
             <h1>Courses</h1>
         </header>
         <main>
-            <div id="tables">
+            <div id="content">
             <?php foreach ($courses as $course) : ?>
             <div class="course" id="<?= $course["number"] ?>">
                 <div class="title">

@@ -34,7 +34,7 @@
             </h1>
         </header>
         <main>
-            <div id="tables">
+            <div id="content">
             <h2>Views for <?= $user["firstname"] ?> <?= $user["lastname"]?></h2>
             <?php foreach($days as $day) : ?>
             <table id="<?= $day["day"]["abbr"] ?>">

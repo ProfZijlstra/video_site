@@ -14,7 +14,7 @@
                 position: relative;
                 bottom: 25px;
             }
-            #tables {
+            #content {
                 width: 70%;
             }
             td.num {
@@ -26,7 +26,7 @@
             td {
                 cursor: pointer;
             }
-            #tables th {
+            #content th {
                 cursor: default;
             }
         </style>
@@ -50,7 +50,7 @@
             <h1><?= $title ?></h1>
         </header>
         <main>
-            <div id="tables">
+            <div id="content">
                 <div id="add_btn">
                     <a href="user/add"><button>Add User</button></a>
                 </div>

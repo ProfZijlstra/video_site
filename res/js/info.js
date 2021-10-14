@@ -253,7 +253,7 @@ const INFO = (function() {
     }
 
     function showTables(title, users) {
-        const tables = document.getElementById("tables");
+        const tables = document.getElementById("content");
         const overlay = document.getElementById("overlay");
         ReactDOM.unmountComponentAtNode(tables);
 

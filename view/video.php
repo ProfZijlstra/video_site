@@ -191,7 +191,7 @@ endforeach;
         <?php if ($_SESSION['user']['type'] === 'admin') : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
-                <div id="tables"></div>
+                <div id="content"></div>
             </div>
         <?php endif; ?>
 

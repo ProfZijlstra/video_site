@@ -106,7 +106,7 @@ div#total {
 	margin-top: 15px;
 	text-align: center;
 }
-#tables td.num {
+#content td.num {
     text-align: right;
 }
 @media screen and (max-width: 900px) {
