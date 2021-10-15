@@ -45,7 +45,7 @@ class ViewDao {
 
 	public function pdf($user_id, $day_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW()), 0");
+			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW(), 0)");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video));
 	}
