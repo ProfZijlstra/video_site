@@ -12,10 +12,11 @@ window.addEventListener('load', () => {
                         'video_link');
                 for (const tab of tabs) {
                     const props = json[tab.dataset.show];
-                    props.showUsers = INFO.videoViewers;
-                    const container = tab.getElementsByClassName('info')[0];
-
-                    ReactDOM.render(e(INFO.Info, props), container);
+                    if (props) {
+                        props.showUsers = INFO.videoViewers;
+                        const container = tab.getElementsByClassName('info')[0];
+                        ReactDOM.render(e(INFO.Info, props), container);    
+                    }
                 }
                 const props = json['total'];
                 props.showUsers = INFO.dayViewers;
