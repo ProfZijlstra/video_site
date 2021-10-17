@@ -1,23 +1,22 @@
 // React components related to admin info
-const INFO = function() {
+const INFO = (function () {
     const e = React.createElement;
     const loc = window.location + "";
     let day = false;
-
     if (day = loc.match(/W\dD\d/)) {
         day = day[0];
     }
 
     let enrollment = false;
-
     function setEnrollment(enr) { enrollment = enr; }
 
     function Users(props) {
         if (props.users) {
-            return /*#__PURE__*/ React.createElement(
-                "span", {class : "users", onClick : props.showUsers},
-                /*#__PURE__*/ React.createElement("i", {class : "far fa-user"}),
-                " ", props.users);
+            return (
+                <span class="users" onClick={props.showUsers}>
+                    <i class="far fa-user"></i> {props.users}
+                </span>
+            );
         } else {
             return "";
         }
@@ -25,10 +24,11 @@ const INFO = function() {
 
     function Views(props) {
         if (props.views) {
-            return /*#__PURE__*/ React.createElement(
-                "span", {class : "views"},
-                /*#__PURE__*/ React.createElement("i", {class : "fas fa-eye"}),
-                " ", props.views);
+            return (
+                <span class="views">
+                    <i class="fas fa-eye"></i> {props.views}
+                </span>
+            );
         } else {
             return "";
         }
@@ -36,12 +36,11 @@ const INFO = function() {
 
     function Time(props) {
         if (props.time) {
-            return /*#__PURE__*/ React.createElement(
-                "span", {class : "time"},
-                /*#__PURE__*/ React.createElement("i", {
-                    class : "far fa-clock"
-                }),
-                " ", props.time);
+            return (
+                <span class="time">
+                    <i class="far fa-clock"></i> {props.time}
+                </span>
+            );
         } else {
             return "";
         }
@@ -49,15 +48,13 @@ const INFO = function() {
 
     function Info(props) {
         if (props.users) {
-            return /*#__PURE__*/ React.createElement(
-                "div", null, /*#__PURE__*/ React.createElement(Users, {
-                    users : props.users,
-                    showUsers : props.showUsers
-                }),
-                "\xA0",
-                /*#__PURE__*/ React.createElement(Views, {views : props.views}),
-                "\xA0",
-                /*#__PURE__*/ React.createElement(Time, {time : props.time}));
+            return (
+                <div>
+                    <Users users={props.users} showUsers={props.showUsers}></Users>
+                    &nbsp;<Views views={props.views}></Views>
+                    &nbsp;<Time time={props.time}></Time>
+                </div>
+            );
         } else {
             return "";
         }
@@ -82,26 +79,31 @@ const INFO = function() {
     class ViewersHeader extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {sorted : "byHours", desc : false};
+            this.state = {
+                sorted: "byHours",
+                desc: false,
+            };
         }
 
         click(name, func, orderFun) {
             func(orderFun);
             let order = "desc";
-
             if (this.state.sorted === name) {
                 if (this.state.desc) {
-                    order = "asc";
+                    order = "asc"
                 } else {
                     order = "desc";
                 }
             }
-
-            this.setState({sorted : name, desc : order == "desc"});
+            this.setState({
+                sorted: name,
+                desc: order == "desc",
+            });
         }
 
         render() {
             const headers = [];
+
             let firstClick =
                 this.click.bind(this, 'byFirst', this.props.sort, byFirst);
             let lastClick =
@@ -115,7 +117,8 @@ const INFO = function() {
             let longClick =
                 this.click.bind(this, "byLong", this.props.sort, byLong);
             let hoursLongClick = this.click.bind(this, "byHoursLong",
-                                                 this.props.sort, byHoursLong);
+                this.props.sort, byHoursLong);
+
             let firstSort = "fas fa-sort";
             let lastSort = "fas fa-sort";
             let pdfSort = "fas fa-sort";
@@ -129,7 +132,7 @@ const INFO = function() {
                     firstSort = "fas fa-sort-up";
                     firstClick =
                         this.click.bind(this, 'byFirst', this.props.sort,
-                                        reverse.bind(null, byFirst));
+                            reverse.bind(null, byFirst));
                 } else {
                     firstSort = "fas fa-sort-down";
                 }
@@ -137,7 +140,7 @@ const INFO = function() {
                 if (this.state.desc) {
                     lastSort = "fas fa-sort-up";
                     lastClick = this.click.bind(this, 'byLast', this.props.sort,
-                                                reverse.bind(null, byLast));
+                        reverse.bind(null, byLast));
                 } else {
                     lastSort = "fas fa-sort-down";
                 }
@@ -145,7 +148,7 @@ const INFO = function() {
                 if (this.state.desc) {
                     pdfSort = "fas fa-sort-up";
                     pdfClick = this.click.bind(this, 'byPdf', this.props.sort,
-                                               reverse.bind(null, byPdf));
+                        reverse.bind(null, byPdf));
                 } else {
                     pdfSort = "fas fa-sort-down";
                 }
@@ -154,7 +157,7 @@ const INFO = function() {
                     videoSort = "fas fa-sort-up";
                     videoClick =
                         this.click.bind(this, 'byVideo', this.props.sort,
-                                        reverse.bind(null, byVideo));
+                            reverse.bind(null, byVideo));
                 } else {
                     videoSort = "fas fa-sort-down";
                 }
@@ -163,7 +166,7 @@ const INFO = function() {
                     hoursSort = "fas fa-sort-up";
                     hoursClick =
                         this.click.bind(this, "byHours", this.props.sort,
-                                        reverse.bind(null, byHours));
+                            reverse.bind(null, byHours));
                 } else {
                     hoursSort = "fas fa-sort-down";
                 }
@@ -171,7 +174,7 @@ const INFO = function() {
                 if (this.state.desc) {
                     longSort = "fas fa-sort-up";
                     longClick = this.click.bind(this, "byLong", this.props.sort,
-                                                reverse.bind(null, byLong));
+                        reverse.bind(null, byLong));
                 } else {
                     longSort = "fas fa-sort-down";
                 }
@@ -180,117 +183,77 @@ const INFO = function() {
                     hoursLongSort = "fas fa-sort-up";
                     hoursLongClick =
                         this.click.bind(this, "byHoursLong", this.props.sort,
-                                        reverse.bind(null, byHoursLong));
+                            reverse.bind(null, byHoursLong));
                 } else {
                     hoursLongSort = "fas fa-sort-down";
                 }
             }
 
-            return /*#__PURE__*/ React.createElement(
-                "tr", null, /*#__PURE__*/
-                            React.createElement(
-                                "th", {onClick : firstClick}, "Given Names ",
-                                /*#__PURE__*/ React.createElement("i", {
-                                    class : firstSort
-                                })),
-                /*#__PURE__*/
-                React.createElement(
-                    "th", {onClick : lastClick}, "Family Names ",
-                    /*#__PURE__*/ React.createElement("i", {class : lastSort})),
-                /*#__PURE__*/
-                React.createElement(
-                    "th", {onClick : pdfClick}, "PDF ",
-                    /*#__PURE__*/ React.createElement("i", {class : pdfSort})),
-                /*#__PURE__*/
-                React.createElement("th", {onClick : videoClick}, "Video ",
-                                    /*#__PURE__*/ React.createElement("i", {
-                                        class : videoSort
-                                    })),
-                /*#__PURE__*/
-                React.createElement("th", {onClick : hoursClick}, "Hours ",
-                                    /*#__PURE__*/ React.createElement("i", {
-                                        class : hoursSort
-                                    })),
-                /*#__PURE__*/
-                React.createElement(
-                    "th", {onClick : longClick}, "Too Long ",
-                    /*#__PURE__*/ React.createElement("i", {class : longSort})),
-                /*#__PURE__*/
-                React.createElement("th", {onClick : hoursLongClick},
-                                    "Inc Long",
-                                    /*#__PURE__*/ React.createElement("i", {
-                                        class : hoursLongSort
-                                    })));
+            return (
+                <tr>
+                    <th onClick={firstClick}>Given Names <i class={firstSort}></i></th>
+                    <th onClick={lastClick}>Family Names <i class={lastSort}></i></th>
+                    <th onClick={pdfClick}>PDF <i class={pdfSort}></i></th>
+                    <th onClick={videoClick}>Video <i class={videoSort}></i></th>
+                    <th onClick={hoursClick}>Hours <i class={hoursSort}></i></th>
+                    <th onClick={longClick}>Too Long <i class={longSort}></i></th>
+                    <th onClick={hoursLongClick}>Inc Long<i class={hoursLongSort}></i></th>
+                </tr>
+            );
         }
     }
 
     function ViewersRow(props) {
-        return /*#__PURE__*/ React.createElement(
-            "tr", null,
-            /*#__PURE__*/
-            React.createElement(
-                "td", null,
-                /*#__PURE__*/
-                React.createElement(
-                    "a", {href : "views/" + props.id + (day ? `#${day}` : '')},
-                    props.firstname)),
-            /*#__PURE__*/
-            React.createElement(
-                "td", null,
-                /*#__PURE__*/
-                React.createElement(
-                    "a", {href : "views/" + props.id + (day ? `#${day}` : '')},
-                    props.lastname, " ")),
-            /*#__PURE__*/ React.createElement("td", {class : "num"}, props.pdf),
-            /*#__PURE__*/
-            React.createElement("td", {class : "num"}, props.video),
-            /*#__PURE__*/
-            React.createElement("td", {class : "num"}, props.hours),
-            /*#__PURE__*/
-            React.createElement("td", {class : "num"}, props.too_long),
-            /*#__PURE__*/
-            React.createElement("td", {class : "num"}, props.hours_long));
+        return (
+            <tr>
+                <td><a href={"views/" + props.id + (day ? `#${day}` : '')}>{props.firstname}</a></td>
+                <td><a href={"views/" + props.id + (day ? `#${day}` : '')}>{props.lastname} </a></td>
+                <td class="num">{props.pdf}</td>
+                <td class="num">{props.video}</td>
+                <td class="num">{props.hours}</td>
+                <td class="num">{props.too_long}</td>
+                <td class="num">{props.hours_long}</td>
+            </tr>
+        );
     }
 
     class ViewersTable extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {users : props.users};
+            this.state = { users: props.users };
         }
 
         sort(order) {
             const sorted = this.state.users.sort(order);
-            this.setState({users : sorted});
+            this.setState({ users: sorted });
         }
 
-        newRows(users) { this.setState({users : users}); }
+        newRows(users) { this.setState({ users: users }); }
 
         render() {
             let rows = this.state.users.map(u => ViewersRow(u));
-            return /*#__PURE__*/ React.createElement(
-                "table", null,
-                /*#__PURE__*/
-                React.createElement("caption", null, this.props.title),
-                /*#__PURE__*/
-                React.createElement(
-                    "tbody", null,
-                    /*#__PURE__*/ React.createElement(ViewersHeader, {
-                        sort : this.sort.bind(this)
-                    }),
-                    rows));
+            return (
+                <table>
+                    <caption>{this.props.title}</caption>
+                    <tbody>
+                        <ViewersHeader sort={this.sort.bind(this)}></ViewersHeader>
+                        {rows}
+                    </tbody>
+                </table>
+            );
         }
     }
 
     function showTables(title, users) {
         const tables = document.getElementById("content");
         const overlay = document.getElementById("overlay");
-        ReactDOM.unmountComponentAtNode(tables); // deep clone enrollment object
+        ReactDOM.unmountComponentAtNode(tables);
 
+        // deep clone enrollment object
         const myEnrollment = JSON.parse(JSON.stringify(enrollment));
         const enrolled = [];
         const enrol_nv = [];
         const non_enrol = [];
-
         for (const user of users) {
             if (myEnrollment[user.id]) {
                 enrolled.push(user);
@@ -299,36 +262,31 @@ const INFO = function() {
                 non_enrol.push(user);
             }
         }
-
         for (const id in myEnrollment) {
             const user = myEnrollment[id];
-
             if (!user.seen) {
                 enrol_nv.push(user);
             }
         }
 
         const items = [];
-
         if (enrolled.length) {
-            items.push(/*#__PURE__*/ React.createElement(
-                ViewersTable, {title : "Enrolled Users", users : enrolled}));
+            items.push(<ViewersTable title="Enrolled Users" users={enrolled}></ViewersTable>);
         }
-
         if (enrol_nv.length) {
-            items.push(/*#__PURE__*/ React.createElement(
-                ViewersTable, {title : "Enrolled No View", users : enrol_nv}));
+            items.push(<ViewersTable title="Enrolled No View" users={enrol_nv}></ViewersTable>);
         }
-
         if (non_enrol.length) {
-            items.push(/*#__PURE__*/ React.createElement(
-                ViewersTable,
-                {title : "Non-Enrolled Users", users : non_enrol}));
+            items.push(<ViewersTable title="Non-Enrolled Users" users={non_enrol}></ViewersTable>);
         }
 
-        const combined = /*#__PURE__*/ React.createElement(
-            "div", null, /*#__PURE__*/ React.createElement("h2", null, title),
-            items);
+        const combined = (
+            <div>
+                <h2>{title}</h2>
+                {items}
+            </div>
+        );
+
         ReactDOM.render(combined, tables);
         overlay.classList.add("visible");
     }
@@ -349,11 +307,9 @@ const INFO = function() {
 
     function dayViewers(evt) {
         let elm = evt.target.parentNode;
-
         while (!elm.dataset.day) {
             elm = elm.parentNode;
         }
-
         const day = elm.dataset.day;
         const day_id = elm.dataset.day_id;
         const text = elm.dataset.text;
@@ -366,16 +322,13 @@ const INFO = function() {
     function videoViewers(evt) {
         const day_id = document.getElementById('day').dataset.id;
         let elm = evt.target.parentNode;
-
         while (!elm.dataset.show) {
             elm = elm.parentNode;
         }
-
         const video = elm.dataset.show;
         const title = video.substring(3);
         const num = video.substring(0, 2);
-        fetch(`${num}/viewers?day_id=${day_id}&video=${
-                  encodeURIComponent(video)}`)
+        fetch(`${num}/viewers?day_id=${day_id}&video=${encodeURIComponent(video)}`)
             .then(response => response.json())
             .then(json => showTables(title, json));
     }
@@ -386,6 +339,6 @@ const INFO = function() {
         offeringViewers,
         dayViewers,
         videoViewers,
-        hideTables
+        hideTables,
     };
-}();
+})();
