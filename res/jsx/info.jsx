@@ -1,12 +1,6 @@
 // React components related to admin info
 const INFO = (function () {
-    const e = React.createElement;
     const loc = window.location + "";
-    let day = false;
-    if (day = loc.match(/W\dD\d/)) {
-        day = day[0];
-    }
-
     let enrollment = false;
     function setEnrollment(enr) { enrollment = enr; }
 
@@ -203,7 +197,7 @@ const INFO = (function () {
         }
     }
 
-    function ViewersRow(props) {
+    function ViewersRow(props, day) {
         return (
             <tr>
                 <td><a href={"views/" + props.id + (day ? `#${day}` : '')}>{props.firstname}</a></td>
@@ -231,7 +225,7 @@ const INFO = (function () {
         newRows(users) { this.setState({ users: users }); }
 
         render() {
-            let rows = this.state.users.map(u => ViewersRow(u));
+            let rows = this.state.users.map(u => ViewersRow(u, this.props.day));
             return (
                 <table>
                     <caption>{this.props.title}</caption>
@@ -244,7 +238,7 @@ const INFO = (function () {
         }
     }
 
-    function showTables(title, users) {
+    function showTables(title, users, day) {
         const tables = document.getElementById("content");
         const overlay = document.getElementById("overlay");
         ReactDOM.unmountComponentAtNode(tables);
@@ -271,13 +265,13 @@ const INFO = (function () {
 
         const items = [];
         if (enrolled.length) {
-            items.push(<ViewersTable title="Enrolled Users" users={enrolled}></ViewersTable>);
+            items.push(<ViewersTable title="Enrolled Users" users={enrolled} day={day}></ViewersTable>);
         }
         if (enrol_nv.length) {
-            items.push(<ViewersTable title="Enrolled No View" users={enrol_nv}></ViewersTable>);
+            items.push(<ViewersTable title="Enrolled No View" users={enrol_nv} day={day}></ViewersTable>);
         }
         if (non_enrol.length) {
-            items.push(<ViewersTable title="Non-Enrolled Users" users={non_enrol}></ViewersTable>);
+            items.push(<ViewersTable title="Non-Enrolled Users" users={non_enrol} day={day}></ViewersTable>);
         }
 
         const combined = (
@@ -316,7 +310,7 @@ const INFO = (function () {
         const title = `${day} ${text}`;
         fetch(`${day}/viewers?day_id=${day_id}`)
             .then(response => response.json())
-            .then(json => showTables(title, json));
+            .then(json => showTables(title, json, day));
     }
 
     function videoViewers(evt) {
