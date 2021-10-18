@@ -38,6 +38,12 @@ class DayDao {
 		return $stmt->fetch();		
 	}
 
+	public function update($day_id, $desc) {
+		$stmt = $this->db->prepare(
+			"UPDATE day SET `desc` = :desc WHERE id = :day_id");
+		$stmt->execute(array("desc" => $desc, "day_id" => $day_id));
+	}
+
 	public function cloneDays($offering_id, $new_offering) {
 		// get old days from the DB
 		$stmt = $this->db->prepare("SELECT * FROM day

@@ -73,4 +73,18 @@ class CourseCtrl {
         $this->dayDao->cloneDays($offering_id, $new_offering);
         return "Location: ../$block/";
     }
+
+    /**
+     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/edit$|", sec="admin")
+     */
+    public function editDay() {
+        global $URI_PARAMS;
+        $block = $URI_PARAMS[2];
+
+        $day_id = filter_input(INPUT_POST, "day_id");
+        $desc = filter_input(INPUT_POST, "desc");
+
+        $this->dayDao->update($day_id, $desc);
+        return "Location: ../${block}/";
+    }
 }

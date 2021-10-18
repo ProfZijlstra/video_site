@@ -54,6 +54,8 @@ $mappings = array(
 	"POST" => array(
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/clone$|' => 
 			['sec' => 'admin', 'route' => 'CourseCtrl@cloneOffering'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/edit$|' => 
+			['sec' => 'admin', 'route' => 'CourseCtrl@editDay'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$|' => 
 			['sec' => 'user', 'route' => 'QuestionCtrl@add'],
 		'|^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delQuestion$|' => 
