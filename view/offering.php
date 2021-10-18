@@ -19,7 +19,7 @@
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
 				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
-					<i class="far fa-copy" style="color: lightgray"></i>
+					<i id="clone" class="far fa-copy"></i>
 					<i id="info-btn" class="fas fa-info-circle"></i>
 					<a href="/videos/user"><i class="fas fa-users"></i></a>
 				<?php endif; ?>

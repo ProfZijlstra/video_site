@@ -14,6 +14,14 @@ class CourseCtrl {
 	 * @Inject("OfferingDao")
 	 */
 	public $offeringDao;
+    /**
+     * @Inject("VideoDao")
+     */
+    public $videoDao;
+    /**
+     * @Inject("DayDao")
+     */
+    public $dayDao;
 
     /**
      * @GET(uri="|^/?$|", sec="user")
@@ -40,5 +48,29 @@ class CourseCtrl {
         $VIEW_DATA["course_offerings"] = $course_offering;
         $VIEW_DATA["latest"] = $newest;
         return "courses.php";
+    }
+
+    /**
+     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/clone$|", sec="admin")
+     */
+    public function cloneOffering() {
+        global $URI_PARAMS;
+
+        $course_number = $URI_PARAMS[1];
+        $old_block = $URI_PARAMS[2];
+
+		$offering_id = filter_input(INPUT_POST, "offering_id");
+        $block = filter_input(INPUT_POST, "block");
+        $start = filter_input(INPUT_POST, "date");
+
+        // calculate stop date
+        $stop = date_create($start);
+        date_add($stop, date_interval_create_from_date_string("24 days"));
+        $stop = date_format($stop, "Y-m-d");
+
+        $this->videoDao->clone($course_number, $block, $old_block);
+        $new_offering = $this->offeringDao->create($course_number, $block, $start, $stop);
+        $this->dayDao->cloneDays($offering_id, $new_offering);
+        return "Location: ../$block/";
     }
 }

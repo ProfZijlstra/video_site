@@ -103,4 +103,17 @@ class OfferingDao {
 		$stmt->execute();
 		return $stmt->fetchAll();
 	}
+
+	/**
+	 * Creates an offering in the DB
+	 */
+	public function create($course_number, $block, $start, $stop) {
+		$stmt = $this->db->prepare(
+			"INSERT INTO offering 
+			VALUES(NULL, :course_number, :block, :start, :stop)"
+		);
+		$stmt->execute(array("course_number" => $course_number, "block" => $block, 
+			"start" => $start, "stop" => $stop));
+		return $this->db->lastInsertId();
+	}
 }

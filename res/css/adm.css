@@ -60,3 +60,23 @@
 #content a:hover {
     text-decoration: underline;
 }
+#content .modal {
+    background-color: #DDD;
+    border: 1px solid black;
+    padding: 2em;
+}
+#content .modal h2 {
+    margin-top: 0px;
+}
+#content .modal label {
+    display: inline-block;
+    width: 100px;
+    margin-bottom: 10px;
+}
+#content .modal input {
+    width: 575px;
+    height: 25px;
+}
+#content .modal .submit {
+    text-align: right;
+}

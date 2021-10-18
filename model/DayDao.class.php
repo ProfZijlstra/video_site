@@ -37,5 +37,23 @@ class DayDao {
 		);
 		return $stmt->fetch();		
 	}
+
+	public function cloneDays($offering_id, $new_offering) {
+		// get old days from the DB
+		$stmt = $this->db->prepare("SELECT * FROM day
+		WHERE offering_id = :offering_id");
+		$stmt->execute(array("offering_id" => $offering_id));
+		$days = $stmt->fetchAll();
+
+		// clone days
+		$stmt = $this->db->prepare(
+			"INSERT INTO day
+			VALUES(NULL, :offering_id, :abbr, :desc)"
+		);
+		foreach ($days as $day) {
+			$stmt->execute(array("offering_id" => $new_offering, 
+				"abbr" => $day["abbr"], "desc" => $day["desc"]));
+		}		
+	}
 }
 

@@ -52,6 +52,8 @@ $mappings = array(
 			['sec' => 'none', 'route' => 'ViewCtrl@enrollemnt'],
 	),
 	"POST" => array(
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/clone$|' => 
+			['sec' => 'admin', 'route' => 'CourseCtrl@cloneOffering'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$|' => 
 			['sec' => 'user', 'route' => 'QuestionCtrl@add'],
 		'|^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delQuestion$|' => 
@@ -141,6 +143,8 @@ class Context {
             $this->objects["CourseCtrl"] = new CourseCtrl();
             $this->objects["CourseCtrl"]->courseDao = $this->get("CourseDao");
             $this->objects["CourseCtrl"]->offeringDao = $this->get("OfferingDao");
+            $this->objects["CourseCtrl"]->videoDao = $this->get("VideoDao");
+            $this->objects["CourseCtrl"]->dayDao = $this->get("DayDao");
         }
         if ($id === "QuestionCtrl" && !isset($this->objects["QuestionCtrl"])) {
             $this->objects["QuestionCtrl"] = new QuestionCtrl();

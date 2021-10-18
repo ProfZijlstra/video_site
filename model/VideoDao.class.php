@@ -56,4 +56,44 @@ class VideoDao {
                     "totalTime" => $totalTime, 
                 );
     }
+
+	public function clone($course_number, $block, $old_block) {
+		// change directory to where the course materials are and start clone
+		chdir("res/$course_number");
+		mkdir($block);
+		chdir($block);
+
+		// clone the day of week directories
+		for ($week = 1; $week < 5; $week++) {
+			for ($day = 1; $day < 7; $day++) { // we don't make sunday dirs
+				mkdir("W${week}D${day}");
+				chdir("W${week}D${day}");
+				// make symlinks to previous offering videos
+				mkdir("vid");
+				// find previoud video files
+				if (chdir("../../${old_block}/W${week}D${day}/vid")) {
+					$videos = glob("*.mp4");
+					// make links in new vid directory
+					chdir("../../../${block}/W${week}D${day}/vid");
+					foreach ($videos as $video) {
+						symlink("../../../${old_block}/W${week}D${day}/vid/$video", $video);
+					}    
+					chdir(".."); // exit vid dir
+				}
+				// make symlinks to previous offering pdfs
+				mkdir("pdf");
+				// find previoud pdf files
+				if (chdir("../../${old_block}/W${week}D${day}/pdf")) {
+					$pdfs = glob("*.pdf");
+					// make links in new pdf directory
+					chdir("../../../${block}/W${week}D${day}/pdf");        
+					foreach ($pdfs as $pdf) {
+						symlink("../../../${old_block}/W${week}D${day}/pdf/$pdf", $pdf);
+					}
+					chdir(".."); // exit pdf dir    
+				}
+				chdir(".."); // exit day dir
+			}
+		}
+	}
 }
