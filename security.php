@@ -10,11 +10,8 @@ function isLoggedIn() {
         global $MY_BASE;
         global $MY_URI;
 
-        // If the user requests a specific project store the request URL
-        // That way we can go there after logging in
-        if (preg_match("|project/(\d+)|", $MY_URI)) {
-            $_SESSION['login_to'] = $MY_URI;
-        }
+        // the original url the user requested
+        $_SESSION['login_to'] = $MY_URI;
 
         // Then show login page
         $_SESSION['error'] = "Please Login:";
