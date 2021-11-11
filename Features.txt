@@ -1,6 +1,4 @@
-- UI for clone offering
 - see raw view data for day and date
-- UI for changing day descriptions
 - GeoIP constraints
 - Improve user system
     - My Profile page with passwd and image
@@ -18,3 +16,5 @@ DONE:
 - Make responsive / mobile friendly UI
 - clone offering
 - Page displaying all courses with offerings in system 
+- UI for clone offering
+- UI for changing day descriptions
