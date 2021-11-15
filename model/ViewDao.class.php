@@ -128,7 +128,8 @@ class ViewDao {
 				THEN 1
 				ELSE 0 END) as video,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long
+			SUM(v.too_long) as too_long,
+			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
 			join  day as d on v.day_id = d.id 
@@ -153,7 +154,8 @@ class ViewDao {
 				THEN 1
 				ELSE 0 END) as video,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long
+			SUM(v.too_long) as too_long,
+			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
 			where v.day_id = :day_id 
@@ -176,7 +178,8 @@ class ViewDao {
 				THEN 1
 				ELSE 0 END) as video,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long
+			SUM(v.too_long) as too_long,
+			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
 			where v.day_id = :day_id 
@@ -200,7 +203,8 @@ class ViewDao {
 				THEN 1
 				ELSE 0 END) as video_views,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long
+			SUM(v.too_long) as too_long,
+			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
 			join day as d on v.day_id = d.id

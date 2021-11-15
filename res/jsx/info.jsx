@@ -64,6 +64,8 @@ const INFO = (function () {
 
     function byHours(a, b) { return a.hours - b.hours; }
 
+    function byNulls(a, b) { return a.nulls - b.nulls; }
+
     function byLong(a, b) { return a.too_long - b.too_long; }
 
     function byHoursLong(a, b) { return a.hours_long - b.hours_long; }
@@ -96,8 +98,6 @@ const INFO = (function () {
         }
 
         render() {
-            const headers = [];
-
             let firstClick =
                 this.click.bind(this, 'byFirst', this.props.sort, byFirst);
             let lastClick =
@@ -108,6 +108,7 @@ const INFO = (function () {
                 this.click.bind(this, 'byVideo', this.props.sort, byVideo);
             let hoursClick =
                 this.click.bind(this, "byHours", this.props.sort, byHours);
+            let nullsClick = this.click.bind(this, "byNulls", this.props.sort, byNulls);
             let longClick =
                 this.click.bind(this, "byLong", this.props.sort, byLong);
             let hoursLongClick = this.click.bind(this, "byHoursLong",
@@ -118,6 +119,7 @@ const INFO = (function () {
             let pdfSort = "fas fa-sort";
             let videoSort = "fas fa-sort";
             let hoursSort = "fas fa-sort";
+            let nullsSort = "fas fa-sort";
             let longSort = "fas fa-sort";
             let hoursLongSort = "fas fa-sort";
 
@@ -164,6 +166,13 @@ const INFO = (function () {
                 } else {
                     hoursSort = "fas fa-sort-down";
                 }
+            } else if (this.state.sorted == "byNulls") {
+                if (this.state.desc) {
+                  nullsSort = "fas fa-sort-up";
+                  nullsClick = this.click.bind(this, "byNulls", this.props.sort, reverse.bind(null, byNulls));
+                } else {
+                  nullsSort = "fas fa-sort-down";
+                }        
             } else if (this.state.sorted == "byLong") {
                 if (this.state.desc) {
                     longSort = "fas fa-sort-up";
@@ -190,6 +199,7 @@ const INFO = (function () {
                     <th onClick={pdfClick}>PDF <i class={pdfSort}></i></th>
                     <th onClick={videoClick}>Video <i class={videoSort}></i></th>
                     <th onClick={hoursClick}>Hours <i class={hoursSort}></i></th>
+                    <th onClick={nullsClick}>Nulls <i class={nullsSort}></i></th>
                     <th onClick={longClick}>Too Long <i class={longSort}></i></th>
                     <th onClick={hoursLongClick}>Inc Long<i class={hoursLongSort}></i></th>
                 </tr>
@@ -205,6 +215,7 @@ const INFO = (function () {
                 <td class="num">{props.pdf}</td>
                 <td class="num">{props.video}</td>
                 <td class="num">{props.hours}</td>
+                <td class="num">{props.nulls}</td>
                 <td class="num">{props.too_long}</td>
                 <td class="num">{props.hours_long}</td>
             </tr>
