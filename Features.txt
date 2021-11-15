@@ -1,9 +1,11 @@
+- Attendance system
 - see raw view data for day and date
 - GeoIP constraints
 - Improve user system
     - My Profile page with passwd and image
     - Auto scrape image from infosys
     - Auto load upcoming offerings to clone from infosys
+    - Default view speed
 - Add Quiz system
 - Add Assignment system
 
@@ -18,3 +20,5 @@ DONE:
 - Page displaying all courses with offerings in system 
 - UI for clone offering
 - UI for changing day descriptions
+- Add view speed to session and DB
+- Add Nulls info column
