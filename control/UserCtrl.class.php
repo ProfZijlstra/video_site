@@ -62,6 +62,7 @@ class UserCtrl {
                 "type" => $row['type'],
                 "autoplay" => "off"
             );
+            $_SESSION['speed'] = 1;
 
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);

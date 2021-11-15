@@ -34,6 +34,7 @@ window.addEventListener('load', () => {
         }
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
         video.playbackRate = speed;
+        postSpeed(speed);
     };
     function slower(e) {
         let speed = parseFloat(curSpeed.innerHTML)
@@ -43,9 +44,20 @@ window.addEventListener('load', () => {
         }
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
         video.playbackRate = speed;
+        postSpeed(speed);
     };
+    function postSpeed(speed) {
+        fetch('./speed', {
+            method : 'POST',
+            body : `speed=${speed}`,
+            headers :
+                {'Content-Type' : 'application/x-www-form-urlencoded'},
+        });
+    }
     document.getElementById('faster').onclick = faster;
     document.getElementById('slower').onclick = slower;
+    // set speed when page is loaded
+    video.playbackRate = parseFloat(curSpeed.innerHTML);
 
     video.focus();
     video.addEventListener('keydown', (e) => {

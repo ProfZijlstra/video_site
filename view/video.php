@@ -77,7 +77,7 @@
         <main>
 			<div id="playSpeed">
 				<span id="slower">-</span>
-				<span id="curSpeed">1.0</span>
+				<span id="curSpeed"><?= number_format($_SESSION['speed'], 1) ?></span>
 				<span id="faster">+</span>
 			</div>
 <?php 

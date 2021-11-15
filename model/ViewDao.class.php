@@ -20,11 +20,11 @@ class ViewDao {
 	 * @param string video file name
 	 * @return int id of created view
 	 */
-	public function start($user_id, $day_id, $video) {
+	public function start($user_id, $day_id, $video, $speed) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 0, :user_id, :day_id, :video, NOW(), NULL, 0)");
+			VALUES(NULL, 0, :user_id, :day_id, :video, NOW(), NULL, :speed, 0)");
 		$stmt->execute(array("user_id" => $user_id, 
-			"day_id" => $day_id, "video" => $video));
+			"day_id" => $day_id, "video" => $video, "speed" => $speed));
 		return $this->db->lastInsertId();
 	}
 
@@ -33,27 +33,35 @@ class ViewDao {
 	 * @param int $view_id
 	 * @returns void
 	 */
-	public function stop($id) {
-		$stmt = $this->db->prepare("UPDATE view SET `stop` = NOW() 
+	public function stop($id, $speed) {
+		$stmt = $this->db->prepare("UPDATE view SET `stop` = NOW(), `speed` = :speed  
 			WHERE id = :id");
+		$stmt->execute(array("id" => $id, "speed" => $speed));
+	}
+
+	public function get($id) {
+		$stmt = $this->db->prepare("SELECT * FROM view WHERE id = :id");
 		$stmt->execute(array("id" => $id));
-		// mark views over 30 minutes as too long
-		$stmt = $this->db->prepare("UPDATE view AS v SET too_long = 1 
-			WHERE id = :id AND `stop` - `start` > 1800");
-		$stmt->execute(array("id" => $id));
+		return $stmt->fetch();
 	}
 
 	public function pdf($user_id, $day_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW(), 0)");
+			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW(), NULL, NULL)");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video));
 	}
 
+	public function too_long($id) {
+		$stmt = $this->db->prepare("UPDATE view SET `too_long` = 1
+			WHERE id = :id");
+		$stmt->execute(array("id" => $id));
+	}
 
 	public function offering($offering_id) {
 		$stmt = $this->db->prepare(
-			"SELECT d.abbr, d.desc, COUNT(DISTINCT v.user_id) AS users, 
+			"SELECT d.abbr, d.desc, 
+			COUNT(DISTINCT v.user_id) AS users, 
 			COUNT(v.id) AS views, 
 			FORMAT(SUM(v.stop - v.start)/3600, 2) AS time 
 			FROM view AS v 

@@ -57,6 +57,23 @@ class VideoDao {
                 );
     }
 
+	public function duration($course_num, $block, $day, $video) {
+		chdir("res/${course_num}/${block}/${day}/vid/");
+		$files = glob("*.mp4");
+		foreach ($files as $file) {
+			$matches = array();
+			if (preg_match("/${video}.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $file, $matches)) {
+				$hours = $matches[1];
+				$minutes = $matches[2];
+				$seconds = $matches[3];
+				// duration in seconds 
+				return $seconds + ($minutes * 60) + ($hours * 60 * 60);
+			}
+		}
+		// if not found return negative
+		return -1;
+	}
+
 	public function clone($course_number, $block, $old_block) {
 		// change directory to where the course materials are and start clone
 		chdir("res/$course_number");

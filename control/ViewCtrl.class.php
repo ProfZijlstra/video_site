@@ -44,15 +44,41 @@ class ViewCtrl {
 		$user_id = $_SESSION['user']['id'];
 		$day_id = filter_input(INPUT_GET, "day_id");
 		$video = filter_input(INPUT_GET, "video");
-		return intval($this->viewDao->start($user_id, $day_id, $video));
+		return intval($this->viewDao->start($user_id, $day_id, $video, $_SESSION['speed']));
 	}
 
 	/**
-	 * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?stop$|", sec="none")
+	 * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/stop$|", sec="none")
 	 */
 	public function stop() {
+        global $URI_PARAMS;
+
 		$view_id = filter_input(INPUT_POST, "view_id");
-		return $this->viewDao->stop($view_id);
+		$this->viewDao->stop($view_id, $_SESSION['speed']);
+
+		// determine if this view is longer than should be possible
+		$view = $this->viewDao->get($view_id);
+		$view_duration = $view['stop'] - $view['start'];
+		if ($view_duration > 15*60*1000) { // if > 15 minutes
+			$course_num = $URI_PARAMS[1];
+			$block = $URI_PARAMS[2];
+			$day = $URI_PARAMS[3];
+			$video = $view['video'];
+
+			$duration = $this->videoDao->duration($course_num, $block, $day, $video);
+			$duration += 5; // allowable margin of error
+
+			if ($view_duration > $duration * $_SESSION['speed']) {
+				$this->viewDao->too_long($view_id);
+			}
+		}
+	}
+
+	/**
+	 * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?speed$|", sec="user")
+	 */
+	public function speed() {
+		$_SESSION['speed'] = filter_input(INPUT_POST, "speed");
 	}
 
    	/**
