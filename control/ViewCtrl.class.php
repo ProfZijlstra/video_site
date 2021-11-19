@@ -78,7 +78,9 @@ class ViewCtrl {
 	 * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?speed$|", sec="user")
 	 */
 	public function speed() {
-		$_SESSION['speed'] = filter_input(INPUT_POST, "speed");
+		$speed = filter_input(INPUT_POST, "speed");
+		$_SESSION['speed'] = $speed;
+		setcookie("view_speed", $speed, time() + 7*24*60*60);
 	}
 
    	/**
