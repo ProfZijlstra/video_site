@@ -84,8 +84,10 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'UserCtrl@update'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/autoplay$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@autoplay'],
-		'|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?stop$|' => 
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/stop$|' => 
 			['sec' => 'none', 'route' => 'ViewCtrl@stop'],
+		'|^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?speed$|' => 
+			['sec' => 'user', 'route' => 'ViewCtrl@speed'],
 	),
 );
 class Context {

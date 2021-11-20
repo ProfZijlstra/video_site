@@ -13,15 +13,8 @@ h1 {
     display: grid;
     grid-row-gap: 15px;
     grid-column-gap: 0px;
-    grid-template-areas:
-        'label_first first'
-        'label_last last'
-        'label_email email'
-        'label_pass pass'
-        'label_type type'
-        'label_active active'
-        'btn btn';
     grid-template-columns: 110px auto;
+    grid-template-rows: 9;
 }
 input, select {
     width: 100%;
@@ -32,39 +25,11 @@ select {
 }
 #btn {
     text-align: right;
+    position: relative;
+    top: 15px;
 }
 .text {
     padding-right: 8px;
-}
-#label_first {
-    grid-area: label_first;
-}
-#first {
-    grid-area: first;
-}
-#label_last {
-    grid-area: label_last;
-}
-#last {
-    grid-area: last;
-}
-#label_email {
-    grid-area: label_email;
-}
-#email {
-    grid-area: email;
-}
-#label_pass {
-    grid-area: label_pass;
-}
-#pass {
-    grid-area: pass;
-}
-#label_active {
-    grid-area: label_active;
-}
-#active {
-    grid-area: active;
 }
 #btn {
     grid-area: btn;

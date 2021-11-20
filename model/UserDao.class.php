@@ -22,10 +22,10 @@ class UserDao {
      */
     public function checkLogin($email) {
         $find = $this->db->prepare(
-                "SELECT id, firstname, lastname, password, type "
-                . "FROM user "
-                . "WHERE email = :email "
-                . "AND active = TRUE ");
+                "SELECT id, firstname, lastname, password, type 
+                FROM user 
+                WHERE email = :email 
+                AND active = TRUE ");
         $find->execute(array("email" => $email));
         return $find->fetch();
     }
@@ -36,8 +36,8 @@ class UserDao {
      */
     public function updateAccessed($id) {
         $upd = $this->db->prepare(
-                "UPDATE user SET accessed = NOW() "
-                . "WHERE id = :uid");
+                "UPDATE user SET accessed = NOW() 
+                    WHERE id = :uid");
         $upd->execute(array("uid" => $id));
     }
     
@@ -67,47 +67,60 @@ class UserDao {
      * Creates a new user in the database based on given values
      * @param string $first
      * @param string $last
+     * @param string $knownAs
      * @param string $email
+     * @param string $studentID
+     * @param string $teamsName
      * @param string $hash password hash
      * @param string $type user type
      * @param int $active
      * @return int id of created row
      */
-    public function insert($first, $last, $email, $hash, $type, $active) {
-        $stmt = $this->db->prepare("INSERT INTO user values "
-                . "(NULL, :first, :last, :email, :pass, :type,"
-                . " NOW(), NOW(), :active)");
+    public function insert($first, $last, $knownAs, $email, $studentID, 
+                                $teamsName, $hash, $type, $active) {
+        $stmt = $this->db->prepare("INSERT INTO user values 
+                (NULL, :first, :last, :knownAs, :email, :studentID, :teamsName, 
+                :pass, :type, NOW(), NOW(), :active, 0)");
         $stmt->execute(array(
             "first" => $first, "last" => $last, "email" => $email, 
             "pass" => $hash, "type" => $type, "active" => $active,
+            "studentID" => $studentID, "knownAs" => $knownAs, "teamsName" =>
+            $teamsName
         ));
         return $this->db->lastInsertId();
     }
 
     /**
      * Updates a user row for given id with given values
+     * @param int $uid user id
      * @param string $first
      * @param string $last
+     * @param string $knownAs
      * @param string $email
+     * @param string $studentID
+     * @param string $teamsName
      * @param string $type user type
      * @param int $active
-     * @param int $uid user id
      * @param string $pass password hash
      */
-    public function update($first, $last, $email, $type, $active, $uid, 
-            $pass) {
-        $stmt = $this->db->prepare("UPDATE user SET "
-                . "firstname = :first, lastname = :last, "
-                . "email = :email, type = :type, "
-                . "active = :active WHERE id = :uid");
+    public function update($uid, $first, $last, $knownAs, $email, $studentID, 
+                            $teamsName, $type, $active, $pass) {
+        $stmt = $this->db->prepare("UPDATE user SET 
+                firstname = :first, lastname = :last, knownAs = :knownAs, 
+                email = :email, studentID = :studentID, teamsName = :teamsName, 
+                type = :type, active = :active WHERE id = :uid"
+        );
         $stmt->execute(array(
-            "first" => $first, "last" => $last, "email" => $email, 
+            "first" => $first, "last" => $last, "knownAs" => $knownAs, 
+            "email" => $email, "studentID" => $studentID, 
+            "teamsName" => $teamsName,
             "type" => $type, "active" => $active, "uid" => $uid
         ));
 
         if ($pass) {
             $hash = password_hash($pass, PASSWORD_DEFAULT);
-            $reset = $this->db->prepare("UPDATE user SET password = :pass WHERE id = :uid");
+            $reset = $this->db->prepare("UPDATE user SET password = :pass 
+                                            WHERE id = :uid");
             $reset->execute(array("pass" => $hash, "uid" => $uid));
         }
     }

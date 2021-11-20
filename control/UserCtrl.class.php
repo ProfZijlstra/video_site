@@ -146,7 +146,10 @@ class UserCtrl {
 
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
+        $knownAs = filter_input(INPUT_POST, "knownAs", FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
+        $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
+        $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_SANITIZE_STRING);
         $pass = filter_input(INPUT_POST, "pass");
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
@@ -176,7 +179,8 @@ class UserCtrl {
         }
 
         try {
-            $uid = $this->userDao->insert($first, $last, $email, $hash, $type, $actv);
+            $uid = $this->userDao->insert($first, $last, $knownAs, $email, 
+                                $studentID, $teamsName, $hash, $type, $actv);
         } catch (Exception $e) {
             $error = true;
         }
@@ -201,7 +205,10 @@ class UserCtrl {
         $uid = $URI_PARAMS[1];
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
+        $knownAs = filter_input(INPUT_POST, "knownAs", FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
+        $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
+        $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_SANITIZE_STRING);
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
         $pass = filter_input(INPUT_POST, "pass");
@@ -224,8 +231,8 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
-        $this->userDao->update($first, $last, $email, $type, $actv, $uid, $pass);
-
+        $this->userDao->update($uid, $first, $last, $knownAs, $email, 
+                $studentID, $teamsName, $type, $actv, $pass);
         return "Location: $uid";
     }
 

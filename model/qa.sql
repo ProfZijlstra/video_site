@@ -65,3 +65,10 @@ UPDATE view as v set v.too_long = 1 where v.stop - v.start > 1800;
 UPDATE view as v set v.too_long = 0 where v.too_long IS NULL;
 
 ALTER TABLE view ADD speed FLOAT default 1.0 after stop;
+
+ALTER TABLE user ADD studentID INT UNSIGNED AFTER email;
+ALTER TABLE user ADD knownAs VARCHAR(45) AFTER lastname;
+ALTER TABLE user ADD teamsName VARCHAR(45) AFTER studentID;
+ALTER TABLE user ADD hasPicture TINYINT(1) NOT NULL DEFAULT 0;
+CREATE INDEX studentID ON user(studentID);
+CREATE INDEX teamsName ON user(teamsName);
