@@ -72,3 +72,67 @@ ALTER TABLE user ADD teamsName VARCHAR(45) AFTER studentID;
 ALTER TABLE user ADD hasPicture TINYINT(1) NOT NULL DEFAULT 0;
 CREATE INDEX studentID ON user(studentID);
 CREATE INDEX teamsName ON user(teamsName);
+
+-- -----------------------------------------------------
+-- Table `cs472`.`meeting`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cs472`.`meeting` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `day_id` INT NOT NULL,
+  `title` VARCHAR(45) NOT NULL,
+  `date` DATE NOT NULL,
+  `start` TIME NOT NULL,
+  `stop` TIME NOT NULL,
+  `sessionWeight` FLOAT NOT NULL DEFAULT 0.5,
+  PRIMARY KEY (`id`),
+  INDEX `fk_meeting_day1_idx` (`day_id` ASC) VISIBLE,
+  CONSTRAINT `fk_meeting_day1`
+    FOREIGN KEY (`day_id`)
+    REFERENCES `cs472`.`day` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `cs472`.`attendance_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cs472`.`attendance_data` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `meeting_id` BIGINT UNSIGNED NOT NULL,
+  `teamsName` VARCHAR(45) NOT NULL,
+  `start` TIME NOT NULL,
+  `stop` TIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_attendance_meeting1_idx` (`meeting_id` ASC) VISIBLE,
+  CONSTRAINT `fk_attendance_meeting1`
+    FOREIGN KEY (`meeting_id`)
+    REFERENCES `cs472`.`meeting` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `cs472`.`attendance`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cs472`.`attendance` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `meeting_id` BIGINT UNSIGNED NOT NULL,
+  `teamsName` VARCHAR(45) NOT NULL,
+  `notEnrolled` TINYINT(1) NOT NULL DEFAULT 0,
+  `absent` TINYINT(1) NOT NULL DEFAULT 0,
+  `arriveLate` TINYINT(1) NOT NULL DEFAULT 0,
+  `leaveEarly` TINYINT(1) NOT NULL DEFAULT 0,
+  `middleMissing` TINYINT(1) NOT NULL DEFAULT 0,
+  `inClass` TINYINT(1) NOT NULL DEFAULT 0,
+  INDEX `fk_attendance_report_meeting1_idx` (`meeting_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_attendance_report_meeting1`
+    FOREIGN KEY (`meeting_id`)
+    REFERENCES `cs472`.`meeting` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+update user set teamsName = CONCAT(TRIM(firstname), " ", TRIM(lastname));
