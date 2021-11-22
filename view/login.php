@@ -76,7 +76,7 @@
     </head>
     <body>
         <div class="central">
-            <h1>CS472 Videos</h1>
+            <h1>Lecture Videos</h1>
             <h2>by Professor Michael Zijlstra</h2>
             <div class="container">
                 <form action="login" method="post">
