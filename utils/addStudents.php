@@ -38,11 +38,14 @@ foreach($lines as $line) {
 			preg_match("/0{3}-([169]\d)-(\d{4})/", $sid, $matches);
 			$id6 = $matches[1] . $matches[2];
 			$hash = password_hash($id6, PASSWORD_DEFAULT);
+			$teamsName = "$first $last";
 
 			$stmt = $db->prepare("INSERT INTO user VALUES
-				(NULL, :first, :last, :email, :pass, :type, NOW(), NOW(), :active)");
+				(NULL, :first, :last, :knownAs, :email, :studentId, :teamsName, 
+				:pass, :type, NOW(), NOW(), :active)");
 			$stmt->execute(array(
-				"first" => $first, "last" => $last, "email" => $email, 
+				"first" => $first, "last" => $last, "knownAs" => $first, 
+				"email" => $email, "studentId" => $id6, "teamsName" => $teamsName, 
 				"pass" => $hash, "type" => "user", "active" => 1));
 			$user_id = $db->lastInsertId();
 
