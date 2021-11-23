@@ -19,12 +19,12 @@
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
 				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
-                    <i id="edit" class="far fa-edit"></i>
-					<i id="clone" class="far fa-copy"></i>
-					<i id="info-btn" class="fas fa-info-circle"></i>
-					<a href="/videos/user"><i class="fas fa-users"></i></a>
+                    <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
+					<i title="Clone Offering" id="clone" class="far fa-copy"></i>
+					<i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+					<a href="/videos/user" title="Users"><i class="fas fa-users"></i></a>
 				<?php endif; ?>
-				<a href="logout"><i class="fas fa-power-off"></i></a>
+				<a href="logout" title="Logout"><i class="fas fa-power-off"></i></a>
 			</div>
             <div id="course">
                 <a href=".." id="course_num"><?= strtoupper($course) ?></a>
@@ -37,6 +37,15 @@
             </h1>
         </header>
         <main>
+            <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <nav>
+                <div title="Videos" class="active"><i class="fas fa-film"></i></div>
+                <div title="Labs"><i class="fas fa-flask"></i></div>
+                <div title="Quizzes"><i class="fas fa-school"></i></div>
+                <div title="Attendance"><i class="fas fa-user-check"></i></div>
+                <div title="Enrollment"><i class="fas fa-user-friends"></i></div>
+            </nav>
+            <?php endif; ?>
             <table id="days">
                 <tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
             <?php for ($w = 1; $w <= 4; $w++): ?>

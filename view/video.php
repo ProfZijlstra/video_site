@@ -22,10 +22,10 @@
             <i id="bars" class="fas fa-bars"></i>
 			<div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
 				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
-					<i id="info-btn" class="fas fa-info-circle"></i>
-					<a href="/videos/user"><i class="fas fa-users"></i></a>
+					<i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+					<a title="Users" href="/videos/user"><i class="fas fa-users"></i></a>
 				<?php endif; ?>
-				<a href="logout"><i class="fas fa-power-off"></i></a>
+				<a title="Logout" href="logout"><i class="fas fa-power-off"></i></a>
 			</div>
             <h1>
 				<span id="day" data-id="<?= $days[$day]["id"] ?>"><?= $day ?> - </span> 

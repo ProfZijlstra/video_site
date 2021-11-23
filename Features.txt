@@ -5,9 +5,8 @@
     - My Profile page with passwd and image
     - Auto scrape image from infosys
     - Auto load upcoming offerings to clone from infosys
-    - Default view speed
 - Add Quiz system
-- Add Assignment system
+- Add Lab system
 
 DONE:
 - Replies to Questions on Vidoes
@@ -22,3 +21,4 @@ DONE:
 - UI for changing day descriptions
 - Add view speed to session and DB
 - Add Nulls info column
+- Default view speed
