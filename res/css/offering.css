@@ -24,6 +24,13 @@ header {
 	text-decoration: none;
 	color: black;
 }
+nav.tools {
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 70px;
+}
 h1 > span.title {
     position: fixed;
     left: 55%;
@@ -53,7 +60,6 @@ main {
                 0 -6px 20px 0 rgba(0, 0, 0, 0.19);
 	min-height: 100vh;
 	background-color: #EEE;
-    padding-bottom: 2em;
 }
 table#days {
     margin-top: 20px;
@@ -109,7 +115,7 @@ div#total {
 #content td.num {
     text-align: right;
 }
-nav {
+nav.areas {
     font-size: 24px;
     position: absolute;
     background-color: #ddd;
@@ -120,7 +126,7 @@ nav {
     border-right: 1px solid black;
     box-shadow: 0px -4px 8px 0px #555 inset;
 }
-nav > div {
+nav.areas > div {
     border: 1px solid black;
     border-top: none;
     border-right: none;
@@ -128,7 +134,10 @@ nav > div {
     text-align: center;
     min-width: 100px;
 }
-nav > div.active {
+nav.areas > div > a {
+    display: block;
+}
+nav.areas > div.active {
     border-right: none;
     background-color: #eee;
     border-bottom-left-radius: 10px;

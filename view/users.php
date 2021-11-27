@@ -30,37 +30,27 @@
                 cursor: default;
             }
         </style>
-        <script>
-            window.addEventListener("load", () => {
-                document.querySelector("table").addEventListener("click", (evt) => {
-                    const target = evt.target;
-                    const link = target.parentNode.querySelector("a");
-                    if (link) {
-                        link.click();
-                    }
-                });
-            });
-        </script>
+        <script src="res/js/users.js"></script>
     </head>
     <body>
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<a href="logout"><i class="fas fa-power-off"></i></a>
+				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
 			</div>
             <h1><?= $title ?></h1>
         </header>
         <main>
+            <nav class="tools">
+                <a href="user/add"><i title="Add User" class="fas fa-user-plus"></i></a>
+            </nav>
             <div id="content">
-                <div id="add_btn">
-                    <a href="user/add"><button>Add User</button></a>
-                </div>
 
         <table>
             <thead>
             <tr>
                 <th>ID</th>
-                <th>first</th>
-                <th>last</th>
+                <th>Given</th>
+                <th>Family</th>
                 <th>email</th>
                 <th>created</th>
                 <th>accessed</th>

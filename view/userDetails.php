@@ -20,7 +20,7 @@ if (!isset($user)) {
     <body>
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<a href="logout"><i class="fas fa-power-off"></i></a>
+				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
 			</div>
             <h1>User Details:</h1>
         </header>

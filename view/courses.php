@@ -56,9 +56,9 @@
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
             <?php if ($_SESSION['user']['type'] === 'admin') : ?>
-                <a href="/videos/user"><i class="fas fa-users"></i></a>
+                <a href="/videos/user"><i title="Users" class="fas fa-users"></i></a>
             <?php endif; ?>
-				<a href="logout"><i class="fas fa-power-off"></i></a>
+				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
 			</div>
             <h1>Courses</h1>
         </header>

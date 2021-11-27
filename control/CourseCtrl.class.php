@@ -22,6 +22,10 @@ class CourseCtrl {
      * @Inject("DayDao")
      */
     public $dayDao;
+    /**
+     * @Inject('EnrollmentDao')
+     */
+    public $enrollmentDao;
 
     /**
      * @GET(uri="|^/?$|", sec="user")
@@ -86,5 +90,24 @@ class CourseCtrl {
 
         $this->dayDao->update($day_id, $desc);
         return "Location: ../${block}/";
+    }
+
+    /**
+     * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|", sec="admin")
+     */
+    public function viewEnrollment() {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_number = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
+        $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
+
+        $VIEW_DATA["course"] = $course_number;
+        $VIEW_DATA["enrollment"] = $enrollment;
+        $VIEW_DATA["offering"] = $offering;
+        return "enrollment.php";
     }
 }

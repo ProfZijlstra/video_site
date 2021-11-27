@@ -4,6 +4,7 @@
 - Improve user system
     - My Profile page with passwd and image
     - Auto scrape image from infosys
+        - for HTTP requests use: https://docs.guzzlephp.org/en/stable/
     - Auto load upcoming offerings to clone from infosys
 - Add Quiz system
 - Add Lab system
