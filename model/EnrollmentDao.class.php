@@ -38,6 +38,19 @@ class EnrollmentDao {
 		$stmt->execute(array("user_id" =>  $user_id));
 		return $stmt->fetch();
 	}
+
+	public function deleteEnrollment($offering_id) {
+		$stmt = $this->db->prepare(
+			"DELETE FROM enrollment 
+				WHERE offering_id = :offering_id");
+		$stmt->execute(["offering_id" => $offering_id]);
+	}
+
+	public function enroll($user_id, $offering_id) {
+		$stmt = $this->db->prepare("INSERT INTO enrollment 
+				VALUES(NULL, :user_id, :offering_id)");
+		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);
+	}
 }
 
 

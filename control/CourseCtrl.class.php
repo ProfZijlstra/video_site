@@ -26,6 +26,10 @@ class CourseCtrl {
      * @Inject('EnrollmentDao')
      */
     public $enrollmentDao;
+    /**
+     * @Inject('UserDao')
+     */
+    public $userDao;
 
     /**
      * @GET(uri="|^/?$|", sec="user")
@@ -109,5 +113,80 @@ class CourseCtrl {
         $VIEW_DATA["enrollment"] = $enrollment;
         $VIEW_DATA["offering"] = $offering;
         return "enrollment.php";
+    }
+
+    /**
+     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|", sec="admin")
+     */
+    public function replaceEnrollment() {
+        $offering_id = filter_input(INPUT_POST, "offering_id");
+        if ($offering_id && $_FILES["list"]) {
+            // delete current enrollment
+            $this->enrollmentDao->deleteEnrollment($offering_id);
+
+            // parse file for new students
+            $this->enrollStudentsInFile($_FILES["list"]["tmp_name"], $offering_id);
+        }
+
+        return "Location: enrollment";
+    }
+
+    private function enrollStudentsInFile($file, $offering_id) {
+        $lines = file($file);
+
+        # The CSV file should be formatted like a copy pasted infosys classlist
+        foreach($lines as $line) {
+        
+            # lines that do not start with an index and a studentId are ignored
+            if (preg_match("/^\d+\s*,\s*0{3}-[169]\d-\d{4}/", $line)) {
+                list($idx, $sid, $first, $middle, $last, $email) = str_getcsv($line);
+        
+                # create user if not already in DB
+                $user_id = $this->userDao->getUserId($email);
+                if (!$user_id) {
+                    $user_id = $this->createAccount($sid, $first, $middle, $last, $email);
+                }
+        
+                # enroll in the offering
+                $this->enrollmentDao->enroll($user_id, $offering_id);
+            }
+        }
+    }
+
+    private function createAccount($sid, $first, $middle, $last, $email) {
+        $given = "$first $middle";
+        $teamsName = "$given $last";
+        # transform social security formatted student ID into 6 digit 
+        $matches = array();
+        preg_match("/0{3}-([169]\d)-(\d{4})/", $sid, $matches);
+        $id6 = $matches[1] . $matches[2];
+        // make initial password be the 6 digit student ID
+        $hash = password_hash($id6, PASSWORD_DEFAULT);
+
+        $user_id = $this->userDao->insert($given, $last, $first, 
+            $email, $id6, $teamsName, $hash, "user", 1);
+    
+        # create custom welcome message
+        $message = 
+"Dear $first $middle $last,
+
+Professor Michael Zijlstra's course has its lecture videos at: https://manalabs.org/videos/
+
+To access these videos the following account has been created for you:
+
+user: $email
+pass: $id6
+
+Please do not reply to this email, instead please ask your questions in class!
+
+Enjoy your course,
+
+Manalabs.org Automated Account Creator
+";
+
+        #email the user about his newly created account
+        $headers ='FROM: "Manalabs Account Creator" <accounts@manalabs.org>';
+        mail($email, "CS472 manalabs.org account", $message, $headers);
+        return $user_id;
     }
 }

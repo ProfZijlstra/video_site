@@ -10,6 +10,8 @@ $mappings = array(
 	"GET" => array(
 		'|^/?$|' => 
 			['sec' => 'user', 'route' => 'CourseCtrl@showCourses'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|' => 
+			['sec' => 'admin', 'route' => 'CourseCtrl@viewEnrollment'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getQuestion$|' => 
 			['sec' => 'user', 'route' => 'QuestionCtrl@get'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getReply$|' => 
@@ -56,6 +58,8 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'CourseCtrl@cloneOffering'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/edit$|' => 
 			['sec' => 'admin', 'route' => 'CourseCtrl@editDay'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|' => 
+			['sec' => 'admin', 'route' => 'CourseCtrl@replaceEnrollment'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$|' => 
 			['sec' => 'user', 'route' => 'QuestionCtrl@add'],
 		'|^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delQuestion$|' => 
@@ -149,6 +153,8 @@ class Context {
             $this->objects["CourseCtrl"]->offeringDao = $this->get("OfferingDao");
             $this->objects["CourseCtrl"]->videoDao = $this->get("VideoDao");
             $this->objects["CourseCtrl"]->dayDao = $this->get("DayDao");
+            $this->objects["CourseCtrl"]->enrollmentDao = $this->get("EnrollmentDao");
+            $this->objects["CourseCtrl"]->userDao = $this->get("UserDao");
         }
         if ($id === "QuestionCtrl" && !isset($this->objects["QuestionCtrl"])) {
             $this->objects["QuestionCtrl"] = new QuestionCtrl();
