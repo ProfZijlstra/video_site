@@ -8,6 +8,8 @@
  ******************************************************************************/
 $mappings = array(
 	"GET" => array(
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@overview'],
 		'|^/?$|' => 
 			['sec' => 'user', 'route' => 'CourseCtrl@showCourses'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|' => 
@@ -54,6 +56,8 @@ $mappings = array(
 			['sec' => 'none', 'route' => 'ViewCtrl@enrollemnt'],
 	),
 	"POST" => array(
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@addMeeting'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/clone$|' => 
 			['sec' => 'admin', 'route' => 'CourseCtrl@cloneOffering'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/edit$|' => 
@@ -104,6 +108,14 @@ class Context {
     }
 
     public function get($id) {
+        if ($id === "AttendanceDao" && !isset($this->objects["AttendanceDao"])) {
+            $this->objects["AttendanceDao"] = new AttendanceDao();
+            $this->objects["AttendanceDao"]->db = $this->get("DB");
+        }
+        if ($id === "AttendanceDataDao" && !isset($this->objects["AttendanceDataDao"])) {
+            $this->objects["AttendanceDataDao"] = new AttendanceDataDao();
+            $this->objects["AttendanceDataDao"]->db = $this->get("DB");
+        }
         if ($id === "CourseDao" && !isset($this->objects["CourseDao"])) {
             $this->objects["CourseDao"] = new CourseDao();
             $this->objects["CourseDao"]->db = $this->get("DB");
@@ -115,6 +127,10 @@ class Context {
         if ($id === "EnrollmentDao" && !isset($this->objects["EnrollmentDao"])) {
             $this->objects["EnrollmentDao"] = new EnrollmentDao();
             $this->objects["EnrollmentDao"]->db = $this->get("DB");
+        }
+        if ($id === "MeetingDao" && !isset($this->objects["MeetingDao"])) {
+            $this->objects["MeetingDao"] = new MeetingDao();
+            $this->objects["MeetingDao"]->db = $this->get("DB");
         }
         if ($id === "OfferingDao" && !isset($this->objects["OfferingDao"])) {
             $this->objects["OfferingDao"] = new OfferingDao();
@@ -146,6 +162,16 @@ class Context {
         if ($id === "ViewDao" && !isset($this->objects["ViewDao"])) {
             $this->objects["ViewDao"] = new ViewDao();
             $this->objects["ViewDao"]->db = $this->get("DB");
+        }
+        if ($id === "AttendanceCtrl" && !isset($this->objects["AttendanceCtrl"])) {
+            $this->objects["AttendanceCtrl"] = new AttendanceCtrl();
+            $this->objects["AttendanceCtrl"]->meetingDao = $this->get("MeetingDao");
+            $this->objects["AttendanceCtrl"]->attendanceDataDao = $this->get("AttendanceDataDao");
+            $this->objects["AttendanceCtrl"]->attendanceDao = $this->get("AttendanceDao");
+            $this->objects["AttendanceCtrl"]->videoCtrl = $this->get("VideoCtrl");
+            $this->objects["AttendanceCtrl"]->enrollmentDao = $this->get("EnrollmentDao");
+            $this->objects["AttendanceCtrl"]->dayDao = $this->get("DayDao");
+            $this->objects["AttendanceCtrl"]->offeringDao = $this->get("OfferingDao");
         }
         if ($id === "CourseCtrl" && !isset($this->objects["CourseCtrl"])) {
             $this->objects["CourseCtrl"] = new CourseCtrl();

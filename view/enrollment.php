@@ -14,56 +14,9 @@
             #content table {
                 cursor: pointer;
             }
-            .modal {
-                border: 1px solid black;
-                margin-left: auto;
-                margin-right: auto;
-                width: 700px;
-                padding: 1em;
-                position: relative;
-                top: 100px;
-                background-color: white;
-            }
-            .modal h3 {
-                border-bottom: 1px solid black;
-            }
-            .modal input {
-                width: 100%;
-                border: 1px solid #ddd;
-            }
-            .modal .btn {
-                margin-top: 10px;
-                text-align: right;
-            }
         </style>
         <script src="res/js/users.js"></script>
-        <script>
-            window.addEventListener("load", () => {
-                const overlay = document.getElementById("overlay");
-                document.getElementById("upload").addEventListener("click", () => {
-                    overlay.classList.add("visible");
-                });
-                function hide() {
-                    overlay.classList.remove("visible");
-                }
-                document.getElementById("close-overlay").onclick = hide;
-
-                document.getElementById("overlay").onclick = function (evt) {
-                    if (evt.target == this) {
-                        hide();
-                    }
-                };
-
-                document.getElementById("upload_form").onsubmit = () => {
-                    const file = document.getElementById("list_file");
-                    if (!file.value) {
-                        return false;
-                    }
-                };
-            });
-
-
-        </script>
+        <script src="res/js/enrollment.js"></script>
     </head>
     <body>
         <header>
@@ -89,7 +42,7 @@
                 <div title="Videos"><a href="../<?= $offering['block'] ?>/"><i class="fas fa-film"></a></i></div>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
                 <div title="Quizzes"><i class="fas fa-school"></i></div>
-                <div title="Attendance"><i class="fas fa-user-check"></i></div>
+                <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrollment" class="active"><i class="fas fa-user-friends"></i></div>
             </nav>
             <div id="content">

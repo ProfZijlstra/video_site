@@ -61,5 +61,13 @@ class DayDao {
 				"abbr" => $day["abbr"], "desc" => $day["desc"]));
 		}		
 	}
+
+	public function get($day_id) {
+		$stmt = $this->db->prepare("SELECT *
+			FROM day 
+			WHERE id = :day_id");
+		$stmt->execute(["day_id" => $day_id]);
+		return $stmt->fetch();
+	}
 }
 
