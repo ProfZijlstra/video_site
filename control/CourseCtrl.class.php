@@ -67,9 +67,9 @@ class CourseCtrl {
         $course_number = $URI_PARAMS[1];
         $old_block = $URI_PARAMS[2];
 
-		$offering_id = filter_input(INPUT_POST, "offering_id");
-        $block = filter_input(INPUT_POST, "block");
-        $start = filter_input(INPUT_POST, "date");
+		$offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+        $block = filter_input(INPUT_POST, "block", FILTER_SANITIZE_STRING);
+        $start = filter_input(INPUT_POST, "date", FILTER_SANITIZE_STRING);
 
         // calculate stop date
         $stop = date_create($start);
@@ -89,8 +89,8 @@ class CourseCtrl {
         global $URI_PARAMS;
         $block = $URI_PARAMS[2];
 
-        $day_id = filter_input(INPUT_POST, "day_id");
-        $desc = filter_input(INPUT_POST, "desc");
+        $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
+        $desc = filter_input(INPUT_POST, "desc", FILTER_SANITIZE_STRING);
 
         $this->dayDao->update($day_id, $desc);
         return "Location: ../${block}/";
@@ -119,7 +119,7 @@ class CourseCtrl {
      * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|", sec="admin")
      */
     public function replaceEnrollment() {
-        $offering_id = filter_input(INPUT_POST, "offering_id");
+        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         if ($offering_id && $_FILES["list"]) {
             // delete current enrollment
             $this->enrollmentDao->deleteEnrollment($offering_id);
@@ -186,7 +186,7 @@ Manalabs.org Automated Account Creator
 
         #email the user about his newly created account
         $headers ='FROM: "Manalabs Account Creator" <accounts@manalabs.org>';
-        mail($email, "CS472 manalabs.org account", $message, $headers);
+        mail($email, "Prof Zijlstra's manalabs.org account", $message, $headers);
         return $user_id;
     }
 }
