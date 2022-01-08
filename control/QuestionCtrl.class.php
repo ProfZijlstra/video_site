@@ -47,7 +47,7 @@ class QuestionCtrl
         $tab = filter_input(INPUT_POST, "tab");
         $id = $this->questionDao->add($question, $user_id, $video);
 
-        $message = "See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#q${id}";
+        $message = "$question \n\nSee question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#q${id}";
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
         mail("mzijlstra@miu.edu", "${course} Question or Comment", $message, $headers);
 
@@ -187,7 +187,7 @@ class QuestionCtrl
         $qid = filter_input(INPUT_POST, "id");
         $id = $this->replyDao->add($text, $user_id, $qid);
 
-        $message = "See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+        $message = "$text \n\nSee reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
         mail("mzijlstra@miu.edu", "${course} Reply", $message, $headers);
 
