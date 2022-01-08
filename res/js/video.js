@@ -46,6 +46,12 @@ window.addEventListener('load', () => {
         video.playbackRate = speed;
         postSpeed(speed);
     };
+    function normalSpeed() {
+        const speed = 1.0;
+        curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
+        video.playbackRate = speed;
+        postSpeed(speed);
+    }
     function postSpeed(speed) {
         fetch('./speed', {
             method : 'POST',
@@ -54,6 +60,7 @@ window.addEventListener('load', () => {
                 {'Content-Type' : 'application/x-www-form-urlencoded'},
         });
     }
+    curSpeed.onclick = normalSpeed;
     document.getElementById('faster').onclick = faster;
     document.getElementById('slower').onclick = slower;
     // set speed when page is loaded
