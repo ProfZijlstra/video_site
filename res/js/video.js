@@ -94,6 +94,7 @@ window.addEventListener('load', () => {
     // play and pause events are communicated to the server
     let view_id = false;
     function playHandler(evt) {
+        window.scrollTo(0,80);
         const video_name = encodeURIComponent(evt.target.parentNode.id);
         // invalidate any old id that may have still been in the system
         view_id = false;
