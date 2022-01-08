@@ -107,7 +107,7 @@ foreach($files as $info) :
             <h2>Questions & Comments</h2>
             <?php foreach ($questions as $question) : ?>
                 <div class="author">
-                    <?= $question["firstname"]?> <?= $question["lastname"]?>  
+                    <?= $question["knownAs"]?> <?= $question["lastname"]?>  
                     <span class="date">created: <?= $question["created"]?></span>
                     <?php if ($question["edited"]) : ?>
                         <span class="date">edited: <?= $question["edited"]?></span>
@@ -136,7 +136,7 @@ foreach($files as $info) :
                     <div class="qText"><?= $parsedown->text($question["text"]) ?></div>
                     <?php foreach ($replies[$question['id']] as $reply) : ?>
                         <div class="author">
-                            <?= $reply["firstname"]?> <?= $reply["lastname"]?>  
+                            <?= $reply["knownAs"]?> <?= $reply["lastname"]?>  
                             <span class="date">created: <?= $reply["created"]?></span>
                             <?php if ($reply["edited"]) : ?>
                                 <span class="date">edited: <?= $reply["edited"]?></span>

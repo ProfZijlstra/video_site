@@ -20,7 +20,7 @@ class ReplyDao
         $inject = implode(",", $qids);
         $stmt = $this->db->prepare(
             "SELECT r.id, r.text, r.user_id, r.created, r.edited, r.question_id,
-			u.firstname, u.lastname, v.id AS vote_id, v.vote AS vote,
+			u.knownAs, u.lastname, v.id AS vote_id, v.vote AS vote,
 			SUM(t.vote) AS vote_total
             FROM reply r
 			JOIN user u ON r.user_id = u.id

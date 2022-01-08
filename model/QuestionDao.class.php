@@ -16,7 +16,7 @@ class QuestionDao {
     public function getAllFor($video, $user_id) {
         $stmt = $this->db->prepare(
 			"SELECT q.id, q.text, q.user_id, q.created, q.edited, 
-			u.firstname, u.lastname, v.id AS vote_id, v.vote AS vote, 
+			u.knownAs, u.lastname, v.id AS vote_id, v.vote AS vote, 
 			SUM(v2.vote) AS vote_total
             FROM question q 
 			JOIN user u ON q.user_id = u.id
