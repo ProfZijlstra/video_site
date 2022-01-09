@@ -154,8 +154,8 @@ class CourseCtrl {
     }
 
     private function createAccount($sid, $first, $middle, $last, $email) {
-        $given = "$first $middle";
-        $teamsName = "$given $last";
+        $given = trim($first) . " " . trim($middle);
+        $teamsName = trim($given) . " " . trim($last);
         # transform social security formatted student ID into 6 digit 
         $matches = array();
         preg_match("/0{3}-([169]\d)-(\d{4})/", $sid, $matches);
