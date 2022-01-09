@@ -217,7 +217,7 @@ class UserCtrl {
         if (!$first) {
             $error .= "first ";
         }
-        if (! $last) {
+        if (!$last) {
             $error .= "last ";
         }
         if (!$email) {
