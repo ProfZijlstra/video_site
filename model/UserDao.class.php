@@ -129,7 +129,6 @@ class UserDao {
         $stmt = $this->db->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->execute(array("email" => $email));
         if ($stmt->rowCount() == 0) {
-            print("$email not found");
             return null;
         } else {
             $row = $stmt->fetch();
