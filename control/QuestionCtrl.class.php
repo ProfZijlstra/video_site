@@ -30,6 +30,11 @@ class QuestionCtrl
     public $replyVoteDao;
 
     /**
+     * @Inject("UserDao")
+     */
+    public $userDao;
+
+    /**
      * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$|", sec="user")
      */
     public function add()
@@ -46,8 +51,12 @@ class QuestionCtrl
         $question = htmlspecialchars(filter_input(INPUT_POST, "question"), ENT_NOQUOTES);
         $tab = filter_input(INPUT_POST, "tab");
         $id = $this->questionDao->add($question, $user_id, $video);
+        $user = $this->userDao->retrieve($user_id);
 
-        $message = "$question \n\nSee question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#q${id}";
+        $message = $user["knownAs"] . " " . $user["lastname"] . 
+            "asks:\n\n$question\n
+See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
         mail("mzijlstra@miu.edu", "${course} Question or Comment", $message, $headers);
 
@@ -184,10 +193,14 @@ class QuestionCtrl
         // see comment inside add method about why htmlspecialchars()
         $text = htmlspecialchars(filter_input(INPUT_POST, "text"), ENT_NOQUOTES);
         $user_id = $_SESSION['user']['id'];
+        $user = $this->userDao->retrieve($user_id);
         $qid = filter_input(INPUT_POST, "id");
         $id = $this->replyDao->add($text, $user_id, $qid);
 
-        $message = "$text \n\nSee reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+        $message = $user["knownAs"] . " " . $user["lastname"] . 
+            "asks:\n\n$text\n
+See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
         mail("mzijlstra@miu.edu", "${course} Reply", $message, $headers);
 
