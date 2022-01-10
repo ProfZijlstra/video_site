@@ -22,7 +22,8 @@ class EnrollmentDao {
 		$stmt = $this->db->prepare("SELECT u.id, u.knownAs, u.studentID, 
 			u.firstname, u.lastname, u.email, u.teamsName
             FROM enrollment e JOIN user u ON e.user_id = u.id 
-            WHERE offering_id = :offering_id");
+            WHERE offering_id = :offering_id
+			ORDER BY u.firstname");
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
 	}
