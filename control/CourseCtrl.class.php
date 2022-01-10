@@ -97,7 +97,7 @@ class CourseCtrl {
     }
 
     /**
-     * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|", sec="admin")
+     * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$|", sec="admin")
      */
     public function viewEnrollment() {
         global $URI_PARAMS;
