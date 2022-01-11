@@ -24,7 +24,7 @@
 				<a href="logout" title="Logout"><i title="Logout" class="fas fa-power-off"></i></a>
 			</div>
             <div id="course">
-                <?= strtoupper($course) ?>
+                <span id="course_num"><?= strtoupper($course) ?></span>
                 <span data-id="<?= $offering['id']?>" id="offering"> <?= $offering['block'] ?> </span>
             </div>
             <h1>
