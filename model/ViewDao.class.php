@@ -63,7 +63,7 @@ class ViewDao {
 			"SELECT d.abbr, d.desc, 
 			COUNT(DISTINCT v.user_id) AS users, 
 			COUNT(v.id) AS views, 
-			FORMAT(SUM(v.stop - v.start)/3600, 2) AS time 
+			FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
 			FROM view AS v 
 			JOIN day AS d ON v.day_id = d.id 
 			WHERE d.offering_id = :offering_id 
@@ -78,7 +78,7 @@ class ViewDao {
 		$stmt = $this->db->prepare(
 			"SELECT COUNT(DISTINCT v.user_id) AS users, 
 			FORMAT(COUNT(v.id), 0) AS views, 
-			FORMAT(SUM(stop - start)/3600, 2) AS time 
+			FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
 			FROM view as v 
 			JOIN day AS d ON v.day_id = d.id 
 			WHERE d.offering_id = :offering_id 
@@ -93,7 +93,7 @@ class ViewDao {
 		$stmt = $this->db->prepare(
 			"SELECT video, COUNT(DISTINCT user_id) AS users, 
 			COUNT(id) AS views, 
-			FORMAT(SUM(stop - start)/3600, 2) AS time 
+			FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
 			FROM view 
 			WHERE day_id = :day_id 
 			AND too_long = 0
@@ -106,7 +106,7 @@ class ViewDao {
 	public function day_total($day_id) {
 		$stmt = $this->db->prepare(
 			"SELECT COUNT(DISTINCT user_id) AS users, COUNT(id) AS views, 
-			FORMAT(SUM(stop - start)/3600, 2) AS time 
+			FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
 			FROM view 
 			WHERE day_id = :day_id 
 			AND too_long = 0
@@ -120,10 +120,10 @@ class ViewDao {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.firstname, u.lastname, 
 			SUM(CASE WHEN v.too_long = 0 
-				THEN v.stop - v.start 
+				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
 				ELSE 0 
 				END)/3600 as `hours`,
-			SUM(v.stop - v.start)/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video,
@@ -146,10 +146,10 @@ class ViewDao {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.firstname, u.lastname, 
 			SUM(CASE WHEN v.too_long = 0 
-				THEN v.stop - v.start 
+				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
 				ELSE 0 
 				END)/3600 as `hours`,
-			SUM(v.stop - v.start)/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video,
@@ -170,10 +170,10 @@ class ViewDao {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.firstname, u.lastname, 
 			SUM(CASE WHEN v.too_long = 0 
-				THEN v.stop - v.start 
+				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
 				ELSE 0 
 				END)/3600 as `hours`,
-			SUM(v.stop - v.start)/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video,
@@ -195,10 +195,10 @@ class ViewDao {
 		$stmt = $this->db->prepare(
 			"SELECT d.abbr as abbr, v.video as video,
 			SUM(CASE WHEN v.too_long = 0 
-				THEN v.stop - v.start 
+				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
 				ELSE 0 
 				END)/3600 as `hours`,
-			SUM(v.stop - v.start)/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video_views,
