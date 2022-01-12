@@ -10,9 +10,11 @@ $mappings = array(
 	"GET" => array(
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|' => 
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@overview'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@getMeeting'],
 		'|^/?$|' => 
 			['sec' => 'user', 'route' => 'CourseCtrl@showCourses'],
-		'|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|' => 
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$|' => 
 			['sec' => 'admin', 'route' => 'CourseCtrl@viewEnrollment'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getQuestion$|' => 
 			['sec' => 'user', 'route' => 'QuestionCtrl@get'],
@@ -28,6 +30,8 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'UserCtrl@all'],
 		'|^/user/(\d+)$|' => 
 			['sec' => 'admin', 'route' => 'UserCtrl@details'],
+		'|^/user/(\D.*)$|' => 
+			['sec' => 'admin', 'route' => 'UserCtrl@teamsName'],
 		'|^/(cs\d{3})/?$|' => 
 			['sec' => 'user', 'route' => 'VideoCtrl@loggedIn'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$|' => 
@@ -56,6 +60,12 @@ $mappings = array(
 			['sec' => 'none', 'route' => 'ViewCtrl@enrollemnt'],
 	),
 	"POST" => array(
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@updMeeting'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/meeting/regen/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@regenReport'],
+		'|^/(cs\d{3})/(20\d{2}-\d{2})/meeting/attend/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@updateAttendance'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|' => 
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@addMeeting'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/clone$|' => 
@@ -188,6 +198,7 @@ class Context {
             $this->objects["QuestionCtrl"]->questionVoteDao = $this->get("QuestionVoteDao");
             $this->objects["QuestionCtrl"]->replyDao = $this->get("ReplyDao");
             $this->objects["QuestionCtrl"]->replyVoteDao = $this->get("ReplyVoteDao");
+            $this->objects["QuestionCtrl"]->userDao = $this->get("UserDao");
         }
         if ($id === "UserCtrl" && !isset($this->objects["UserCtrl"])) {
             $this->objects["UserCtrl"] = new UserCtrl();

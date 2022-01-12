@@ -126,6 +126,20 @@ class UserCtrl {
     }
 
     /**
+     * @GET(uri="|^/user/(\D.*)$|", sec="admin")
+     */
+    public function teamsName() {
+        global $URI_PARAMS;
+
+        $teamsName = urldecode($URI_PARAMS[1]);
+        $uid = $this->userDao->byTeamsName($teamsName);
+        if (!$uid) {
+            $uid = [ $teamsName, "not found" ];
+        }
+        return "Location: $uid";
+    }
+
+    /**
      * Show the create user page
      * 
      * @GET(uri="|^/user/add$|", sec="admin")

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><?= $course ?> Videos</title>
+        <title><?= $offering['block'] ?> Attendance</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
@@ -14,7 +14,6 @@
                 text-align: left;
             }
             div.meeting {
-                font-size; 10px;
                 max-height: 15px;
                 overflow: hidden;
                 margin: 10px 0px;
@@ -26,9 +25,7 @@
     <body>
         <header>
 			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
-					<a href="/videos/user" title="Users"><i class="fas fa-users"></i></a>
-				<?php endif; ?>
+                <a href="/videos/user" title="Users"><i class="fas fa-users"></i></a>
 				<a href="logout" title="Logout"><i title="Logout" class="fas fa-power-off"></i></a>
 			</div>
             <div id="course">
@@ -37,7 +34,7 @@
             </div>
             <h1>
                 <span class="title" >
-					<?= Attendance ?> 
+					Attendance
 				</span>
             </h1>
         </header>
@@ -47,7 +44,7 @@
                 <div title="Labs"><i class="fas fa-flask"></i></div>
                 <div title="Quizzes"><i class="fas fa-school"></i></div>
                 <div title="Attendance" class="active"><i class="fas fa-user-check"></i></div>
-                <div title="Enrollment"><a href="enrollment"><i class="fas fa-user-friends"></i></a></div>
+                <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
             </nav>
 
             <table id="days">

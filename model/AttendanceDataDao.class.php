@@ -26,8 +26,10 @@ class AttendanceDataDao {
     }
 
     public function uniqueUsersForMeeting($meeting_id) {
-        $stmt = $this->db->prepare("SELECT teamsName, MIN(start), MAX(stop) 
-                    FROM attendance_data WHERE meeting_id = :meeting_id ");
+        $stmt = $this->db->prepare("SELECT teamsName, MIN(start) as `start`, 
+                        MAX(stop) as `stop` 
+                    FROM attendance_data WHERE meeting_id = :meeting_id 
+                    GROUP BY teamsName");
         $stmt->execute(["meeting_id" => $meeting_id]);
         return $stmt->fetchAll();
     }

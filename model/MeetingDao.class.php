@@ -27,4 +27,22 @@ class MeetingDao {
         $stmt->execute(["offering_id" => $offering_id]);
         return $stmt->fetchAll();
     }
+
+    public function get($id) {
+        $stmt = $this->db->prepare("SELECT * 
+                FROM meeting 
+                WHERE id = :id ");
+        $stmt->execute(["id" => $id]);
+        return $stmt->fetch();
+    }
+
+    public function update($id, $title, $date, $start, $stop, $weight) {
+        $stmt = $this->db->prepare("UPDATE meeting 
+                SET title = :title, `date` = :date, 
+                    `start` = :start, `stop` = :stop, 
+                    `sessionWeight` = :weight
+                WHERE id = :id ");
+        $stmt->execute(["id" => $id, "title" => $title, "date" => $date, 
+                        "start" => $start, "stop" => $stop, "weight" => $weight]);
+    }
 }

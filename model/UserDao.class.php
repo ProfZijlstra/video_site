@@ -136,4 +136,15 @@ class UserDao {
         }
     }
 
+    public function byTeamsName($teamsName) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM user WHERE teamsName = :teamsName");
+        $stmt->execute(array("teamsName" => $teamsName));
+        if ($stmt->rowCount() == 0) {
+            return null;
+        } else {
+            $row = $stmt->fetch();
+            return $row["id"];
+        }
+    }
 }

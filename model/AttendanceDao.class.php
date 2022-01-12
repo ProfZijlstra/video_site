@@ -33,4 +33,23 @@ class AttendanceDao {
             ]);
         }
     }
+
+    public function forMeeting($meeting_id) {
+        $stmt = $this->db->prepare("SELECT *
+                FROM attendance
+                WHERE meeting_id = :meeting_id");
+        $stmt->execute(["meeting_id" => $meeting_id]);
+        return $stmt->fetchAll();        
+    }
+
+    public function update($data) {      
+        var_dump($data);
+        $stmt = $this->db->prepare("UPDATE attendance SET 
+            arriveLate = :late,
+            leaveEarly = :left, 
+            middleMissing = :mid, 
+            inClass = :phys
+            WHERE id = :id");
+        $stmt->execute($data);
+    }
 }
