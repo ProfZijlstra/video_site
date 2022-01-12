@@ -195,13 +195,15 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         $user_id = $_SESSION['user']['id'];
         $user = $this->userDao->retrieve($user_id);
         $qid = filter_input(INPUT_POST, "id");
+        $op_email = $this->questionDao->getUserEmail($qid);
         $id = $this->replyDao->add($text, $user_id, $qid);
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
-            "asks:\n\n$text\n
+            "says:\n\n$text\n
 See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
 
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
+        mail($op_email, "$course Reply", $message, $headers);
         mail("mzijlstra@miu.edu", "${course} Reply", $message, $headers);
 
         return "Location: ${tab}#r${id}";

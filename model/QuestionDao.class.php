@@ -40,6 +40,18 @@ class QuestionDao {
 		return $stmt->fetch();
     }
 
+	public function getUserEmail($id) {
+		$stmt = $this->db->prepare(
+			"SELECT u.email
+            FROM question AS q 
+			JOIN user AS u ON q.user_id = u.id
+            WHERE q.id = :id"
+		);
+		$stmt->execute(array("id" =>  $id));
+		$result = $stmt->fetch();
+		return $result["email"];
+	}
+
 	public function add($question, $user_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO question 
 			VALUES(NULL, :question, :user_id, :video, NOW(), NULL)");
