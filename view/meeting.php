@@ -12,22 +12,18 @@
         h3 {
             margin-bottom: 0px;
         }
-
         label {
             display: inline-block;
             width: 100px;
         }
-
         input[type=text],
         input[type=date] {
             width: 638px;
         }
-
         div.btns {
             margin-top: 5px;
             text-align: right;
         }
-
         td.cbox {
             width: 50px;
             text-align: center;
@@ -38,61 +34,20 @@
         #back {
             cursor: pointer;
         }
+        td.name {
+            position: relative;
+        }
+        td.name span.right {
+            position: absolute;
+            right: 3px;
+            color: gray;
+            cursor: pointer;
+        }
+        td.student_id {
+            text-align: center;
+        }
     </style>
-    <script>
-        window.addEventListener("load", () => {
-            document.getElementById("back").onclick = () => {
-                window.history.go(-1);
-            };
-
-            const present = document.getElementById("present");
-            if (present) {
-                present.onclick = (evt) => {
-                    if (evt.target.tagName === "INPUT") {
-                        doUpdate(evt);
-                    } 
-                };
-            }
-            function doUpdate(evt) {
-                const tr = evt.target.parentNode.parentNode;
-                const id = tr.dataset.id;
-                const boxes = tr.getElementsByTagName("input");
-                const update = {
-                    "id": id, "late":0, "mid":0, "left":0, "phys":0
-                };
-                for (const box of boxes) {
-                    if (box.checked) {
-                        const name = box.getAttribute("name");
-                        update[name] = 1;
-                    }
-                }
-                console.log(update);
-
-                fetch(`attend/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(update)
-                });
-            }
-
-            document.getElementById("regen").onclick = () => {
-                const boxes = present.getElementsByClassName("phys");
-                let has_phys = false;
-                for (const box of boxes) {
-                    if (box.checked) {
-                        has_phys = true;
-                        break;
-                    }
-                }
-                if (has_phys && !confirm("Regenerate and delete all physical attendance?")) {
-                    return false;
-                }
-                return true;
-            };
-        });
-    </script>
+    <script src="res/js/meeting.js"></script>
 </head>
 
 <body>
@@ -167,11 +122,17 @@
 
             <!-- Absent -->
             <?php if ($absent) : ?>
+                <form id="presentForm" method="post" action="<?= $meeting["id"]?>/present">
+                    <input id="present_id" type="hidden" name="attendance_id" value="" />
+                </form>
                 <h3>Absent</h3>
                 <table>
                     <?php foreach ($absent as $missing) : ?>
-                        <tr>
-                            <td><a href="../../../user/<?= $missing["teamsName"] ?>"><?= $missing["teamsName"] ?></a></td>
+                        <tr data-id="<?= $missing["id"] //is attendance id ?>" id="<?= $missing["id"] ?>">
+                            <td class="name">
+                                <a href="../../../user/<?= $missing["teamsName"] ?>"><?= $missing["teamsName"] ?></a>
+                                <span class="right present">present</span>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
@@ -179,9 +140,13 @@
 
             <!-- Present -->
             <?php if ($present) : ?>
+                <form id="absentForm" method="post" action="<?= $meeting["id"]?>/absent">
+                    <input id="absent_id" type="hidden" name="attendance_id" value="" />
+                </form>
                 <h3>Present</h3>
                 <table id="present">
                     <tr>
+                        <th title="Student ID">ID</th>
                         <th>Name</th>
                         <th title="Arrived Late">Late</th>
                         <th title="Missed Middle">MisMid</th>
@@ -189,9 +154,13 @@
                         <th title="In Physical Room">Phys</th>
                     </tr>
                     <?php foreach ($present as $student) : ?>
-                        <tr data-id="<?= $student["id"] //is attendance id, not student id ?>">
-                            <td>
+                        <tr data-id="<?= $student["id"] //is attendance id, not student id ?>" id="<?= $student["id"]?>">
+                            <td class="student_id">
+                                <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["studentID"] ?></a>
+                            </td>
+                            <td class="name">
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["teamsName"] ?></a>
+                                <span class="right absent">absent</span>
                             </td>
                             <td class="cbox" title="Arrived Late">
                                 <input type="checkbox" name="late" value="late" <?= $student["arriveLate"] ? "checked" : "" ?> />

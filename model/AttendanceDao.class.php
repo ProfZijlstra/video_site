@@ -35,15 +35,17 @@ class AttendanceDao {
     }
 
     public function forMeeting($meeting_id) {
-        $stmt = $this->db->prepare("SELECT *
-                FROM attendance
+        $stmt = $this->db->prepare("SELECT a.id, a.teamsName, u.studentID,
+                    a.arriveLate, a.middleMissing, a.leaveEarly, a.inClass,
+                    a.notEnrolled, a.absent, a.meeting_id
+                FROM attendance AS a
+                LEFT JOIN user AS u on a.teamsName = u.teamsName
                 WHERE meeting_id = :meeting_id");
         $stmt->execute(["meeting_id" => $meeting_id]);
         return $stmt->fetchAll();        
     }
 
     public function update($data) {      
-        var_dump($data);
         $stmt = $this->db->prepare("UPDATE attendance SET 
             arriveLate = :late,
             leaveEarly = :left, 
@@ -51,5 +53,12 @@ class AttendanceDao {
             inClass = :phys
             WHERE id = :id");
         $stmt->execute($data);
+    }
+
+    public function markAbsent($id, $absent) {
+        $stmt = $this->db->prepare("UPDATE attendance SET 
+            `absent` = :absent 
+            WHERE id = :id");
+        $stmt->execute(["id" => $id, "absent" => $absent]);
     }
 }

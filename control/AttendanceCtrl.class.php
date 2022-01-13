@@ -128,7 +128,7 @@ class AttendanceCtrl
      */
     public function regenReport()
     {
-        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);;
+        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         $meeting_id = filter_input(INPUT_POST, "meeting_id", FILTER_SANITIZE_NUMBER_INT);
         $start = filter_input(INPUT_POST, "start", FILTER_SANITIZE_STRING);
         $stop = filter_input(INPUT_POST, "stop", FILTER_SANITIZE_STRING);
@@ -144,6 +144,32 @@ class AttendanceCtrl
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         $this->attendanceDao->update($data);
+    }
+
+    /**
+     * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/absent$|", sec="admin")
+     */
+    public function markAbsent() {
+        global $URI_PARAMS;
+
+        $meeting_id = $URI_PARAMS[1];
+        $attendance_id = filter_input(INPUT_POST, "attendance_id", FILTER_SANITIZE_NUMBER_INT);
+        $this->attendanceDao->markAbsent($attendance_id, 1);
+
+        return "Location: ../$meeting_id#$attendance_id";
+    }
+
+    /**
+     * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/present$|", sec="admin")
+     */
+    public function markPresent() {
+        global $URI_PARAMS;
+
+        $meeting_id = $URI_PARAMS[1];
+        $attendance_id = filter_input(INPUT_POST, "attendance_id", FILTER_SANITIZE_NUMBER_INT);
+        $this->attendanceDao->markAbsent($attendance_id, 0);
+
+        return "Location: ../$meeting_id#$attendance_id";
     }
 
     /**
