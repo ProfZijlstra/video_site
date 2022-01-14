@@ -108,18 +108,6 @@
                 </form>
             </div>
 
-            <!-- Visitors -->
-            <?php if ($visitors) : ?>
-                <h3>Not Enrolled</h3>
-                <table>
-                    <?php foreach ($visitors as $visitor) : ?>
-                        <tr>
-                            <td><?= $visitor["teamsName"] ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
-
             <!-- Absent -->
             <?php if ($absent) : ?>
                 <form id="presentForm" method="post" action="<?= $meeting["id"]?>/present">
@@ -174,6 +162,18 @@
                             <td class="cbox" title="In Physical Room">
                                 <input type="checkbox" name="phys" value="phys" class="phys" <?= $student["inClass"] ? "checked" : "" ?> />
                             </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endif; ?>
+
+            <!-- Visitors -->
+            <?php if ($visitors) : ?>
+                <h3>Not Enrolled</h3>
+                <table>
+                    <?php foreach ($visitors as $visitor) : ?>
+                        <tr>
+                            <td><?= $visitor["teamsName"] ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
