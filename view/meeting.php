@@ -158,7 +158,7 @@
                             <td class="student_id">
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["studentID"] ?></a>
                             </td>
-                            <td class="name">
+                            <td class="name" title="<?= $student["start"] . " - " . $student["stop"] ?>">
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["teamsName"] ?></a>
                                 <span class="right absent">absent</span>
                             </td>
