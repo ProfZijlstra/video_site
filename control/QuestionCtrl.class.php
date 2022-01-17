@@ -54,7 +54,7 @@ class QuestionCtrl
         $user = $this->userDao->retrieve($user_id);
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
-            "asks:\n\n$question\n
+            " asks:\n\n$question\n
 See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
 
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
@@ -199,7 +199,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         $id = $this->replyDao->add($text, $user_id, $qid);
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
-            "says:\n\n$text\n
+            " says:\n\n$text\n
 See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
 
         $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
