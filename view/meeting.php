@@ -31,9 +31,6 @@
         .btns button {
             width: 200px;
         }
-        #back {
-            cursor: pointer;
-        }
         td.name {
             position: relative;
         }
@@ -57,7 +54,9 @@
             <a href="logout" title="Logout"><i title="Logout" class="fas fa-power-off"></i></a>
         </div>
         <div id="course">
-            <i class="fas fa-arrow-left" id="back"></i>
+            <div id="course">
+                <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
+            </div>
         </div>
         <h1>
             <span class="title">

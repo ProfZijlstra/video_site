@@ -1,6 +1,4 @@
 window.addEventListener("load", () => {
-    document.getElementById("back").onclick = () => { window.history.go(-1); };
-
     const present = document.getElementById("present");
     if (present) {
         present.onclick = (evt) => {

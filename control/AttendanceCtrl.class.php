@@ -97,6 +97,8 @@ class AttendanceCtrl
             }
         }
 
+        $VIEW_DATA["course"] = $course_number;
+        $VIEW_DATA["block"] = $block;
         $VIEW_DATA["offering_id"] = $offering["id"];
         $VIEW_DATA["meeting"] = $meeting;
         $VIEW_DATA["visitors"] = $visitors;
