@@ -67,4 +67,10 @@ class AttendanceDao {
             WHERE id = :id");
         $stmt->execute(["id" => $id, "absent" => $absent]);
     }
+
+    public function deleteForMeeting($meeting_id) {
+        $stmt = $this->db->prepare("DELETE FROM attendance
+                WHERE meeting_id = :meeting_id ");
+        $stmt->execute(["meeting_id" => $meeting_id]);
+    }
 }

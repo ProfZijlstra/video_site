@@ -82,5 +82,11 @@ window.addEventListener("load", () => {
     for (const excuse of excuses) {
         excuse.onclick = markAbsenceExcused;
     }
+
+    document.getElementById("delete_meeting").onclick = function() {
+        if (confirm("Delete this meeting and all related data?")) {
+            document.getElementById("delete_form").submit();
+        }
+    }
     
 });

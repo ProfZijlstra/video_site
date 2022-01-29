@@ -45,4 +45,9 @@ class MeetingDao {
         $stmt->execute(["id" => $id, "title" => $title, "date" => $date, 
                         "start" => $start, "stop" => $stop, "weight" => $weight]);
     }
+
+    public function delete($id) {
+        $stmt = $this->db->prepare("DELETE FROM meeting WHERE id = :id ");
+        $stmt->execute(["id" => $id]);
+    }
 }

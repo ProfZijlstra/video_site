@@ -194,6 +194,20 @@ class AttendanceCtrl
         return "Location: attendance";
     }
 
+    /**
+     * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/delete$|", sec="admin")
+     */
+    public function deleteMeeting() {
+        global $URI_PARAMS;
+
+        $meeting_id = $URI_PARAMS[1];
+        $this->attendanceDataDao->deleteForMeeting($meeting_id);
+        $this->attendanceDao->deleteForMeeting($meeting_id);
+        $this->meetingDao->delete($meeting_id);
+
+        return "Location: ../../attendance";
+    }
+
     private function parseMeetingFile($file, $filename, $day_id)
     {
         // meeting weight for weekly in-class requirement

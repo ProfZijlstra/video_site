@@ -72,6 +72,8 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@markPresent'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|' => 
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@addMeeting'],
+		'|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/delete$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@deleteMeeting'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/clone$|' => 
 			['sec' => 'admin', 'route' => 'CourseCtrl@cloneOffering'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/edit$|' => 

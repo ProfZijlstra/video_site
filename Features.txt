@@ -2,7 +2,7 @@
 - Remove 'too-long' debugging things
 - Attendance system
     - [DONE] Add excused option
-    - Ability to delete meeting (bad upload)
+    - [DONE] Ability to delete meeting (bad upload)
     - Add end of week report
     - Add professionalism report
     - Add sessions (AM/PM) in which meetings are 

@@ -44,4 +44,10 @@ class AttendanceDataDao {
         $stmt->execute(["meeting_id" => $meeting_id]);
         return $stmt->fetchAll();
     }
+
+    public function deleteForMeeting($meeting_id) {
+        $stmt = $this->db->prepare("DELETE FROM attendance_data 
+                WHERE meeting_id = :meeting_id ");
+        $stmt->execute(["meeting_id" => $meeting_id]);
+    }
 }

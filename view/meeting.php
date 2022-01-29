@@ -43,6 +43,15 @@
         td.student_id {
             text-align: center;
         }
+        .meeting {
+            position: relative;
+        }
+        #delete_meeting {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            cursor: pointer;
+        }
     </style>
     <script src="res/js/meeting.js"></script>
 </head>
@@ -69,6 +78,9 @@
             <!-- General Meeting Info here -->
             <div class="meeting">
                 <h3>Meeting Details:</h3>
+                <form id="delete_form" method="post" action="<?= $meeting["id"]?>/delete"> 
+                    <i id="delete_meeting" class="far fa-trash-alt"></i>
+                </form>
                 <form method="post">
                     <input type="hidden" name="id" value="<?= $meeting["id"] ?>">
                     <div>
