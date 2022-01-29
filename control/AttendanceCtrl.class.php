@@ -119,7 +119,7 @@ class AttendanceCtrl
         $start = filter_input(INPUT_POST, "start", FILTER_SANITIZE_STRING);
         $stop = filter_input(INPUT_POST, "stop", FILTER_SANITIZE_STRING);
         $weight = filter_input(INPUT_POST, "weight", FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        
+
         $this->meetingDao->update($meeting_id, $title, $date, $start, $stop, $weight);
 
         return "Location: $meeting_id";
@@ -142,7 +142,8 @@ class AttendanceCtrl
     /**
      * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/meeting/attend/(\d+)$|", sec="admin")
      */
-    public function updateAttendance() {
+    public function updateAttendance()
+    {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         $this->attendanceDao->update($data);
@@ -151,7 +152,8 @@ class AttendanceCtrl
     /**
      * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/absent$|", sec="admin")
      */
-    public function markAbsent() {
+    public function markAbsent()
+    {
         global $URI_PARAMS;
 
         $meeting_id = $URI_PARAMS[1];
@@ -164,7 +166,8 @@ class AttendanceCtrl
     /**
      * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/present$|", sec="admin")
      */
-    public function markPresent() {
+    public function markPresent()
+    {
         global $URI_PARAMS;
 
         $meeting_id = $URI_PARAMS[1];
@@ -181,13 +184,17 @@ class AttendanceCtrl
     {
         $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
         if ($day_id && $_FILES["list"]) {
-            $this->parseMeetingFile($_FILES["list"]["tmp_name"], $day_id);
+            $this->parseMeetingFile(
+                $_FILES["list"]["tmp_name"],
+                $_FILES["list"]["name"],
+                $day_id
+            );
         }
 
         return "Location: attendance";
     }
 
-    private function parseMeetingFile($file, $day_id)
+    private function parseMeetingFile($file, $filename, $day_id)
     {
         // meeting weight for weekly in-class requirement
         $weight = 0.5; // international students need '2 sessions' per week
@@ -197,7 +204,7 @@ class AttendanceCtrl
         $lines = explode("\n", $text);
 
         // gather meeting data 
-        $title = trim(str_getcsv($lines[2], "\t")[1]);
+        $title = substr($filename, 0, strlen($filename) - 4);
         $fields = str_getcsv($lines[3], "\t");
         $date = $this->toIsoDate($fields[1]);
 
