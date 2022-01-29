@@ -114,11 +114,18 @@
                 </form>
                 <h3>Absent</h3>
                 <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Excu</th>
+                    </tr>
                     <?php foreach ($absent as $missing) : ?>
                         <tr data-id="<?= $missing["id"] //is attendance id ?>" id="<?= $missing["id"] ?>">
                             <td class="name">
                                 <a href="../../../user/<?= $missing["teamsName"] ?>"><?= $missing["teamsName"] ?></a>
                                 <span class="right present">present</span>
+                            </td>
+                            <td class="cbox" title="Excused">
+                                <input class="absent_excused" type="checkbox" name="excu" value="excu" <?= $missing["excused"] ? "checked" : "" ?> />
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -138,6 +145,7 @@
                         <th title="Arrived Late">Late</th>
                         <th title="Missed Middle">MisMid</th>
                         <th title="Left Early">Left</th>
+                        <th title="Excused">Excu</th>
                         <th title="In Physical Room">Phys</th>
                     </tr>
                     <?php foreach ($present as $student) : ?>
@@ -157,6 +165,9 @@
                             </td>
                             <td class="cbox" title="Left Early">
                                 <input type="checkbox" name="left" value="left" <?= $student["leaveEarly"] ? "checked" : "" ?> />
+                            </td>
+                            <td class="cbox" title="Excused">
+                                <input type="checkbox" name="excu" value="excu" <?= $student["excused"] ? "checked" : "" ?> />
                             </td>
                             <td class="cbox" title="In Physical Room">
                                 <input type="checkbox" name="phys" value="phys" class="phys" <?= $student["inClass"] ? "checked" : "" ?> />

@@ -37,7 +37,7 @@ class AttendanceDao {
     public function forMeeting($meeting_id) {
         $stmt = $this->db->prepare("SELECT a.id, a.teamsName, u.studentID,
                     a.arriveLate, a.middleMissing, a.leaveEarly, a.inClass,
-                    a.notEnrolled, a.absent, a.meeting_id,
+                    a.notEnrolled, a.absent, a.excused, a.meeting_id,
                     MIN(d.start) as `start`, MAX(d.stop) as `stop`
                 FROM attendance AS a
                 LEFT JOIN attendance_data AS d ON a.meeting_id = d.meeting_id 
@@ -55,7 +55,8 @@ class AttendanceDao {
             arriveLate = :late,
             leaveEarly = :left, 
             middleMissing = :mid, 
-            inClass = :phys
+            inClass = :phys,
+            excused = :excu
             WHERE id = :id");
         $stmt->execute($data);
     }

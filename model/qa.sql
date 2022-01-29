@@ -136,3 +136,5 @@ CREATE TABLE IF NOT EXISTS `cs472`.`attendance` (
 ENGINE = InnoDB;
 
 update user set teamsName = CONCAT(TRIM(firstname), " ", TRIM(lastname));
+
+ALTER TABLE attendance ADD COLUMN excused tinyint(1) NOT NULL DEFAULT 0;

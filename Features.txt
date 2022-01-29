@@ -1,4 +1,13 @@
+- Bug view speed cookie (make multiple cookies)
+- Remove 'too-long' debugging things
 - Attendance system
+    - [DONE] Add excused option
+    - Ability to delete meeting (bad upload)
+    - Add end of week report
+    - Add professionalism report
+    - Add sessions (AM/PM) in which meetings are 
+    - Add automated emails to unexcused
+    - Ability to submit to CAMS
 - see raw view data for day and date
 - GeoIP constraints
 - Improve user system
