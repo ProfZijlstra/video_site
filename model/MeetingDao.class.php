@@ -11,18 +11,20 @@ class MeetingDao {
 	 */
 	public $db;
 
-    public function add($day_id, $title, $date, $start, $stop, $weight) {
+    public function add($session_id, $title, $date, $start, $stop) {
         $stmt = $this->db->prepare("INSERT INTO meeting VALUES(
-            NULL, :day_id, :title, :date, :start, :stop, :weight)");
-        $stmt->execute(["day_id" => $day_id, "title" => $title, "date" => $date, 
-                        "start" => $start, "stop" => $stop, "weight" => $weight]);
+            NULL, :title, :date, :start, :stop, :session_id)");
+        $stmt->execute(["title" => $title, "date" => $date, 
+                        "start" => $start, "stop" => $stop, 
+                        "session_id" => $session_id]);
         return $this->db->lastInsertId();        
     }
 
     public function allForOffering($offering_id) {
-        $stmt = $this->db->prepare("SELECT m.id, m.title, d.abbr 
+        $stmt = $this->db->prepare("SELECT m.id, m.title, d.abbr, s.type as stype
                 FROM meeting AS m
-                JOIN day AS d ON m.day_id = d.id 
+                JOIN `session` AS s ON m.session_id = s.id
+                JOIN `day` AS d ON s.day_id = d.id 
                 WHERE d.offering_id = :offering_id ");
         $stmt->execute(["offering_id" => $offering_id]);
         return $stmt->fetchAll();
@@ -36,14 +38,13 @@ class MeetingDao {
         return $stmt->fetch();
     }
 
-    public function update($id, $title, $date, $start, $stop, $weight) {
+    public function update($id, $title, $date, $start, $stop) {
         $stmt = $this->db->prepare("UPDATE meeting 
                 SET title = :title, `date` = :date, 
-                    `start` = :start, `stop` = :stop, 
-                    `sessionWeight` = :weight
+                    `start` = :start, `stop` = :stop
                 WHERE id = :id ");
         $stmt->execute(["id" => $id, "title" => $title, "date" => $date, 
-                        "start" => $start, "stop" => $stop, "weight" => $weight]);
+                        "start" => $start, "stop" => $stop]);
     }
 
     public function delete($id) {

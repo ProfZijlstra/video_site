@@ -168,6 +168,10 @@ class Context {
             $this->objects["ReplyVoteDao"] = new ReplyVoteDao();
             $this->objects["ReplyVoteDao"]->db = $this->get("DB");
         }
+        if ($id === "SessionDao" && !isset($this->objects["SessionDao"])) {
+            $this->objects["SessionDao"] = new SessionDao();
+            $this->objects["SessionDao"]->db = $this->get("DB");
+        }
         if ($id === "UserDao" && !isset($this->objects["UserDao"])) {
             $this->objects["UserDao"] = new UserDao();
             $this->objects["UserDao"]->db = $this->get("DB");
@@ -188,6 +192,7 @@ class Context {
             $this->objects["AttendanceCtrl"]->enrollmentDao = $this->get("EnrollmentDao");
             $this->objects["AttendanceCtrl"]->dayDao = $this->get("DayDao");
             $this->objects["AttendanceCtrl"]->offeringDao = $this->get("OfferingDao");
+            $this->objects["AttendanceCtrl"]->sessionDao = $this->get("SessionDao");
         }
         if ($id === "CourseCtrl" && !isset($this->objects["CourseCtrl"])) {
             $this->objects["CourseCtrl"] = new CourseCtrl();

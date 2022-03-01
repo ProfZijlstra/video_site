@@ -138,3 +138,23 @@ ENGINE = InnoDB;
 update user set teamsName = CONCAT(TRIM(firstname), " ", TRIM(lastname));
 
 ALTER TABLE attendance ADD COLUMN excused tinyint(1) NOT NULL DEFAULT 0;
+
+CREATE TABLE `cs472`.`session` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `day_id` INT(11) NOT NULL,
+  `type` CHAR(2) NOT NULL DEFAULT 'AM',
+  `exported` TINYINT(8) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_session_day_id` FOREIGN KEY (`day_id`) REFERENCES `cs472`.`day`(`id`)
+) ENGINE = InnoDB;
+
+ALTER TABLE meeting ADD COLUMN session_id INT(10) UNSIGNED;
+ALTER TABLE meeting ADD FOREIGN KEY (session_id) REFERENCES `session`(id);
+ALTER TABLE meeting DROP sessionWeight;
+
+ALTER TABLE attendance_data MODIFY teamsName varchar(90);
+ALTER TABLE attendance MODIFY teamsName varchar(90);
+
+-- TODO
+ALTER TABLE meeting DROP FOREIGN KEY fk_meeting_day1;
+ALTER TABLE meeting DROP day_id;

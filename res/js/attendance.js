@@ -14,8 +14,8 @@ window.addEventListener("load", () => {
 
     // showing the overlay
     function addMeeting() {
-        const day_id = this.parentNode.dataset.day_id;;
-        document.getElementById("day_id").value = day_id;
+        const session_id = this.parentNode.dataset.session_id;;
+        document.getElementById("session_id").value = session_id;
         overlay.classList.add("visible");
     }
     const addBtns = document.getElementsByClassName("fa-plus-square");

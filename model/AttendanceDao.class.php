@@ -20,7 +20,7 @@ class AttendanceDao {
     public function addReport($meeting_id, $report) {
         $stmt = $this->db->prepare("INSERT INTO attendance VALUES(NULL, :meeting_id, 
             :teamsName, :notEnrolled, :absent, :arriveLate, :leaveEarly, 
-            :middleMissing, 0)");
+            :middleMissing, 0, 0)");
         foreach ($report as $teamsName => $attend) {
             $stmt->execute([
                 "meeting_id" => $meeting_id, 

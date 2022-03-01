@@ -36,6 +36,10 @@ class AttendanceCtrl
      * @Inject("OfferingDao")
      */
     public $offeringDao;
+    /**
+     * @Inject("SessionDao")
+     */
+    public $sessionDao;
 
 
     /**
@@ -48,17 +52,19 @@ class AttendanceCtrl
         // We're going to build on top of offering overview -- run it first
         // this populates $VIEW_DATA with the overview related data
         $this->videoCtrl->offering();
+        $days = $VIEW_DATA["days"];
+
+        // get sessions for these days
+        $sessions = $this->sessionDao->allForOffering($VIEW_DATA["offering"]["id"]);
+        foreach ($sessions as $session) {
+            $session["meetings"] = [];
+            $days[$session["abbr"]][$session["type"]] = $session;
+        }
 
         // Add attendance data
         $meetings = $this->meetingDao->allForOffering($VIEW_DATA["offering"]["id"]);
-        //var_dump($meetings);
-
-        $days = $VIEW_DATA["days"];
         foreach ($meetings as $meeting) {
-            if (!array_key_exists("meetings", $days[$meeting["abbr"]])) {
-                $days[$meeting["abbr"]]["meetings"] = [];
-            }
-            $days[$meeting["abbr"]]["meetings"][] = $meeting;
+            $days[$meeting["abbr"]][$meeting["stype"]]["meetings"][] = $meeting;
         }
         $VIEW_DATA["days"] = $days;
 
@@ -182,12 +188,13 @@ class AttendanceCtrl
      */
     public function addMeeting()
     {
-        $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
-        if ($day_id && $_FILES["list"]) {
+        $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
+        print($session_id);
+        if ($session_id && $_FILES["list"]) {
             $this->parseMeetingFile(
                 $_FILES["list"]["tmp_name"],
                 $_FILES["list"]["name"],
-                $day_id
+                $session_id
             );
         }
 
@@ -208,11 +215,8 @@ class AttendanceCtrl
         return "Location: ../../attendance";
     }
 
-    private function parseMeetingFile($file, $filename, $day_id)
+    private function parseMeetingFile($file, $filename, $session_id)
     {
-        // meeting weight for weekly in-class requirement
-        $weight = 0.5; // international students need '2 sessions' per week
-
         // prepare file contents
         $text = mb_convert_encoding(file_get_contents($file), "UTF-8", "UTF-16LE");
         $lines = explode("\n", $text);
@@ -236,12 +240,11 @@ class AttendanceCtrl
 
         // insert meeting into DB 
         $meeting_id = $this->meetingDao->add(
-            $day_id,
+            $session_id,
             $title,
             $date,
             $meeting_start,
             $meeting_stop,
-            $weight
         );
 
         // insert attendance lines
@@ -255,7 +258,7 @@ class AttendanceCtrl
         }
 
         // generate report
-        $day = $this->dayDao->get($day_id);
+        $day = $this->sessionDao->getOfferingId($session_id);
         $this->generateReport($day["offering_id"], $meeting_id, $meeting_start, $meeting_stop);
     }
 

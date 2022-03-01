@@ -3,10 +3,11 @@
 - Attendance system
     - [DONE] Add excused option
     - [DONE] Ability to delete meeting (bad upload)
-    - Add end of week report
-    - Add professionalism report
-    - Add sessions (AM/PM) in which meetings are 
+    - [DONE] Add sessions (AM/PM) in which meetings are 
+    - Add manual meeting addition
     - Add automated emails to unexcused
+    - Add end of week physical attendance report
+    - Add end of month professionalism report
     - Ability to submit to CAMS
 - see raw view data for day and date
 - GeoIP constraints

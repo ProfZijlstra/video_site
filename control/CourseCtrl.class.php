@@ -79,6 +79,7 @@ class CourseCtrl {
         $this->videoDao->clone($course_number, $block, $old_block);
         $new_offering = $this->offeringDao->create($course_number, $block, $start, $stop);
         $this->dayDao->cloneDays($offering_id, $new_offering);
+        // TODO clone sessions for $new_offering
         return "Location: ../$block/";
     }
 

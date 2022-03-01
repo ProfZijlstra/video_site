@@ -15,17 +15,29 @@
             text-align: left;
         }
 
+        div.session {
+            margin-top: 5px;
+            border-bottom: 1px solid black;
+        }
+        div.session.AM {
+            padding-top: 5px;
+            border-top: 1px solid black;
+        }
+        div.session .fa-plus-square {
+            cursor: pointer;
+        }
         div.meeting {
             max-height: 15px;
-            overflow: hidden;
-            margin: 10px 0px;
+            margin-left: 10px;
+            margin-bottom: 7px;
         }
 
-        #days .fa-door-open, 
+        #days .fa-chalkboard-teacher, 
         #days .fa-black-tie {
             bottom: 75px;
             right: 75px;
             font-size: 30px;
+            cursor: pointer;
         }
     </style>
 
@@ -72,25 +84,30 @@
                     <?php for ($d = 1; $d <= 7; $d++) : ?>
                         <?php $date = $start + ($w - 1) * 60 * 60 * 24 * 7 + ($d - 1) * 60 * 60 * 24; ?>
                         <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>">
+                            <?php if ($w == 4 && $d == 6) : ?>
+                                <i title="Professionalism Report" class="fab fa-black-tie"></i>
+                            <?php elseif ($d == 7): ?>
+                                <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
+                            <?php else : ?>
+                                <?php foreach (["AM", "PM"] as $stype): ?>
+                                    <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>">
+                                        <?= $stype ?>
+                                        <i title="Add Meeting" class="far fa-plus-square"></i>
 
-                            <?php foreach ($days["W{$w}D{$d}"]["meetings"] as $meeting) : ?>
-                                <div class="meeting">
-                                    <a href="meeting/<?= $meeting["id"] ?>">
-                                        <i class="far fa-check-square"></i>
-                                        <?= $meeting["title"] ?>
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
+                                    <?php foreach ($days["W{$w}D{$d}"][$stype]["meetings"] as $meeting) : ?>
+                                        <div class="meeting">
+                                            <a href="meeting/<?= $meeting["id"] ?>">
+                                                <?= $meeting["title"] ?>
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
                             <time>
                                 <?= date("M j Y", $date); ?>
                             </time>
-                            <?php if ($w == 4 && $d == 6) : ?>
-                                <i title="Professionalism Report" class="fab fa-black-tie"></i>
-                            <?php elseif ($d < 7) : ?>
-                                <i title="Add Meeting" class="far fa-plus-square"></i>
-                            <?php else : ?>
-                                <i title="Physical Attendance Report" class="fas fa-door-open"></i>
-                            <?php endif; ?>
                         </td>
                     <?php endfor ?>
                 </tr>
@@ -104,7 +121,7 @@
             <h3>Upload Attendance</h3>
             <p>Expected format is a Teams report with addditional column for meeting attendance start and stop time</p>
             <form action="" method="post" enctype="multipart/form-data" id="upload_form">
-                <input type="hidden" id="day_id" name="day_id" />
+                <input type="hidden" id="session_id" name="session_id" />
                 <input type="file" id="list_file" name="list" />
                 <div class="btn"><button>Upload Attendance</button></div>
             </form>

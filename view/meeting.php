@@ -14,11 +14,15 @@
         }
         label {
             display: inline-block;
-            width: 100px;
+            width: 50px;
+            text-align: left;
+        }
+        #meeting_form div {
+            text-align: right;
         }
         input[type=text],
         input[type=date] {
-            width: 638px;
+            width: 680px;
         }
         div.btns {
             margin-top: 5px;
@@ -81,7 +85,7 @@
                 <form id="delete_form" method="post" action="<?= $meeting["id"]?>/delete"> 
                     <i id="delete_meeting" class="far fa-trash-alt"></i>
                 </form>
-                <form method="post">
+                <form method="post" id="meeting_form">
                     <input type="hidden" name="id" value="<?= $meeting["id"] ?>">
                     <div>
                         <label>Title</label>
@@ -98,10 +102,6 @@
                     <div>
                         <label>Stop</label>
                         <input type="text" name="stop" value="<?= $meeting["stop"] ?>" />
-                    </div>
-                    <div>
-                        <label>Weight</label>
-                        <input type="text" name="weight" value="<?= $meeting["sessionWeight"] ?>" />
                     </div>
                     <div class="btns">
                         <button type="submit">Update</button>
@@ -157,8 +157,8 @@
                         <th title="Arrived Late">Late</th>
                         <th title="Missed Middle">MisMid</th>
                         <th title="Left Early">Left</th>
-                        <th title="Excused">Excu</th>
                         <th title="In Physical Room">Phys</th>
+                        <th title="Excused">Excu</th>
                     </tr>
                     <?php foreach ($present as $student) : ?>
                         <tr data-id="<?= $student["id"] //is attendance id, not student id ?>" id="<?= $student["id"]?>">
@@ -178,11 +178,11 @@
                             <td class="cbox" title="Left Early">
                                 <input type="checkbox" name="left" value="left" <?= $student["leaveEarly"] ? "checked" : "" ?> />
                             </td>
-                            <td class="cbox" title="Excused">
-                                <input type="checkbox" name="excu" value="excu" <?= $student["excused"] ? "checked" : "" ?> />
-                            </td>
                             <td class="cbox" title="In Physical Room">
                                 <input type="checkbox" name="phys" value="phys" class="phys" <?= $student["inClass"] ? "checked" : "" ?> />
+                            </td>
+                            <td class="cbox" title="Excused">
+                                <input type="checkbox" name="excu" value="excu" <?= $student["excused"] ? "checked" : "" ?> />
                             </td>
                         </tr>
                     <?php endforeach; ?>
