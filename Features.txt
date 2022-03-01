@@ -1,3 +1,4 @@
+- Remove sensitive info and make project open source
 - Remove 'too-long' debugging things
 - Attendance system
     - [DONE] Add excused option
@@ -19,7 +20,7 @@
 - Add Lab system
 
 DONE:
-- Bug view speed cookie (make multiple cookies)
+- Bug view speed cookie (makes multiple cookies)
 - Replies to Questions on Vidoes
 - Fix / Finish view stats to include PDF
 - Autoplay next video
