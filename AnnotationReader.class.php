@@ -26,8 +26,8 @@ class AnnotationReader {
     /**
      * Helper function to extract annotation attributes (key / value pairs)
      * 
-     * @param type $annotation
-     * @param type $text
+     * @param string $annotation
+     * @param string $text
      * @return array
      * @throws Exception
      */
@@ -156,8 +156,8 @@ class AnnotationReader {
     /**
      * Scan for PHP classes in a directory, calling the passed function on them
      * 
-     * @param type $directory
-     * @param type $function
+     * @param string $directory
+     * @param function $function
      */
     private function scan_classes($directory, $function) {
         $files = scandir($directory);

@@ -189,7 +189,6 @@ class AttendanceCtrl
     public function addMeeting()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
-        print($session_id);
         if ($session_id && $_FILES["list"]) {
             $this->parseMeetingFile(
                 $_FILES["list"]["tmp_name"],
