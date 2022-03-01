@@ -5,10 +5,8 @@
 /* ******************************
  * Configuration variables
  * **************************** */
+require("settings.php");
 define("DEVELOPMENT", true);
-define("DSN", "mysql:dbname=cs472;host=localhost");
-define("DB_USER", "cs472dbuser");
-define("DB_PASS", "WAP Passwd");
 $SEC_LVLS = array("none", "user", "admin");
 date_default_timezone_set("America/Chicago");
 error_reporting(E_ALL ^ E_WARNING);
