@@ -55,23 +55,6 @@ class ViewCtrl {
 
 		$view_id = filter_input(INPUT_POST, "view_id");
 		$this->viewDao->stop($view_id, $_SESSION['speed']);
-
-		// determine if this view is longer than should be possible
-		$view = $this->viewDao->get($view_id);
-		$view_duration = $view['stop'] - $view['start'];
-		if ($view_duration > 15*60*1000) { // if > 15 minutes
-			$course_num = $URI_PARAMS[1];
-			$block = $URI_PARAMS[2];
-			$day = $URI_PARAMS[3];
-			$video = $view['video'];
-
-			$duration = $this->videoDao->duration($course_num, $block, $day, $video);
-			$duration += 5; // allowable margin of error
-
-			if ($view_duration > $duration * $_SESSION['speed']) {
-				$this->viewDao->too_long($view_id);
-			}
-		}
 	}
 
 	/**
@@ -128,8 +111,6 @@ class ViewCtrl {
 			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["hours"] = $view["hours"];
 			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["video_views"] = $view["video_views"];
 			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["pdf"] = $view["pdf"];
-			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["too_long"] = $view["too_long"];
-			$days[$view["abbr"]]["video"]["file_info"][$view["video"]]["hours_long"] = $view["hours_long"];
 		}
 
 		$VIEW_DATA["user"] = $user;

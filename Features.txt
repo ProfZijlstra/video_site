@@ -1,5 +1,3 @@
-- Remove sensitive info and make project open source
-- Remove 'too-long' debugging things
 - Attendance system
     - [DONE] Add excused option
     - [DONE] Ability to delete meeting (bad upload)
@@ -20,6 +18,8 @@
 - Add Lab system
 
 DONE:
+- Remove 'too-long' view debugging items
+- Remove sensitive info and make project open source
 - Bug view speed cookie (makes multiple cookies)
 - Replies to Questions on Vidoes
 - Fix / Finish view stats to include PDF

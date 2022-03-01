@@ -155,6 +155,8 @@ ALTER TABLE meeting DROP sessionWeight;
 ALTER TABLE attendance_data MODIFY teamsName varchar(90);
 ALTER TABLE attendance MODIFY teamsName varchar(90);
 
--- TODO
 ALTER TABLE meeting DROP FOREIGN KEY fk_meeting_day1;
 ALTER TABLE meeting DROP day_id;
+
+-- TODO
+ALTER TABLE view DROP too_long;

@@ -66,10 +66,6 @@ const INFO = (function () {
 
     function byNulls(a, b) { return a.nulls - b.nulls; }
 
-    function byLong(a, b) { return a.too_long - b.too_long; }
-
-    function byHoursLong(a, b) { return a.hours_long - b.hours_long; }
-
     function reverse(func, a, b) { return -func(a, b); }
 
     class ViewersHeader extends React.Component {
@@ -109,10 +105,6 @@ const INFO = (function () {
             let hoursClick =
                 this.click.bind(this, "byHours", this.props.sort, byHours);
             let nullsClick = this.click.bind(this, "byNulls", this.props.sort, byNulls);
-            let longClick =
-                this.click.bind(this, "byLong", this.props.sort, byLong);
-            let hoursLongClick = this.click.bind(this, "byHoursLong",
-                this.props.sort, byHoursLong);
 
             let firstSort = "fas fa-sort";
             let lastSort = "fas fa-sort";
@@ -120,8 +112,6 @@ const INFO = (function () {
             let videoSort = "fas fa-sort";
             let hoursSort = "fas fa-sort";
             let nullsSort = "fas fa-sort";
-            let longSort = "fas fa-sort";
-            let hoursLongSort = "fas fa-sort";
 
             if (this.state.sorted == "byFirst") {
                 if (this.state.desc) {
@@ -173,23 +163,6 @@ const INFO = (function () {
                 } else {
                   nullsSort = "fas fa-sort-down";
                 }        
-            } else if (this.state.sorted == "byLong") {
-                if (this.state.desc) {
-                    longSort = "fas fa-sort-up";
-                    longClick = this.click.bind(this, "byLong", this.props.sort,
-                        reverse.bind(null, byLong));
-                } else {
-                    longSort = "fas fa-sort-down";
-                }
-            } else if (this.state.sorted == "byHoursLong") {
-                if (this.state.desc) {
-                    hoursLongSort = "fas fa-sort-up";
-                    hoursLongClick =
-                        this.click.bind(this, "byHoursLong", this.props.sort,
-                            reverse.bind(null, byHoursLong));
-                } else {
-                    hoursLongSort = "fas fa-sort-down";
-                }
             }
 
             return (
@@ -200,8 +173,6 @@ const INFO = (function () {
                     <th onClick={videoClick}>Video <i class={videoSort}></i></th>
                     <th onClick={hoursClick}>Hours <i class={hoursSort}></i></th>
                     <th onClick={nullsClick}>Nulls <i class={nullsSort}></i></th>
-                    <th onClick={longClick}>Too Long <i class={longSort}></i></th>
-                    <th onClick={hoursLongClick}>Inc Long<i class={hoursLongSort}></i></th>
                 </tr>
             );
         }
@@ -216,8 +187,6 @@ const INFO = (function () {
                 <td class="num">{props.video}</td>
                 <td class="num">{props.hours}</td>
                 <td class="num">{props.nulls}</td>
-                <td class="num">{props.too_long}</td>
-                <td class="num">{props.hours_long}</td>
             </tr>
         );
     }

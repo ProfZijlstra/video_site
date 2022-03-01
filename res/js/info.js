@@ -83,14 +83,6 @@ const INFO = function () {
     return a.nulls - b.nulls;
   }
 
-  function byLong(a, b) {
-    return a.too_long - b.too_long;
-  }
-
-  function byHoursLong(a, b) {
-    return a.hours_long - b.hours_long;
-  }
-
   function reverse(func, a, b) {
     return -func(a, b);
   }
@@ -129,16 +121,12 @@ const INFO = function () {
       let videoClick = this.click.bind(this, 'byVideo', this.props.sort, byVideo);
       let hoursClick = this.click.bind(this, "byHours", this.props.sort, byHours);
       let nullsClick = this.click.bind(this, "byNulls", this.props.sort, byNulls);
-      let longClick = this.click.bind(this, "byLong", this.props.sort, byLong);
-      let hoursLongClick = this.click.bind(this, "byHoursLong", this.props.sort, byHoursLong);
       let firstSort = "fas fa-sort";
       let lastSort = "fas fa-sort";
       let pdfSort = "fas fa-sort";
       let videoSort = "fas fa-sort";
       let hoursSort = "fas fa-sort";
       let nullsSort = "fas fa-sort";
-      let longSort = "fas fa-sort";
-      let hoursLongSort = "fas fa-sort";
 
       if (this.state.sorted == "byFirst") {
         if (this.state.desc) {
@@ -182,20 +170,6 @@ const INFO = function () {
         } else {
           nullsSort = "fas fa-sort-down";
         }
-      } else if (this.state.sorted == "byLong") {
-        if (this.state.desc) {
-          longSort = "fas fa-sort-up";
-          longClick = this.click.bind(this, "byLong", this.props.sort, reverse.bind(null, byLong));
-        } else {
-          longSort = "fas fa-sort-down";
-        }
-      } else if (this.state.sorted == "byHoursLong") {
-        if (this.state.desc) {
-          hoursLongSort = "fas fa-sort-up";
-          hoursLongClick = this.click.bind(this, "byHoursLong", this.props.sort, reverse.bind(null, byHoursLong));
-        } else {
-          hoursLongSort = "fas fa-sort-down";
-        }
       }
 
       return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
@@ -222,14 +196,6 @@ const INFO = function () {
         onClick: nullsClick
       }, "Nulls ", /*#__PURE__*/React.createElement("i", {
         class: nullsSort
-      })), /*#__PURE__*/React.createElement("th", {
-        onClick: longClick
-      }, "Too Long ", /*#__PURE__*/React.createElement("i", {
-        class: longSort
-      })), /*#__PURE__*/React.createElement("th", {
-        onClick: hoursLongClick
-      }, "Inc Long", /*#__PURE__*/React.createElement("i", {
-        class: hoursLongSort
       })));
     }
 
@@ -248,11 +214,7 @@ const INFO = function () {
       class: "num"
     }, props.hours), /*#__PURE__*/React.createElement("td", {
       class: "num"
-    }, props.nulls), /*#__PURE__*/React.createElement("td", {
-      class: "num"
-    }, props.too_long), /*#__PURE__*/React.createElement("td", {
-      class: "num"
-    }, props.hours_long));
+    }, props.nulls));
   }
 
   class ViewersTable extends React.Component {

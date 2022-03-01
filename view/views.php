@@ -46,8 +46,6 @@
                         <th>Views</th>
                         <th>PDF</th>
                         <th>Hours</th>
-                        <th>Too Long</th>
-                        <th>Inc Long</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,8 +56,6 @@
                             <td class="num"><?= $video["video_views"]?></td>
                             <td class="num"><?= $video["pdf"]?></td>
                             <td class="num"><?= $video["hours"]?></td>
-                            <td class="num"><?= $video["too_long"]?></td>
-                            <td class="num"><?= $video["hours_long"]?></td>
                         </tr>
                     <?php endforeach; ?> 
                 <tbody>

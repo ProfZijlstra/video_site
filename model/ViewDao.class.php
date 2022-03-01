@@ -22,7 +22,7 @@ class ViewDao {
 	 */
 	public function start($user_id, $day_id, $video, $speed) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 0, :user_id, :day_id, :video, NOW(), NULL, :speed, 0)");
+			VALUES(NULL, 0, :user_id, :day_id, :video, NOW(), NULL, :speed)");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video, "speed" => $speed));
 		return $this->db->lastInsertId();
@@ -47,15 +47,9 @@ class ViewDao {
 
 	public function pdf($user_id, $day_id, $video) {
 		$stmt = $this->db->prepare("INSERT INTO view 
-			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW(), NULL, NULL)");
+			VALUES(NULL, 1, :user_id, :day_id, :video, NOW(), NOW(), NULL)");
 		$stmt->execute(array("user_id" => $user_id, 
 			"day_id" => $day_id, "video" => $video));
-	}
-
-	public function too_long($id) {
-		$stmt = $this->db->prepare("UPDATE view SET `too_long` = 1
-			WHERE id = :id");
-		$stmt->execute(array("id" => $id));
 	}
 
 	public function offering($offering_id) {
@@ -67,7 +61,6 @@ class ViewDao {
 			FROM view AS v 
 			JOIN day AS d ON v.day_id = d.id 
 			WHERE d.offering_id = :offering_id 
-			AND v.too_long = 0
 			GROUP BY d.id"
 		);
 		$stmt->execute(array("offering_id" =>  $offering_id));
@@ -82,7 +75,6 @@ class ViewDao {
 			FROM view as v 
 			JOIN day AS d ON v.day_id = d.id 
 			WHERE d.offering_id = :offering_id 
-			AND v.too_long = 0
 			GROUP BY d.offering_id;"
 		);
         $stmt->execute(array(":offering_id" => $offering_id));
@@ -96,7 +88,6 @@ class ViewDao {
 			FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
 			FROM view 
 			WHERE day_id = :day_id 
-			AND too_long = 0
 			GROUP BY video"
 		);
 		$stmt->execute(array("day_id" =>  $day_id));
@@ -109,7 +100,6 @@ class ViewDao {
 			FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
 			FROM view 
 			WHERE day_id = :day_id 
-			AND too_long = 0
 			GROUP BY day_id"
 		);
         $stmt->execute(array(":day_id" => $day_id));
@@ -119,16 +109,11 @@ class ViewDao {
 	public function offering_viewers($offering_id) {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.firstname, u.lastname, 
-			SUM(CASE WHEN v.too_long = 0 
-				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
-				ELSE 0 
-				END)/3600 as `hours`,
-			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as `hours`,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long,
 			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
@@ -145,16 +130,11 @@ class ViewDao {
 	public function day_viewers($day_id) {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.firstname, u.lastname, 
-			SUM(CASE WHEN v.too_long = 0 
-				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
-				ELSE 0 
-				END)/3600 as `hours`,
-			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as `hours`,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long,
 			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
@@ -169,16 +149,11 @@ class ViewDao {
 	public function video_viewers($day_id, $video) {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.firstname, u.lastname, 
-			SUM(CASE WHEN v.too_long = 0 
-				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
-				ELSE 0 
-				END)/3600 as `hours`,
-			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as `hours`,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long,
 			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
@@ -194,16 +169,11 @@ class ViewDao {
 	public function person_views($offering_id, $user_id) {
 		$stmt = $this->db->prepare(
 			"SELECT d.abbr as abbr, v.video as video,
-			SUM(CASE WHEN v.too_long = 0 
-				THEN TIME_TO_SEC(TIMEDIFF(v.stop, v.start)) 
-				ELSE 0 
-				END)/3600 as `hours`,
-			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as hours_long,
+			SUM(TIME_TO_SEC(TIMEDIFF(v.stop, v.start)))/3600 as `hours`,
 			SUM(CASE WHEN v.pdf = 0 
 				THEN 1
 				ELSE 0 END) as video_views,
 			SUM(v.pdf) as pdf,
-			SUM(v.too_long) as too_long,
 			SUM(CASE WHEN v.stop IS NULL THEN 1 ELSE 0 END) AS `nulls`
 			from view as v 
 			join user as u on v.user_id = u.id 
