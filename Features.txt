@@ -1,4 +1,3 @@
-- Bug view speed cookie (make multiple cookies)
 - Remove 'too-long' debugging things
 - Attendance system
     - [DONE] Add excused option
@@ -20,6 +19,7 @@
 - Add Lab system
 
 DONE:
+- Bug view speed cookie (make multiple cookies)
 - Replies to Questions on Vidoes
 - Fix / Finish view stats to include PDF
 - Autoplay next video
