@@ -70,6 +70,10 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@markAbsent'],
 		'|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/present$|' => 
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@markPresent'],
+		'|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailAbsent$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@emailAbsent'],
+		'|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailTardy$|' => 
+			['sec' => 'admin', 'route' => 'AttendanceCtrl@emailTardy'],
 		'|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|' => 
 			['sec' => 'admin', 'route' => 'AttendanceCtrl@addMeeting'],
 		'|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/delete$|' => 

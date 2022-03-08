@@ -1,0 +1,50 @@
+h3 {
+    margin-bottom: 0px;
+}
+label {
+    display: inline-block;
+    width: 50px;
+    text-align: left;
+}
+#meeting_form div {
+    text-align: right;
+}
+input[type=text],
+input[type=date] {
+    width: 680px;
+}
+div.btns {
+    margin-top: 5px;
+    text-align: right;
+}
+td.cbox {
+    width: 50px;
+    text-align: center;
+}
+.btns button {
+    width: 200px;
+}
+td.name {
+    position: relative;
+}
+td.name span.right {
+    position: absolute;
+    right: 3px;
+    color: gray;
+    cursor: pointer;
+}
+td.student_id {
+    text-align: center;
+}
+#content {
+    position: relative;
+}
+#delete_form {
+    display: inline;
+}
+.fa-trash-alt, 
+.fa-paper-plane {
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+}

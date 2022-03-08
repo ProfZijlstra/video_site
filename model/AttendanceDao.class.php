@@ -50,6 +50,38 @@ class AttendanceDao {
         return $stmt->fetchAll();        
     }
 
+    public function unexcusedAbsentForMeeting($meeting_id) {
+        $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
+                    m.title, m.start, m.stop
+                FROM attendance AS a
+                JOIN meeting AS m ON a.meeting_id = m.id
+                JOIN user AS u on a.teamsName = u.teamsName
+                WHERE a.meeting_id = :meeting_id
+                AND a.absent = 1
+                AND a.excused = 0");
+        $stmt->execute(["meeting_id" => $meeting_id]);
+        return $stmt->fetchAll();                
+    }
+
+    public function unexcusedTardyForMeeting($meeting_id) {
+        $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
+                    m.title, m.start, m.stop,
+                    a.arriveLate, a.leaveEarly, a.middleMissing,
+                    MIN(d.start) as `arrive`, MAX(d.stop) as `left`
+                FROM attendance AS a
+                JOIN meeting AS m ON a.meeting_id = m.id
+                JOIN attendance_data AS d ON a.meeting_id = d.meeting_id 
+                    AND a.teamsName = d.teamsName
+                JOIN user AS u on a.teamsName = u.teamsName
+                WHERE a.meeting_id = :meeting_id
+                AND (a.arriveLate = 1 OR a.leaveEarly = 1 OR a.middleMissing = 1)
+                AND a.excused = 0
+                GROUP BY a.teamsName");
+        $stmt->execute(["meeting_id" => $meeting_id]);
+        return $stmt->fetchAll();                
+    }
+
+
     public function update($data) {      
         $stmt = $this->db->prepare("UPDATE attendance SET 
             arriveLate = :late,

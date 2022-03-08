@@ -184,6 +184,101 @@ class AttendanceCtrl
     }
 
     /**
+     * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailAbsent$|", sec="admin")
+     */
+    public function emailAbsent() {
+        global $URI_PARAMS;
+        $meeting_id = $URI_PARAMS[1];
+        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
+        "Reply-To:<mzijlstra@miu.edu> ";
+        $template = 
+"
+
+If you let your instructor know ahead of time when you are unable to attend it 
+is possible to have an excused absence.
+
+As is this unexcused absence will be added to your professionalism record
+for this course.
+
+Please make sure this does not happen again!
+
+With kind regards,
+
+Manalabs Attendance System.
+
+";
+        // get all unexcused absences for this meeting
+        $absentees = $this->attendanceDao->unexcusedAbsentForMeeting($meeting_id);
+
+        // for each absent student
+        foreach ($absentees as $absent) {
+            $to = $absent["email"];
+            $message = 
+"Hi " . trim($absent['knownAs']) . ",
+
+We noticed you were absent from the ". $absent["title"]." meeting from its start
+ at: ". $absent["start"]. " trough its end at: " . $absent["stop"]. "." .$template;
+
+            echo $message;
+            mail($to, "Unexcused Absence", $message, $headers);
+        }
+    }
+
+    /**
+     * @POST(uri="|^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailTardy$|", sec="admin")
+     */
+    public function emailTardy() {
+        global $URI_PARAMS;
+        $meeting_id = $URI_PARAMS[1];
+        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
+        "Reply-To:<mzijlstra@miu.edu> ";
+        $template = 
+"
+If you let your instructor know ahead of time when you are unable to attend it 
+is possible to have an excused absence.
+
+As is, the minutes of unexcused absence will be added to your professionalism 
+record for this course.
+
+Please make sure this does not happen again!
+
+With kind regards,
+
+Manalabs Attendance System.
+
+";
+        // get all unexcused absences for this meeting
+        $tardies = $this->attendanceDao->unexcusedTardyForMeeting($meeting_id);
+
+        // for each absent student
+        foreach ($tardies as $tardy) {
+            $to = $tardy["email"];
+            $message = 
+"Hi " . trim($tardy['knownAs']) . ",
+
+We noticed you were tardy for the ". $tardy["title"]." meeting that started at: 
+". $tardy["start"]. " and stopped at: " . $tardy["stop"]. " 
+
+";
+
+            if ($tardy["arriveLate"]) {
+                $message .= "\t-You arrived at: " . $tardy['arrive'] ."\n";
+            }
+            if ($tardy["middleMissing"]) {
+                $message .= "\t-You missed a significant part in the middle of the meeting\n";
+            }
+            if ($tardy["leaveEarly"]) {
+                $message .= "\t-You left early at: " . $tardy['left'] . "\n";
+            }
+            $message .= $template;
+
+            echo $message;
+            mail($to, "Unexcused Absence", $message, $headers);
+        }
+    }
+
+
+    /**
      * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|", sec="admin")
      */
     public function addMeeting()

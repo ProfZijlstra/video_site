@@ -88,5 +88,25 @@ window.addEventListener("load", () => {
             document.getElementById("delete_form").submit();
         }
     }
+
+    // enable email absent
+    document.getElementById("email_absent").onclick = function() {
+        if (confirm("Email Unexcused Absent?")) {
+            const meeting_id = document.getElementById("meeting_id").value;
+            fetch(`${meeting_id}/emailAbsent`, {
+                method : 'POST',
+            });    
+        }
+    }
+
+    // enable email tardy
+    document.getElementById("email_tardy").onclick = function() {
+        if (confirm("Email Unexcused Tardy?")) {
+            const meeting_id = document.getElementById("meeting_id").value;
+            fetch(`${meeting_id}/emailTardy`, {
+                method : 'POST',
+            });    
+        }
+    }
     
 });

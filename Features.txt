@@ -2,8 +2,8 @@
     - [DONE] Add excused option
     - [DONE] Ability to delete meeting (bad upload)
     - [DONE] Add sessions (AM/PM) in which meetings are 
+    - [DONE / NOT TESTED] Add automated emails to unexcused
     - Add manual meeting addition
-    - Add automated emails to unexcused
     - Add end of week physical attendance report
     - Add end of month professionalism report
     - Ability to submit to CAMS

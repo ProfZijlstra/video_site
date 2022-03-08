@@ -8,56 +8,8 @@
     <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/offering.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <style>
-        h3 {
-            margin-bottom: 0px;
-        }
-        label {
-            display: inline-block;
-            width: 50px;
-            text-align: left;
-        }
-        #meeting_form div {
-            text-align: right;
-        }
-        input[type=text],
-        input[type=date] {
-            width: 680px;
-        }
-        div.btns {
-            margin-top: 5px;
-            text-align: right;
-        }
-        td.cbox {
-            width: 50px;
-            text-align: center;
-        }
-        .btns button {
-            width: 200px;
-        }
-        td.name {
-            position: relative;
-        }
-        td.name span.right {
-            position: absolute;
-            right: 3px;
-            color: gray;
-            cursor: pointer;
-        }
-        td.student_id {
-            text-align: center;
-        }
-        .meeting {
-            position: relative;
-        }
-        #delete_meeting {
-            position: absolute;
-            top: 0px;
-            right: 0px;
-            cursor: pointer;
-        }
-    </style>
-    <script src="res/js/meeting.js"></script>
+    <link rel="stylesheet" href="res/css/meeting.css">
+   <script src="res/js/meeting.js"></script>
 </head>
 
 <body>
@@ -81,10 +33,12 @@
         <div id="content">
             <!-- General Meeting Info here -->
             <div class="meeting">
-                <h3>Meeting Details:</h3>
-                <form id="delete_form" method="post" action="<?= $meeting["id"]?>/delete"> 
-                    <i id="delete_meeting" class="far fa-trash-alt"></i>
-                </form>
+                <h3>
+                    Meeting Details:
+                    <form id="delete_form" method="post" action="<?= $meeting["id"]?>/delete"> 
+                        <i id="delete_meeting" class="far fa-trash-alt"></i>
+                    </form>
+                </h3>
                 <form method="post" id="meeting_form">
                     <input type="hidden" name="id" value="<?= $meeting["id"] ?>">
                     <div>
@@ -104,7 +58,7 @@
                         <input type="text" name="stop" value="<?= $meeting["stop"] ?>" />
                     </div>
                     <div class="btns">
-                        <button type="submit">Update</button>
+                        <button type="submit">Update Meeting Details</button>
                     </div>
                 </form>
             </div>
@@ -112,19 +66,26 @@
             <div class="btns">
                 <form method="post" action="regen/<?= $meeting["id"] ?>">
                     <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
-                    <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" />
+                    <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" id="meeting_id"/>
                     <input type="hidden" name="start" value="<?= $meeting["start"]?>" />
                     <input type="hidden" name="stop" value="<?= $meeting["stop"]?>" />
                     <button id="regen">Regenerate Report</button>
                 </form>
             </div>
+            <form id="absentForm" method="post" action="<?= $meeting["id"]?>/absent">
+                <input id="absent_id" type="hidden" name="attendance_id" value="" />
+            </form>
+            <form id="presentForm" method="post" action="<?= $meeting["id"]?>/present">
+                <input id="present_id" type="hidden" name="attendance_id" value="" />
+            </form>
+
 
             <!-- Absent -->
             <?php if ($absent) : ?>
-                <form id="presentForm" method="post" action="<?= $meeting["id"]?>/present">
-                    <input id="present_id" type="hidden" name="attendance_id" value="" />
-                </form>
-                <h3>Absent</h3>
+                <h3>
+                    Absent
+                    <i id="email_absent" class="far fa-paper-plane" title="Email Unexcused Absent"></i>
+                </h3>
                 <table>
                     <tr>
                         <th>Name</th>
@@ -146,10 +107,10 @@
 
             <!-- Present -->
             <?php if ($present) : ?>
-                <form id="absentForm" method="post" action="<?= $meeting["id"]?>/absent">
-                    <input id="absent_id" type="hidden" name="attendance_id" value="" />
-                </form>
-                <h3>Present</h3>
+                <h3>
+                    Present
+                    <i id="email_tardy" class="far fa-paper-plane" title="Email Unexcused Tardy"></i>
+                </h3>
                 <table id="present">
                     <tr>
                         <th title="Student ID">ID</th>
