@@ -1,0 +1,47 @@
+table#days td {
+    vertical-align: top;
+    cursor: default;
+    text-align: left;
+}
+
+div.session {
+    margin-top: 5px;
+    border-bottom: 1px solid black;
+}
+div.session.AM {
+    padding-top: 5px;
+    border-top: 1px solid black;
+}
+div.session .fa-plus-square {
+    cursor: pointer;
+}
+div.meeting {
+    max-height: 15px;
+    margin-left: 10px;
+    margin-bottom: 7px;
+}
+.modal h4 {
+    border-bottom: 1px solid black;
+    margin-bottom: 0px;
+}
+.modal input {
+    width: 635px;
+}
+.modal label {
+    display: inline-block;
+    width: 50px;
+}
+.modal p.right {
+    text-align: right;
+}
+.modal form div {
+    margin: 2px 0px;
+}
+
+#days .fa-chalkboard-teacher, 
+#days .fa-black-tie {
+    bottom: 75px;
+    right: 75px;
+    font-size: 30px;
+    cursor: pointer;
+}

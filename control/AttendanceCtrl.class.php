@@ -284,13 +284,52 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
     public function addMeeting()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
+        $start = filter_input(INPUT_POST, "start");
         if ($session_id && $_FILES["list"]) {
             $this->parseMeetingFile(
                 $_FILES["list"]["tmp_name"],
                 $_FILES["list"]["name"],
-                $session_id
+                $session_id, 
+                $start
             );
         }
+
+        return "Location: attendance";
+    }
+
+    /**
+     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/meeting$|", sec="admin")
+     */
+    public function createMeeting() {
+        $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
+        $title = filter_input(INPUT_POST, "title");
+        $date  = filter_input(INPUT_POST, "date");
+        $start = filter_input(INPUT_POST, "start");
+        $stop  = filter_input(INPUT_POST, "stop");
+
+        // insert meeting into DB 
+        $meeting_id = $this->meetingDao->add(
+            $session_id,
+            $title,
+            $date,
+            $start,
+            $stop
+        );
+        
+        // attach all enrolled students as 'present', no tardies
+        $day = $this->sessionDao->getOfferingId($session_id);
+        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($day["offering_id"]);
+        $attendance = [];
+        foreach ($enrolled as $attendant) {
+            $attendance[$attendant["teamsName"]] = [
+                "notEnrolled" => 0,
+                "absent" => 0,
+                "arriveLate" => 0,
+                "leaveEarly" => 0,
+                "middleMissing" => 0
+            ];
+        }
+        $this->attendanceDao->addReport($meeting_id, $attendance);
 
         return "Location: attendance";
     }
@@ -309,7 +348,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         return "Location: ../../attendance";
     }
 
-    private function parseMeetingFile($file, $filename, $session_id)
+    private function parseMeetingFile($file, $filename, $session_id, $meeting_start)
     {
         // prepare file contents
         $text = mb_convert_encoding(file_get_contents($file), "UTF-8", "UTF-16LE");
@@ -319,18 +358,8 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         $title = substr($filename, 0, strlen($filename) - 4);
         $fields = str_getcsv($lines[3], "\t");
         $date = $this->toIsoDate($fields[1]);
-
-        if (count($fields) == 3) {
-            $meeting_start = $fields[2];
-        } else {
-            $meeting_start = $this->to24hour($fields[1]);
-        }
         $fields = str_getcsv($lines[4], "\t");
-        if (count($fields) == 3) {
-            $meeting_stop = $fields[2];
-        } else {
-            $meeting_stop = $this->to24hour($fields[1]);
-        }
+        $meeting_stop = $this->to24hour($fields[1]);
 
         // insert meeting into DB 
         $meeting_id = $this->meetingDao->add(
@@ -338,7 +367,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
             $title,
             $date,
             $meeting_start,
-            $meeting_stop,
+            $meeting_stop
         );
 
         // insert attendance lines

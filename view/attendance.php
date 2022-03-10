@@ -8,39 +8,7 @@
     <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/offering.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <style>
-        table#days td {
-            vertical-align: top;
-            cursor: default;
-            text-align: left;
-        }
-
-        div.session {
-            margin-top: 5px;
-            border-bottom: 1px solid black;
-        }
-        div.session.AM {
-            padding-top: 5px;
-            border-top: 1px solid black;
-        }
-        div.session .fa-plus-square {
-            cursor: pointer;
-        }
-        div.meeting {
-            max-height: 15px;
-            margin-left: 10px;
-            margin-bottom: 7px;
-        }
-
-        #days .fa-chalkboard-teacher, 
-        #days .fa-black-tie {
-            bottom: 75px;
-            right: 75px;
-            font-size: 30px;
-            cursor: pointer;
-        }
-    </style>
-
+    <link rel="stylesheet" href="res/css/attendance.css">
     <script src="res/js/attendance.js"></script>
 </head>
 
@@ -83,14 +51,17 @@
                 <tr>
                     <?php for ($d = 1; $d <= 7; $d++) : ?>
                         <?php $date = $start + ($w - 1) * 60 * 60 * 24 * 7 + ($d - 1) * 60 * 60 * 24; ?>
-                        <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>">
+                        <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" 
+                            id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" 
+                            data-date="<?= date("Y-m-d", $date) ?>">
                             <?php if ($w == 4 && $d == 6) : ?>
                                 <i title="Professionalism Report" class="fab fa-black-tie"></i>
                             <?php elseif ($d == 7): ?>
                                 <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
                             <?php else : ?>
                                 <?php foreach (["AM", "PM"] as $stype): ?>
-                                    <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>">
+                                    <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>"
+                                        data-stype="<?= $stype ?>">
                                         <?= $stype ?>
                                         <i title="Add Meeting" class="far fa-plus-square"></i>
 
@@ -118,12 +89,45 @@
     <div id="overlay">
         <i id="close-overlay" class="fas fa-times-circle"></i>
         <div class="modal">
-            <h3>Upload Attendance</h3>
-            <p>Expected format is a Teams report with addditional column for meeting attendance start and stop time</p>
+            <h3>Add a Meeting</h3>
+
+            <h4>Manually Create a Meeting</h4>
+            <form action="meeting" method="post"> 
+                <input type="hidden" id="manual_session_id" name="session_id" />
+                <div>
+                    <label>Title</label>
+                    <input type="text" name="title" id="manual_title" />
+                </div>
+                <div>
+                    <label>Date</label>
+                    <input type="date" name="date" id="manual_date"/>
+                </div>
+                <div>
+                    <label>Start</label>
+                    <input type="text" name="start" id="manual_start"/>
+                </div>
+                <div>
+                    <label>Stop</label>
+                    <input type="text" name="stop" />
+                </div>
+                <div class="btn">
+                    <button type="submit">Create Meeting</button>
+                </div>
+            </form>
+
+            <h4>Or Upload a Teams Meeting</h4>
             <form action="" method="post" enctype="multipart/form-data" id="upload_form">
                 <input type="hidden" id="session_id" name="session_id" />
-                <input type="file" id="list_file" name="list" />
-                <div class="btn"><button>Upload Attendance</button></div>
+                <div>
+                    <label>Start</label>
+                    <input type="text" name="start" id="start" />
+                </div>
+                <div>
+                    <label>File*</label>
+                    <input type="file" id="list_file" name="list" />
+                </div>
+                <div class="btn"><button>Upload Meeting</button></div>
+                <p class="right">*Filename will be used as meeting title</p>
             </form>
         </div>
 
