@@ -91,36 +91,12 @@
         <div class="modal">
             <h3>Add a Meeting</h3>
 
-            <h4>Manually Create a Meeting</h4>
-            <form action="meeting" method="post"> 
-                <input type="hidden" id="manual_session_id" name="session_id" />
-                <div>
-                    <label>Title</label>
-                    <input type="text" name="title" id="manual_title" />
-                </div>
-                <div>
-                    <label>Date</label>
-                    <input type="date" name="date" id="manual_date"/>
-                </div>
-                <div>
-                    <label>Start</label>
-                    <input type="text" name="start" id="manual_start"/>
-                </div>
-                <div>
-                    <label>Stop</label>
-                    <input type="text" name="stop" />
-                </div>
-                <div class="btn">
-                    <button type="submit">Create Meeting</button>
-                </div>
-            </form>
-
-            <h4>Or Upload a Teams Meeting</h4>
+            <h4>Upload a Teams Meeting</h4>
             <form action="" method="post" enctype="multipart/form-data" id="upload_form">
                 <input type="hidden" id="session_id" name="session_id" />
                 <div>
                     <label>Start</label>
-                    <input type="text" name="start" id="start" />
+                    <input type="text" name="start" id="start" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
                 </div>
                 <div>
                     <label>File*</label>
@@ -128,6 +104,30 @@
                 </div>
                 <div class="btn"><button>Upload Meeting</button></div>
                 <p class="right">*Filename will be used as meeting title</p>
+            </form>
+
+            <h4>Or Manually Create a Meeting</h4>
+            <form action="meeting" method="post"> 
+                <input type="hidden" id="manual_session_id" name="session_id" />
+                <div>
+                    <label>Title</label>
+                    <input type="text" name="title" id="manual_title" required />
+                </div>
+                <div>
+                    <label>Date</label>
+                    <input type="date" name="date" id="manual_date" required />
+                </div>
+                <div>
+                    <label>Start</label>
+                    <input type="text" name="start" id="manual_start" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
+                </div>
+                <div>
+                    <label>Stop</label>
+                    <input type="text" name="stop" id="manual_stop" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
+                </div>
+                <div class="btn">
+                    <button type="submit">Create Meeting</button>
+                </div>
             </form>
         </div>
 

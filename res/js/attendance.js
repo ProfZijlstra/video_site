@@ -31,11 +31,20 @@ window.addEventListener("load", () => {
         document.getElementById("manual_title").value = day + day_part;
         document.getElementById("manual_date").value = date;
         document.getElementById("manual_start").value = start;
-        
+
         overlay.classList.add("visible");
     }
     const addBtns = document.getElementsByClassName("fa-plus-square");
     for (const btn of addBtns) {
         btn.onclick = addMeeting;
     }
+
+    function timeValidationMsg(event) {
+        event.target.setCustomValidity("Ivalid 24 hour colon separated time format");
+    }
+
+    document.getElementById("start").oninvalid = timeValidationMsg;
+    document.getElementById("manual_start").oninvalid = timeValidationMsg;
+    document.getElementById("manual_stop").oninvalid = timeValidationMsg;
+
 });
