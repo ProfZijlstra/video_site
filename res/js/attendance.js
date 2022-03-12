@@ -39,12 +39,9 @@ window.addEventListener("load", () => {
         btn.onclick = addMeeting;
     }
 
-    function timeValidationMsg(event) {
-        event.target.setCustomValidity("Ivalid 24 hour colon separated time format");
-    }
-
-    document.getElementById("start").oninvalid = timeValidationMsg;
-    document.getElementById("manual_start").oninvalid = timeValidationMsg;
-    document.getElementById("manual_stop").oninvalid = timeValidationMsg;
+    const timeValidationMsg = "Ivalid 24 hour colon separated time format";
+    document.getElementById("start").setCustomValidity(timeValidationMsg);
+    document.getElementById("manual_start").setCustomValidity(timeValidationMsg);
+    document.getElementById("manual_stop").setCustomValidity(timeValidationMsg);
 
 });
