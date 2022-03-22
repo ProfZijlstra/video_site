@@ -68,7 +68,7 @@ Manalabs.org Automated Account Creator
 ";
 
 			#email the user about his newly created account
-			$headers ='FROM: "Manalabs Account Creator" <accounts@manalabs.org>';
+			$headers ='From: "Manalabs Video System" <videos@manalabs.org> \r\n';
 			mail($email, "CS472 manalabs.org account", $message, $headers);
 			echo "created account: $email\n";
 		} else { // user does exist in db

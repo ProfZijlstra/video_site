@@ -44,7 +44,7 @@
             <nav class="areas">
                 <div title="Videos" class="active"><i class="fas fa-film"></i></div>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
-                <div title="Quizzes"><i class="fas fa-school"></i></div>
+                <div title="Quizzes"><i class="fas fa-vial"></i></div>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
             </nav>

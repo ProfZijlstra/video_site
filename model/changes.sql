@@ -158,5 +158,42 @@ ALTER TABLE attendance MODIFY teamsName varchar(90);
 ALTER TABLE meeting DROP FOREIGN KEY fk_meeting_day1;
 ALTER TABLE meeting DROP day_id;
 
--- TODO
 ALTER TABLE view DROP too_long;
+
+-- TODO
+ALTER TABLE `session` DROP exported;
+ALTER TABLE `session` ADD COLUMN `status` VARCHAR(45);
+ALTER TABLE `session` ADD COLUMN `start` TIME;
+ALTER TABLE `session` ADD COLUMN `stop` TIME;
+ALTER TABLE `session` ADD COLUMN `generated` tinyint UNSIGNED;
+
+CREATE TABLE `attendance_export` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `studentID` int(10) unsigned NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  `inClass` TINYINT(1) NOT NULL,
+  `comment` VARCHAR(255) NOT NULL,
+  `session_id` INT(10) unsigned NOT NULL,
+  PRIMARY KEY(`id`),
+  KEY `fk_session_id` (`session_id`),
+  CONSTRAINT `fk_session_id` FOREIGN KEY(`session_id`) REFERENCES `session`(`id`) 
+);
+
+ALTER TABLE `attendance` ADD COLUMN `start` TIME;
+ALTER TABLE `attendance` ADD COLUMN `stop` TIME;
+
+UPDATE `attendance` AS a SET `start` = 
+  (SELECT MIN(d.start) 
+  FROM attendance_data AS d 
+  WHERE a.meeting_id = d.meeting_id 
+  AND a.teamsName = d.teamsName
+  GROUP BY d.teamsName);
+
+UPDATE `attendance` AS a SET `stop` = 
+  (SELECT MAX(d.stop) 
+  FROM attendance_data AS d 
+  WHERE a.meeting_id = d.meeting_id 
+  AND a.teamsName = d.teamsName
+  GROUP BY d.teamsName);
+
+ALTER TABLE attendance_data RENAME attendance_import;

@@ -1,3 +1,6 @@
+#content {
+    width: 800px;
+}
 h3 {
     margin-bottom: 0px;
 }
@@ -32,6 +35,9 @@ td.name span.right {
     right: 3px;
     color: gray;
     cursor: pointer;
+}
+td input.time {
+    width: 55px;
 }
 td.student_id {
     text-align: center;

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title><?= $offering['block'] ?> Attendance</title>
+    <title>Meeting: <?= $meeting["title"] ?></title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
@@ -19,9 +19,7 @@
             <a href="logout" title="Logout"><i title="Logout" class="fas fa-power-off"></i></a>
         </div>
         <div id="course">
-            <div id="course">
-                <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
-            </div>
+            <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
         </div>
         <h1>
             <span class="title">
@@ -115,6 +113,8 @@
                     <tr>
                         <th title="Student ID">ID</th>
                         <th>Name</th>
+                        <th title="Arrived at">Start</th>
+                        <th title="Left at">Stop</th>
                         <th title="Arrived Late">Late</th>
                         <th title="Missed Middle">MisMid</th>
                         <th title="Left Early">Left</th>
@@ -129,6 +129,12 @@
                             <td class="name" title="<?= $student["start"] . " - " . $student["stop"] ?>">
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["teamsName"] ?></a>
                                 <span class="right absent">absent</span>
+                            </td>
+                            <td>
+                                <input class="time start" value="<?= $student["start"] ?>">
+                            </td>
+                            <td>
+                                <input class="time stop" value="<?= $student["stop"] ?>">
                             </td>
                             <td class="cbox" title="Arrived Late">
                                 <input type="checkbox" name="late" value="late" <?= $student["arriveLate"] ? "checked" : "" ?> />

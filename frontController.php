@@ -35,8 +35,9 @@ $VIEW_DATA = array(); // populated by controller, and used by view
  * Include the (generated) application context
  * **************************** */
 // Setup autoloading for control and model classes
-// TODO move these into the AnnotationContext, so that it automatically adds
-// an additional spl_autoload function for each directory it searches
+// may be good to move these into the AnnotationContext, so that it 
+// automatically adds an additional spl_autoload function for each directory 
+// that it searches
 spl_autoload_register(function ($class) {
     $file = 'control/' . $class . '.class.php';
     if (file_exists($file)) {

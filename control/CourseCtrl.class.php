@@ -30,6 +30,10 @@ class CourseCtrl {
      * @Inject('UserDao')
      */
     public $userDao;
+    /**
+     * @Inject('sessionDao')
+     */
+    public $sessionDao;
 
     /**
      * @GET(uri="|^/?$|", sec="user")
@@ -79,7 +83,8 @@ class CourseCtrl {
         $this->videoDao->clone($course_number, $block, $old_block);
         $new_offering = $this->offeringDao->create($course_number, $block, $start, $stop);
         $this->dayDao->cloneDays($offering_id, $new_offering);
-        // TODO clone sessions for $new_offering
+        $this->sessionDao->createForOffering($new_offering);
+
         return "Location: ../$block/";
     }
 
@@ -186,7 +191,7 @@ Manalabs.org Automated Account Creator
 ";
 
         #email the user about his newly created account
-        $headers ='FROM: "Manalabs Account Creator" <accounts@manalabs.org>';
+        $headers ='From: "Manalabs Video System" <videos@manalabs.org> \r\n';
         mail($email, "Prof Zijlstra's manalabs.org account", $message, $headers);
         return $user_id;
     }

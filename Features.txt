@@ -4,7 +4,8 @@
     - [DONE] Add sessions (AM/PM) in which meetings are 
     - [DONE / NOT TESTED] Add automated emails to unexcused
     - [DONE] Add manual meeting addition
-    - Add end of week physical attendance report
+    - [DONE] Add end of week physical attendance report
+    - [DONE] Add export report (first step for submitting to CAMS)
     - Add end of month professionalism report
     - Ability to submit to CAMS
 - see raw view data for day and date

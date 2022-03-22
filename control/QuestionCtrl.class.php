@@ -57,7 +57,7 @@ class QuestionCtrl
             " asks:\n\n$question\n
 See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
 
-        $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
+        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
         mail("mzijlstra@miu.edu", "${course} Question or Comment", $message, $headers);
 
         return "Location: ${tab}#q${id}";
@@ -202,7 +202,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
             " says:\n\n$text\n
 See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
 
-        $headers = 'FROM: "Manalabs Video System" <videos@manalabs.org>';
+        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
         mail($op_email, "$course Reply", $message, $headers);
         mail("mzijlstra@miu.edu", "${course} Reply", $message, $headers);
 

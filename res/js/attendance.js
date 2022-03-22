@@ -40,8 +40,7 @@ window.addEventListener("load", () => {
     }
 
     const timeValidationMsg = "Ivalid 24 hour colon separated time format";
-    document.getElementById("start").setCustomValidity(timeValidationMsg);
-    document.getElementById("manual_start").setCustomValidity(timeValidationMsg);
-    document.getElementById("manual_stop").setCustomValidity(timeValidationMsg);
-
+    document.getElementById("start").validationMessage = timeValidationMsg;
+    document.getElementById("manual_start").validationMessage = timeValidationMsg;
+    document.getElementById("manual_stop").validationMessage = timeValidationMsg;
 });

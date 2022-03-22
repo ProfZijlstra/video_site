@@ -22,7 +22,7 @@ function htmlView($view) {
     } else {
         // make keys in VIEW_DATA available as regular variables
         foreach ($VIEW_DATA as $key => $value) {
-            // TODO htmlspecialchars! (breaks flowcharts)
+            // do htmlspecialchars? (breaks flowcharts)
             $$key = $value;
         }
         require "view/$view";

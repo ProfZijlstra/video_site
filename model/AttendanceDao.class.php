@@ -20,7 +20,7 @@ class AttendanceDao {
     public function addReport($meeting_id, $report) {
         $stmt = $this->db->prepare("INSERT INTO attendance VALUES(NULL, :meeting_id, 
             :teamsName, :notEnrolled, :absent, :arriveLate, :leaveEarly, 
-            :middleMissing, 0, 0)");
+            :middleMissing, 0, 0, :start, :stop)");
         foreach ($report as $teamsName => $attend) {
             $stmt->execute([
                 "meeting_id" => $meeting_id, 
@@ -29,7 +29,9 @@ class AttendanceDao {
                 "absent" => $attend["absent"], 
                 "arriveLate" => $attend["arriveLate"], 
                 "leaveEarly" => $attend["leaveEarly"], 
-                "middleMissing" => $attend["middleMissing"]
+                "middleMissing" => $attend["middleMissing"],
+                "start" => $attend["start"],
+                "stop" => $attend["stop"],
             ]);
         }
     }
@@ -38,13 +40,10 @@ class AttendanceDao {
         $stmt = $this->db->prepare("SELECT a.id, a.teamsName, u.studentID,
                     a.arriveLate, a.middleMissing, a.leaveEarly, a.inClass,
                     a.notEnrolled, a.absent, a.excused, a.meeting_id,
-                    MIN(d.start) as `start`, MAX(d.stop) as `stop`
+                    a.start, a.stop 
                 FROM attendance AS a
-                LEFT JOIN attendance_data AS d ON a.meeting_id = d.meeting_id 
-                    AND a.teamsName = d.teamsName
                 LEFT JOIN user AS u on a.teamsName = u.teamsName
                 WHERE a.meeting_id = :meeting_id
-                GROUP BY a.teamsName
                 ORDER BY a.id DESC");
         $stmt->execute(["meeting_id" => $meeting_id]);
         return $stmt->fetchAll();        
@@ -67,16 +66,13 @@ class AttendanceDao {
         $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
                     m.title, m.start, m.stop,
                     a.arriveLate, a.leaveEarly, a.middleMissing,
-                    MIN(d.start) as `arrive`, MAX(d.stop) as `left`
+                    a.start as `arrive`, a.stop as `left`
                 FROM attendance AS a
                 JOIN meeting AS m ON a.meeting_id = m.id
-                JOIN attendance_data AS d ON a.meeting_id = d.meeting_id 
-                    AND a.teamsName = d.teamsName
                 JOIN user AS u on a.teamsName = u.teamsName
                 WHERE a.meeting_id = :meeting_id
                 AND (a.arriveLate = 1 OR a.leaveEarly = 1 OR a.middleMissing = 1)
-                AND a.excused = 0
-                GROUP BY a.teamsName");
+                AND a.excused = 0");
         $stmt->execute(["meeting_id" => $meeting_id]);
         return $stmt->fetchAll();                
     }
@@ -88,7 +84,9 @@ class AttendanceDao {
             leaveEarly = :left, 
             middleMissing = :mid, 
             inClass = :phys,
-            excused = :excu
+            excused = :excu, 
+            `start` = :start,
+            `stop` = :stop
             WHERE id = :id");
         $stmt->execute($data);
     }
@@ -104,5 +102,29 @@ class AttendanceDao {
         $stmt = $this->db->prepare("DELETE FROM attendance
                 WHERE meeting_id = :meeting_id ");
         $stmt->execute(["meeting_id" => $meeting_id]);
+    }
+
+    public function getExportData($session_id) {
+        $stmt = $this->db->prepare(
+            "SELECT u.studentID, 
+            SUM(a.absent) AS `absent`, 
+            SUM(a.arriveLate) AS late, 
+            SUM(a.leaveEarly) AS leaveEarly, 
+            SUM(a.middleMissing) AS middleMissing, 
+            SUM(a.inClass) AS inClass, 
+            SUM(a.excused) AS excused,
+            SEC_TO_TIME(SUM(case when TIME_TO_SEC(TIMEDIFF(a.start, m.start)) > 0 
+                then TIME_TO_SEC(TIMEDIFF(a.start, m.start)) 
+                else 0 end)) AS minsLate,
+            SEC_TO_TIME(SUM(case when TIME_TO_SEC(TIMEDIFF(m.stop, a.stop)) > 0 
+                then TIME_TO_SEC(TIMEDIFF(m.stop, a.stop)) 
+                else 0 end)) AS minsLeave
+            FROM attendance AS a
+            JOIN meeting AS m ON a.meeting_id = m.id
+            JOIN user AS u ON a.teamsName = u.teamsName
+            WHERE m.session_id = :session_id
+            GROUP BY u.id");
+        $stmt->execute(["session_id" => $session_id]);
+        return $stmt->fetchAll();                        
     }
 }

@@ -7,12 +7,29 @@ window.addEventListener("load", () => {
             }
         };
     }
+    const inputs = document.getElementsByClassName("time");
+    for (const input of inputs) {
+        input.onchange = doUpdate;
+    }
+
     function doUpdate(evt) {
         const tr = evt.target.parentNode.parentNode;
         const id = tr.dataset.id;
         const boxes = tr.getElementsByTagName("input");
-        const update =
-            {"id" : id, "late" : 0, "mid" : 0, "left" : 0, "excu": 0, "phys" : 0};
+        const startFields = tr.getElementsByClassName("start");
+        const start = startFields[0].value;
+        const stopFields = tr.getElementsByClassName("stop");
+        const stop = stopFields[0].value;
+        const update = {
+            "id" : id,
+            "start" : start,
+            "stop" : stop,
+            "late" : 0,
+            "mid" : 0,
+            "left" : 0,
+            "excu" : 0,
+            "phys" : 0
+        };
         for (const box of boxes) {
             if (box.checked) {
                 const name = box.getAttribute("name");
@@ -38,7 +55,8 @@ window.addEventListener("load", () => {
             }
         }
         if (has_phys &&
-            !confirm("Regenerate and delete all excused and all physical attendance?")) {
+            !confirm(
+                "Regenerate and delete all excused and all physical attendance?")) {
             return false;
         }
         return true;
@@ -69,8 +87,14 @@ window.addEventListener("load", () => {
     function markAbsenceExcused(evt) {
         const id = evt.target.parentNode.parentNode.dataset.id;
         const excu = evt.target.checked ? 1 : 0;
-        const update =
-            {"id" : id, "late" : 0, "mid" : 0, "left" : 0, "excu": excu, "phys" : 0};
+        const update = {
+            "id" : id,
+            "late" : 0,
+            "mid" : 0,
+            "left" : 0,
+            "excu" : excu,
+            "phys" : 0
+        };
 
         fetch(`attend/${id}`, {
             method : 'POST',
@@ -83,7 +107,8 @@ window.addEventListener("load", () => {
         excuse.onclick = markAbsenceExcused;
     }
 
-    document.getElementById("delete_meeting").onclick = function() {
+    document.getElementById("delete_meeting").onclick =
+        function() {
         if (confirm("Delete this meeting and all related data?")) {
             document.getElementById("delete_form").submit();
         }
@@ -95,7 +120,7 @@ window.addEventListener("load", () => {
             const meeting_id = document.getElementById("meeting_id").value;
             fetch(`${meeting_id}/emailAbsent`, {
                 method : 'POST',
-            });    
+            }).then(() => {alert("Emails sent")});
         }
     }
 
@@ -105,8 +130,7 @@ window.addEventListener("load", () => {
             const meeting_id = document.getElementById("meeting_id").value;
             fetch(`${meeting_id}/emailTardy`, {
                 method : 'POST',
-            });    
+            }).then(() => {alert("Emails sent")});
         }
     }
-    
 });

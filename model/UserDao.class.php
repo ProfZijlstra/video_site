@@ -46,7 +46,7 @@ class UserDao {
      * @return array of arrays of user data
      */
     public function all() {
-        // TODO add parameters for constraints and order by
+        // maybe add parameters for constraints and order by
         $stmt = $this->db->prepare("SELECT * FROM user");
         $stmt->execute();
         return $stmt->fetchAll();        

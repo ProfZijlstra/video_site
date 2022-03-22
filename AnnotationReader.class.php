@@ -3,13 +3,10 @@
 /*
  * Michael Zijlstra 03 May 2017
  * 
- * TODO: create proper documentation for this class
+ * It would be good to create proper documentation for this class
  */
 
 class AnnotationReader {
-
-    // public $security = array();
-    // public $routing = array();
     public $mappings = array();
     public $repositories = array();
     public $controllers = array();

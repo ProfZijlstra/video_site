@@ -32,7 +32,7 @@
         <nav class="areas">
             <div title="Videos"><a href="../<?= $offering['block'] ?>/"><i class="fas fa-film"></a></i></div>
             <div title="Labs"><i class="fas fa-flask"></i></div>
-            <div title="Quizzes"><i class="fas fa-school"></i></div>
+            <div title="Quizzes"><i class="fas fa-vial"></i></div>
             <div title="Attendance" class="active"><i class="fas fa-user-check"></i></div>
             <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
         </nav>
@@ -57,13 +57,20 @@
                             <?php if ($w == 4 && $d == 6) : ?>
                                 <i title="Professionalism Report" class="fab fa-black-tie"></i>
                             <?php elseif ($d == 7): ?>
-                                <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
+                                <a href="physical/W<?= $w ?>">
+                                    <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
+                                </a>
                             <?php else : ?>
                                 <?php foreach (["AM", "PM"] as $stype): ?>
                                     <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>"
                                         data-stype="<?= $stype ?>">
                                         <?= $stype ?>
                                         <i title="Add Meeting" class="far fa-plus-square"></i>
+                                        <?php if ($days["W{$w}D{$d}"][$stype]["meetings"]) : ?>
+                                        <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
+                                            <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
+                                        </a>
+                                        <?php endif; ?>
 
                                     <?php foreach ($days["W{$w}D{$d}"][$stype]["meetings"] as $meeting) : ?>
                                         <div class="meeting">
@@ -92,22 +99,22 @@
             <h3>Add a Meeting</h3>
 
             <h4>Upload a Teams Meeting</h4>
-            <form action="" method="post" enctype="multipart/form-data" id="upload_form">
+            <form name="import" action="" method="post" enctype="multipart/form-data" id="upload_form">
                 <input type="hidden" id="session_id" name="session_id" />
                 <div>
                     <label>Start</label>
-                    <input type="text" name="start" id="start" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
+                    <input type="text" name="start" id="start" required pattern="([0-1]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
                 </div>
                 <div>
                     <label>File*</label>
-                    <input type="file" id="list_file" name="list" />
+                    <input type="file" id="list_file" name="list" required />
                 </div>
                 <div class="btn"><button>Upload Meeting</button></div>
                 <p class="right">*Filename will be used as meeting title</p>
             </form>
 
             <h4>Or Manually Create a Meeting</h4>
-            <form action="meeting" method="post"> 
+            <form name="create" action="meeting" method="post"> 
                 <input type="hidden" id="manual_session_id" name="session_id" />
                 <div>
                     <label>Title</label>

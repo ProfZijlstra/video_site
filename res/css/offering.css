@@ -99,7 +99,7 @@ td .users {
     top: 5px;
     left: 16px;
 }
-td .time {
+td span.time {
     position: absolute;
     top: 5px;
     right: 5px;
