@@ -52,7 +52,8 @@ div#playSpeed {
     cursor: default;
     border: 1px solid black;
     display: inline-block;
-    width: 21px;
+    width: 25px;
+    height: 25px;
     border-radius: 20px;
     cursor: pointer;
 }
