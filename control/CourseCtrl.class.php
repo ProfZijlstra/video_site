@@ -122,7 +122,7 @@ class CourseCtrl {
     }
 
     /**
-     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrollment$|", sec="admin")
+     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$|", sec="admin")
      */
     public function replaceEnrollment() {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
