@@ -134,7 +134,7 @@ class CourseCtrl {
             $this->enrollStudentsInFile($_FILES["list"]["tmp_name"], $offering_id);
         }
 
-        return "Location: enrollment";
+        return "Location: enrolled";
     }
 
     private function enrollStudentsInFile($file, $offering_id) {
