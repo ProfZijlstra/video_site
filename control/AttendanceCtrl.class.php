@@ -38,7 +38,7 @@ class AttendanceCtrl
     public $attendanceExportDao;
 
     /**
-     * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/attendance$|", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!"", sec="admin")
      */
     public function overview()
     {
@@ -67,7 +67,7 @@ class AttendanceCtrl
     }
 
     /**
-     * @GET(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])$|", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])$!"", sec="admin")
      */
     public function physicalAttendanceReport() {
         global $URI_PARAMS;
@@ -89,7 +89,7 @@ class AttendanceCtrl
     }
 
     /**
-     * @POST(uri="|^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])/email$|", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])/email$!"", sec="admin")
      */
     public function emailLowPhysical() {
         global $URI_PARAMS;
