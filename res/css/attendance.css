@@ -20,6 +20,9 @@ div.meeting {
     margin-left: 10px;
     margin-bottom: 7px;
 }
+div.meeting a {
+    font-size: 10px;
+}
 .modal h4 {
     border-bottom: 1px solid black;
     margin-bottom: 0px;
