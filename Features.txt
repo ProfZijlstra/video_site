@@ -8,6 +8,7 @@
     - [DONE] Add export report (first step for submitting to CAMS)
     - Add end of month professionalism report
     - Ability to submit to CAMS
+- FIX markdown handling (no double html-escape -- see: https://manalabs.org/videos/cs544/2022-06/W1D2/13)
 - see raw view data for day and date
 - GeoIP constraints
 - Improve user system
