@@ -135,12 +135,9 @@ class VideoCtrl {
 		$start = strtotime($offering_detail['start']);
 		$now = time();
 		$days_passed = floor(($now - $start) / (60 * 60 * 24));
-		$page_w = $day[1];
-		$page_d = $day[3];
-		$curr_w = floor($days_passed / 7) + 1;
-		$curr_d = ($days_passed % 7) + 1;
 
 		// get video related data
+		$video_file = array();
 		$videos = $this->videoDao->forDay($course_num, $block, $day);
 		$file_info = $videos["file_info"];
 		foreach ($file_info as $file) {
@@ -153,9 +150,9 @@ class VideoCtrl {
 		// get questions for selected video
 		$questions = $this->questionDao->getAllFor($video_file["parts"][2], $user_id);
 		// get the replies for those questions
+		$replies = array();
 		if ($questions) {
 			$qids = array();
-			$replies = array();
 			foreach ($questions as $question) {
 				$qids[] = $question["id"];
 				$replies[$question["id"]] = array();
