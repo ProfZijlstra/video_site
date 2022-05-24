@@ -117,13 +117,16 @@ window.addEventListener("load", () => {
     }
 
     // enable email absent
-    document.getElementById("email_absent").onclick = function() {
-        if (confirm("Email Unexcused Absent?")) {
-            const meeting_id = document.getElementById("meeting_id").value;
-            fetch(`${meeting_id}/emailAbsent`, {
-                method : 'POST',
-            }).then(() => {alert("Emails sent")});
-        }
+    const emailAbsent = document.getElementById("email_absent");
+    if (emailAbsent) {
+        emailAbsent.onclick = function() {
+            if (confirm("Email Unexcused Absent?")) {
+                const meeting_id = document.getElementById("meeting_id").value;
+                fetch(`${meeting_id}/emailAbsent`, {
+                    method : 'POST',
+                }).then(() => {alert("Emails sent")});
+            }
+        }    
     }
 
     // enable email tardy
