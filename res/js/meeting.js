@@ -93,7 +93,9 @@ window.addEventListener("load", () => {
             "mid" : 0,
             "left" : 0,
             "excu" : excu,
-            "phys" : 0
+            "phys" : 0,
+            "start": null,
+            "stop": null
         };
 
         fetch(`attend/${id}`, {
