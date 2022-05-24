@@ -31,7 +31,7 @@ class CourseCtrl {
      */
     public $userDao;
     /**
-     * @Inject('sessionDao')
+     * @Inject('SessionDao')
      */
     public $sessionDao;
 
