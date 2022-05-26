@@ -63,7 +63,7 @@ window.addEventListener("load", () => {
 			</div>
 
             <div id="course">
-                <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
+                <a href="../.."><?= strtoupper($course) ?> <?= $block ?></a>
             </div>
             <h1>
                 <span id="title" class="title" data-stype="<?= $stype ?>">
