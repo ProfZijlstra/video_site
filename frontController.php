@@ -10,6 +10,10 @@ define("DEVELOPMENT", true);
 $SEC_LVLS = array("none", "user", "admin");
 date_default_timezone_set("America/Chicago");
 error_reporting(E_ALL ^ E_WARNING);
+// extend session to 12 hours, based on: 
+// https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php
+ini_set('session.gc_maxlifetime', 43200);
+session_set_cookie_params(43200);
 
 /* ******************************
  * Initialize Globals
