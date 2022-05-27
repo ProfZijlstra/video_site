@@ -127,4 +127,32 @@ class AttendanceDao {
         $stmt->execute(["session_id" => $session_id]);
         return $stmt->fetchAll();                        
     }
+
+    public function professionalism($offering_id) {
+        $stmt = $this->db->prepare(
+            "SELECT u.studentID, u.knownAs, u.lastname,
+            SUM(a.absent) AS `absent`, 
+            SUM(a.arriveLate) AS late, 
+            SUM(a.leaveEarly) AS leaveEarly, 
+            SUM(a.middleMissing) AS middleMissing, 
+            SUM(a.inClass) AS inClass, 
+            SEC_TO_TIME(SUM(case when a.arriveLate > 0 
+                then TIME_TO_SEC(TIMEDIFF(a.start, m.start)) 
+                else 0 end)) AS minsLate,
+            SEC_TO_TIME(SUM(case when a.leaveEarly > 0 
+                then TIME_TO_SEC(TIMEDIFF(m.stop, a.stop)) 
+                else 0 end)) AS minsLeave
+            FROM attendance AS a
+            JOIN meeting AS m ON a.meeting_id = m.id
+            JOIN `session` AS s ON m.session_id = s.id
+            JOIN `day` AS d ON s.day_id = d.id
+            JOIN user AS u ON a.teamsName = u.teamsName
+            JOIN enrollment AS e ON e.user_id = u.id
+            WHERE d.offering_id = :offering_id
+            AND e.offering_id = :offering_id
+            AND a.excused = 0
+            GROUP BY u.id");
+        $stmt->execute(["offering_id" => $offering_id]);
+        return $stmt->fetchAll();                        
+    }
 }

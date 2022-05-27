@@ -55,7 +55,9 @@
                             id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" 
                             data-date="<?= date("Y-m-d", $date) ?>">
                             <?php if ($w == 4 && $d == 6) : ?>
-                                <i title="Professionalism Report" class="fab fa-black-tie"></i>
+                                <a href="professionalism">
+                                    <i title="Professionalism Report" class="fab fa-black-tie"></i>
+                                </a>
                             <?php elseif ($d == 7): ?>
                                 <a href="physical/W<?= $w ?>">
                                     <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>

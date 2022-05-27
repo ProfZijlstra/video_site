@@ -1,15 +1,8 @@
-- Attendance system
-    - [DONE] Add excused option
-    - [DONE] Ability to delete meeting (bad upload)
-    - [DONE] Add sessions (AM/PM) in which meetings are 
-    - [DONE / NOT TESTED] Add automated emails to unexcused
-    - [DONE] Add manual meeting addition
-    - [DONE] Add end of week physical attendance report
-    - [DONE] Add export report (first step for submitting to CAMS)
-    - Add end of month professionalism report
-    - Ability to submit to CAMS
 - FIX markdown handling (no double html-escape -- see: https://manalabs.org/videos/cs544/2022-06/W1D2/13)
+- FIX people marked as excused still absent in export report???
+- Feature: background click on person views page should trigger "back"
 - see raw view data for day and date
+- Ability to submit attendance to CAMS
 - GeoIP constraints
 - Improve user system
     - My Profile page with passwd and image
@@ -20,6 +13,15 @@
 - Add Lab system
 
 DONE:
+- Attendance system
+    - Add excused option
+    - Ability to delete meeting (bad upload)
+    - Add sessions (AM/PM) in which meetings are 
+    - Add automated emails to unexcused
+    - Add manual meeting addition
+    - Add end of week physical attendance report
+    - Add export report (first step for submitting to CAMS)
+    - Add end of month professionalism report
 - Remove 'too-long' view debugging items
 - Remove sensitive info and make project open source
 - Bug view speed cookie (makes multiple cookies)
