@@ -26,7 +26,7 @@ class CourseDao {
 	}
 
 	public function all() {
-		$stmt = $this->db->prepare("SELECT * FROM course ORDER BY `number`");
+		$stmt = $this->db->prepare("SELECT * FROM course ORDER BY `number` DESC");
 		$stmt->execute();
 		return $stmt->fetchAll();
 	}
