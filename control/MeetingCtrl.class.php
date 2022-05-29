@@ -34,7 +34,7 @@ class MeetingCtrl
     public $attendanceImportDao;
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$!"", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$!", sec="admin")
      */
     public function getMeeting()
     {
@@ -72,12 +72,13 @@ class MeetingCtrl
         $VIEW_DATA["visitors"] = $visitors;
         $VIEW_DATA["absent"] = $absent;
         $VIEW_DATA["present"] = $present;
+        $VIEW_DATA["title"] = "Meeting: " . $meeting["title"];
 
         return "meeting.php";
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$!", sec="admin")
      */
     public function updMeeting()
     {
@@ -94,7 +95,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/regen/(\d+)$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/regen/(\d+)$!", sec="admin")
      */
     public function regenReport()
     {
@@ -108,7 +109,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/attend/(\d+)$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/attend/(\d+)$!", sec="admin")
      */
     public function updateAttendance()
     {
@@ -118,7 +119,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/absent$!"", sec="admin")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/absent$!", sec="admin")
      */
     public function markAbsent()
     {
@@ -132,7 +133,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/present$!"", sec="admin")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/present$!", sec="admin")
      */
     public function markPresent()
     {
@@ -146,7 +147,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailAbsent$!"", sec="admin")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailAbsent$!", sec="admin")
      */
     public function emailAbsent() {
         global $URI_PARAMS;
@@ -187,7 +188,7 @@ We noticed you were absent from the ". $absent["title"]." meeting from its start
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailTardy$!"", sec="admin")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailTardy$!", sec="admin")
      */
     public function emailTardy() {
         global $URI_PARAMS;
@@ -241,7 +242,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
 
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!", sec="admin")
      */
     public function addMeeting()
     {
@@ -260,7 +261,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting$!", sec="admin")
      */
     public function createMeeting() {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -299,7 +300,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/delete$!"", sec="admin")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/delete$!", sec="admin")
      */
     public function deleteMeeting() {
         global $URI_PARAMS;

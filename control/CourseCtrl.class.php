@@ -36,7 +36,7 @@ class CourseCtrl {
     public $sessionDao;
 
     /**
-     * @GET(uri="!^/?$!"", sec="user")
+     * @GET(uri="!^/?$!", sec="user")
      */
     public function showCourses() {
         global $VIEW_DATA;
@@ -59,11 +59,12 @@ class CourseCtrl {
         $VIEW_DATA["courses"] = $courses;
         $VIEW_DATA["course_offerings"] = $course_offering;
         $VIEW_DATA["latest"] = $newest;
+        $VIEW_DATA["title"] = "Courses";
         return "courses.php";
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/clone$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/clone$!", sec="admin")
      */
     public function cloneOffering() {
         global $URI_PARAMS;
@@ -89,7 +90,7 @@ class CourseCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/edit$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/edit$!", sec="admin")
      */
     public function editDay() {
         global $URI_PARAMS;
@@ -103,7 +104,7 @@ class CourseCtrl {
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$!"", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$!", sec="admin")
      */
     public function viewEnrollment() {
         global $URI_PARAMS;
@@ -117,12 +118,14 @@ class CourseCtrl {
 
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["enrollment"] = $enrollment;
-        $VIEW_DATA["offering"] = $offering;
+        $VIEW_DATA["block"] = $block;
+        $VIEW_DATA["offering_id"] = $offering["id"];
+        $VIEW_DATA["title"] = "Enrollment";
         return "enrollment.php";
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$!", sec="admin")
      */
     public function replaceEnrollment() {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);

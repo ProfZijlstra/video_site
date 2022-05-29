@@ -38,7 +38,7 @@ class AttendanceCtrl
     public $attendanceExportDao;
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!"", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!", sec="admin")
      */
     public function overview()
     {
@@ -50,24 +50,25 @@ class AttendanceCtrl
         $days = $VIEW_DATA["days"];
 
         // get sessions for these days
-        $sessions = $this->sessionDao->allForOffering($VIEW_DATA["offering"]["id"]);
+        $sessions = $this->sessionDao->allForOffering($VIEW_DATA["offering_id"]);
         foreach ($sessions as $session) {
             $session["meetings"] = [];
             $days[$session["abbr"]][$session["type"]] = $session;
         }
 
         // Add attendance data
-        $meetings = $this->meetingDao->allForOffering($VIEW_DATA["offering"]["id"]);
+        $meetings = $this->meetingDao->allForOffering($VIEW_DATA["offering_id"]);
         foreach ($meetings as $meeting) {
             $days[$meeting["abbr"]][$meeting["stype"]]["meetings"][] = $meeting;
         }
         $VIEW_DATA["days"] = $days;
+        $VIEW_DATA["title"] = "Attendance";
 
         return "attendance.php";
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/professionalism$!"", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/professionalism$!", sec="admin")
      */
     public function professionalismReport() {
         global $URI_PARAMS;
@@ -106,6 +107,7 @@ class AttendanceCtrl
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["professionals"] = $professionals;
+        $VIEW_DATA["title"] = "Professionalism";
 
         return "professionalism.php";
     }
@@ -115,7 +117,7 @@ class AttendanceCtrl
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])$!"", sec="admin")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])$!", sec="admin")
      */
     public function physicalAttendanceReport() {
         global $URI_PARAMS;
@@ -132,12 +134,12 @@ class AttendanceCtrl
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["attend"] = $attend;
-
+        $VIEW_DATA["title"] = $week . " Physical Attendance";
         return "physical.php";
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])/email$!"", sec="admin")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])/email$!", sec="admin")
      */
     public function emailLowPhysical() {
         global $URI_PARAMS;
@@ -200,10 +202,10 @@ Manalabs Attendance System.
 
         $VIEW_DATA['course'] = $course_number;
         $VIEW_DATA['block'] = $block;
-        $VIEW_DATA['day_abbr'] = $day_abbr;
         $VIEW_DATA['stype'] = $stype;
         $VIEW_DATA['session'] = $session;
         $VIEW_DATA['exports'] = $exports;
+        $VIEW_DATA['title'] = $day_abbr . " " .$stype . " Attendance Export";
 
         return "attendanceExport.php";
     }

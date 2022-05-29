@@ -1,0 +1,120 @@
+body {
+    margin: 0px;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+    text-decoration: underline;
+}
+header {
+    height: 80px;
+}
+header #controls {
+    position: fixed;
+    z-index: 1;
+    top: 27px;
+    right: 70px;
+	font-size: 24px;
+    cursor: pointer;
+}
+header #controls a {
+	text-decoration: none;
+	color: black;
+}
+header #course {
+    text-align: center;
+    position: fixed;
+    z-index: 1;
+    top: 20px;
+    left: 50px;
+	font-size: 20pt;
+    font-weight: bold;
+}
+header #course a:hover {
+    text-decoration: none;
+}
+header h1 {
+    position: fixed;
+    top: 0px;
+    z-index: 0;
+    width: 100%;
+    font-size: 20pt;
+    text-align: center;
+}
+main {
+    position: relative;
+    z-index: 10;
+	border-top: 1px solid black;
+    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 
+                0 -6px 20px 0 rgba(0, 0, 0, 0.19);
+	min-height: 100vh;
+	background-color: #EEE;
+    padding-bottom: 5px;
+}
+nav.tools {
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 70px;
+}
+nav.areas {
+    font-size: 24px;
+    position: absolute;
+    background-color: #ddd;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    width: 125px;
+    border-right: 1px solid black;
+    box-shadow: 0px -4px 8px 0px #555 inset;
+}
+nav.areas > div {
+    border: 1px solid black;
+    border-top: none;
+    border-right: none;
+    padding: 5px 5px;
+    text-align: center;
+    min-width: 100px;
+}
+nav.areas > div > a {
+    display: block;
+}
+nav.areas > div.active {
+    border-right: none;
+    background-color: #eee;
+    border-bottom-left-radius: 10px;
+    position: relative;
+    left: 2px;
+}
+nav.back {
+    font-size: 24px;
+    position: absolute;
+    top: 15px;
+    left: 50px;
+    cursor: pointer;
+}
+/* For enrollment and attendance */
+.modal {
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+    padding: 1em;
+    position: relative;
+    top: 100px;
+    background-color: white;
+}
+.modal h3 {
+    border-bottom: 1px solid black;
+}
+.modal input {
+    width: 100%;
+    border: 1px solid #ddd;
+}
+.modal .btn {
+    margin-top: 10px;
+    text-align: right;
+}

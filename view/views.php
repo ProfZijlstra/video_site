@@ -1,4 +1,3 @@
-<?php if ($_SESSION['user']['type'] === 'admin') : ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             th.name, td.name {
@@ -16,24 +15,14 @@
                 text-align: right;
             }
         </style>
+        <script src="res/js/back.js"></script>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-            <div id="course">
-                <a href=".." id="course_num"><?= strtoupper($course) ?>
-                    <span data-id="<?= $offering['id']?>" id="offering"> <?= $offering['block'] ?> </span>
-                </a>
-            </div>
-            <h1>
-                <span class="title" >
-					<?= $title ?> 
-				</span>
-            </h1>
-        </header>
+        <?php include("header.php");?>
         <main>
+            <nav class="back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </nav>
             <div id="content">
             <h2>Views for <?= $user["firstname"] ?> <?= $user["lastname"]?></h2>
             <?php foreach($days as $day) : ?>
@@ -65,4 +54,3 @@
         </main>
     </body>
 </html>
-<?php endif; ?>

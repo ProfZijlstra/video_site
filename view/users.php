@@ -6,7 +6,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             #add_btn {
@@ -20,9 +20,6 @@
             td.num {
                 text-align: right;
             }
-            h1 {
-                text-align: center;
-            }
             td {
                 cursor: pointer;
             }
@@ -31,15 +28,14 @@
             }
         </style>
         <script src="res/js/users.js"></script>
+        <script src="res/js/back.js"></script>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-            <h1><?= $title ?></h1>
-        </header>
+        <?php include("header.php"); ?>
         <main>
+            <nav class="back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </nav>
             <nav class="tools">
                 <a href="user/add"><i title="Add User" class="fas fa-user-plus"></i></a>
             </nav>

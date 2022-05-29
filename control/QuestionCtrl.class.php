@@ -35,7 +35,7 @@ class QuestionCtrl
     public $userDao;
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$!"", sec="user")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$!", sec="user")
      */
     public function add()
     {
@@ -64,7 +64,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delQuestion$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delQuestion$!", sec="user")
      */
     public function del()
     {
@@ -79,7 +79,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getQuestion$!"", sec="user")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getQuestion$!", sec="user")
      */
     public function get()
     {
@@ -88,7 +88,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updQuestion$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updQuestion$!", sec="user")
      */
     public function update()
     {
@@ -105,7 +105,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/upvote$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/upvote$!", sec="user")
      */
     public function upvote()
     {
@@ -113,7 +113,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/downvote$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/downvote$!", sec="user")
      */
     public function downvote()
     {
@@ -121,7 +121,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/upreply$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/upreply$!", sec="user")
      */
     public function upreply()
     {
@@ -129,7 +129,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/downreply$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/downreply$!", sec="user")
      */
     public function downreply()
     {
@@ -180,7 +180,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/addReply$!"", sec="user")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/addReply$!", sec="user")
      */
     public function addReply()
     {
@@ -210,7 +210,7 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getReply$!"", sec="user")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getReply$!", sec="user")
      */
     public function getReply()
     {
@@ -219,7 +219,7 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updReply$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updReply$!", sec="user")
      */
     public function updateReply()
     {
@@ -236,7 +236,7 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delReply$!"", sec="user")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delReply$!", sec="user")
      */
     public function delReply()
     {

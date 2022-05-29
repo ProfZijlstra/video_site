@@ -5,6 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
+        <link rel="stylesheet" href="res/css/common.css">
         <link rel="stylesheet" type="text/css" href="res/css/video.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
         <script src="res/js/video.js"></script>
@@ -18,26 +19,11 @@
         <?php endif; ?>
     </head>
     <body>
-        <header>
-            <i id="bars" class="fas fa-bars"></i>
-			<div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
-				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
-					<i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
-					<a title="Users" href="/videos/user"><i class="fas fa-users"></i></a>
-				<?php endif; ?>
-				<a title="Logout" href="logout"><i class="fas fa-power-off"></i></a>
-			</div>
-            <h1>
-				<span id="day" data-id="<?= $days[$day]["id"] ?>"><?= $day ?> - </span> 
-				<span class="title"><?= $days[$day]["desc"] ?></span>
-            </h1>
-        </header>
+        <?php include("header.php"); ?>
         <div id="container">
         <nav id="videos">
-            <div id="course" data-oid="<?= $offering_id ?>">
-                <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
-            </div>
             <nav>
+                <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <table id="days">
                     <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
 <?php 
@@ -74,7 +60,7 @@
                 data-day_id="<?= $days[$day]["id"] ?>" 
                 data-text="<?= $days[$day]["desc"] ?>"></div>
         </nav>
-        <main>
+        <main id="day" data-id="<?= $days[$day]["id"] ?>">
 			<div id="playSpeed">
 				<span id="slower">-</span>
 				<span id="curSpeed"><?= number_format($_SESSION['speed'], 1) ?></span>

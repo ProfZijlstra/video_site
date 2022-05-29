@@ -14,17 +14,17 @@ if (!isset($user)) {
         <meta name=viewport content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
         <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common.css">
         <link rel="stylesheet" href="res/css/user.css">
+        <script src="res/js/back.js"></script>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-            <h1>User Details:</h1>
-        </header>
+        <?php $title="User Details:"; include("header.php");?>
         <main>
+            <nav class="back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </nav>
+
         <div class="error"><?= $msg ?></div>
         <form method="post" action="<?= $user ? $user['id'] : "../user" ?>">
         <div class="fields">

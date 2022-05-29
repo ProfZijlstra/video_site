@@ -6,7 +6,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             #plane {
@@ -40,23 +40,14 @@ window.addEventListener("load", () => {
     };
 });
         </script>
+        <script src="res/js/back.js"></script>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-                <a href="/videos/user" title="Users"><i class="fas fa-users"></i></a>
-                <a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-            <div id="course">
-                <a href=".."><?= strtoupper($course) ?> <?= $block ?></a>
-            </div>
-            <h1>
-                <span class="title" id="week" data-week="<?= $week ?>">
-					<?= $week ?> Physical Attendance
-				</span>
-            </h1>
-        </header>
+        <?php include("header.php"); ?>
         <main>
+            <nav class="back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </nav>
             <div id="content">
                 <p><strong>Note:</strong> this report is based on attendance-export data. 
                     If the required export reports have not been generated yet 
@@ -68,7 +59,7 @@ window.addEventListener("load", () => {
                 <input type="text" id="minPhys" name="minPhys" value="2" />
                 <i title="Email Students Below" id="plane" class="far fa-paper-plane"></i>                    
             </h3>
-            <table>
+            <table id="week" data-week="<?= $week ?>">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>

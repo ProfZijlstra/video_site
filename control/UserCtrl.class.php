@@ -18,18 +18,10 @@ class UserCtrl {
 
     /**
      * Simple mapping to the login page
-     * @GET(uri="!^/.*login$!"", sec="none")
+     * @GET(uri="!^/.*login$!", sec="none")
      */
     public function getLogin() {
         return "login.php";
-    }
-
-    /**
-     * Simple mapping to get the add user page
-     * @GET(uri="!^/user/add$!"", sec="admin")
-     */
-    public function getAddUser() {
-        return "userDetails.php";
     }
 
     /**
@@ -37,7 +29,7 @@ class UserCtrl {
      * @global type $MY_BASE base URI of our application
      * @return string appropriate redirect for success or failure
      * 
-	 * @POST(uri="!^/.*login$!"", sec="none")
+	 * @POST(uri="!^/.*login$!", sec="none")
      */
     public function login() {
         global $MY_BASE;
@@ -84,7 +76,7 @@ class UserCtrl {
      * Logs someone out of the application
      * @return string redirect back to login page
      * 
-     * @GET(uri="!^/.*logout$!"", sec="none")
+     * @GET(uri="!^/.*logout$!", sec="none")
      */
     public function logout() {
         session_destroy();
@@ -97,7 +89,7 @@ class UserCtrl {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
      * 
-     * @GET(uri="!^/user$!"", sec="admin")
+     * @GET(uri="!^/user$!", sec="admin")
      */
     public function all() {
         global $VIEW_DATA;
@@ -107,12 +99,23 @@ class UserCtrl {
     }
 
     /**
+     * Show the create user page
+     * 
+     * @GET(uri="!^/user/add$!", sec="admin")
+     */
+    public function addUser() {
+        global $VIEW_DATA;
+        $VIEW_DATA["title"] = "User Details";
+        return "userDetails.php";
+    }
+
+    /**
      * Shows details for a user
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
      * 
-     * @GET(uri="!^/user/(\d+)$!"", sec="admin")
+     * @GET(uri="!^/user/(\d+)$!", sec="admin")
      */
     public function details() {
         global $VIEW_DATA;
@@ -121,12 +124,13 @@ class UserCtrl {
 
         $user = $this->userDao->retrieve($uid);
         $VIEW_DATA['user'] = $user;
+        $VIEW_DATA["title"] = "User Details";
         
         return "userDetails.php";
     }
 
     /**
-     * @GET(uri="!^/user/(\D.*)$!"", sec="admin")
+     * @GET(uri="!^/user/(\D.*)$!", sec="admin")
      */
     public function teamsName() {
         global $URI_PARAMS;
@@ -140,20 +144,11 @@ class UserCtrl {
     }
 
     /**
-     * Show the create user page
-     * 
-     * @GET(uri="!^/user/add$!"", sec="admin")
-     */
-    public function addUser() {
-        return "userDetails.php";
-    }
-
-    /**
      * Creates a user
      * @return strng redirect URI
      * @throws PDOException
      * 
-     * @POST(uri="!^/user$!"", sec="admin")
+     * @POST(uri="!^/user$!", sec="admin")
      */
     public function create() {
         global $VIEW_DATA;
@@ -212,7 +207,7 @@ class UserCtrl {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
      * 
-     * @POST(uri="!^/user/(\d+)$!"", sec="admin")
+     * @POST(uri="!^/user/(\d+)$!", sec="admin")
      */
     public function update() {
         global $URI_PARAMS;

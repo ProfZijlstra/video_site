@@ -5,6 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
+        <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/offering.css">
         <script src="res/js/offering.js"></script>
         <?php if ($_SESSION['user']['type'] === 'admin') : ?>
@@ -16,23 +17,7 @@
         <?php endif; ?>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-				<?php if ($_SESSION['user']['type'] === 'admin') : ?>
-					<a href="/videos/user" title="Users"><i class="fas fa-users"></i></a>
-				<?php endif; ?>
-				<a href="logout" title="Logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-            <div id="course">
-                <span id="course_num"><?= strtoupper($course) ?></span>
-                <span data-id="<?= $offering['id']?>" id="offering"> <?= $offering['block'] ?> </span>
-            </div>
-            <h1>
-                <span class="title" >
-					<?= $title ?> 
-				</span>
-            </h1>
-        </header>
+        <?php include("header.php"); ?>
         <main>
             <?php if ($_SESSION['user']['type'] === 'admin') : ?>
             <nav class="tools">

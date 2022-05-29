@@ -6,7 +6,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             .session input[type=text] {
@@ -27,7 +27,7 @@
         </style>
         <script>
 window.addEventListener("load", () => {    
-    const stype = document.getElementById('title').dataset.stype;
+    const stype = document.getElementById('session').dataset.stype;
 
     const tags = document.getElementById('data').getElementsByTagName('input');
     for (const tag of tags) {
@@ -54,27 +54,17 @@ window.addEventListener("load", () => {
     }
 });
         </script>
+        <script src="res/js/back.js"></script>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-                <a href="/videos/user" title="Users"><i class="fas fa-users"></i></a>
-                <a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-
-            <div id="course">
-                <a href="../.."><?= strtoupper($course) ?> <?= $block ?></a>
-            </div>
-            <h1>
-                <span id="title" class="title" data-stype="<?= $stype ?>">
-                    <?= $day_abbr . " " . $stype ?> Attendance Export 
-                </span>
-            </h1>
-        </header>
+        <?php include("header.php"); ?>
         <main>
+            <nav class="back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </nav>
             <div id="content">
             <!-- General Session Info here -->
-            <div class="session">
+            <div class="session" id="session" data-stype="<?= $stype ?>">
                 <h3>Session Details:</h3>
                 <div>
                     <label>Status</label>

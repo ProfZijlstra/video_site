@@ -40,7 +40,7 @@ class VideoCtrl {
 
     /**
      * Redirects to latest offering for a course
-     * @GET(uri="!^/(cs\d{3})/?$!"", sec="user")
+     * @GET(uri="!^/(cs\d{3})/?$!", sec="user")
      */
     public function loggedIn() {
         global $URI_PARAMS;
@@ -64,14 +64,14 @@ class VideoCtrl {
 	/**
 	 * If the URL doesn't contain a video selection, just a day
 	 * 
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$!"", sec="user")
+	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$!", sec="user")
 	 */
 	public function only_day() {
 		return "Location: 01";
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/$!"", sec="user");
+	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/$!", sec="user");
 	 */
 	public function offering() {
         global $URI_PARAMS;
@@ -96,8 +96,9 @@ class VideoCtrl {
 		}
 
 		$VIEW_DATA["course"] = strtoupper($course_num);
+		$VIEW_DATA["block"] = $offering_detail['block'];
 		$VIEW_DATA["title"] = $course_detail["name"];
-		$VIEW_DATA["offering"] = $offering_detail;
+		$VIEW_DATA["offering_id"] = $offering_detail["id"];
 		$VIEW_DATA["start"] = strtotime($offering_detail['start']);
 		$VIEW_DATA["days"] = $days;
 		$VIEW_DATA["now"] = time();
@@ -106,7 +107,7 @@ class VideoCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/(\d{2})$!"", sec="user")
+	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/(\d{2})$!", sec="user")
 	 */
 	public function video() {
         global $URI_PARAMS;
@@ -169,6 +170,7 @@ class VideoCtrl {
 		$VIEW_DATA["block"] = $block;
 		$VIEW_DATA["day"] = $day;
 		$VIEW_DATA["offering_id"] = $offering_detail['id'];
+		$VIEW_DATA["title"] = $day . " - " . $days[$day]["desc"];
 
 		// calendar related
 		$VIEW_DATA["days"] = $days;
@@ -194,7 +196,7 @@ class VideoCtrl {
 	}
 
 	/**
-	 * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/autoplay$!"", sec="user")
+	 * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/autoplay$!", sec="user")
 	 */
 	public function autoplay() {
 		$toggle = filter_input(INPUT_POST, "toggle");

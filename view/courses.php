@@ -5,13 +5,11 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
-            h1 {
-                text-align: center;
-                font-size: 45px;
-                margin-bottom: 0px;
+            header #course {
+                display: none;
             }
             .course {
                 border: 1px solid black;
@@ -21,11 +19,11 @@
                 display: inline-block;
                 width: 60px;
             }
-            .title {
+            .course .title {
                 font-weight: bold;
                 font-size: 30px;
             }
-            .title, .latest, .offerings {
+            .course .title, .latest, .offerings {
                 padding: 5px;
                 border-bottom: 1px solid black;
             }
@@ -53,15 +51,7 @@
         </style>
     </head>
     <body>
-        <header>
-			<div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-            <?php if ($_SESSION['user']['type'] === 'admin') : ?>
-                <a href="/videos/user"><i title="Users" class="fas fa-users"></i></a>
-            <?php endif; ?>
-				<a href="logout"><i title="Logout" class="fas fa-power-off"></i></a>
-			</div>
-            <h1>Courses</h1>
-        </header>
+        <?php include("header.php"); ?>
         <main>
             <div id="content">
             <?php foreach ($courses as $course) : ?>
