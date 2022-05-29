@@ -59,7 +59,7 @@ window.addEventListener("load", () => {
     <body>
         <?php include("header.php"); ?>
         <main>
-            <nav class="back">
+            <nav class="back" title="back">
                 <i class="fa-solid fa-arrow-left"></i>
             </nav>
             <div id="content">
