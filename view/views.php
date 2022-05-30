@@ -26,6 +26,7 @@
             <div id="content">
             <h2>Views for <?= $user["firstname"] ?> <?= $user["lastname"]?></h2>
             <?php foreach($days as $day) : ?>
+                <?php if ($day["day"]["abbr"]): ?>
             <table id="<?= $day["day"]["abbr"] ?>">
                 <caption><?= $day["day"]["abbr"] ?> <?= $day["day"]["description"] ?></caption>
                 <thead>
@@ -49,6 +50,7 @@
                     <?php endforeach; ?> 
                 <tbody>
             </table>
+                <?php endif; ?>
             <?php endforeach; ?>
             </div>
         </main>

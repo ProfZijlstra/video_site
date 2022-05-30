@@ -20,7 +20,7 @@ class DayDao {
 	 */
 	public function getDays($offering_id) {
 		$stmt = $this->db->prepare("SELECT * FROM day
-			WHERE offering_id = :offering_id");
+			WHERE offering_id = :offering_id ORDER BY abbr");
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
 	}
