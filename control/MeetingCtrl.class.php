@@ -49,7 +49,6 @@ class MeetingCtrl
         $attendance = $this->attendanceDao->forMeeting($meeting_id);
 
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
-        $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
         $visitors = [];
         $absent = [];
