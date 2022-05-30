@@ -46,9 +46,7 @@ class QuestionCtrl
 
         $user_id = $_SESSION['user']['id'];
         $video = filter_input(INPUT_POST, "video");
-        // using the capabilities of filter_input changes all html entities,
-        // breaking markdown syntax -- so we fall back to htmlspecialchars()
-        $question = htmlspecialchars(filter_input(INPUT_POST, "question"), ENT_NOQUOTES);
+        $question = filter_input(INPUT_POST, "question");
         $tab = filter_input(INPUT_POST, "tab");
         $id = $this->questionDao->add($question, $user_id, $video);
         $user = $this->userDao->retrieve($user_id);
@@ -95,8 +93,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
-        // see comment inside add method about why htmlspecialchars()
-        $text = htmlspecialchars(filter_input(INPUT_POST, "text"), ENT_NOQUOTES);
+        $text = filter_input(INPUT_POST, "text");
         $question = $this->questionDao->get($id);
         if ($_SESSION['user']['type'] === 'admin' || $question['user_id'] == $_SESSION['user']['id']) {
             $this->questionDao->update($id, $text);

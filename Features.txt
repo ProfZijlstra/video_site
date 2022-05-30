@@ -1,4 +1,3 @@
-- FIX markdown handling (no double html-escape -- see: https://manalabs.org/videos/cs544/2022-06/W1D2/13)
 - see raw view data for day and date
 - Ability to submit attendance to CAMS
 - GeoIP constraints
@@ -11,6 +10,7 @@
 - Add Lab system
 
 DONE:
+- FIX markdown handling (no double html-escape -- see: https://manalabs.org/videos/cs544/2022-06/W1D2/13)
 - Improve naviation, including an icon on header to go back to root
 - FIX longer reply text is hidden behind buttons
 - Attendance system
