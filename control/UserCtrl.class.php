@@ -245,4 +245,14 @@ class UserCtrl {
         return "Location: $uid";
     }
 
+    /**
+     * @POST(uri="!^/user/registerBadge$!", sec="admin")
+     */
+    public function updateAttendance()
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        $this->userDao->setBadge($data["studentID"], $data["badge"]);
+    }
+
 }

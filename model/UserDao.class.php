@@ -80,7 +80,7 @@ class UserDao {
                                 $teamsName, $hash, $type, $active) {
         $stmt = $this->db->prepare("INSERT INTO user values 
                 (NULL, :first, :last, :knownAs, :email, :studentID, :teamsName, 
-                :pass, :type, NOW(), NOW(), :active, 0)");
+                :pass, :type, NOW(), NOW(), :active, 0, NULL)");
         $stmt->execute(array(
             "first" => $first, "last" => $last, "email" => $email, 
             "pass" => $hash, "type" => $type, "active" => $active,
@@ -146,5 +146,11 @@ class UserDao {
             $row = $stmt->fetch();
             return $row["id"];
         }
+    }
+
+    public function setBadge($studentID, $badge) {
+        $stmt = $this->db->prepare("UPDATE user SET badge = :badge 
+                                    WHERE studentID = :studentID");
+        $stmt->execute(array("studentID" => $studentID, "badge" => $badge));
     }
 }

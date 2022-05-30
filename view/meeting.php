@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/meeting.css">
    <script src="res/js/meeting.js"></script>
-   <script src="res/js/back.js"></script>
+   <script src="res/js/lib/html5-qrcode.min.js"></script>
+   <script src="res/js/sounds.js"></script>
 </head>
 
 <body>
@@ -19,7 +20,32 @@
         <nav class="back" title="back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
-        <div id="content">
+
+        <nav id="barcodeReader" class="tools" title="Start/Stop Reader">
+            <div id="stripe"></div>
+            <i class="fa-solid fa-barcode"></i>
+        </nav>
+
+        <div id="readerContainer" class="hide">
+            <div id="rotate" class="hide">
+                <i class="fas fa-sync"></i>
+                <div id="camera_icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+            <div id="readerStripe"></div>
+            <div id="reader"></div>
+            <div id="attendMsg" class="msg hidden">
+                Thanks <strong id="physicallyPresent"></strong> your attendance is recorded
+            </div>
+            <div id="registerMsg" class="msg hidden">
+                <strong>Unknown badge:</strong> <span id="unknownBadge"></span>
+                Register it to a user by marking them present
+                <button id="cancelRegister">Cancel</button>
+            </div>
+        </div>
+
+        <div id="content" class="">
             <!-- General Meeting Info here -->
             <div class="meeting">
                 <h3>
@@ -137,7 +163,7 @@
                                 <input type="checkbox" name="left" value="left" <?= $student["leaveEarly"] ? "checked" : "" ?> />
                             </td>
                             <td class="cbox" title="In Physical Room">
-                                <input type="checkbox" name="phys" value="phys" class="phys" <?= $student["inClass"] ? "checked" : "" ?> />
+                                <input id="<?= $student["badge"] ?>" type="checkbox" name="phys" value="phys" class="phys" <?= $student["inClass"] ? "checked" : "" ?> />
                             </td>
                             <td class="cbox" title="Excused">
                                 <input type="checkbox" name="excu" value="excu" <?= $student["excused"] ? "checked" : "" ?> />

@@ -197,3 +197,5 @@ UPDATE `attendance` AS a SET `stop` =
   GROUP BY d.teamsName);
 
 ALTER TABLE attendance_data RENAME attendance_import;
+------------- 29th of May 2022
+ALTER TABLE user ADD COLUMN `badge` BIGINT;

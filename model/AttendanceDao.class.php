@@ -40,7 +40,7 @@ class AttendanceDao {
         $stmt = $this->db->prepare("SELECT a.id, a.teamsName, u.studentID,
                     a.arriveLate, a.middleMissing, a.leaveEarly, a.inClass,
                     a.notEnrolled, a.absent, a.excused, a.meeting_id,
-                    a.start, a.stop 
+                    a.start, a.stop, u.badge 
                 FROM attendance AS a
                 LEFT JOIN user AS u on a.teamsName = u.teamsName
                 WHERE a.meeting_id = :meeting_id
