@@ -1,5 +1,5 @@
 div#days {
-    margin-top: 20px;
+    margin-top: 50px;
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto; /* 7 cols */
     margin-left: auto;
@@ -40,11 +40,11 @@ div#days div.data.curr {
 }
 div.data time {
     display: block;
-    margin-top: 10px;
     font-size: 75%;
     position: absolute;
+    left: 0px;
     bottom: 3px;
-    width: 130px;
+    width: 100%;
     text-align: center;
 }
 div.data .users {
@@ -62,59 +62,6 @@ div.data .views {
     top: 25px;
 	left: 13px;
 }
-
-
-
-/* from here  to be removed */
-table#days {
-    margin-top: 20px;
-    border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
-}
-table#days td {
-    cursor: pointer;
-    border: 1px solid black;
-    height: 150px;
-    width: 150px;
-    padding: 15px;
-    text-align: center;
-    position: relative;
-    background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); 
-}
-table#days td.done {
-    background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
-}
-table#days td.curr {
-    background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
-}
-time {
-    display: block;
-    margin-top: 10px;
-    font-size: 75%;
-    position: absolute;
-    bottom: 3px;
-    width: 130px;
-    text-align: center;
-}
-td .users {
-    position: absolute;
-    top: 5px;
-    left: 16px;
-}
-td span.time {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-}
-td .views {
-    position: absolute;
-    top: 25px;
-	left: 13px;
-    
-}
-/* until here */
-
 div#total {
 	margin-top: 15px;
 	text-align: center;
