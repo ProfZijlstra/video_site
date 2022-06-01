@@ -23,7 +23,9 @@
         <div id="container">
         <nav id="videos">
             <nav>
-                <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+                    <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                <?php endif; ?>
                 <table id="days">
                     <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
 <?php 
