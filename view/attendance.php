@@ -24,62 +24,64 @@
             <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
         </nav>
 
-        <table id="days">
-            <tr>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
-                <th>Sun</th>
-            </tr>
-            <?php for ($w = 1; $w <= 4; $w++) : ?>
-                <tr>
-                    <?php for ($d = 1; $d <= 7; $d++) : ?>
-                        <?php $date = $start + ($w - 1) * 60 * 60 * 24 * 7 + ($d - 1) * 60 * 60 * 24; ?>
-                        <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" 
-                            id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" 
-                            data-date="<?= date("Y-m-d", $date) ?>">
-                            <?php if ($w == 4 && $d == 6) : ?>
-                                <a href="professionalism">
-                                    <i title="Professionalism Report" class="fab fa-black-tie"></i>
-                                </a>
-                            <?php elseif ($d == 7): ?>
-                                <a href="physical/W<?= $w ?>">
-                                    <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
-                                </a>
-                            <?php else : ?>
-                                <?php foreach (["AM", "PM"] as $stype): ?>
-                                    <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>"
-                                        data-stype="<?= $stype ?>">
-                                        <?= $stype ?>
-                                        <i title="Add Meeting" class="far fa-plus-square"></i>
-                                        <?php if ($days["W{$w}D{$d}"][$stype]["meetings"]) : ?>
-                                        <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
-                                            <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
-                                        </a>
-                                        <?php endif; ?>
 
-                                    <?php foreach ($days["W{$w}D{$d}"][$stype]["meetings"] as $meeting) : ?>
-                                        <div class="meeting">
-                                            <a href="meeting/<?= $meeting["id"] ?>">
-                                                <?= $meeting["title"] ?>
-                                            </a>
-                                        </div>
-                                    <?php endforeach; ?>
+        <div id="days">
+            <div class="header">Mon</div>
+            <div class="header">Tue</div>
+            <div class="header">Wed</div>
+            <div class="header">Thu</div>
+            <div class="header">Fri</div>
+            <div class="header">Sat</div>
+            <div class="header">Sun</div>
+
+            <?php for ($w = 1; $w <= 4; $w++): ?>
+                <?php for ($d = 1; $d <= 7; $d++): ?>
+                    <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
+
+                    <div class="data <?= $d == 1 ? "mon " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+                        id="<?= "W{$w}D{$d}" ?>"
+                        data-day="<?= "W{$w}D{$d}" ?>" 
+                        data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
+                        data-date="<?= date("Y-m-d", $date) ?>">
+
+                        <?php if ($w == 4 && $d == 6) : ?>
+                            <a href="professionalism">
+                                <i title="Professionalism Report" class="fab fa-black-tie"></i>
+                            </a>
+                        <?php elseif ($d == 7): ?>
+                            <a href="physical/W<?= $w ?>">
+                                <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
+                            </a>
+                        <?php else : ?>
+                            <?php foreach (["AM", "PM"] as $stype): ?>
+                                <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>"
+                                    data-stype="<?= $stype ?>">
+                                    <?= $stype ?>
+                                    <i title="Add Meeting" class="far fa-plus-square"></i>
+                                    <?php if ($days["W{$w}D{$d}"][$stype]["meetings"]) : ?>
+                                    <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
+                                        <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
+                                    </a>
+                                    <?php endif; ?>
+
+                                <?php foreach ($days["W{$w}D{$d}"][$stype]["meetings"] as $meeting) : ?>
+                                    <div class="meeting">
+                                        <a href="meeting/<?= $meeting["id"] ?>">
+                                            <?= $meeting["title"] ?>
+                                        </a>
                                     </div>
                                 <?php endforeach; ?>
-                            <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
 
-                            <time>
-                                <?= date("M j Y", $date); ?>
-                            </time>
-                        </td>
-                    <?php endfor ?>
-                </tr>
+                        <time>
+                            <?= date("M j Y", $date); ?>
+                        </time>
+                    </div>
+                <?php endfor ?>
             <?php endfor ?>
-        </table>
+        </div>
     </main>
 
     <div id="overlay">

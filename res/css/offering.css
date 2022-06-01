@@ -17,7 +17,7 @@ div#days div.data {
     cursor: pointer;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
-    height: 8vw;
+    min-height: 8vw;
     width: 8vw;
     padding: 15px;
     text-align: center;

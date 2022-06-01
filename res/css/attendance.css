@@ -1,9 +1,8 @@
-table#days td {
-    vertical-align: top;
+div#days div.data {
+    display: block;
     cursor: default;
     text-align: left;
 }
-
 div.session {
     margin-top: 5px;
     border-bottom: 1px solid black;
@@ -44,8 +43,8 @@ div.meeting a {
 #days .fa-chalkboard-teacher, 
 #days .fa-black-tie {
     position: absolute;
-    bottom: 75px;
-    right: 75px;
+    bottom: 4vw;
+    right: 4vw;
     font-size: 30px;
     cursor: pointer;
 }
