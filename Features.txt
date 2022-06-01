@@ -1,3 +1,4 @@
+- Add ability to add or remove a single user from enrollment
 - see raw view data for day and date
 - Ability to submit attendance to CAMS
 - GeoIP constraints

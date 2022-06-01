@@ -34,13 +34,20 @@
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
             </nav>
             <?php endif; ?>
-            <table id="days">
-                <tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
-            <?php for ($w = 1; $w <= 4; $w++): ?>
-                <tr>
-                <?php for ($d = 1; $d <= 7; $d++): ?>
-                    <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
-                    <td class="<?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+            <div id="days">
+                <div class="header">Mon</div>
+                <div class="header">Tue</div>
+                <div class="header">Wed</div>
+                <div class="header">Thu</div>
+                <div class="header">Fri</div>
+                <div class="header">Sat</div>
+                <div class="header">Sun</div>
+
+                <?php for ($w = 1; $w <= 4; $w++): ?>
+                    <?php for ($d = 1; $d <= 7; $d++): ?>
+                        <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
+
+                        <div class="data <?= $d == 1 ? "mon " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
                             id="<?= "W{$w}D{$d}" ?>"
                             data-day="<?= "W{$w}D{$d}" ?>" 
                             data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
@@ -50,11 +57,11 @@
                             <span class="text"><?= $days["W{$w}D{$d}"]["desc"] ?></span>
                         </a>
                         <time><?= date("M j Y", $date);?></time>
-                    </td>
+                    </div>
+
+                    <?php endfor ?>
                 <?php endfor ?>
-                </tr>
-            <?php endfor ?>
-            </table>
+            </div>
 			<div id="total"><div class="info"></div></div>
         </main>
         <?php if ($_SESSION['user']['type'] === 'admin') : ?>
