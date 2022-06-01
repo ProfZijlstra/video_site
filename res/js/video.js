@@ -134,7 +134,7 @@ window.addEventListener('load', () => {
         const file = this.dataset.file;
         const href = this.href;
         const url = `./pdf?day_id=${day_id}&file=${file}`;
-        fetch(url, {cache : 'no-cache'}).then(() => {window.location = href});
+        fetch(url, {cache : 'no-cache'}).then(() => {window.open(href, '_blank')});
         evt.preventDefault();
     };
     // disable right-clicking on PDF (no download without view)

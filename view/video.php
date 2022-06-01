@@ -76,7 +76,7 @@ foreach($files as $info) :
     <article id="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>" 
             class="selected">
         <h2><?= $info["parts"][1]?></h2>
-        <a id="pdf" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
+        <a id="pdf" target="_blank" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
             href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
             <i class="far fa-file-pdf"></i>
         </a>
