@@ -64,6 +64,7 @@
             }
             @media screen and (max-width: 900px) {
                 .central {
+                    top: 10%;
                     width: 90%;
                     margin-left: 0px;
                     left: 2px;
@@ -77,7 +78,6 @@
     <body>
         <div class="central">
             <h1>Lecture Videos</h1>
-            <h2>by Professor Michael Zijlstra</h2>
             <div class="container">
                 <form action="login" method="post">
                     <?php if (isset($_SESSION['error'])) : ?>
