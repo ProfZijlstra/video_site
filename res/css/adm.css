@@ -73,7 +73,7 @@
     width: 100px;
     margin-bottom: 10px;
 }
-#content .modal input {
+#content .modal input, #content .modal select {
     width: 575px;
     height: 25px;
 }

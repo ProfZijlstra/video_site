@@ -41,25 +41,10 @@ class CourseCtrl {
     public function showCourses() {
         global $VIEW_DATA;
 
-        $latests = $this->offeringDao->allLatest();
-        $newest = [];
-        foreach ($latests as $latest) {
-            $newest[$latest['course_number']] = $latest['block'];
-        }
         $offerings = $this->offeringDao->all();
-        $courses = $this->courseDao->all();
-        $course_offering = [];
-        foreach ($courses as $course) {
-            $course_offering[$course["number"]] = [];
-        }
-        foreach ($offerings as $offering) {
-            $course_offering[$offering["course_number"]][] = $offering;
-        }
 
-        $VIEW_DATA["courses"] = $courses;
-        $VIEW_DATA["course_offerings"] = $course_offering;
-        $VIEW_DATA["latest"] = $newest;
-        $VIEW_DATA["title"] = "Courses";
+        $VIEW_DATA["title"] = "Course Offerings";
+        $VIEW_DATA["offerings"] = $offerings;
         return "courses.php";
     }
 
@@ -73,6 +58,7 @@ class CourseCtrl {
         $old_block = $URI_PARAMS[2];
 
 		$offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+		$fac_user_id = filter_input(INPUT_POST, "fac_user_id", FILTER_SANITIZE_NUMBER_INT);
         $block = filter_input(INPUT_POST, "block", FILTER_SANITIZE_STRING);
         $start = filter_input(INPUT_POST, "date", FILTER_SANITIZE_STRING);
 
@@ -82,7 +68,8 @@ class CourseCtrl {
         $stop = date_format($stop, "Y-m-d");
 
         $this->videoDao->clone($course_number, $block, $old_block);
-        $new_offering = $this->offeringDao->create($course_number, $block, $start, $stop);
+        $new_offering = $this->offeringDao->create($course_number, $block, 
+                                            $start, $stop, $fac_user_id);
         $this->dayDao->cloneDays($offering_id, $new_offering);
         $this->sessionDao->createForOffering($new_offering);
 

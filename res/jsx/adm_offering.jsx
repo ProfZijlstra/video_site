@@ -34,7 +34,17 @@ window.addEventListener("load", () => {
         }
     };
 
-    document.getElementById("clone").onclick = function () {
+    document.getElementById("clone").onclick = function () { 
+        fetch('/videos/user/faculty')
+            .then(response => response.json())
+            .then(response => createCloneModal(response));
+    };
+
+    function createCloneModal(fac_users) {
+        const fac_user_opts = fac_users.map((user) => {
+            return (
+                <option value={user.id}>{user.firstname} {user.lastname}</option>
+            )});
         const content = document.getElementById("content");
         const offering_id = document.getElementById("offering").dataset.id;
         ReactDOM.unmountComponentAtNode(content);
@@ -46,6 +56,10 @@ window.addEventListener("load", () => {
                     <div class="line">
                         <label>New Block:</label>
                         <input name="block" />
+                    </div>
+                    <div class="line">
+                        <label>Faculty</label>
+                        <select name="fac_user_id">{fac_user_opts}</select>
                     </div>
                     <div class="line">
                         <label>Start Date:</label>

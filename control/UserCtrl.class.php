@@ -110,6 +110,15 @@ class UserCtrl {
     }
 
     /**
+     * Get faculty memebers
+     * 
+     * @GET(uri="!^/user/faculty$!", sec="admin")
+     */
+    public function getFaculty() {
+        return $this->userDao->faculty();        
+    }
+
+    /**
      * Shows details for a user
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @global array $VIEW_DATA empty array that we populate with view data

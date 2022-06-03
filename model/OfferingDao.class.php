@@ -77,7 +77,12 @@ class OfferingDao {
 	 * @return array of offering records
 	 */
 	public function all() {
-		$stmt = $this->db->prepare("SELECT * FROM offering");
+		$stmt = $this->db->prepare(
+			"SELECT c.number, c.name, o.block, u.knownAs, u.lastname 
+			FROM offering AS o 
+			JOIN course AS c ON c.number = o.course_number
+			JOIN user AS u ON o.fac_user_id = u.id
+			ORDER BY o.block DESC");
 		$stmt->execute();
 		return $stmt->fetchAll();
 	}
@@ -107,13 +112,13 @@ class OfferingDao {
 	/**
 	 * Creates an offering in the DB
 	 */
-	public function create($course_number, $block, $start, $stop) {
+	public function create($course_number, $block, $start, $stop, $fac_user_id) {
 		$stmt = $this->db->prepare(
 			"INSERT INTO offering 
-			VALUES(NULL, :course_number, :block, :start, :stop)"
+			VALUES(NULL, :course_number, :block, :start, :stop, :fac_user_id)"
 		);
 		$stmt->execute(array("course_number" => $course_number, "block" => $block, 
-			"start" => $start, "stop" => $stop));
+			"start" => $start, "stop" => $stop, "fac_user_id" => $fac_user_id));
 		return $this->db->lastInsertId();
 	}
 }

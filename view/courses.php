@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><?= $course ?> Videos</title>
+        <title>Course Offerings</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
         <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
-            header #course {
-                display: none;
+            main div#content {
+                margin: 50px auto;
+                width: 750px;
             }
-            .course {
-                border: 1px solid black;
-                margin-bottom: 3em;
-            }
-            .course label {
-                display: inline-block;
-                width: 60px;
-            }
-            .course .title {
-                font-weight: bold;
-                font-size: 30px;
-            }
-            .course .title, .latest, .offerings {
-                padding: 5px;
+
+            div#content div.offering {
                 border-bottom: 1px solid black;
+                padding: 20px;
             }
-            .offerings {
-                border-bottom: none;
-            }
-            #content a {
+            div.offering span {
                 display: inline-block;
-                border: 1px solid black;
-                border-radius: 5px;
-                padding: 1px 6px;
-                font-family: monospace;
-                font-size: 15px;
-                margin-left: 5px;
-                background: linear-gradient(to bottom, #eee 0%,#ccc 100%) 
+            }
+            div.offering span.number {
+                min-width: 60px;
+            }
+            div.offering span.block { 
+                min-width: 80px;
+            }
+            span.faculty {
+                float: right;
             }
             @media screen and (max-width: 900px) {
-                #content {
-                    width: 100%;
-                }
-                #course_name {
+                .fa-flask-vial, .fa-users {
                     display: none;
+                }
+                div#controls {
+                    top: 22px;
+                    right: 15px;
+                }
+                main div#content {
+                    width: 90%;
+                }
+                div#content div.offering {
+                    text-align: center;
+                }
+                div.offering span {
+                    display: inline;
+                }
+                div.offering span.name {
+                    display: block;
+                }
+                span.faculty {
+                    float: none;
                 }
             }
         </style>
@@ -54,30 +59,18 @@
         <?php include("header.php"); ?>
         <main>
             <div id="content">
-            <?php foreach ($courses as $course) : ?>
-            <div class="course" id="<?= $course["number"] ?>">
-                <div class="title">
-                    <?= strtoupper($course["number"]) ?>
-                    <span id="course_name">: <?= $course["name"] ?></span>
-                </div>
-                <div class="latest">
-                    <label>Latest:</label> 
-                    <a class="offering" href="<?= $course["number"]?>/<?= $latest[$course["number"]] ?>/">
-                        <?= $latest[$course["number"]] ?>
+
+            <?php foreach($offerings as $offering): ?>
+                <div class="offering">
+                    <a href="<?= $offering["number"] . "/" . $offering["block"] . "/" ?>">
+                        <span class="number"><?= strtoupper($offering["number"]) ?></span>
+                        <span class="block"><?= $offering["block"]?></span>
+                        <span class="name"><?= $offering["name"]?></span>
+                        <span class="faculty"><?= $offering["knownAs"] ?> <?= $offering["lastname"] ?></span>
                     </a>
                 </div>
-                <div class="offerings">
-                    <label>Other:</label> 
-                <?php foreach($course_offerings[$course["number"]] as $offering) : ?>
-                    <?php if ($latest[$course["number"]] != $offering["block"]) : ?>
-                    <a class="offering" href="<?= $offering["course_number"]?>/<?= $offering["block"]?>/">
-                        <?= $offering["block"]?>
-                    </a>
-                    <?php endif; ?>
-                <?php endforeach; ?>    
-                </div>
-            </div>
             <?php endforeach; ?>
+
             </div>
         </main>
     </body>

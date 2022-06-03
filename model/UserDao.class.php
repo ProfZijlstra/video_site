@@ -51,6 +51,15 @@ class UserDao {
         $stmt->execute();
         return $stmt->fetchAll();        
     }
+
+    public function faculty() {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM user 
+            WHERE `type` = 'admin' 
+            AND active = 1");
+        $stmt->execute();
+        return $stmt->fetchAll();        
+    }
     
     /**
      * Gets user data based on id

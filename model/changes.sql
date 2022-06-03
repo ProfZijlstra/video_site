@@ -199,3 +199,8 @@ UPDATE `attendance` AS a SET `stop` =
 ALTER TABLE attendance_data RENAME attendance_import;
 ------------- 29th of May 2022
 ALTER TABLE user ADD COLUMN `badge` BIGINT;
+------------- 3rd of June 2022
+ALTER TABLE offering ADD COLUMN `fac_user_id` INT;
+CREATE INDEX fac_user_id ON offering(fac_user_id);
+CREATE INDEX `type` ON user(`type`);
+UPDATE offering SET fac_user_id = 5;
