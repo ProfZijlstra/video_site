@@ -29,6 +29,9 @@
             span.faculty {
                 float: right;
             }
+            span.number {
+                position: inherit !important;
+            }
             @media screen and (max-width: 900px) {
                 .fa-flask-vial, .fa-users {
                     display: none;
