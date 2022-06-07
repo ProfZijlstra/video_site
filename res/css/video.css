@@ -65,11 +65,13 @@ nav#videos {
     border-right: 1px solid black;
     width: 20%;
     background-color: #eee;
-    transition: width 1s;
+    opacity: 100%;
+    transition: width 1s, opacity 500ms ease 300ms;
 }
 nav#videos.hidden {
     width: 0%;
-    transition: width 1s;
+    opacity: 0%;
+    transition: width 1s, opacity 500ms;
 }
 nav#videos nav {
     position: relative;
