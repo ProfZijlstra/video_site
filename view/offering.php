@@ -54,6 +54,7 @@
                             data-text="<?= $days["W{$w}D{$d}"]["desc"] ?>">
                         <div class="info"></div>
                         <a href="W<?= $w ?>D<?= $d ?>/">
+                            <span class="day"><?= "W{$w}D{$d}" ?></span>
                             <span class="text"><?= $days["W{$w}D{$d}"]["desc"] ?></span>
                         </a>
                         <time><?= date("M j Y", $date);?></time>

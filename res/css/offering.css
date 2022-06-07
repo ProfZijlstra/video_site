@@ -62,6 +62,9 @@ div.data .views {
     top: 25px;
 	left: 13px;
 }
+div.data span.day {
+    display: none;
+}
 div#total {
 	margin-top: 15px;
 	text-align: center;
@@ -69,33 +72,47 @@ div#total {
 #content td.num {
     text-align: right;
 }
-#days td > i {
-    position: absolute;
-    font-size: 15px;
-    bottom: 3px;
-    right: 3px;
-}
 
 @media screen and (max-width: 900px) {
-    #days span.text, time {
-        display: none;
-    }
-    table#days td {
-        width: 20px;
-        height: 20px;
-    }
     header h1 {
         display: none;
     }
     header {
         height: 120px;
     }
-    header #course {
-        top: 50px;
-        left: 30px;
-        width: 90%; 
+    header div#course {
+        top: 60px;
+        left:0px;
+        width: 100%; 
     }
-    #controls {
+    header div#controls {
+        top: 20px;
         right: 30px;
+    }
+    main nav.areas, main nav.tools {
+        display: none;
+    }
+    div#days {
+        display: block;
+        width: 80vw;
+        margin: auto;
+    }
+    div#days div.header {
+        display: none;
+    }
+    div#days div.data {
+        width: 100%;
+        padding: 15px 0px;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+        min-height: 75px;
+    }
+    div#days div.data.mon {
+        border-top: 1px solid black;
+        margin-top: 40px;
+    }
+    div.data span.day { 
+        display: block;
     }
 }
