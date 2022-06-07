@@ -11,6 +11,14 @@ a:hover {
 header {
     height: auto;
 }
+i#bars.fa-bars {
+    position: absolute;
+    top: 92px;
+    left: 25px;
+    z-index: 20;
+    font-size: 25px;
+    cursor: pointer;
+}
 #user {
     position: absolute;
     top: 25px;
@@ -57,16 +65,20 @@ nav#videos {
     border-right: 1px solid black;
     width: 20%;
     background-color: #eee;
-
+    transition: width 1s;
+}
+nav#videos.hidden {
+    width: 0%;
+    transition: width 1s;
 }
 nav#videos nav {
     position: relative;
 }
 nav#videos nav #info-btn {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
     font-size: 24px;
+    top: 50px;
+    left: 24px;
 }
 nav#videos div.video_link {
     text-align: center;
@@ -185,6 +197,37 @@ main article .progress .time {
     font-size: 12pt;
     position: relative;
     top: 2px;
+}
+.progress #shortcuts {
+    position: absolute;
+    bottom: -30px;
+    right: 100px;
+    font-size: 20px;
+    cursor: pointer;
+}
+#keyboard {
+    margin: auto;
+    width: 80%;
+    text-align: left;
+    display: flex;
+}
+#keyboard.hidden {
+    display: none;
+}
+#keyboard h5 {
+    margin-bottom: 3px;
+}
+#keyboard section {
+    flex-grow: 1;
+}
+#keyboard section span.key {
+    display: inline-block;
+    border: 1px solid gray;
+    border-radius: 3px;
+    background-color: lightgray;
+    width: 75px;
+    text-align: center;
+    margin: 3px;
 }
 #questions {
     width: 80%;

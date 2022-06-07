@@ -202,6 +202,14 @@ class VideoCtrl {
 		$toggle = filter_input(INPUT_POST, "toggle");
 		$_SESSION['user']["autoplay"] = $toggle;
 	}
+
+		/**
+	 * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/theater$!", sec="user")
+	 */
+	public function theater() {
+		$toggle = filter_input(INPUT_POST, "toggle");
+		$_SESSION['user']["theater"] = $toggle;
+	}
 }
 
 ?>

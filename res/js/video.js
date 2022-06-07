@@ -20,8 +20,24 @@ window.addEventListener('load', () => {
     // start video of autoplay is on
     if (document.getElementById("auto_toggle")
             .classList.contains("fa-toggle-on")) {
-        document.querySelector('video').play();
+        video.play();
     }
+
+    // hide / show video list
+    document.getElementById("bars").onclick = function() {
+        const nav = document.querySelector("nav#videos");
+        nav.classList.toggle("hidden");
+
+        let state = '';
+        if (nav.classList.contains('hidden')) {
+            state = 'hidden';
+        }
+        fetch('./theater', {
+            method : 'POST',
+            body : `toggle=${state}`,
+            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+        });
+    };
 
     // video speed controls
     const curSpeed = document.getElementById('curSpeed');
@@ -67,8 +83,13 @@ window.addEventListener('load', () => {
     video.playbackRate = parseFloat(curSpeed.innerHTML);
 
     video.focus();
-    video.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName == "TEXTAREA") {
+            return;
+        }
         switch (e.code) {
+        case "Space":
+            e.preventDefault();
         case "KeyK":
             if (video.paused) {
                 video.play()
@@ -88,8 +109,27 @@ window.addEventListener('load', () => {
         case "BracketRight":
             faster();
             break;
+        case "Digit0":
+            normalSpeed();
+            break;
+        case "KeyA":
+            document.getElementById('autoplay').click();
+            break;
+        case "KeyF":
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                video.requestFullscreen();
+            }
+            break;
+        case "KeyT":
+            document.getElementById("bars").click();
+            break;
         }
     });
+    document.getElementById("shortcuts").onclick = function() {
+        document.getElementById("keyboard").classList.toggle("hidden");
+    }
 
     // play and pause events are communicated to the server
     let view_id = false;

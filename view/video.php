@@ -20,8 +20,9 @@
     </head>
     <body>
         <?php include("header.php"); ?>
+        <i id="bars" class="fa-solid fa-bars"></i>
         <div id="container">
-        <nav id="videos">
+        <nav id="videos" class="<?= $_SESSION['user']["theater"] ?>">
             <nav>
                 <?php if ($_SESSION['user']['type'] === 'admin') : ?>
                     <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
@@ -90,7 +91,72 @@ foreach($files as $info) :
             <div class="passed"  style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
             <div class="time"><?= $totalTime ?></div>
             <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $_SESSION['user']["autoplay"] ?>"></i></div>
+            <div id="shortcuts" title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard"></i></div>
         </div>
+
+        <div id="keyboard" class="hidden">
+            <section>
+                <h5>Playback</h5>
+                <div>
+                    <span class="key">Space</span>
+                    <span class="action">Play / Pause</span>
+                </div>
+                <div>
+                    <span class="key"><i class="fa-solid fa-arrow-left"></i></span>
+                    <span class="action">Back 10 secconds</span>
+                </div>
+                <div>
+                    <span class="key"><i class="fa-solid fa-arrow-right"></i></span>
+                    <span class="action">Forward 10 seconds</span>
+                </div>
+            </section>
+            <section>
+                <h5>Alternate Playback</h5>
+                <div>
+                    <span class="key">K</span>
+                    <span class="action">Play / Pause</span>
+                </div>
+                <div>
+                    <span class="key">J</i></span>
+                    <span class="action">Back 5 Secconds</span>
+                </div>
+                <div>
+                    <span class="key">L</i></span>
+                    <span class="action">Forward 5 Seconds</span>
+                </div>
+            </section>
+            <section>
+                <h5>Speed</h5>
+                <div>
+                    <span class="key">[</span>
+                    <span class="action">Decrease Speed</span>
+                </div>
+                <div>
+                    <span class="key">]</span>
+                    <span class="action">Increase Speed</span>
+                </div>
+                <div>
+                    <span class="key">0</span>
+                    <span class="action">Normal Speed</span>
+                </div>
+            </section>
+            <section>
+                <h5>Modes</h5>
+                <div>
+                    <span class="key">A</span>
+                    <span class="action">Toggle Auto Play</span>
+                </div>
+                <div>
+                    <span class="key">T</span>
+                    <span class="action">Toggle Theater Mode</span>
+                </div>
+                <div>
+                    <span class="key">F</span>
+                    <span class="action">Toggle Full Screen</span>
+                </div>
+            </section>
+        </div>
+
         <div id="questions">
             <h2>Questions & Comments</h2>
             <?php foreach ($questions as $question) : ?>
