@@ -351,3 +351,39 @@ textarea.questionText {
 #content td.num {
     text-align: right;
 }
+
+@media screen and (max-width: 900px) {
+    h1 {
+        display: none;
+    }
+    div#container nav#videos {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        width: auto;
+        z-index: 25;
+    }
+    div#container nav#videos.hidden {
+        display: none;
+    }
+    div#controls {
+        right: 10px;
+        top: 23px;
+    }
+    main div#playSpeed {
+        top: 15px;
+        right: 70px;
+    }
+    main #pdf {
+        top: 0px;
+        right: 15px;
+    }
+    main article h2 {
+        margin-top: 60px;
+    }
+    main article video {
+        width: 100%;
+    }
+}
