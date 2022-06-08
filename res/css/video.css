@@ -212,6 +212,7 @@ main article .progress .time {
     width: 80%;
     text-align: left;
     display: flex;
+    flex-wrap: wrap;
 }
 #keyboard.hidden {
     display: none;
@@ -227,7 +228,7 @@ main article .progress .time {
     border: 1px solid gray;
     border-radius: 3px;
     background-color: lightgray;
-    width: 75px;
+    width: 60px;
     text-align: center;
     margin: 3px;
 }

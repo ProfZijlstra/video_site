@@ -126,6 +126,21 @@ foreach($files as $info) :
                 </div>
             </section>
             <section>
+                <h5>Content Control</h5>
+                <div>
+                    <span class="key">N</span>
+                    <span class="action">Next Video</span>
+                </div>
+                <div>
+                    <span class="key">P</i></span>
+                    <span class="action">Previous Video</span>
+                </div>
+                <div>
+                    <span class="key">D</i></span>
+                    <span class="action">Download PDF</span>
+                </div>
+            </section>
+            <section>
                 <h5>Speed</h5>
                 <div>
                     <span class="key">[</span>

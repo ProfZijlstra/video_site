@@ -23,7 +23,7 @@ window.addEventListener('load', () => {
         video.play();
     }
 
-    // hide / show video list
+    // hide / show video list (theater mode)
     document.getElementById("bars").onclick = function() {
         const nav = document.querySelector("nav#videos");
         nav.classList.toggle("hidden");
@@ -72,8 +72,7 @@ window.addEventListener('load', () => {
         fetch('./speed', {
             method : 'POST',
             body : `speed=${speed}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
+            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
         });
     }
     curSpeed.onclick = normalSpeed;
@@ -82,6 +81,22 @@ window.addEventListener('load', () => {
     // set speed when page is loaded
     video.playbackRate = parseFloat(curSpeed.innerHTML);
 
+    function nextVideo() {
+        const tab = document.querySelector(".video_link.selected");
+        if (tab.nextElementSibling) {
+            const nextTab = tab.nextElementSibling.querySelector('a');
+            nextTab.click();    
+        }
+    }
+    function prevVideo() {
+        const tab = document.querySelector(".video_link.selected");
+        if (tab.previousElementSibling) {
+            const prevTab = tab.previousElementSibling.querySelector('a');
+            prevTab.click();    
+        }
+    }
+
+    // keyboard controls
     video.focus();
     document.addEventListener('keydown', (e) => {
         if (e.target.tagName == "TEXTAREA") {
@@ -125,6 +140,14 @@ window.addEventListener('load', () => {
         case "KeyT":
             document.getElementById("bars").click();
             break;
+        case "KeyN":
+            nextVideo();
+            break;
+        case "KeyP":
+            prevVideo();
+            break;
+        case "KeyD":
+            document.getElementById("pdf").click();
         }
     });
     document.getElementById("shortcuts").onclick = function() {
@@ -134,7 +157,7 @@ window.addEventListener('load', () => {
     // play and pause events are communicated to the server
     let view_id = false;
     function playHandler(evt) {
-        window.scrollTo(0,80);
+        window.scrollTo(0, 80);
         const video_name = encodeURIComponent(evt.target.parentNode.id);
         // invalidate any old id that may have still been in the system
         view_id = false;
@@ -144,7 +167,8 @@ window.addEventListener('load', () => {
             .then(response => response.text())
             .then(text => view_id = text);
     }
-    function pauseHandler() {
+    let pauseAction = null;
+    function pauseHandler(action) {
         if (view_id) {
             // post view_id to url: stop
             fetch('./stop', {
@@ -152,6 +176,11 @@ window.addEventListener('load', () => {
                 body : `view_id=${view_id}`,
                 headers :
                     {'Content-Type' : 'application/x-www-form-urlencoded'},
+            }).then(() => {
+                if (pauseAction) {
+                    pauseAction();
+                    pauseAction = null;
+                }
             });
         }
     }
@@ -160,8 +189,7 @@ window.addEventListener('load', () => {
         if (toggle.classList.contains("fa-toggle-on")) {
             const tab = document.querySelector(".video_link.selected");
             const nextTab = tab.nextElementSibling.querySelector('a');
-            // wait half a second to make sure that the pause handler
-            // reports the video stop event to the server
+            // wait half a second to smooth the transition
             setTimeout(() => nextTab.click(), 500);
         }
     }
@@ -169,22 +197,36 @@ window.addEventListener('load', () => {
     video.addEventListener('pause', pauseHandler);
     video.addEventListener('ended', endedHandler);
 
+    // clicking on another video first sends a 'pause' to current video
+    const anchors = document.getElementsByTagName('a');
+    for (const a of anchors) {
+        a.addEventListener('click', (evt)=> {
+            if (!video.paused) {
+                evt.preventDefault();
+                pauseAction = function() {
+                    evt.target.click();
+                };
+                video.pause();
+            }
+        });
+    }
+
     // make clicking on the PDF icon work while communicating with server
     document.getElementById('pdf').onclick = function(evt) {
         const file = this.dataset.file;
         const href = this.href;
         const url = `./pdf?day_id=${day_id}&file=${file}`;
-        fetch(url, {cache : 'no-cache'}).then(() => {window.open(href, '_blank')});
+        fetch(url, {
+            cache : 'no-cache'
+        }).then(() => {window.open(href, '_blank')});
         evt.preventDefault();
     };
     // disable right-clicking on PDF (no download without view)
     document.getElementById('pdf').oncontextmenu =
-        function(evt) { evt.preventDefault(); }
+        function(evt) { evt.preventDefault(); };
 
-        // make clicking on autoplay work
-        document.getElementById("autoplay")
-            .onclick =
-            function() {
+    // make clicking on autoplay work
+    document.getElementById("autoplay").onclick = function() {
         const toggle = document.getElementById("auto_toggle");
         toggle.classList.toggle("fa-toggle-off");
         toggle.classList.toggle("fa-toggle-on");
@@ -200,8 +242,7 @@ window.addEventListener('load', () => {
     }
 
     // make clicking on delete question and delete reply work
-    function
-    delHandler() {
+    function delHandler() {
         if (window.confirm('Do you really want to delete?')) {
             this.parentNode.submit();
         }
