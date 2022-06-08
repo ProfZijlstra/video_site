@@ -1,5 +1,5 @@
 - Re-create mobile view
-- Have video scrub events and switch to different video events also send stop
+- Fix view stats on day page not knowing who enrolled 
 - Add ability to add or remove a single user from enrollment
 - see raw view data for day and date
 - Ability to submit attendance to CAMS
@@ -13,6 +13,8 @@
 - Add Lab system
 
 DONE:
+- Fix clicking on video links not reporting video stop
+- Add Theater mode
 - FIX markdown handling (no double html-escape -- see: https://manalabs.org/videos/cs544/2022-06/W1D2/13)
 - Improve naviation, including an icon on header to go back to root
 - FIX longer reply text is hidden behind buttons

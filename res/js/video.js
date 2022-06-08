@@ -198,17 +198,18 @@ window.addEventListener('load', () => {
     video.addEventListener('ended', endedHandler);
 
     // clicking on another video first sends a 'pause' to current video
+    function stopBeforeClick(evt) {
+        if (!video.paused) {
+            evt.preventDefault();
+            pauseAction = function() {
+                evt.target.click();
+            };
+            video.pause();
+        }
+    }
     const anchors = document.getElementsByTagName('a');
     for (const a of anchors) {
-        a.addEventListener('click', (evt)=> {
-            if (!video.paused) {
-                evt.preventDefault();
-                pauseAction = function() {
-                    evt.target.click();
-                };
-                video.pause();
-            }
-        });
+        a.addEventListener('click', stopBeforeClick);
     }
 
     // make clicking on the PDF icon work while communicating with server
