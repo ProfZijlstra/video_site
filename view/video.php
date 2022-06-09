@@ -21,7 +21,7 @@
     <body>
         <?php include("header.php"); ?>
         <i id="bars" class="fa-solid fa-bars"></i>
-        <div id="container">
+        <div id="container" data-oid="<?= $offering_id ?>">
         <nav id="videos" class="<?= $_SESSION['user']["theater"] ?>">
             <nav>
                 <?php if ($_SESSION['user']['type'] === 'admin') : ?>

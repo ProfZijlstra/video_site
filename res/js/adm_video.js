@@ -1,7 +1,7 @@
 window.addEventListener('load', () => {
     // display on page summary when clicking info button
     document.getElementById('info-btn').onclick = function() {
-        const offering_id = document.getElementById('course').dataset.oid;
+        const offering_id = document.getElementById('container').dataset.oid;
         const day_id = document.getElementById('day').dataset.id;
         fetch(`info?day_id=${day_id}`)
             .then(response => response.json())
