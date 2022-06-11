@@ -15,6 +15,9 @@
 #overlay.visible {
     display: block;
 }
+div.modal.hide {
+    display: none;
+}
 #close-overlay {
     position: fixed;
     top: 25px;

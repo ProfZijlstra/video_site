@@ -14,6 +14,12 @@
             #content table {
                 cursor: pointer;
             }
+            td.center {
+                text-align: center;
+            }
+            p.error {
+                color: red;
+            }
         </style>
         <script src="res/js/users.js"></script>
         <script src="res/js/enrollment.js"></script>
@@ -22,6 +28,7 @@
         <?php include("header.php"); ?>
         <main>
             <nav class="tools">
+                <i id="addUser" class="fa-solid fa-user-plus"></i>
                 <i id="upload" title="Uplad Replacement List" class="fas fa-upload"></i>
             </nav>
             <nav class="areas">
@@ -35,6 +42,9 @@
             <?php if (!$enrollment): ?>
                 <h2>No Enrollment Yet</h2>
             <?php else: ?>
+                <?php if ($error) : ?>
+                    <p class="error"><?= $error ?></p>
+                <?php endif; ?>
             <table>
                 <tr>
                     <th>ID</th>
@@ -42,11 +52,12 @@
                     <th>Given</th>
                     <th>Family</th>
                     <th>Email</th>
+                    <th>Del</th>
                 </tr>
                 <?php foreach ($enrollment as $student): ?>
                 <tr>
-                    <td><?= $student["studentID"] ?></td>
-                    <td><?= $student["knownAs"] ?></td>
+                    <td class="center studentID"><?= $student["studentID"] ?></td>
+                    <td class="name"><?= $student["knownAs"] ?></td>
                     <td>
                         <a href="../../user/<?= $student["id"]?>">
                             <?= $student["firstname"] ?>
@@ -54,6 +65,7 @@
                     </td>
                     <td><?= $student["lastname"] ?></td>
                     <td><?= $student["email"] ?></td>
+                    <td class="center"><i class="fa-solid fa-trash-can" data-uid="<?= $student['id'] ?>"></i></td>
                 </tr>
                 <?php endforeach; ?>
             </table>
@@ -62,16 +74,30 @@
         </main>
         <div id="overlay">
             <i id="close-overlay" class="fas fa-times-circle"></i>
-            <div class="modal">
+            <div id="upload_modal" class="modal hide">
                 <h3>Upload Replacement</h3>
                 <p>Expected format is an infosys class list as .csv</p>
                 <form action="" method="post" enctype="multipart/form-data" id="upload_form">
-                    <input type="hidden" name="offering_id" value="<?= $offering["id"] ?>" />
+                    <input type="hidden" name="offering_id" value="<?= $offering_id ?>" id="offering_id"/>
                     <input type="file" id="list_file" name="list" />
                     <div class="btn"><button>Upload Replacement</button></div>
                 </form>
             </div>
+            <div id="enroll_modal" class="modal hide">
+                <h3>Enroll User</h3>
+                <p>The student already has to have an account <a href="/videos/user">(be a user)</a></p>
+                <form action="enroll" method="post" id="enroll_form">
+                    <input type="hidden" name="offering_id" value="<?= $offering_id ?>" id="offering_id"/>
+                    6 digit Student ID: <input type="text" name="studentID" id="enrollID" />
+                    <div class="btn">
+                        <button>Enroll</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
+        <form id="removeStudent" action="unenroll" method="post">
+            <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
+            <input type="hidden" name="uid" value="" id="removeUid" />
+        </form>
     </body>
 </html>

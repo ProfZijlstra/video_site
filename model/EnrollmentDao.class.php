@@ -52,6 +52,13 @@ class EnrollmentDao {
 				VALUES(NULL, :user_id, :offering_id)");
 		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);
 	}
+
+	public function unenroll($user_id, $offering_id) {
+		$stmt = $this->db->prepare("DELETE FROM enrollment 
+				WHERE user_id = :user_id 
+				AND offering_id = :offering_id");
+		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);		
+	}
 }
 
 

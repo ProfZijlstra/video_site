@@ -103,6 +103,11 @@ class CourseCtrl {
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
+        if ($_SESSION['error']) {
+            $VIEW_DATA['error'] = $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["enrollment"] = $enrollment;
         $VIEW_DATA["block"] = $block;
@@ -124,6 +129,32 @@ class CourseCtrl {
             $this->enrollStudentsInFile($_FILES["list"]["tmp_name"], $offering_id);
         }
 
+        return "Location: enrolled";
+    }
+
+    /**
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enroll$!", sec="admin")
+     */
+    public function enroll() {
+        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+		$studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
+
+        $stu_user_id = $this->userDao->getUserIdByStudentId($studentID);
+        if ($stu_user_id) {
+            $this->enrollmentDao->enroll($stu_user_id, $offering_id);
+        } else {
+            $_SESSION['error'] = "User with student ID: $studentID not found";
+        }
+        return "Location: enrolled";
+    }
+
+    /**
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/unenroll$!", sec="admin")
+     */
+    public function unenroll() {
+        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+		$stu_user_id = filter_input(INPUT_POST, "uid", FILTER_SANITIZE_NUMBER_INT);
+        $this->enrollmentDao->unenroll($stu_user_id, $offering_id);
         return "Location: enrolled";
     }
 

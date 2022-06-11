@@ -145,6 +145,17 @@ class UserDao {
         }
     }
 
+    public function getUserIdByStudentId($studentID) {
+        $stmt = $this->db->prepare("SELECT * FROM user WHERE studentID = :studentID");
+        $stmt->execute(array("studentID" => $studentID));
+        if ($stmt->rowCount() == 0) {
+            return null;
+        } else {
+            $row = $stmt->fetch();
+            return $row["id"];
+        }
+    }
+
     public function byTeamsName($teamsName) {
         $stmt = $this->db->prepare(
             "SELECT * FROM user WHERE teamsName = :teamsName");
