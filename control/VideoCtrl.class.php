@@ -44,6 +44,7 @@ class VideoCtrl {
      */
     public function loggedIn() {
         global $URI_PARAMS;
+		global $MY_BASE;
 
 		$course_num = $URI_PARAMS[1];
 		$user_id = $_SESSION['user']['id'];
@@ -52,11 +53,11 @@ class VideoCtrl {
 			$offering = $this->offeringDao->getOfferingById($enrolled["offering_id"]);
 			$course = $offering['course_number'];
 			$block = $offering['block'];
-			return "Location: /videos/${course}/${block}/";
+			return "Location: $MY_BASE/${course}/${block}/";
 		} else {
 			// default to latest offering
 			$data = $this->offeringDao->getLatestForCourse($course_num); 
-			return "Location: /videos/${data['number']}/${data['block']}/";
+			return "Location: $MY_BASE/${data['number']}/${data['block']}/";
 		}
 
     }

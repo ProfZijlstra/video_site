@@ -103,11 +103,6 @@ class CourseCtrl {
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
-        if ($_SESSION['error']) {
-            $VIEW_DATA['error'] = $_SESSION['error'];
-            unset($_SESSION['error']);
-        }
-
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["enrollment"] = $enrollment;
         $VIEW_DATA["block"] = $block;
@@ -136,6 +131,8 @@ class CourseCtrl {
      * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enroll$!", sec="admin")
      */
     public function enroll() {
+        global $VIEW_DATA;
+
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
 		$studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
 
@@ -143,7 +140,7 @@ class CourseCtrl {
         if ($stu_user_id) {
             $this->enrollmentDao->enroll($stu_user_id, $offering_id);
         } else {
-            $_SESSION['error'] = "User with student ID: $studentID not found";
+            $VIEW_DATA['error'] = "User with student ID: $studentID not found";
         }
         return "Location: enrolled";
     }

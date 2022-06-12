@@ -9,7 +9,7 @@ require("settings.php");
 define("DEVELOPMENT", true);
 $SEC_LVLS = array("none", "user", "admin");
 date_default_timezone_set("America/Chicago");
-error_reporting(E_ALL ^ E_WARNING);
+error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
 // extend session to 12 hours, based on: 
 // https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php
 ini_set('session.gc_maxlifetime', 43200);

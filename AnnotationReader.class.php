@@ -80,8 +80,6 @@ class AnnotationReader {
     private function validate_request_annotation(&$attrs, $com) {
         global $SEC_LVLS;
         if (isset($attrs['uri']) == false && isset($attrs['value']) == false ) {
-			print("has url: " . (isset($attrs['url']) == true)); 
-			var_dump($attrs);
             throw new Exception("@GET or @POST missing uri attribute in: $com");
         }
         if (!isset($attrs['uri']) && isset($attrs['value'])) {

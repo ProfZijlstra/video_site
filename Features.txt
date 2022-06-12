@@ -1,4 +1,3 @@
-- Add ability to add or remove a single user from enrollment
 - see raw view data for day and date
 - Ability to submit attendance to CAMS
 - GeoIP constraints
@@ -11,6 +10,8 @@
 - Add Lab system
 
 DONE:
+- Integrate Flowcharts with manalabs users
+- Add ability to add or remove a single user from enrollment
 - Fix view stats on day page not knowing who enrolled 
 - Re-create mobile view
 - Fix clicking on video links not reporting video stop
