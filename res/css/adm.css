@@ -63,23 +63,23 @@ div.modal.hide {
 #content a:hover {
     text-decoration: underline;
 }
-#content .modal {
+div.modal {
     background-color: #DDD;
     border: 1px solid black;
     padding: 2em;
 }
-#content .modal h2 {
+div.modal h2 {
     margin-top: 0px;
 }
-#content .modal label {
+div.modal label {
     display: inline-block;
     width: 100px;
     margin-bottom: 10px;
 }
-#content .modal input, #content .modal select {
+div.modal input, div.modal select {
     width: 575px;
     height: 25px;
 }
-#content .modal .submit {
+div.modal .submit {
     text-align: right;
 }

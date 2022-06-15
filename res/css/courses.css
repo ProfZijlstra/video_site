@@ -1,0 +1,60 @@
+main div#content {
+    margin: 50px auto;
+    width: 750px;
+}
+
+div#content div.offering {
+    border-bottom: 1px solid black;
+    padding: 20px;
+}
+div#content div.offering a {
+    text-decoration: none;
+}
+div.offering span {
+    display: inline-block;
+}
+div.offering span.number {
+    min-width: 60px;
+}
+div.offering span.block { 
+    min-width: 80px;
+}
+span.faculty {
+    float: right;
+}
+span.number {
+    position: inherit !important;
+}
+div#overlay div.modal label {
+    width: 150px;
+}
+
+div#overlay div.modal input,
+div#overlay div.modal select {
+    width: 530px;
+}
+
+@media screen and (max-width: 900px) {
+    .fa-flask-vial, .fa-users {
+        display: none;
+    }
+    div#controls {
+        top: 22px;
+        right: 15px;
+    }
+    main div#content {
+        width: 90%;
+    }
+    div#content div.offering {
+        text-align: center;
+    }
+    div.offering span {
+        display: inline;
+    }
+    div.offering span.name {
+        display: block;
+    }
+    span.faculty {
+        float: none;
+    }
+}

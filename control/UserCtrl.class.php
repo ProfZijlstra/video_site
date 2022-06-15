@@ -162,12 +162,12 @@ class UserCtrl {
     public function create() {
         global $VIEW_DATA;
 
-        $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
-        $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $knownAs = filter_input(INPUT_POST, "knownAs", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
+        $first = filter_input(INPUT_POST, "first", FILTER_UNSAFE_RAW);
+        $last = filter_input(INPUT_POST, "last", FILTER_UNSAFE_RAW);
+        $knownAs = filter_input(INPUT_POST, "knownAs", FILTER_UNSAFE_RAW);
+        $email = filter_input(INPUT_POST, "email", FILTER_UNSAFE_RAW);
         $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
-        $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_SANITIZE_STRING);
+        $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_UNSAFE_RAW);
         $pass = filter_input(INPUT_POST, "pass");
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
@@ -221,12 +221,12 @@ class UserCtrl {
     public function update() {
         global $URI_PARAMS;
         $uid = $URI_PARAMS[1];
-        $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
-        $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $knownAs = filter_input(INPUT_POST, "knownAs", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
+        $first = filter_input(INPUT_POST, "first", FILTER_UNSAFE_RAW);
+        $last = filter_input(INPUT_POST, "last", FILTER_UNSAFE_RAW);
+        $knownAs = filter_input(INPUT_POST, "knownAs", FILTER_UNSAFE_RAW);
+        $email = filter_input(INPUT_POST, "email", FILTER_UNSAFE_RAW);
         $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
-        $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_SANITIZE_STRING);
+        $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_UNSAFE_RAW);
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
         $pass = filter_input(INPUT_POST, "pass");

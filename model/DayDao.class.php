@@ -69,5 +69,20 @@ class DayDao {
 		$stmt->execute(["day_id" => $day_id]);
 		return $stmt->fetch();
 	}
+
+	public function create($offering_id, $lessonsPerRow, $lessonRows) {
+		$stmt = $this->db->prepare(
+			"INSERT INTO day
+			VALUES(NULL, :offering_id, :abbr, 'TODO')"
+		);
+
+		for ($week = 1; $week <= $lessonRows; $week++) {
+			for ($day = 1; $day <= $lessonsPerRow; $day++) {
+				$stmt->execute(array(
+					"offering_id" => $offering_id, "abbr" => "W${week}D${day}"
+				));
+			}
+		}
+	}
 }
 

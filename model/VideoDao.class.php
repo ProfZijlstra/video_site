@@ -113,4 +113,22 @@ class VideoDao {
 			}
 		}
 	}
+
+	public function create($number, $block, $lessonsPerRow, $lessonRows) {
+		chdir("res");
+		mkdir($number);
+		chdir($number);
+		mkdir($block);
+		chdir($block);
+
+		for ($week = 1; $week <= $lessonRows; $week++) {
+			for ($day = 1; $day <= $lessonsPerRow; $day++) {
+				mkdir("W${week}D${day}");
+				chdir("W${week}D${day}");
+				mkdir("vid");
+				mkdir("pdf");
+				chdir("..");
+			}
+		}
+	}
 }

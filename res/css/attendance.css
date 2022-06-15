@@ -48,6 +48,9 @@ div.meeting a {
     font-size: 30px;
     cursor: pointer;
 }
+#days .fa-black-tie {
+    right: 1vw;
+}
 .fa-cloud-upload-alt {
     position: absolute;
     right: 15px;

@@ -6,13 +6,6 @@ div#days {
     margin-right: auto;
     width: 67vw;
 }
-div#days div.header {
-    font-weight: bold;
-    max-height: 30px;
-    text-align: center;   
-    border-bottom: 1px solid black;
-    padding: 1px;
-}
 div#days div.data {
     cursor: pointer;
     border-right: 1px solid black;
@@ -29,7 +22,10 @@ div#days div.data {
 div#days div.data a {
     width: 100%;
 }
-div#days div.data.mon {
+div#days div.data.w1 {
+    border-top: 1px solid black;
+}
+div#days div.data.d1 {
     border-left: 1px solid black;
 }
 div#days div.data.done {

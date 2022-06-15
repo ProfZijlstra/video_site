@@ -1,3 +1,12 @@
+<?php
+$de = false;
+$cols = $offering['lessonsPerPart'];
+if ($cols < 7) {
+    $de = true;
+    $cols += 1;
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -11,6 +20,17 @@
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/attendance.css">
     <script src="res/js/attendance.js"></script>
+    <style>
+        div#days {
+            grid-template-columns: <?php for ($i = 0; $i < $cols; $i++): ?>auto <?php endfor; ?>;
+            width: <?= 9 * $cols ?>vw;
+        }
+        <?php if ($de): ?>
+            #days .fa-black-tie {
+                right: 4vw;
+            }
+        <?php endif; ?>
+    </style>
 </head>
 
 <body>
@@ -26,32 +46,25 @@
 
 
         <div id="days">
-            <div class="header">Mon</div>
-            <div class="header">Tue</div>
-            <div class="header">Wed</div>
-            <div class="header">Thu</div>
-            <div class="header">Fri</div>
-            <div class="header">Sat</div>
-            <div class="header">Sun</div>
+            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
+                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
+                    <?php $date = $start + ($w - 1)*60*60*24*$offering['daysPerLesson']*$offering['lessonsPerPart'] + ($d - 1)*60*60*24*$offering["daysPerLesson"]; ?>
 
-            <?php for ($w = 1; $w <= 4; $w++): ?>
-                <?php for ($d = 1; $d <= 7; $d++): ?>
-                    <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
-
-                    <div class="data <?= $d == 1 ? "mon " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+                    <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
                         id="<?= "W{$w}D{$d}" ?>"
                         data-day="<?= "W{$w}D{$d}" ?>" 
                         data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
                         data-date="<?= date("Y-m-d", $date) ?>">
 
-                        <?php if ($w == 4 && $d == 6) : ?>
-                            <a href="professionalism">
-                                <i title="Professionalism Report" class="fab fa-black-tie"></i>
-                            </a>
-                        <?php elseif ($d == 7): ?>
+                        <?php if ($d == 7): ?>
                             <a href="physical/W<?= $w ?>">
                                 <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
                             </a>
+                            <?php if ($w == 4) : ?>
+                                <a href="professionalism">
+                                    <i title="Professionalism Report" class="fab fa-black-tie"></i>
+                                </a>
+                            <?php endif; ?>
                         <?php else : ?>
                             <?php foreach (["AM", "PM"] as $stype): ?>
                                 <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>"
@@ -79,6 +92,17 @@
                             <?= date("M j Y", $date); ?>
                         </time>
                     </div>
+
+                    <?php // for DE courses add a column to show professionalism link ?>
+                    <?php if($d == $offering['lessonsPerPart'] && $d < $cols): ?>
+                        <div class="data <?= $w == 1 ? "w1" : "" ?>">
+                            <?php if ($w == $offering['lessonParts']): ?>
+                                <a href="professionalism">
+                                    <i title="Professionalism Report" class="fab fa-black-tie"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endfor ?>
             <?php endfor ?>
         </div>

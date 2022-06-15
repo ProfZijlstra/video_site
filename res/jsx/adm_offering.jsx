@@ -65,6 +65,14 @@ window.addEventListener("load", () => {
                         <label>Start Date:</label>
                         <input type="date" name="date" />
                     </div>
+                    <div>
+                        <label>Days per Lesson</label>
+                        <input type="number" value="1" name="daysPerLesson" />
+                        <label>Lessons per Part</label>
+                        <input type="number" value="7" name="lessonsPerPart" />
+                        <label>Parts</label>
+                        <input type="number" value="4" name="lessonParts" />
+                    </div>
                     <div class="submit">
                         <button>Submit</button>
                     </div>
@@ -105,16 +113,14 @@ window.addEventListener("load", () => {
     }
 
     document.getElementById("edit").onclick = function() {
-        for (let w = 1; w < 5; w++) {
-            for (let d = 1; d < 8; d++) { 
-                const td = document.getElementById(`W${w}D${d}`);
-                const nextSib = td.querySelector("time");
-                const text = td.querySelector(".text").innerText;
-                const edit = document.createElement("i");
-                edit.setAttribute("class", "far fa-edit");
-                edit.onclick = editDay.bind(null, td.dataset.day_id, text);
-                td.insertBefore(edit, nextSib);
-            }
+        const divs = document.querySelectorAll("div.data");
+        for (const div of divs) {
+            const nextSib = div.querySelector("time");
+            const text = div.querySelector(".text").innerText;
+            const edit = document.createElement("i");
+            edit.setAttribute("class", "far fa-edit");
+            edit.onclick = editDay.bind(null, div.dataset.day_id, text);
+            div.insertBefore(edit, nextSib);
         }
     };
 });

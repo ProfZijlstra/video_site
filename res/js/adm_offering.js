@@ -63,6 +63,18 @@ window.addEventListener("load", () => {
     }, /*#__PURE__*/React.createElement("label", null, "Start Date:"), /*#__PURE__*/React.createElement("input", {
       type: "date",
       name: "date"
+    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, "Days per Lesson"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      value: "1",
+      name: "daysPerLesson"
+    }), /*#__PURE__*/React.createElement("label", null, "Lessons per Part"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      value: "7",
+      name: "lessonsPerPart"
+    }), /*#__PURE__*/React.createElement("label", null, "Parts"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      value: "4",
+      name: "lessonParts"
     })), /*#__PURE__*/React.createElement("div", {
       class: "submit"
     }, /*#__PURE__*/React.createElement("button", null, "Submit"))));
@@ -104,16 +116,15 @@ window.addEventListener("load", () => {
   }
 
   document.getElementById("edit").onclick = function () {
-    for (let w = 1; w < 5; w++) {
-      for (let d = 1; d < 8; d++) {
-        const td = document.getElementById(`W${w}D${d}`);
-        const nextSib = td.querySelector("time");
-        const text = td.querySelector(".text").innerText;
-        const edit = document.createElement("i");
-        edit.setAttribute("class", "far fa-edit");
-        edit.onclick = editDay.bind(null, td.dataset.day_id, text);
-        td.insertBefore(edit, nextSib);
-      }
+    const divs = document.querySelectorAll("div.data");
+
+    for (const div of divs) {
+      const nextSib = div.querySelector("time");
+      const text = div.querySelector(".text").innerText;
+      const edit = document.createElement("i");
+      edit.setAttribute("class", "far fa-edit");
+      edit.onclick = editDay.bind(null, div.dataset.day_id, text);
+      div.insertBefore(edit, nextSib);
     }
   };
 });

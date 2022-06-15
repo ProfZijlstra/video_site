@@ -15,6 +15,12 @@
             <script src="res/js/info.js"></script>
             <script src="res/js/adm_offering.js"></script>
         <?php endif; ?>
+        <style>
+        div#days {
+            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++): ?>auto <?php endfor; ?>;
+            width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
+        }
+        </style>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -35,19 +41,11 @@
             </nav>
             <?php endif; ?>
             <div id="days">
-                <div class="header">Mon</div>
-                <div class="header">Tue</div>
-                <div class="header">Wed</div>
-                <div class="header">Thu</div>
-                <div class="header">Fri</div>
-                <div class="header">Sat</div>
-                <div class="header">Sun</div>
+                <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
+                    <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
+                        <?php $date = $start + ($w - 1)*60*60*24*$offering['daysPerLesson']*$offering['lessonsPerPart'] + ($d - 1)*60*60*24*$offering["daysPerLesson"]; ?>
 
-                <?php for ($w = 1; $w <= 4; $w++): ?>
-                    <?php for ($d = 1; $d <= 7; $d++): ?>
-                        <?php $date = $start + ($w - 1)*60*60*24*7 + ($d - 1)*60*60*24; ?>
-
-                        <div class="data <?= $d == 1 ? "mon " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+                        <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
                             id="<?= "W{$w}D{$d}" ?>"
                             data-day="<?= "W{$w}D{$d}" ?>" 
                             data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"

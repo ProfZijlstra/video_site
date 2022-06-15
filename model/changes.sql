@@ -204,3 +204,10 @@ ALTER TABLE offering ADD COLUMN `fac_user_id` INT;
 CREATE INDEX fac_user_id ON offering(fac_user_id);
 CREATE INDEX `type` ON user(`type`);
 UPDATE offering SET fac_user_id = 5;
+
+------------- 13th of June 2022
+ALTER TABLE offering ADD COLUMN `daysPerLesson` TINYINT UNSIGNED NOT NULL;
+ALTER TABLE offering ADD COLUMN `lessonsPerPart` TINYINT UNSIGNED NOT NULL;
+ALTER TABLE offering ADD COLUMN `lessonParts` TINYINT UNSIGNED NOT NULL;
+ALTER TABLE offering DROP COLUMN `stop`;
+UPDATE offering set daysPerLesson = 1, lessonsPerPart = 7, lessonParts = 4;

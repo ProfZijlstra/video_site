@@ -65,7 +65,7 @@ class VideoCtrl {
 	/**
 	 * If the URL doesn't contain a video selection, just a day
 	 * 
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/$!", sec="user")
+	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/([A-Z][1-4][A-Z][1-7])/$!", sec="user")
 	 */
 	public function only_day() {
 		return "Location: 01";
@@ -99,7 +99,8 @@ class VideoCtrl {
 		$VIEW_DATA["course"] = strtoupper($course_num);
 		$VIEW_DATA["block"] = $offering_detail['block'];
 		$VIEW_DATA["title"] = $course_detail["name"];
-		$VIEW_DATA["offering_id"] = $offering_detail["id"];
+		$VIEW_DATA["offering"] = $offering_detail;
+		$VIEW_DATA["offering_id"] = $offering_detail["id"]; // for header.php
 		$VIEW_DATA["start"] = strtotime($offering_detail['start']);
 		$VIEW_DATA["days"] = $days;
 		$VIEW_DATA["now"] = time();
