@@ -7,7 +7,7 @@
  * **************************** */
 require("settings.php");
 define("DEVELOPMENT", true);
-$SEC_LVLS = array("none", "user", "admin");
+$SEC_LVLS = array("none", "applicant", "student", "instructor", "admin");
 date_default_timezone_set("America/Chicago");
 error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
 // extend session to 12 hours, based on: 

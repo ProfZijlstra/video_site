@@ -96,6 +96,20 @@ class OfferingDao
 		return $stmt->fetchAll();
 	}
 
+	public function enrolled($user_id) {
+		$stmt = $this->db->prepare(
+			"SELECT c.number, c.name, o.block, u.knownAs, u.lastname 
+			FROM offering AS o 
+			JOIN course AS c ON c.number = o.course_number
+			JOIN user AS u ON o.fac_user_id = u.id
+			JOIN enrollment AS e ON o.id = e.offering_id
+			WHERE e.user_id = :user_id
+			ORDER BY o.block DESC"
+		);
+		$stmt->execute(array("user_id" => $user_id));
+		return $stmt->fetchAll();
+	}
+
 	public function allForCourse($course_num)
 	{
 		$stmt = $this->db->prepare("SELECT * FROM offering 

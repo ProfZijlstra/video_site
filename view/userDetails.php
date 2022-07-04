@@ -75,9 +75,9 @@ if (!isset($user)) {
             </div>
             <div id="type">
                 <select name="type">
-                    <option>student</option>
-                    <option <?= $user && $user['type'] === "admin" ? 'selected="selected"' : '' ?>>
-                        admin</option>
+                    <?php foreach ($types as $type): ?>
+                        <option <?= $user['type'] == $type ? 'selected' : ''?>><?= $type ?></option>
+                    <?php endforeach; ?>                    
                 </select> <br />
                 </div>
             <div id="label_active" >

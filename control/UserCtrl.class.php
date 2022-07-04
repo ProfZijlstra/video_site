@@ -17,6 +17,11 @@ class UserCtrl {
     public $userDao;
 
     /**
+     * @Inject("OfferingDao")
+     */
+    public $offeringDao;
+
+    /**
      * Simple mapping to the login page
      * @GET(uri="!^/.*login$!", sec="none")
      */
@@ -54,6 +59,15 @@ class UserCtrl {
                 "type" => $row['type'],
                 "autoplay" => "off"
             );
+            // save enrollment in session (to limit access to enrolled)
+            if ($row['type'] === 'applicant' || $row['type' === 'student']) {
+                $rows = $this->offeringDao->enrolled($row['id']);
+                $enrollment = array();
+                foreach ($rows as $off) {
+                    $enrollment[] = ["number" => $off['number'], "block" => $off['block']];
+                }
+                $_SESSION['user']['enrolled'] = $enrollment;
+            }
             $_SESSION['speed'] = $_COOKIE['view_speed'] ? $_COOKIE['view_speed'] : 1;
 
             // update the last accessed time
@@ -105,7 +119,9 @@ class UserCtrl {
      */
     public function addUser() {
         global $VIEW_DATA;
+        global $SEC_LVLS;
         $VIEW_DATA["title"] = "User Details";
+        $VIEW_DATA['types'] = $SEC_LVLS; 
         return "userDetails.php";
     }
 
@@ -129,11 +145,13 @@ class UserCtrl {
     public function details() {
         global $VIEW_DATA;
         global $URI_PARAMS;
+        global $SEC_LVLS;
         $uid = $URI_PARAMS[1];
 
         $user = $this->userDao->retrieve($uid);
         $VIEW_DATA['user'] = $user;
         $VIEW_DATA["title"] = "User Details";
+        $VIEW_DATA['types'] = $SEC_LVLS;
         
         return "userDetails.php";
     }

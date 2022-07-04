@@ -211,3 +211,6 @@ ALTER TABLE offering ADD COLUMN `lessonsPerPart` TINYINT UNSIGNED NOT NULL;
 ALTER TABLE offering ADD COLUMN `lessonParts` TINYINT UNSIGNED NOT NULL;
 ALTER TABLE offering DROP COLUMN `stop`;
 UPDATE offering set daysPerLesson = 1, lessonsPerPart = 7, lessonParts = 4;
+
+------------- 3rd of July 2022
+UPDATE user set type='student' WHERE type='user';

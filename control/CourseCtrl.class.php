@@ -36,12 +36,17 @@ class CourseCtrl {
     public $sessionDao;
 
     /**
-     * @GET(uri="!^/?$!", sec="user")
+     * @GET(uri="!^/?$!", sec="applicant")
      */
     public function showCourses() {
         global $VIEW_DATA;
 
-        $offerings = $this->offeringDao->all();
+        if ($_SESSION['user']['type'] === 'applicant') {
+            $offerings = $this->offeringDao->enrolled($_SESSION['user']['id']);
+        } else {
+            $offerings = $this->offeringDao->all();
+        }
+        
         $faculty = $this->userDao->faculty();
 
         $VIEW_DATA["title"] = "Course Offerings";
