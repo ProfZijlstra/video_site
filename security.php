@@ -21,7 +21,7 @@ function isLoggedIn() {
 }
 
 // helper function to check if logged in applicant / student is enrolled
-function allowEnrolledAt($url_pattern) {
+function allowOnlyEnrolledAt($url_pattern) {
     global $MY_URI;
 
     $matches = array();
@@ -48,11 +48,11 @@ switch ($MY_MAPPING['sec']) {
         isLoggedIn();
         // has to be enrolled to see anything in an offering
         if ($_SESSION['user']['type'] === 'applicant') {
-            allowEnrolledAt("!^/(cs\d{3})/(20\d{2}-\d{2})/.*!"); 
+            allowOnlyEnrolledAt("!^/(cs\d{3})/(20\d{2}-\d{2})/.*!"); 
         }
         // has to be enrolled to see quiz or lab for an offering
         // if ($_SESSION['user']['type'] === 'student') {
-        //    allowEnrolledAt("!^/(cs\d{3})/(20\d{2}-\d{2})/(quiz|lab)/.*!");
+        //    allowOnlyEnrolledAt("!^/(cs\d{3})/(20\d{2}-\d{2})/(quiz|lab)/.*!");
         // }
         break;
     case "student":
