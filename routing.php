@@ -59,8 +59,17 @@ if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
 list($class, $method) = explode("@",  $MY_MAPPING['route']);
 try {
     $context = new Context();
+    $db = $context->get("DB");
     $controler = $context->get($class);
-    view($controler->{$method}());
+    try {
+        $db->beginTransaction();
+        $output = $controler->{$method}();
+        $db->commit();
+    } catch (PDOException $e) {
+        $db->rollBack();
+        throw $e;
+    }
+    view($output);
 } catch (Exception $e) {
     // Perhaps have some user setting for debug mode
     error_log($e->getMessage());
