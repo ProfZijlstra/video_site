@@ -65,15 +65,12 @@ window.addEventListener("load", () => {
       name: "date"
     })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, "Days per Lesson"), /*#__PURE__*/React.createElement("input", {
       type: "number",
-      value: "1",
       name: "daysPerLesson"
     }), /*#__PURE__*/React.createElement("label", null, "Lessons per Part"), /*#__PURE__*/React.createElement("input", {
       type: "number",
-      value: "7",
       name: "lessonsPerPart"
     }), /*#__PURE__*/React.createElement("label", null, "Parts"), /*#__PURE__*/React.createElement("input", {
       type: "number",
-      value: "4",
       name: "lessonParts"
     })), /*#__PURE__*/React.createElement("div", {
       class: "submit"

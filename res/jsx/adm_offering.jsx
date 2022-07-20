@@ -67,11 +67,11 @@ window.addEventListener("load", () => {
                     </div>
                     <div>
                         <label>Days per Lesson</label>
-                        <input type="number" value="1" name="daysPerLesson" />
+                        <input type="number" name="daysPerLesson" />
                         <label>Lessons per Part</label>
-                        <input type="number" value="7" name="lessonsPerPart" />
+                        <input type="number" name="lessonsPerPart" />
                         <label>Parts</label>
-                        <input type="number" value="4" name="lessonParts" />
+                        <input type="number" name="lessonParts" />
                     </div>
                     <div class="submit">
                         <button>Submit</button>
