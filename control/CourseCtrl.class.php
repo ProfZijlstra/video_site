@@ -79,7 +79,7 @@ class CourseCtrl {
         // that is, if I actually implement transactions...
         $this->videoDao->create($number, $block, $lessonsPerRow, $lessonRows);
 
-        return "location: $MY_BASE";
+        return "Location: $MY_BASE";
     }
 
     /**
