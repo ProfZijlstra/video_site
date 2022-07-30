@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Question Controller Class
+ * Comment Controller Class
  * @author mzijlstra 09/24/2021
  *
  * @Controller
  */
-class QuestionCtrl
+class CommentCtrl
 {
 
     /**
-     * @Inject("QuestionDao")
+     * @Inject("CommentDao")
      */
-    public $questionDao;
+    public $commentDao;
 
     /**
-     * @Inject("QuestionVoteDao")
+     * @Inject("CommentVoteDao")
      */
-    public $questionVoteDao;
+    public $commentVoteDao;
 
     /**
      * @Inject("ReplyDao")
@@ -35,7 +35,7 @@ class QuestionCtrl
     public $userDao;
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/question$!", sec="applicant")
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/comment$!", sec="applicant")
      */
     public function add()
     {
@@ -46,47 +46,47 @@ class QuestionCtrl
 
         $user_id = $_SESSION['user']['id'];
         $video = filter_input(INPUT_POST, "video");
-        $question = filter_input(INPUT_POST, "question");
+        $comment = filter_input(INPUT_POST, "comment");
         $tab = filter_input(INPUT_POST, "tab");
-        $id = $this->questionDao->add($question, $user_id, $video);
+        $id = $this->commentDao->add($comment, $user_id, $video);
         $user = $this->userDao->retrieve($user_id);
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
-            " asks:\n\n$question\n
-See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+            " asks:\n\n$comment\n
+See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
 
         $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
-        mail("mzijlstra@miu.edu", "${course} Question or Comment", $message, $headers);
+        mail("mzijlstra@miu.edu", "${course} Comment or Comment", $message, $headers);
 
         return "Location: ${tab}#q${id}";
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delQuestion$!", sec="applicant")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delComment$!", sec="applicant")
      */
     public function del()
     {
         $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
-        $question = $this->questionDao->get($id);
-        if ($_SESSION['user']['type'] === 'admin' || $question['user_id'] == $_SESSION['user']['id']) {
-            $this->questionDao->del($id);
+        $comment = $this->commentDao->get($id);
+        if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
+            $this->commentDao->del($id);
         }
-        return "Location: ${tab}#questionForm";
+        return "Location: ${tab}#commentForm";
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getQuestion$!", sec="applicant")
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getComment$!", sec="applicant")
      */
     public function get()
     {
         $id = filter_input(INPUT_GET, "id");
-        return $this->questionDao->get($id);
+        return $this->commentDao->get($id);
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updQuestion$!", sec="applicant")
+     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updComment$!", sec="applicant")
      */
     public function update()
     {
@@ -94,9 +94,9 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         $text = filter_input(INPUT_POST, "text");
-        $question = $this->questionDao->get($id);
-        if ($_SESSION['user']['type'] === 'admin' || $question['user_id'] == $_SESSION['user']['id']) {
-            $this->questionDao->update($id, $text);
+        $comment = $this->commentDao->get($id);
+        if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
+            $this->commentDao->update($id, $text);
         }
         return "Location: ${tab}#q${id}";
     }
@@ -160,7 +160,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         if ($vid) {
             // update if it exists
             if ($q_r == "q") {
-                $this->questionVoteDao->update($vid, $user_id, $value);
+                $this->commentVoteDao->update($vid, $user_id, $value);
             } else {
                 $this->replyVoteDao->update($vid, $user_id, $value);
             }
@@ -169,7 +169,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         } else {
             // otherwise create
             if ($q_r == "q") {
-                return $this->questionVoteDao->add($id, $user_id, $value);
+                return $this->commentVoteDao->add($id, $user_id, $value);
             } else {
                 return $this->replyVoteDao->add($id, $user_id, $value);
             }
@@ -192,7 +192,7 @@ See question at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${
         $user_id = $_SESSION['user']['id'];
         $user = $this->userDao->retrieve($user_id);
         $qid = filter_input(INPUT_POST, "id");
-        $op_email = $this->questionDao->getUserEmail($qid);
+        $op_email = $this->commentDao->getUserEmail($qid);
         $id = $this->replyDao->add($text, $user_id, $qid);
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
@@ -244,7 +244,7 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
         if ($_SESSION['user']['type'] === 'admin' || $reply['user_id'] == $_SESSION['user']['id']) {
             $this->replyDao->del($id);
         }
-        return "Location: ${tab}#q" . $reply['question_id'];
+        return "Location: ${tab}#q" . $reply['comment_id'];
     }
 
 }

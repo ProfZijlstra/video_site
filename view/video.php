@@ -172,38 +172,38 @@ foreach($files as $info) :
             </section>
         </div>
 
-        <div id="questions">
+        <div id="comments">
             <h2>Questions & Comments</h2>
-            <?php foreach ($questions as $question) : ?>
+            <?php foreach ($comments as $comment) : ?>
                 <div class="author">
-                    <?= $question["knownAs"]?> <?= $question["lastname"]?>  
-                    <span class="date">created: <?= $question["created"]?></span>
-                    <?php if ($question["edited"]) : ?>
-                        <span class="date">edited: <?= $question["edited"]?></span>
+                    <?= $comment["knownAs"]?> <?= $comment["lastname"]?>  
+                    <span class="date">created: <?= $comment["created"]?></span>
+                    <?php if ($comment["edited"]) : ?>
+                        <span class="date">edited: <?= $comment["edited"]?></span>
                     <?php endif; ?>
-                    <?php if ($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['id'] == $question["user_id"]) : ?>
-                        <form method="post" action="delQuestion">
-                            <input type="hidden" name="id" value="<?= $question['id']?>" />
+                    <?php if ($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['id'] == $comment["user_id"]) : ?>
+                        <form method="post" action="delComment">
+                            <input type="hidden" name="id" value="<?= $comment['id']?>" />
                             <input type="hidden" name="tab" value="<?= $video ?>" />
                             <i class="far fa-trash-alt" data-id=""></i>
                         </form>
-                        <i class="far fa-edit" data-id="<?= $question['id']?>"></i>
+                        <i class="far fa-edit" data-id="<?= $comment['id']?>"></i>
                     <?php endif; ?>
-                    <div class="vote" data-id="<?= $question['id'] ?>"
-                        <?php if($question["vote_id"]) : ?>  
-                            data-vid="<?= $question["vote_id"] ?>"
+                    <div class="vote" data-id="<?= $comment['id'] ?>"
+                        <?php if($comment["vote_id"]) : ?>  
+                            data-vid="<?= $comment["vote_id"] ?>"
                         <?php endif; ?>
-                        <?php if($question["vote"]) : ?>  
-                            data-type="<?= $question["vote"] > 0 ? "up" : "down" ?>"
+                        <?php if($comment["vote"]) : ?>  
+                            data-type="<?= $comment["vote"] > 0 ? "up" : "down" ?>"
                         <?php endif; ?>
                     >
-                        <i class="fas fa-angle-up <?= $question["vote"] > 0 ? 'selected' : "" ?>"></i> 
-                        <i class="fas fa-angle-down <?= $question["vote"] < 0 ? 'selected' : "" ?>"></i>
+                        <i class="fas fa-angle-up <?= $comment["vote"] > 0 ? 'selected' : "" ?>"></i> 
+                        <i class="fas fa-angle-down <?= $comment["vote"] < 0 ? 'selected' : "" ?>"></i>
                     </div>
                 </div>
-                <div class="question mdBox" id="q<?= $question['id'] ?>">
-                    <div class="qText"><?= $parsedown->text($question["text"]) ?></div>
-                    <?php foreach ($replies[$question['id']] as $reply) : ?>
+                <div class="comment mdBox" id="q<?= $comment['id'] ?>">
+                    <div class="qText"><?= $parsedown->text($comment["text"]) ?></div>
+                    <?php foreach ($replies[$comment['id']] as $reply) : ?>
                         <div class="author">
                             <?= $reply["knownAs"]?> <?= $reply["lastname"]?>  
                             <span class="date">created: <?= $reply["created"]?></span>
@@ -234,15 +234,15 @@ foreach($files as $info) :
                     <?php endforeach; ?>
                     <div class="addReply">add reply</div>
                 </div>
-            <?php endforeach; // question ?>
-            <?php if (count($questions) == 0) : ?>
-                <div>No questions or comments yet</div>
+            <?php endforeach; // comment ?>
+            <?php if (count($comments) == 0) : ?>
+                <div>No comments or comments yet</div>
             <?php endif; ?>
-            <h3>Add a question or comment:</h3>
-            <form method="post" action="question" id="questionForm">
+            <h3>Add a comment or comment:</h3>
+            <form method="post" action="comment" id="commentForm">
                 <input type="hidden" name="video" value="<?= $info["parts"][2] ?>" />
                 <input type="hidden" name="tab" id="tab" value="<?= $info["parts"][0] ?>" />
-                <textarea name="question" class="questionText" 
+                <textarea name="comment" class="commentText" 
                     placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
                 <button class="textAction">Add</button>
             </form>

@@ -1,29 +1,29 @@
 <?php
 /**
- * QuestionVote DAO Class
+ * CommentVote DAO Class
  *
  * @author mzijlstra 09/25/2021
  * @Repository
  * 
  */
-class QuestionVoteDao {
+class CommentVoteDao {
     /**
 	 * @var PDO PDO database connection object
 	 * @Inject("DB")
 	 */
 	public $db;
 
-    public function add($question_id, $user_id, $vote) {
-		$stmt = $this->db->prepare("INSERT INTO question_vote 
-			VALUES(NULL, :question_id, :user_id, :vote)");
-		$stmt->execute(array("question_id" => $question_id, "user_id" => $user_id, 
+    public function add($comment_id, $user_id, $vote) {
+		$stmt = $this->db->prepare("INSERT INTO comment_vote 
+			VALUES(NULL, :comment_id, :user_id, :vote)");
+		$stmt->execute(array("comment_id" => $comment_id, "user_id" => $user_id, 
 			"vote" => $vote));
 		return $this->db->lastInsertId();
 	}
 
     public function update($id, $user_id, $vote) {
         $stmt = $this->db->prepare(
-			"UPDATE question_vote 
+			"UPDATE comment_vote 
             SET vote = :vote
             WHERE id = :id AND user_id = :user_id"
 		);

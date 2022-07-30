@@ -26,9 +26,9 @@ class VideoCtrl {
 	 */
 	public $enrollmentDao;
 	/**
-	 * @Inject("QuestionDao")
+	 * @Inject("CommentDao")
 	 */
-	public $questionDao;
+	public $commentDao;
 	/**
 	 * @Inject("ReplyDao")
 	 */
@@ -150,19 +150,19 @@ class VideoCtrl {
 			}
 		}
 
-		// get questions for selected video
-		$questions = $this->questionDao->getAllFor($video_file["parts"][2], $user_id);
-		// get the replies for those questions
+		// get comments for selected video
+		$comments = $this->commentDao->getAllFor($video_file["parts"][2], $user_id);
+		// get the replies for those comments
 		$replies = array();
-		if ($questions) {
+		if ($comments) {
 			$qids = array();
-			foreach ($questions as $question) {
-				$qids[] = $question["id"];
-				$replies[$question["id"]] = array();
+			foreach ($comments as $comment) {
+				$qids[] = $comment["id"];
+				$replies[$comment["id"]] = array();
 			}
 			$replies_data = $this->replyDao->getAllFor($qids, $user_id);
 			foreach ($replies_data as $reply) {
-				$replies[$reply["question_id"]][] = $reply;
+				$replies[$reply["comment_id"]][] = $reply;
 			}	
 		}
 
@@ -189,9 +189,9 @@ class VideoCtrl {
 		$VIEW_DATA["totalDuration"] = $videos["totalDuration"];
 		$VIEW_DATA["totalTime"] = $videos["totalTime"];
 
-		// questions related
+		// comments related
 		$VIEW_DATA["parsedown"] = new Parsedown();
-		$VIEW_DATA["questions"] = $questions;
+		$VIEW_DATA["comments"] = $comments;
 		$VIEW_DATA["replies"] = $replies;
 
 		return "video.php";

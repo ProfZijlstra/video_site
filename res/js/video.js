@@ -3,9 +3,9 @@ window.addEventListener('load', () => {
     const day_id = document.getElementById('day').dataset.id;
     const video = document.querySelector("video");
 
-    // highlight url selected question
+    // highlight url selected comment
     const hash = window.location.hash;
-    if (hash && hash != 'questionForm' && (hash[1] == 'q' || hash[1] == 'r')) {
+    if (hash && hash != 'commentForm' && (hash[1] == 'q' || hash[1] == 'r')) {
         const elm = document.getElementById(hash.substring(1));
         if (elm) {
             elm.classList.add('selected');
@@ -242,7 +242,7 @@ window.addEventListener('load', () => {
         });
     }
 
-    // make clicking on delete question and delete reply work
+    // make clicking on delete comment and delete reply work
     function delHandler() {
         if (window.confirm('Do you really want to delete?')) {
             this.parentNode.submit();
@@ -252,7 +252,7 @@ window.addEventListener('load', () => {
         del.addEventListener('click', delHandler);
     }
 
-    // make clicking on edit question and edit reply work
+    // make clicking on edit comment and edit reply work
     function createEditBox(action, btn, id, content, placeholder, cancelFn) {
         const form = document.createElement('form');
         form.setAttribute('method', 'post');
@@ -271,7 +271,7 @@ window.addEventListener('load', () => {
         const text = document.createElement('textarea');
         text.setAttribute('name', 'text');
         text.setAttribute('placeholder', placeholder);
-        text.classList.add('questionText');
+        text.classList.add('commentText');
         text.append(content);
         form.append(text);
         const submit = document.createElement('input');
@@ -303,22 +303,22 @@ window.addEventListener('load', () => {
                 initial.style.display = 'none';
             });
     }
-    const question_edits =
-        document.querySelectorAll('#questions > .author > .fa-edit');
-    for (const edit of question_edits) {
-        edit.addEventListener('click', editHandler.bind(null, "Question"));
+    const comment_edits =
+        document.querySelectorAll('#comments > .author > .fa-edit');
+    for (const edit of comment_edits) {
+        edit.addEventListener('click', editHandler.bind(null, "Comment"));
     }
     const reply_edits =
-        document.querySelectorAll('.question > .author > .fa-edit');
+        document.querySelectorAll('.comment > .author > .fa-edit');
     for (const edit of reply_edits) {
         edit.addEventListener('click', editHandler.bind(null, "Reply"));
     }
-    // make clicking on upvote and downvote question and reply work
+    // make clicking on upvote and downvote comment and reply work
     function voteHandler(url, evt) {
         const parent = evt.target.parentNode;
-        const id = parent.dataset.id; // either question_id or reply_id
+        const id = parent.dataset.id; // either comment_id or reply_id
         const vid =
-            parent.dataset.vid; // vote id (in question_vote or reply_vote)
+            parent.dataset.vid; // vote id (in comment_vote or reply_vote)
         const type = parent.dataset.type;
         fetch(`./${url}`, {
             method : 'POST',
@@ -343,20 +343,20 @@ window.addEventListener('load', () => {
                 }
             });
     }
-    const question_ups = document.querySelectorAll(
-        '#questions > .author > .vote > .fa-angle-up');
-    const question_downs = document.querySelectorAll(
-        '#questions > .author > .vote > .fa-angle-down');
-    for (const up of question_ups) {
+    const comment_ups = document.querySelectorAll(
+        '#comments > .author > .vote > .fa-angle-up');
+    const comment_downs = document.querySelectorAll(
+        '#comments > .author > .vote > .fa-angle-down');
+    for (const up of comment_ups) {
         up.addEventListener('click', voteHandler.bind(null, 'upvote'));
     }
-    for (const down of question_downs) {
+    for (const down of comment_downs) {
         down.addEventListener('click', voteHandler.bind(null, 'downvote'));
     }
     const reply_ups =
-        document.querySelectorAll('.question > .author > .vote > .fa-angle-up');
+        document.querySelectorAll('.comment > .author > .vote > .fa-angle-up');
     const reply_downs = document.querySelectorAll(
-        '.question > .author > .vote > .fa-angle-down');
+        '.comment > .author > .vote > .fa-angle-down');
     for (const up of reply_ups) {
         up.addEventListener('click', voteHandler.bind(null, 'upreply'));
     }

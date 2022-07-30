@@ -19,14 +19,14 @@ class ReplyDao
         // I hate to SQL inject, but just not sure how to cleanly bind many params
         $inject = implode(",", $qids);
         $stmt = $this->db->prepare(
-            "SELECT r.id, r.text, r.user_id, r.created, r.edited, r.question_id,
+            "SELECT r.id, r.text, r.user_id, r.created, r.edited, r.comment_id,
 			u.knownAs, u.lastname, v.id AS vote_id, v.vote AS vote,
 			SUM(t.vote) AS vote_total
             FROM reply r
 			JOIN user u ON r.user_id = u.id
 			LEFT JOIN reply_vote v ON r.id = v.reply_id AND v.user_id = :user_id
 			LEFT JOIN reply_vote t ON r.id = t.reply_id
-            WHERE r.question_id IN (${inject})
+            WHERE r.comment_id IN (${inject})
 			GROUP BY r.id
 			ORDER BY vote_total DESC"
         );
@@ -44,11 +44,11 @@ class ReplyDao
 		return $stmt->fetch();
     }
 
-    public function add($text, $uid, $qid)
+    public function add($text, $uid, $cid)
     {
         $stmt = $this->db->prepare("INSERT INTO reply
-			VALUES(NULL, :answer, :user_id, :question_id, NOW(), NULL)");
-        $stmt->execute(array("answer" => $text, "user_id" => $uid, "question_id" => $qid));
+			VALUES(NULL, :answer, :user_id, :comment_id, NOW(), NULL)");
+        $stmt->execute(array("answer" => $text, "user_id" => $uid, "comment_id" => $cid));
         return $this->db->lastInsertId();
     }
 

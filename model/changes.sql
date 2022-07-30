@@ -214,3 +214,9 @@ UPDATE offering set daysPerLesson = 1, lessonsPerPart = 7, lessonParts = 4;
 
 ------------- 3rd of July 2022
 UPDATE user set type='student' WHERE type='user';
+
+------------- 29th of July 2022
+ALTER TABLE question RENAME comment;
+ALTER TABLE question_vote RENAME comment_vote;
+ALTER TABLE comment_vote CHANGE question_id comment_id BIGINT;
+ALTER TABLE reply CHANGE question_id comment_id BIGINT;

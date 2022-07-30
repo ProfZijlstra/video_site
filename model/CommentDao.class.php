@@ -1,12 +1,12 @@
 <?php
 /**
- * Question DAO Class
+ * Comment DAO Class
  *
  * @author mzijlstra 09/24/2021
  * @Repository
  * 
  */
-class QuestionDao {
+class CommentDao {
     /**
 	 * @var PDO PDO database connection object
 	 * @Inject("DB")
@@ -18,10 +18,10 @@ class QuestionDao {
 			"SELECT q.id, q.text, q.user_id, q.created, q.edited, 
 			u.knownAs, u.lastname, v.id AS vote_id, v.vote AS vote, 
 			SUM(v2.vote) AS vote_total
-            FROM question q 
+            FROM comment q 
 			JOIN user u ON q.user_id = u.id
-			LEFT JOIN question_vote v ON q.id = v.question_id AND v.user_id = :user_id 
-			LEFT JOIN question_vote v2 ON q.id = v2.question_id
+			LEFT JOIN comment_vote v ON q.id = v.comment_id AND v.user_id = :user_id 
+			LEFT JOIN comment_vote v2 ON q.id = v2.comment_id
             WHERE q.video = :video
 			GROUP BY q.id
 			ORDER BY vote_total DESC"
@@ -33,7 +33,7 @@ class QuestionDao {
     public function get($id) {
         $stmt = $this->db->prepare(
 			"SELECT *
-            FROM question 
+            FROM comment 
             WHERE id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
@@ -43,7 +43,7 @@ class QuestionDao {
 	public function getUserEmail($id) {
 		$stmt = $this->db->prepare(
 			"SELECT u.email
-            FROM question AS q 
+            FROM comment AS q 
 			JOIN user AS u ON q.user_id = u.id
             WHERE q.id = :id"
 		);
@@ -52,10 +52,10 @@ class QuestionDao {
 		return $result["email"];
 	}
 
-	public function add($question, $user_id, $video) {
-		$stmt = $this->db->prepare("INSERT INTO question 
-			VALUES(NULL, :question, :user_id, :video, NOW(), NULL)");
-		$stmt->execute(array("question" => $question, "user_id" => $user_id, 
+	public function add($comment, $user_id, $video) {
+		$stmt = $this->db->prepare("INSERT INTO comment 
+			VALUES(NULL, :comment, :user_id, :video, NOW(), NULL)");
+		$stmt->execute(array("comment" => $comment, "user_id" => $user_id, 
 			"video" => $video));
 		return $this->db->lastInsertId();
 	}
@@ -63,12 +63,12 @@ class QuestionDao {
     public function del($id) {
 		$stmt = $this->db->prepare(
 			"DELETE
-            FROM question_vote 
-            WHERE question_id = :id"
+            FROM comment_vote 
+            WHERE comment_id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
-		// deleting the reply votes related to this question takes more work 
-		$stmt = $this->db->prepare("SELECT id FROM reply WHERE question_id = :qid");
+		// deleting the reply votes related to this comment takes more work 
+		$stmt = $this->db->prepare("SELECT id FROM reply WHERE comment_id = :qid");
 		$stmt->execute(array("qid" => $id));
 		$rids_data = $stmt->fetchAll();
 		if ($rids_data) {
@@ -88,12 +88,12 @@ class QuestionDao {
 		$stmt = $this->db->prepare(
 			"DELETE
             FROM reply 
-            WHERE question_id = :id"
+            WHERE comment_id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
         $stmt = $this->db->prepare(
 			"DELETE
-            FROM question 
+            FROM comment 
             WHERE id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
@@ -101,10 +101,10 @@ class QuestionDao {
 
     public function update($id, $text) {
         $stmt = $this->db->prepare(
-			"UPDATE question 
-            SET `text` = :question, edited = NOW()
+			"UPDATE comment 
+            SET `text` = :comment, edited = NOW()
             WHERE id = :id"
 		);
-		$stmt->execute(array("id" =>  $id, "question" => $text));
+		$stmt->execute(array("id" =>  $id, "comment" => $text));
     }
 }
