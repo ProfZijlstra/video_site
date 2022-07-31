@@ -1,4 +1,4 @@
-<?php if ($_SESSION['user']['type'] === 'admin') : ?>
+<?php if ($_user_type === 'admin') : ?>
 <!DOCTYPE html>
 <html>
     <head>

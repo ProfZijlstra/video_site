@@ -165,6 +165,10 @@ class VideoCtrl {
 				$replies[$reply["comment_id"]][] = $reply;
 			}	
 		}
+		// settings
+		$VIEW_DATA['speed'] = $_SESSION['user']['speed'];
+		$VIEW_DATA['theater'] = $_SESSION['user']['theater'];
+		$VIEW_DATA['autoplay'] = $_SESSION['user']['autoplay'];
 
 		// general course related
 		$VIEW_DATA["course"] = $course_num;

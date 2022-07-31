@@ -1,7 +1,7 @@
 <?php global $MY_BASE; ?>
 <header>
-    <div id="controls" data-id="<?= $_SESSION['user']['id'] ?>">
-        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+    <div id="controls" data-id="<?= $_user_id ?>">
+        <?php if ($_user_type === 'admin') : ?>
             <a href="<?= $MY_BASE ?>/user" title="Users"><i class="fas fa-users"></i></a>
         <?php endif; ?>
         <a href="logout" title="Logout"><i title="Logout" class="fas fa-power-off"></i></a>

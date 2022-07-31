@@ -20,6 +20,12 @@ function htmlView($view) {
         }
         header($view);
     } else {
+        // if logged in also add user_id and user_type (used in header.php)
+        if ($_SESSION['user']) {
+            $VIEW_DATA['_user_id'] = $_SESSION['user']['id'];
+            $VIEW_DATA['_user_type'] = $_SESSION['user']['type'];
+        }
+
         // make keys in VIEW_DATA available as regular variables
         foreach ($VIEW_DATA as $key => $value) {
             // do htmlspecialchars? (breaks flowcharts)

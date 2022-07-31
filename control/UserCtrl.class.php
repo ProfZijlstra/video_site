@@ -26,6 +26,14 @@ class UserCtrl {
      * @GET(uri="!^/.*login$!", sec="none")
      */
     public function getLogin() {
+        global $VIEW_DATA;
+
+        // if found add and remove error
+        if ($_SESSION['error']) {
+            $VIEW_DATA['_error'] = $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+        
         return "login.php";
     }
 
@@ -68,7 +76,7 @@ class UserCtrl {
                 }
                 $_SESSION['user']['enrolled'] = $enrollment;
             }
-            $_SESSION['speed'] = $_COOKIE['view_speed'] ? $_COOKIE['view_speed'] : 1;
+            $_SESSION['user']['speed'] = $_COOKIE['view_speed'] ? $_COOKIE['view_speed'] : 1;
 
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);

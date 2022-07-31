@@ -44,7 +44,7 @@ class ViewCtrl {
 		$user_id = $_SESSION['user']['id'];
 		$day_id = filter_input(INPUT_GET, "day_id");
 		$video = filter_input(INPUT_GET, "video");
-		return intval($this->viewDao->start($user_id, $day_id, $video, $_SESSION['speed']));
+		return intval($this->viewDao->start($user_id, $day_id, $video, $_SESSION['user']['speed']));
 	}
 
 	/**
@@ -54,7 +54,7 @@ class ViewCtrl {
         global $URI_PARAMS;
 
 		$view_id = filter_input(INPUT_POST, "view_id");
-		$this->viewDao->stop($view_id, $_SESSION['speed']);
+		$this->viewDao->stop($view_id, $_SESSION['user']['speed']);
 	}
 
 	/**
@@ -62,7 +62,7 @@ class ViewCtrl {
 	 */
 	public function speed() {
 		$speed = filter_input(INPUT_POST, "speed");
-		$_SESSION['speed'] = $speed;
+		$_SESSION['user']['speed'] = $speed;
 		setcookie("view_speed", $speed, time() + 7*24*60*60, "/videos");
 	}
 

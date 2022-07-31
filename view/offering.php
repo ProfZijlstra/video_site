@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common.css">
 		<link rel="stylesheet" href="res/css/offering.css">
         <script src="res/js/offering.js"></script>
-        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+        <?php if ($_user_type === 'admin') : ?>
             <link rel="stylesheet" href="res/css/adm.css">
             <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
@@ -25,7 +25,7 @@
     <body>
         <?php include("header.php"); ?>
         <main>
-            <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <?php if ($_user_type === 'admin') : ?>
             <nav class="tools">
                 <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
@@ -63,7 +63,7 @@
             </div>
 			<div id="total"><div class="info"></div></div>
         </main>
-        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+        <?php if ($_user_type === 'admin') : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
                 <div id="content"></div>

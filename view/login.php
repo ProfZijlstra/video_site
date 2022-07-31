@@ -80,10 +80,9 @@
             <h1>Lecture Videos</h1>
             <div class="container">
                 <form action="login" method="post">
-                    <?php if (isset($_SESSION['error'])) : ?>
-                        <span class="error"><?= $_SESSION['error'] ?></span>
+                    <?php if (isset($_error)) : ?>
+                        <span class="error"><?= $_error ?></span>
                         <br />
-                        <?php unset($_SESSION['error']) ?>
                     <?php endif; ?>
                     <input type="text" name="email" placeholder="Email or Username" autofocus />
                     <br />

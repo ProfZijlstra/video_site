@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="res/css/prism.css" />
         <script src="res/js/video.js"></script>
         <script src="res/js/prism.js"></script>
-        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+        <?php if ($_user_type === 'admin') : ?>
             <link rel="stylesheet" href="res/css/adm.css">
             <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
@@ -22,9 +22,9 @@
         <?php include("header.php"); ?>
         <i id="bars" class="fa-solid fa-bars"></i>
         <div id="container" data-oid="<?= $offering_id ?>">
-        <nav id="videos" class="<?= $_SESSION['user']["theater"] ?>">
+        <nav id="videos" class="<?= $theater ?>">
             <nav>
-                <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+                <?php if ($_user_type === 'admin') : ?>
                     <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <?php endif; ?>
                 <table id="days">
@@ -66,7 +66,7 @@
         <main id="day" data-id="<?= $days[$day]["id"] ?>">
 			<div id="playSpeed">
 				<span id="slower">-</span>
-				<span id="curSpeed"><?= number_format($_SESSION['speed'], 1) ?></span>
+				<span id="curSpeed"><?= number_format($speed, 1) ?></span>
 				<span id="faster">+</span>
 			</div>
 <?php 
@@ -90,7 +90,7 @@ foreach($files as $info) :
             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
             <div class="passed"  style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
             <div class="time"><?= $totalTime ?></div>
-            <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $_SESSION['user']["autoplay"] ?>"></i></div>
+            <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $autoplay ?>"></i></div>
             <div id="shortcuts" title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard"></i></div>
         </div>
 
@@ -181,7 +181,7 @@ foreach($files as $info) :
                     <?php if ($comment["edited"]) : ?>
                         <span class="date">edited: <?= $comment["edited"]?></span>
                     <?php endif; ?>
-                    <?php if ($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['id'] == $comment["user_id"]) : ?>
+                    <?php if ($_user_type === 'admin' || $_user_id == $comment["user_id"]) : ?>
                         <form method="post" action="delComment">
                             <input type="hidden" name="id" value="<?= $comment['id']?>" />
                             <input type="hidden" name="tab" value="<?= $video ?>" />
@@ -210,7 +210,7 @@ foreach($files as $info) :
                             <?php if ($reply["edited"]) : ?>
                                 <span class="date">edited: <?= $reply["edited"]?></span>
                             <?php endif; ?>
-                            <?php if ($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['id'] == $reply["user_id"]) : ?>
+                            <?php if ($_user_type === 'admin' || $_user_id == $reply["user_id"]) : ?>
                                 <form method="post" action="delReply">
                                     <input type="hidden" name="id" value="<?= $reply['id']?>" />
                                     <input type="hidden" name="tab" value="<?= $video ?>" />
@@ -257,7 +257,7 @@ endforeach;
         </main>
         </div> <!-- close container-->
 
-        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+        <?php if ($_user_type === 'admin') : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
                 <div id="content"></div>

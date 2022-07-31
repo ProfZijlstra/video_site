@@ -30,7 +30,7 @@
 <body>
     <?php include("header.php"); ?>
     <main>
-        <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+        <?php if ($_user_type === 'admin') : ?>
             <nav class="tools"><i id="createCourse" class="fa-regular fa-square-plus"></i></nav>
         <?php endif; ?>
         <div id="content">
@@ -49,7 +49,7 @@
         </div>
     </main>
 
-    <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+    <?php if ($_user_type === 'admin') : ?>
         <div id="overlay">
             <i id="close-overlay" class="fas fa-times-circle"></i>
             <div id="createCourseModal" class="modal">
