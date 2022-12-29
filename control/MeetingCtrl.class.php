@@ -73,7 +73,7 @@ class MeetingCtrl
         $VIEW_DATA["present"] = $present;
         $VIEW_DATA["title"] = "Meeting: " . $meeting["title"];
 
-        return "meeting.php";
+        return "attendance/meeting.php";
     }
 
     /**
@@ -248,12 +248,13 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
         $start = filter_input(INPUT_POST, "start");
         if ($session_id && $_FILES["list"]) {
-            $this->parseMeetingFile(
+            $meeting_id = $this->parseMeetingFile(
                 $_FILES["list"]["tmp_name"],
                 $_FILES["list"]["name"],
                 $session_id, 
                 $start
             );
+            return "Location: meeting/${meeting_id}";
         }
 
         return "Location: attendance";
@@ -347,6 +348,8 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         // generate report
         $offering_id = $this->sessionDao->getOfferingId($session_id);
         $this->generateReport($offering_id, $meeting_id, $meeting_start, $meeting_stop);
+
+        return $meeting_id;
     }
 
     private function generateReport($offering_id, $meeting_id, $start, $stop)
