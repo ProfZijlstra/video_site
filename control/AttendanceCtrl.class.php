@@ -64,7 +64,7 @@ class AttendanceCtrl
         $VIEW_DATA["days"] = $days;
         $VIEW_DATA["title"] = "Attendance";
 
-        return "attendance.php";
+        return "attendance/attendance.php";
     }
 
     /**
@@ -109,7 +109,7 @@ class AttendanceCtrl
         $VIEW_DATA["professionals"] = $professionals;
         $VIEW_DATA["title"] = "Professionalism";
 
-        return "professionalism.php";
+        return "attendance/professionalism.php";
     }
 
     private static function byTotal($a, $b) {
@@ -135,7 +135,7 @@ class AttendanceCtrl
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["attend"] = $attend;
         $VIEW_DATA["title"] = $week . " Physical Attendance";
-        return "physical.php";
+        return "attendance/physical.php";
     }
 
     /**
@@ -207,7 +207,7 @@ Manalabs Attendance System.
         $VIEW_DATA['exports'] = $exports;
         $VIEW_DATA['title'] = $day_abbr . " " .$stype . " Attendance Export";
 
-        return "attendanceExport.php";
+        return "attendance/attendanceExport.php";
     }
 
     /**
