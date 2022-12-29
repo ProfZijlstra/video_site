@@ -6,7 +6,7 @@
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
         <link rel="stylesheet" href="res/css/common-1.1.css">
-        <link rel="stylesheet" type="text/css" href="res/css/video.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/video-1.1.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
         <script src="res/js/video.js"></script>
         <script src="res/js/prism.js"></script>
@@ -28,24 +28,16 @@
                     <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <?php endif; ?>
                 <table id="days">
-                    <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
-<?php 
-    for ($w = 1; $w <= 4; $w++) :
-?>
+                    <!-- <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr> -->
+                    <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
                     <tr>
-<?php 
-        for ($d = 1; $d <= 7; $d++) :
-?>
+                        <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
                         <td class="<?= $w < $curr_w || $w == $curr_w && $d <= $curr_d ? "done": ""?>
                             <?= $w == $page_w && $d == $page_d ? "curr": ""?>">
                             <a href="../W<?=$w?>D<?=$d?>/">&nbsp;</a></td>
-<?php
-        endfor; // td loop
-?>
+                        <?php endfor; // td loop ?>
                     </tr>
-<?php
-    endfor; // tr loop
-?>
+                    <?php endfor; // tr loop ?>
                 </table>
             </nav>
             <div id="tabs">
@@ -62,6 +54,12 @@
                 data-day="<?= $day ?>" 
                 data-day_id="<?= $days[$day]["id"] ?>" 
                 data-text="<?= $days[$day]["desc"] ?>"></div>
+            <div id="back">
+                <a href="../">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Overview
+                </a>
+            </div>
         </nav>
         <main id="day" data-id="<?= $days[$day]["id"] ?>">
 			<div id="playSpeed">

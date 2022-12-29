@@ -182,6 +182,7 @@ class VideoCtrl {
 		$VIEW_DATA["page_d"] = $day[3];
 		$VIEW_DATA["curr_w"] = floor($days_passed / 7) + 1;
 		$VIEW_DATA["curr_d"] = ($days_passed % 7) + 1;
+		$VIEW_DATA["offering"] = $offering_detail;
 
 		// videos related
 		$VIEW_DATA["video"] = $video;

@@ -103,11 +103,15 @@ nav#videos div.video_link.selected {
 nav#videos div.video_link.selected:hover {
     font-weight: normal;
 }
+nav#videos div#back {
+    text-align: center;
+}
 #days td a, div.video_link a {
     display: block;
 }
 div#total {
-	margin-top: 15px;
+	margin-top: 10px;
+    margin-bottom: 5px;
 	text-align: center;
 }
 nav nav {
