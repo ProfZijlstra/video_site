@@ -160,7 +160,7 @@ ALTER TABLE meeting DROP day_id;
 
 ALTER TABLE view DROP too_long;
 
--- TODO
+-- DONE
 ALTER TABLE `session` DROP exported;
 ALTER TABLE `session` ADD COLUMN `status` VARCHAR(45);
 ALTER TABLE `session` ADD COLUMN `start` TIME;
@@ -220,3 +220,82 @@ ALTER TABLE question RENAME comment;
 ALTER TABLE question_vote RENAME comment_vote;
 ALTER TABLE comment_vote CHANGE question_id comment_id BIGINT;
 ALTER TABLE reply CHANGE question_id comment_id BIGINT;
+
+------------- 30th of July 2022
+CREATE TABLE IF NOT EXISTS `manalabs`.`quiz` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `day_id` INT NOT NULL,
+  `start` TIMESTAMP NOT NULL,
+  `stop` TIMESTAMP NOT NULL,
+  `visible` BOOLEAN NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  INDEX `fk_quiz_day1_idx` (`day_id` ASC) VISIBLE,
+  CONSTRAINT `fk_quiz_day1`
+    FOREIGN KEY (`day_id`)
+    REFERENCES `manalabs`.`day` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `manalabs`.`question` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quiz_id` INT UNSIGNED NOT NULL,
+  `text` TEXT NOT NULL,
+  `modelAnswer` TEXT NULL,
+  `points` INT UNSIGNED NOT NULL,
+  `seq` INT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_question_quiz1_idx` (`quiz_id` ASC) VISIBLE,
+  CONSTRAINT `fk_question_quiz1`
+    FOREIGN KEY (`quiz_id`)
+    REFERENCES `manalabs`.`quiz` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `manalabs`.`answer` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `text` TEXT NOT NULL,
+  `question_id` BIGINT UNSIGNED NOT NULL,
+  `user_id` INT NOT NULL,
+  `created` TIMESTAMP NOT NULL,
+  `updated` TIMESTAMP NULL,
+  `points` FLOAT NULL,
+  `comment` TEXT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_answer_question2_idx` (`question_id` ASC) VISIBLE,
+  INDEX `fk_answer_user2_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_answer_question2`
+    FOREIGN KEY (`question_id`)
+    REFERENCES `manalabs`.`question` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_answer_user2`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `manalabs`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `manalabs`.`quiz_event` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `timestamp` TIMESTAMP NOT NULL,
+  `type` CHAR(5),
+  `quiz_id` INT UNSIGNED NOT NULL,
+  `user_id`INT NOT NULL,
+  PRIMARY KEY(`id`),
+  KEY `fk_take_quiz_idx` (`quiz_id`),
+  KEY `fk_take_user_idx` (`user_id`),
+  CONSTRAINT `fk_take_quiz_id` 
+    FOREIGN KEY (`quiz_id`)
+    REFERENCES `manalabs`.`quiz` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_take_user_id` 
+    FOREIGN KEY (`user_id`)
+    REFERENCES `manalabs`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

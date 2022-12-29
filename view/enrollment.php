@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common.css">
+        <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <style>
             #content {
@@ -28,15 +28,20 @@
         <?php include("header.php"); ?>
         <main>
             <nav class="tools">
-                <i id="addUser" class="fa-solid fa-user-plus"></i>
+                <i id="addUser" title="Add Existing User" class="fa-solid fa-user-plus"></i>
                 <i id="upload" title="Uplad Replacement List" class="fas fa-upload"></i>
             </nav>
             <nav class="areas">
                 <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
+                <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
-                <div title="Quizzes"><i class="fas fa-vial"></i></div>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrollment" class="active"><i class="fas fa-user-friends"></i></div>
+                <div title="Back to My Courses">
+                    <a href="../../">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
             </nav>
             <div id="content">
             <?php if (!$enrollment): ?>

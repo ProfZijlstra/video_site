@@ -9,9 +9,9 @@
 class AttendanceCtrl
 {
     /**
-     * @Inject("VideoCtrl")
+     * @Inject("OverviewCtrl")
      */
-    public $videoCtrl;
+    public $overviewCtr;
     /**
      * @Inject("SessionDao")
      */
@@ -40,13 +40,13 @@ class AttendanceCtrl
     /**
      * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!", sec="admin")
      */
-    public function overview()
-    {
+    public function overview() {
+        // We're building on top of  overview -- run it first
+        // this populates $VIEW_DATA with the overview related data
+        $this->overviewCtr->overview();
+
         global $VIEW_DATA;
 
-        // We're going to build on top of offering overview -- run it first
-        // this populates $VIEW_DATA with the overview related data
-        $this->videoCtrl->offering();
         $days = $VIEW_DATA["days"];
 
         // get sessions for these days

@@ -15,8 +15,8 @@ if ($cols < 7) {
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common.css">
-    <link rel="stylesheet" href="res/css/offering.css">
+    <link rel="stylesheet" href="res/css/common-1.1.css">
+    <link rel="stylesheet" href="res/css/offering-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/attendance.css">
     <script src="res/js/attendance.js"></script>
@@ -38,10 +38,15 @@ if ($cols < 7) {
     <main>
         <nav class="areas">
             <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
+            <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
             <div title="Labs"><i class="fas fa-flask"></i></div>
-            <div title="Quizzes"><i class="fas fa-vial"></i></div>
             <div title="Attendance" class="active"><i class="fas fa-user-check"></i></div>
             <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
+            <div title="Back to My Courses">
+                <a href="../../">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
         </nav>
 
 

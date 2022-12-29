@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common.css">
+        <link rel="stylesheet" href="res/css/common-1.1.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             th.name, td.name {
@@ -20,7 +20,7 @@
     <body>
         <?php include("header.php");?>
         <main>
-            <nav class="back" title="back">
+            <nav class="back" title="Back">
                 <i class="fa-solid fa-arrow-left"></i>
             </nav>
             <div id="content">

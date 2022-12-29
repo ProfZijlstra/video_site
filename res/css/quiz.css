@@ -1,0 +1,136 @@
+nav.tools {
+    top: 80px;
+    position: fixed;
+}
+div.questionText, div.answerText {
+    border: 1px solid grey;
+    padding: 5px;
+    background-color: #FAFAFA;
+}
+div.done {
+    margin-top: 50px;
+    margin-bottom: 300px;
+    text-align: center;
+}
+form#delQuiz {
+    display: inline;
+}
+div.quiz {
+    text-align: center;
+}
+div.status {
+    margin-bottom: 5px;
+}
+div.quiz form label {
+    display: inline-block;
+    width: 60px;
+    margin-bottom: 5px;
+}
+div.quiz input.name {
+    width: 310px;
+}
+div.quiz input[type="time"], div.quiz input[type="date"] {
+    width: 150px;
+}
+
+div.qcontainer {
+    display: flex;
+    border-top: 1px solid black;
+    margin-top: 30px;
+}
+div.qcontainer div.about {
+    flex-basis: 150px;
+    border-right: 1px solid black;
+    text-align: center;
+    position: relative;
+}
+div.qcontainer div.about div.seq {
+    font-size: 50pt;
+}
+div.qcontainer div.about input[type="number"] {
+    width: 50px;
+}
+div.qcontainer div.about i.fa-trash-alt {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+div.qcontainer div.question {
+    flex-grow: 1;
+    padding: 5px;
+}
+div.qcontainer div.question textarea {
+    width: 100%;
+    height: 10em;
+}
+div.qcontainer div.previewBtn {
+    margin: 5px 0px;
+    text-align: right;
+}
+div.qcontainer div.pcontainer {
+    padding: 5px;
+    border: 1px solid gray;
+}
+div#total {
+    margin-top: 2em;
+    text-align: center;
+}
+div.modal input[type='number'] {
+    width: 50px;
+    float: right;
+}
+div.modal textarea {
+    width: 100%;
+    height: 10em;
+}
+span.timestamp {
+    font-size: 10pt;
+    color: #AAA;
+}
+
+@media screen and (max-width: 900px) {
+    header {
+        height: 120px;
+    }
+    header div#course {
+        display: none;
+    }
+    header h1 {
+        margin-top: 60px;
+    }
+    header div#controls {
+        top: 20px;
+        right: 30px;
+    }
+    nav.back {
+        left: 20px;
+    }
+    nav.tools {
+        top: 0px;
+        right: 125px;
+        background-color: white;
+    }
+    nav.tools h3 {
+        margin: 0px;
+        padding: 3px;
+    }
+    #content {
+        width: auto;
+    }
+    #content h1 {
+        text-align: center;
+    }
+    #content > div {
+        margin-left: 20px;
+    }
+    #content div.qcontainer {
+        margin-left: 5px;
+    }
+    #content div.about {
+        flex-basis: 75px;
+    }
+    #content #countdown {
+        font-size: 35px;
+    }
+}

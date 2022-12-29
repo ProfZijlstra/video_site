@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
-        <link rel="stylesheet" href="res/css/common.css">
+        <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" type="text/css" href="res/css/video.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
         <script src="res/js/video.js"></script>

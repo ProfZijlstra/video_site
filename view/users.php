@@ -6,7 +6,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common.css">
+        <link rel="stylesheet" href="res/css/common-1.1.css">
 		<link rel="stylesheet" href="res/css/adm.css">
         <style>
             #add_btn {
@@ -15,7 +15,7 @@
                 bottom: 25px;
             }
             #content {
-                width: 70%;
+                width: 85%;
             }
             td.num {
                 text-align: right;
@@ -33,7 +33,7 @@
     <body>
         <?php include("header.php"); ?>
         <main>
-            <nav class="back" title="back">
+            <nav class="back" title="Back">
                 <i class="fa-solid fa-arrow-left"></i>
             </nav>
             <nav class="tools">
@@ -45,6 +45,7 @@
             <thead>
             <tr>
                 <th>ID</th>
+                <th>KnownAs</th>
                 <th>Given</th>
                 <th>Family</th>
                 <th>email</th>
@@ -57,6 +58,7 @@
             <?php foreach ($users as $user) : ?>
                 <tr class="user">
                     <td class="num"><a href="user/<?= $user['id'] ?>"><?= $user['id'] ?></a></td>
+                    <td><?= $user['knownAs'] ?></td>
                     <td><?= $user['firstname'] ?></td>
                     <td><?= $user['lastname'] ?></td>
                     <td><?= $user['email'] ?></td>

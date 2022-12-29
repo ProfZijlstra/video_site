@@ -7,10 +7,12 @@
  * **************************** */
 require("settings.php");
 define("DEVELOPMENT", true);
+define("TIMEZONE", "America/Chicago");
+date_default_timezone_set(TIMEZONE);
 $SEC_LVLS = array("none", "applicant", "student", "instructor", "admin");
-date_default_timezone_set("America/Chicago");
 error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
-// extend session to 12 hours, based on: 
+
+// try to extend session to 12 hours, based on: 
 // https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php
 ini_set('session.gc_maxlifetime', 43200);
 session_set_cookie_params(43200);

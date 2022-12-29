@@ -14,14 +14,14 @@ if (!isset($user)) {
         <meta name=viewport content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
         <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common.css">
+        <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/user.css">
         <script src="res/js/back.js"></script>
     </head>
     <body>
         <?php $title="User Details:"; include("header.php");?>
         <main>
-            <nav class="back" title="back">
+            <nav class="back" title="Back">
                 <i class="fa-solid fa-arrow-left"></i>
             </nav>
 

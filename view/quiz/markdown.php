@@ -1,0 +1,1 @@
+<?= $parsedown->text($markdown) ?>

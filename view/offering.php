@@ -5,8 +5,8 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common.css">
-		<link rel="stylesheet" href="res/css/offering.css">
+        <link rel="stylesheet" href="res/css/common-1.1.css">
+		<link rel="stylesheet" href="res/css/offering-1.1.css">
         <script src="res/js/offering.js"></script>
         <?php if ($_user_type === 'admin') : ?>
             <link rel="stylesheet" href="res/css/adm.css">
@@ -31,15 +31,22 @@
                 <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                 <i title="Clone Offering" id="clone" class="far fa-copy"></i>
             </nav>
+            <?php endif; ?>
 
             <nav class="areas">
                 <div title="Videos" class="active"><i class="fas fa-film"></i></div>
+                <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
+                <?php if ($_user_type === 'admin') : ?>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
-                <div title="Quizzes"><i class="fas fa-vial"></i></div>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
+                <?php endif; ?>
+                <div title="Back to My Courses">
+                    <a href="../../">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
             </nav>
-            <?php endif; ?>
             <div id="days">
                 <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
                     <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>

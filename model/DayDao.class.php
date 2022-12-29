@@ -84,5 +84,26 @@ class DayDao {
 			}
 		}
 	}
+
+	public function getDate($day_id) {
+		$stmt = $this->db->prepare(
+			"SELECT d.abbr, o.start, 
+			o.daysPerLesson, o.lessonsPerPart, o.lessonParts
+			FROM day d
+			JOIN offering o ON d.offering_id = o.id
+			WHERE d.id = :day_id");
+		$stmt->execute(["day_id" => $day_id]);
+		$result = $stmt->fetch();
+		$abbr = $result['abbr'];
+		$week = $abbr[1] - 1;
+		$day = $abbr[3] - 1;
+		$daysPerLesson = $result["daysPerLesson"];
+		$lessonsPerPart = $result["lessonsPerPart"];
+		$add = $daysPerLesson * $day + $lessonsPerPart * $daysPerLesson * $week;
+
+		$tz = new DateTimeZone(TIMEZONE);
+		$date = new DateTimeImmutable($result['start'], $tz);
+		return $date->add(new DateInterval("P${add}D"));
+	}
 }
 
