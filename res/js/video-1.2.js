@@ -17,7 +17,7 @@ window.addEventListener('load', () => {
         }
     }
 
-    // start video of autoplay is on
+    // start video if autoplay is on
     if (document.getElementById("auto_toggle")
             .classList.contains("fa-toggle-on")) {
         video.play();
@@ -197,7 +197,7 @@ window.addEventListener('load', () => {
     video.addEventListener('pause', pauseHandler);
     video.addEventListener('ended', endedHandler);
 
-    // clicking on another video first sends a 'pause' to current video
+    // clicking on another video (or pdf) first sends a 'pause' to current video
     function stopBeforeClick(evt) {
         if (!video.paused) {
             evt.preventDefault();
@@ -212,16 +212,6 @@ window.addEventListener('load', () => {
         a.addEventListener('click', stopBeforeClick);
     }
 
-    // make clicking on the PDF icon work while communicating with server
-    document.getElementById('pdf').onclick = function(evt) {
-        const file = this.dataset.file;
-        const href = this.href;
-        const url = `./pdf?day_id=${day_id}&file=${file}`;
-        fetch(url, {
-            cache : 'no-cache'
-        }).then(() => {window.open(href, '_blank')});
-        evt.preventDefault();
-    };
     // disable right-clicking on PDF (no download without view)
     document.getElementById('pdf').oncontextmenu =
         function(evt) { evt.preventDefault(); };

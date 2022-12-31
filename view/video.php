@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="res/css/video-1.2.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/video-1.1.js"></script>
+        <script src="res/js/video-1.2.js"></script>
         <script src="res/js/prism.js"></script>
         <?php if ($_user_type === 'admin') : ?>
             <link rel="stylesheet" href="res/css/adm.css">
