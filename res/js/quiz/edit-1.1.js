@@ -21,6 +21,16 @@ window.addEventListener("load", () => {
         document.getElementById("addQuestionText").focus();
     };
 
+    // ceasar shift question text and model answer text when on add submit
+    document.getElementById('add_form').onsubmit = function() {
+        const qtext = this.elements.text;
+        const atext = this.elements.model_answer;
+        const qshifted = MARKDOWN.ceasarShift(qtext.value);
+        const ashifted = MARKDOWN.ceasarShift(atext.value);
+        qtext.value = qshifted;
+        atext.value = ashifted;
+    }
+
     // change quiz status when a checkbox is clicked
     document.getElementById("visible").onchange = function updateStatus() {
         this.value = this.value == 0 ? 1 : 0;
@@ -74,7 +84,7 @@ window.addEventListener("load", () => {
     document.getElementById("delBtn").onclick = deleteQuiz;
 
     // enable markdown previews
-    MARKDOWN.enablePreview("../markdown");
+    MARKDOWN.enablePreview("../../markdown");
 
     // automatically save changes to text and answer
     function saveQuestionChange() {
@@ -85,9 +95,12 @@ window.addEventListener("load", () => {
         const prev = parent.previousElementSibling;
         const points = prev.querySelector(".points input").value;
 
+        const qshifted = MARKDOWN.ceasarShift(text);
+        const ashifted = MARKDOWN.ceasarShift(model_answer);
+
         fetch(`question/${id}`, {
             method : "POST",
-            body : `text=${text}&model_answer=${model_answer}&points=${points}`,
+            body : `text=${qshifted}&model_answer=${ashifted}&points=${points}`,
             headers :
                 {'Content-Type' : 'application/x-www-form-urlencoded'},
         });

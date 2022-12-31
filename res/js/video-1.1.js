@@ -242,6 +242,17 @@ window.addEventListener('load', () => {
         });
     }
 
+    // used for both creating and updating comments and replies
+    function ceaseShiftText() {
+        const text = this.elements.text;
+        const markdown = text.value;
+        const shifted = MARKDOWN.ceasarShift(markdown);
+        text.value = shifted;
+    }
+
+    // connect ceasar shift to new comment submit
+    document.getElementById('commentForm').onsubmit = ceaseShiftText;    
+
     // make clicking on delete comment and delete reply work
     function delHandler() {
         if (window.confirm('Do you really want to delete?')) {
@@ -274,31 +285,52 @@ window.addEventListener('load', () => {
         text.classList.add('commentText');
         text.append(content);
         form.append(text);
-        const submit = document.createElement('input');
+        const actions = document.createElement('div');
+        actions.classList.add('commentActions');
+        const mdBtn = document.createElement('button');
+        mdBtn.setAttribute('type', 'button');
+        mdBtn.innerText = "Preview Markdown";
+        mdBtn.onclick = MARKDOWN.getHtmlForMarkdown;
+        // to match what makdown.js wants
+        const extra = document.createElement('span'); 
+        extra.append(mdBtn);
+        actions.append(extra);
+        const submit = document.createElement('button');
         submit.setAttribute('type', 'submit');
-        submit.setAttribute('value', btn);
-        submit.classList.add('textAction');
-        form.append(submit);
+        submit.innerText = btn;
+        actions.append(submit);
         const cancel = document.createElement('button');
         cancel.setAttribute('type', 'button');
         cancel.append("Cancel");
-        cancel.classList.add('cancel');
         cancel.onclick = function() {
             form.remove();
             cancelFn();
         };
-        form.append(cancel);
+        actions.append(cancel);
+        const preview = document.createElement('div');
+        preview.classList.add("previewArea");
+        actions.append(preview);
+        form.append(actions);
+        form.onsubmit = ceaseShiftText;
         return form;
     }
     function editHandler(type, evt) {
-        const id = evt.target.dataset.id;
+        const target = evt.target;
+        const id = target.dataset.id;
+        const del = target.parentNode.querySelector("i.fa-trash-alt");
+        target.style.display = "none";
+        del.style.display = "none";
         fetch(`get${type}?id=${id}`)
             .then(response => response.json())
             .then(json => {
                 const initial = evt.target.parentNode.nextSibling.nextSibling;
                 const form =
                     createEditBox(`upd${type}`, "Update", id, json.text, "",
-                                  () => initial.style.display = 'block');
+                                  () => { 
+                                    initial.style.display = 'block'; 
+                                    target.style.display = "inline"
+                                    del.style.display = 'inline';
+                                });
                 evt.target.parentNode.after(form);
                 initial.style.display = 'none';
             });
@@ -313,6 +345,28 @@ window.addEventListener('load', () => {
     for (const edit of reply_edits) {
         edit.addEventListener('click', editHandler.bind(null, "Reply"));
     }
+
+    // make 'add reply' links work
+    function createReply() {
+        const qid = this.parentNode.id.substring(1);
+        const placeholder = `Use **markdown** syntax in your text like: 
+
+\`\`\`javascript
+const code = "highlighted";
+\`\`\``;
+        const form = createEditBox("addReply", "Reply", qid, "", placeholder,
+                                   () => this.style.display = "block");
+        const container = document.createElement("div");
+        container.classList.add("replyContainer");
+        container.append(form);
+        this.after(container);
+        this.style.display = "none";
+    }
+    const replies = document.getElementsByClassName("addReply");
+    for (const reply of replies) {
+        reply.addEventListener('click', createReply);
+    }
+    
     // make clicking on upvote and downvote comment and reply work
     function voteHandler(url, evt) {
         const parent = evt.target.parentNode;
@@ -364,23 +418,6 @@ window.addEventListener('load', () => {
         down.addEventListener('click', voteHandler.bind(null, 'downreply'));
     }
 
-    function createReply() {
-        const qid = this.parentNode.id.substring(1);
-        const placeholder = `Use **markdown** syntax in your text like: 
-
-\`\`\`javascript
-const code = "highlighted";
-\`\`\``;
-        const form = createEditBox("addReply", "Reply", qid, "", placeholder,
-                                   () => this.style.display = "block");
-        const container = document.createElement("div");
-        container.classList.add("replyContainer");
-        container.append(form);
-        this.after(container);
-        this.style.display = "none";
-    }
-    const replies = document.getElementsByClassName("addReply");
-    for (const reply of replies) {
-        reply.addEventListener('click', createReply);
-    }
+    // make markdown preview work
+    MARKDOWN.enablePreview("../markdown");
 });

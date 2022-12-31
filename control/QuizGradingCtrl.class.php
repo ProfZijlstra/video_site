@@ -43,6 +43,11 @@ class QuizGradingCtrl {
     public $userDao;
 
     /**
+     * @Inject('MarkdownCtrl')
+     */
+    public $markdownCtrl;
+
+    /**
      * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/grade$!", sec="instructor")
      */
     public function gradeQuiz() {
@@ -155,7 +160,9 @@ class QuizGradingCtrl {
     public function grade() {
         $answer_ids = filter_input(INPUT_POST, "answer_ids");
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
-        $comment = filter_input(INPUT_POST, "comment");
+        $shifted = filter_input(INPUT_POST, "comment");
+
+        $comment = $this->markdownCtrl->ceasarShift($shifted);
 
         $this->answerDao->grade($answer_ids, $points, $comment);
     }
@@ -170,7 +177,9 @@ class QuizGradingCtrl {
         $user_id = filter_input(INPUT_POST, "user_id", FILTER_VALIDATE_INT);
         $question_id = filter_input(INPUT_POST, "question_id", FILTER_VALIDATE_INT);
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
-        $comment = filter_input(INPUT_POST, "comment");
+        $shifted = filter_input(INPUT_POST, "comment");
+
+        $comment = $this->markdownCtrl->ceasarShift($shifted);
 
         if ($answer_id) {
             $this->answerDao->grade($answer_id, $points, $comment);

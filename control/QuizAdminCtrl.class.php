@@ -22,20 +22,11 @@ class QuizAdminCtrl {
      */
     public $overviewCtrl;
 
-
     /**
-     * AJAX call to get a markdown preview
-     * 
-     * @GET(uri="!^/cs\d{3}/20\d{2}-\d{2}/quiz/markdown$!", sec="applicant")
+     * @Inject('MarkdownCtrl')
      */
-    public function markdownPreview() {
-        // TODO move markdown into it's own controller with url: /markdown
-        // TODO make incoming data ceasar shifted to avoid dreamhost security
-        global $VIEW_DATA;
-        $VIEW_DATA["parsedown"] = new Parsedown();
-        $VIEW_DATA['markdown'] = filter_input(INPUT_GET, "markdown");
-        return "quiz/markdown.php";
-    }
+    public $markdownCtrl;
+
 
     /**
      * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz$!", sec="applicant")
@@ -113,6 +104,7 @@ class QuizAdminCtrl {
      */
     public function updateQuiz() {
         global $URI_PARAMS;
+
         $id = $URI_PARAMS[3];
         $name = filter_input(INPUT_POST, "name");
         $startdate = filter_input(INPUT_POST, "startdate");
@@ -154,10 +146,13 @@ class QuizAdminCtrl {
     public function addQuestion() {
         $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
         $type = filter_input(INPUT_POST, "type");
-        $text = filter_input(INPUT_POST, "text");
-        $model_answer = filter_input(INPUT_POST, "model_answer");
+        $qshifted = filter_input(INPUT_POST, "text");
+        $ashifted = filter_input(INPUT_POST, "model_answer");
         $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
         $seq = filter_input(INPUT_POST, "seq", FILTER_SANITIZE_NUMBER_INT);
+
+        $text = $this->markdownCtrl->ceasarShift($qshifted);
+        $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
 
         $this->questionDao->add($quiz_id, $type, $text, $model_answer, $points, $seq);
 
@@ -169,10 +164,14 @@ class QuizAdminCtrl {
      */
     public function updateQuestion() {
         global $URI_PARAMS;
+
         $id = $URI_PARAMS[1];
-        $text = filter_input(INPUT_POST, "text");
-        $model_answer = filter_input(INPUT_POST, "model_answer");
+        $qshifted = filter_input(INPUT_POST, "text");
+        $ashifted = filter_input(INPUT_POST, "model_answer");
         $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
+
+        $text = $this->markdownCtrl->ceasarShift($qshifted);
+        $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
 
         $this->questionDao->update($id, $text, $model_answer, $points);
     }

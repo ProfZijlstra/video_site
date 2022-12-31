@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz.css">
+        <link rel="stylesheet" href="res/css/quiz-1.1.css">
         <script src="res/js/prism.js"></script>
-        <script src="res/js/quiz/markdown.js"></script>
-        <script src="res/js/quiz/edit.js"></script>
+        <script src="res/js/markdown.js"></script>
+        <script src="res/js/quiz/edit-1.1.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -63,14 +63,14 @@
                         <div class="question" data-id="<?= $question['id']?>">
                             <div>Question Text:</div> 
                             <textarea class="text" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $question['text']?></textarea>
-                            <div class="preview">
-                                <div class="previewBtn"><button>Preview Markdown</button></div>
+                            <div>
+                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
                             <div>Model Answer:</div> 
                             <textarea class="model_answer" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $question['modelAnswer']?></textarea>
-                            <div class="preview">
-                                <div class="previewBtn"><button>Preview Markdown</button></div>
+                            <div>
+                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
                         </div>

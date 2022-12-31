@@ -8,54 +8,15 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz.css">
+        <link rel="stylesheet" href="res/css/quiz-1.1.css">
         <style>
             #content > h3 {
                 margin-bottom: 0px;
             }
         </style>
         <script src="res/js/prism.js"></script>
-        <script src="res/js/quiz/markdown.js"></script>
-        <script>
-window.addEventListener("load", () => {   
-    // focus first comment area to get started
-    document.querySelector('textarea.comment').focus();
-
-    // hookup markdown previews
-    MARKDOWN.enablePreview("../../markdown");
-
-    // hookup comment and point submission 
-    const user_id = document.getElementById('user').dataset.user_id;
-    function saveGrading() {
-        const qc = this.parentNode.parentNode;
-        const commentArea = qc.querySelector('textarea.comment');
-        const comment = encodeURIComponent(commentArea.value);
-        const points = qc.querySelector('input.points').value;
-        const question_id = qc.querySelector('div.question').dataset.id
-        const answer_id = commentArea.dataset.id;
-
-        fetch(`grade`, {
-            method : "POST",
-            body : `comment=${comment}&points=${points}&answer_id=${answer_id}&question_id=${question_id}&user_id=${user_id}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            commentArea.dataset.id = data.answer_id;
-        });
-
-    }
-    const areas = document.querySelectorAll('div.qcontainer textarea.comment');
-    for (const area of areas) {
-        area.onchange = saveGrading;
-    }
-    const inputs = document.querySelectorAll('div.qcontainer input.points');
-    for (const input of inputs) {
-        input.onchange = saveGrading;
-    }
-});
-        </script>
+        <script src="res/js/markdown.js"></script>
+        <script src="res/js/quiz/gradeUser.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -128,8 +89,8 @@ window.addEventListener("load", () => {
                                 data-id="<?= $answers[$question['id']]['id'] ?>" 
                                 placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"
                                 ><?= $answers[$question['id']]['comment']?></textarea>
-                            <div class="preview">
-                                <div class="previewBtn"><button>Preview Markdown</button></div>
+                            <div>
+                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
                         </div>

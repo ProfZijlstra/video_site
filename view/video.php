@@ -6,9 +6,10 @@
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css" />
         <link rel="stylesheet" href="res/css/common-1.1.css">
-        <link rel="stylesheet" type="text/css" href="res/css/video-1.1.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/video-1.2.css" />
         <link rel="stylesheet" href="res/css/prism.css" />
-        <script src="res/js/video.js"></script>
+        <script src="res/js/markdown.js"></script>
+        <script src="res/js/video-1.1.js"></script>
         <script src="res/js/prism.js"></script>
         <?php if ($_user_type === 'admin') : ?>
             <link rel="stylesheet" href="res/css/adm.css">
@@ -195,8 +196,8 @@ foreach($files as $info) :
                             data-type="<?= $comment["vote"] > 0 ? "up" : "down" ?>"
                         <?php endif; ?>
                     >
-                        <i class="fas fa-angle-up <?= $comment["vote"] > 0 ? 'selected' : "" ?>"></i> 
-                        <i class="fas fa-angle-down <?= $comment["vote"] < 0 ? 'selected' : "" ?>"></i>
+                        <i class="fas fa-angle-up <?= $comment["vote"] > 0 ? 'selected' : "" ?>" title="Vote Up"></i> 
+                        <i class="fas fa-angle-down <?= $comment["vote"] < 0 ? 'selected' : "" ?>" title="Vote Down"></i>
                     </div>
                 </div>
                 <div class="comment mdBox" id="q<?= $comment['id'] ?>">
@@ -224,8 +225,8 @@ foreach($files as $info) :
                                     data-type="<?= $reply["vote"] > 0 ? "up" : "down" ?>"
                                 <?php endif; ?>
                             >
-                                <i class="fas fa-angle-up <?= $reply["vote"] > 0 ? 'selected' : "" ?>"></i> 
-                                <i class="fas fa-angle-down <?= $reply["vote"] < 0 ? 'selected' : "" ?>"></i>
+                                <i class="fas fa-angle-up <?= $reply["vote"] > 0 ? 'selected' : "" ?>" title="Vote Up"></i> 
+                                <i class="fas fa-angle-down <?= $reply["vote"] < 0 ? 'selected' : "" ?>" title="Vote Down"></i>
                             </div>
                         </div>
                         <div class="reply mdBox" id="r<?= $reply['id'] ?>"><?= $parsedown->text($reply["text"]) ?></div>
@@ -236,13 +237,19 @@ foreach($files as $info) :
             <?php if (count($comments) == 0) : ?>
                 <div>No comments or comments yet</div>
             <?php endif; ?>
-            <h3>Add a comment or comment:</h3>
+            <h3>Add a question or comment:</h3>
             <form method="post" action="comment" id="commentForm">
                 <input type="hidden" name="video" value="<?= $info["parts"][2] ?>" />
                 <input type="hidden" name="tab" id="tab" value="<?= $info["parts"][0] ?>" />
-                <textarea name="comment" class="commentText" 
+                <textarea name="text" class="commentText" 
                     placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
-                <button class="textAction">Add</button>
+                <div>
+                    <div class="commentActions">
+                        <button class="previewBtn">Preview Markdown</button>
+                        <button>Add</button>
+                    </div>
+                    <div class="previewArea"></div>
+                </div>
             </form>
         </div> 
     </article>

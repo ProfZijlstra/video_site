@@ -64,7 +64,7 @@ div.qcontainer div.question textarea {
     width: 100%;
     height: 10em;
 }
-div.qcontainer div.previewBtn {
+div.qcontainer div.preview {
     margin: 5px 0px;
     text-align: right;
 }

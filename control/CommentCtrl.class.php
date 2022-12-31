@@ -35,6 +35,11 @@ class CommentCtrl
     public $userDao;
 
     /**
+     * @Inject('MarkdownCtrl')
+     */
+    public $markdownCtrl;
+
+    /**
      * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/comment$!", sec="applicant")
      */
     public function add()
@@ -46,8 +51,10 @@ class CommentCtrl
 
         $user_id = $_SESSION['user']['id'];
         $video = filter_input(INPUT_POST, "video");
-        $comment = filter_input(INPUT_POST, "comment");
+        $shifted = filter_input(INPUT_POST, "text");
         $tab = filter_input(INPUT_POST, "tab");
+
+        $comment = $this->markdownCtrl->ceasarShift($shifted);
         $id = $this->commentDao->add($comment, $user_id, $video);
         $user = $this->userDao->retrieve($user_id);
 
@@ -90,14 +97,17 @@ See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${i
      */
     public function update()
     {
-        $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
-        $text = filter_input(INPUT_POST, "text");
+        $shifted = filter_input(INPUT_POST, "text");
+
+        $text = $this->markdownCtrl->ceasarShift($shifted);
         $comment = $this->commentDao->get($id);
+
         if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
             $this->commentDao->update($id, $text);
         }
+
         return "Location: ${tab}#q${id}";
     }
 
@@ -186,10 +196,10 @@ See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${i
         $block = $URI_PARAMS[2];
         $day = $URI_PARAMS[3];
         $tab = filter_input(INPUT_POST, "tab");
-
-        // see comment inside add method about why htmlspecialchars()
-        $text = htmlspecialchars(filter_input(INPUT_POST, "text"), ENT_NOQUOTES);
+        $shifted = filter_input(INPUT_POST, "text");
         $user_id = $_SESSION['user']['id'];
+
+        $text = $this->markdownCtrl->ceasarShift($shifted);
         $user = $this->userDao->retrieve($user_id);
         $qid = filter_input(INPUT_POST, "id");
         $op_email = $this->commentDao->getUserEmail($qid);
@@ -220,15 +230,16 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
      */
     public function updateReply()
     {
-        $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
-        // see comment inside add method about why htmlspecialchars()
-        $text = htmlspecialchars(filter_input(INPUT_POST, "text"), ENT_NOQUOTES);
+        $shifted =filter_input(INPUT_POST, "text");
+
+        $text = $this->markdownCtrl->ceasarShift($shifted);
         $reply = $this->replyDao->get($id);
         if ($_SESSION['user']['type'] === 'admin' || $reply['user_id'] == $_SESSION['user']['id']) {
             $this->replyDao->update($id, $text);
         }
+        
         return "Location: ${tab}#r${id}";
     }
 
@@ -237,13 +248,14 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
      */
     public function delReply()
     {
-        $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
+
         $reply = $this->replyDao->get($id);
         if ($_SESSION['user']['type'] === 'admin' || $reply['user_id'] == $_SESSION['user']['id']) {
             $this->replyDao->del($id);
         }
+
         return "Location: ${tab}#q" . $reply['comment_id'];
     }
 

@@ -27,6 +27,11 @@ class QuizTakingCtrl {
      */
     public $quizEventDao;
 
+    /**
+     * @Inject('MarkdownCtrl')
+     */
+    public $markdownCtrl;
+
 
     /**
      * This function is really a 3 in one. 
@@ -100,7 +105,9 @@ class QuizTakingCtrl {
         $question_id = $URI_PARAMS[4];
         $user_id = $_SESSION['user']['id'];
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
-        $answer = filter_input(INPUT_POST, "answer");
+        $shifted = filter_input(INPUT_POST, "answer");
+
+        $answer = $this->markdownCtrl->ceasarShift($shifted);
 
         if ($answer_id) {
             $this->answerDao->update($answer_id, $answer, $user_id);
@@ -159,7 +166,7 @@ class QuizTakingCtrl {
         $tz = new DateTimeZone(TIMEZONE);
         $now = new DateTimeImmutable("now", $tz);
         $stop = new DateTimeImmutable($quiz['stop'], $tz);
-        // give 30 second leeway 
+        // give leeway second 
         $stop = $stop->add(new DateInterval("PT${leewaySecs}S"));
         $stopDiff = $now->diff($stop);
         return $stopDiff->invert == 1; // is it in the past?

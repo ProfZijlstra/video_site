@@ -246,15 +246,21 @@ main article .progress .time {
 }
 #commentForm {
     position: relative;
+    margin-bottom: 75px;
 }
-.textAction, .cancel {
-    position: absolute;
-    top:  50px;
-    right: 0px;
-    z-index: 100;
+.commentActions {
+    text-align: right;
+    margin-top: 5px;  
+    margin-bottom: 5px;  
 }
-.cancel {
-    right: 70px;
+.commentActions button {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+div.pcontainer {
+    padding: 5px;
+    border: 1px solid gray;
+    text-align: left;
 }
 .author {
     color: grey;
@@ -344,10 +350,6 @@ main article .progress .time {
 textarea.commentText {
     width: 100%;
     min-height: 75px;
-    margin-bottom: 25px;
-}
-.comment textarea.commentText {
-    margin-bottom: 5px;
 }
 .replyContainer {
     padding: 0px 5px;

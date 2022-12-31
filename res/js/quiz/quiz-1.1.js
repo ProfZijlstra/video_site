@@ -3,7 +3,7 @@ window.addEventListener("load", () => {
     COUNTDOWN.start(() => window.location.refresh());
 
     // enable markdown previews
-    MARKDOWN.enablePreview("markdown");
+    MARKDOWN.enablePreview("../markdown");
 
     // automatically save changes to answers
     function saveQuestionChange() {
@@ -11,9 +11,10 @@ window.addEventListener("load", () => {
         const parent = this.parentNode;
         const qid = parent.dataset.id;
         const text = parent.querySelector('textarea.answer');
-        const answer = encodeURIComponent(text.value);
         const aid = text.dataset.id;
         const quiz_id = document.getElementById('quiz_id').dataset.id;
+        const shifted = MARKDOWN.ceasarShift(text.value);
+        const answer = encodeURIComponent(shifted);
 
         fetch(`${quiz_id}/question/${qid}/markdown`, {
             method : "POST",

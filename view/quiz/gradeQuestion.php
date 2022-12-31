@@ -8,8 +8,10 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz.css">
+        <link rel="stylesheet" href="res/css/quiz-1.1.css">
         <script src="res/js/prism.js"></script>
+        <script src="res/js/markdown.js"></script>
+        <script src="res/js/quiz/gradeQuestion.js"></script>
         <style>
             div#content {
                 width: 90%;
@@ -47,40 +49,6 @@
                 width: 300px;
             }
         </style>
-        <script>
-window.addEventListener("load", () => {    
-    // automatically save changes to comments or points
-    function saveGrading() {
-        const tr = this.parentNode.parentNode;
-        const comment = encodeURIComponent(tr.querySelector('textarea.comment').value);
-        const points = tr.querySelector('input.points').value;
-        const answer_ids = tr.querySelector('input.answer_ids').value;
-
-        fetch(`grade`, {
-            method : "POST",
-            body : `comment=${comment}&points=${points}&answer_ids=${answer_ids}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
-        });
-    }
-    const areas = document.querySelectorAll('table textarea.comment');
-    for (const area of areas) {
-        area.onchange = saveGrading;
-    }
-    const inputs = document.querySelectorAll('table input.points');
-    for (const input of inputs) {
-        input.onchange = saveGrading;
-    }
-
-    // start focus on first comment textarea
-    const start = document.querySelector('textarea.comment');
-    if (start) {
-        start.focus();
-    } else {
-        document.getElementById('finish').focus();
-    }
-});            
-        </script>
     </head>
     <body>
         <?php include("header.php"); ?>
