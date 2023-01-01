@@ -78,10 +78,12 @@ foreach($files as $info) :
     <article id="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>" 
             class="selected">
         <h2><?= $info["parts"][1]?></h2>
+        <?php if($pdf): ?>
         <a id="pdf" target="_blank" data-file="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
-            href='<?= "res/{$course}/{$block}/{$day}/pdf/" .$info["parts"][0] . "_" . $info["parts"][1] . ".pdf" ?>'>
+            href='<?= $pdf_file ?>'>
             <i class="far fa-file-pdf"></i>
         </a>
+        <?php endif; ?>
         <video controls>
             <source src="<?= "res/${course}/${block}/${day}/vid/${info["file"]}" ?>" type="video/mp4"/>
         </video>

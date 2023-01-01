@@ -157,6 +157,11 @@ class VideoCtrl {
 			}	
 		}
 
+		// construct PDF file name for this video
+		$pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
+			$video_file["parts"][0] . "_" . $video_file["parts"][1] . ".pdf";
+
+		// fix video play speed if broken
 		if (!$_SESSION['user']['speed'] || $_SESSION['user']['speed'] < 0.4) {
 			$_SESSION['user']['speed'] = 0.4;
 		}
@@ -189,6 +194,8 @@ class VideoCtrl {
 		$VIEW_DATA["files"] = $file_info;
 		$VIEW_DATA["totalDuration"] = $videos["totalDuration"];
 		$VIEW_DATA["totalTime"] = $videos["totalTime"];
+		$VIEW_DATA["pdf"] = file_exists($pdf_file);
+		$VIEW_DATA["pdf_file"] = $pdf_file;
 
 		// comments related
 		$VIEW_DATA["parsedown"] = new Parsedown();
