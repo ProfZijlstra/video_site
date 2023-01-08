@@ -1,6 +1,8 @@
 const MARKDOWN = (function() {
     let mdurl = "markdown";
 
+    // we ceasar shift because dreamhost has some very solid XSS injection 
+    // protection... which stops a variety of markdown submits
     function ceasarShift(text, amount = 1) {
         let result = "";
         for (const char of text) {
