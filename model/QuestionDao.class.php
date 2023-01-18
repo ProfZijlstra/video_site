@@ -58,6 +58,18 @@ class QuestionDao {
         ));
     }
 
+    public function updateModelAnswer($id, $model_answer) {
+        $stmt = $this->db->prepare(
+			"UPDATE question 
+            SET `modelAnswer` = :model_answer
+            WHERE id = :id "
+		);
+		$stmt->execute(array(
+            "id" =>  $id, 
+            "model_answer" => $model_answer,
+        ));
+    }
+
     public function delete($id) {
         $stmt = $this->db->prepare(
             "SELECT * FROM question 

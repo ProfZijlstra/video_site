@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.1.css">
+        <link rel="stylesheet" href="res/css/quiz-1.2.css">
         <script src="res/js/prism.js"></script>
         <script src="res/js/markdown.js"></script>
         <script src="res/js/quiz/gradeQuestion.js"></script>
@@ -20,6 +20,9 @@
                 border: 1px solid grey;
                 padding: 5px;
                 background-color: #FAFAFA;
+            }
+            div.question div.text img {
+                max-width: 800px;
             }
             div.qcontainer {
                 margin-bottom: 30px;
@@ -33,6 +36,7 @@
             }
             td.comment {
                 width: 30%;
+                vertical-align: top;
             }
             td.comment textarea.comment {
                 width: 95%;
@@ -47,6 +51,10 @@
             }
             td.users {
                 width: 300px;
+                vertical-align: top;
+            }
+            td.answer img {
+                width: 800px;
             }
         </style>
     </head>
@@ -80,7 +88,11 @@
                         </div>
                         <div>Model Answer:</div> 
                         <div class="text">
+                            <?php if($question['type'] == 'markdown'): ?>
                             <?= $parsedown->text($question['modelAnswer']) ?>
+                            <?php elseif ($question['type'] == "image"): ?>
+                            <img src="<?= $question['modelAnswer'] ?>" />
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -107,7 +119,11 @@
                             <input type="hidden" name="answer_ids" class="answer_ids" value="<?= implode(",", $ids) ?>" />
                         </td>
                         <td class="answer">
+                            <?php if($question['type'] == 'markdown'): ?>
                             <?= $parsedown->text($answer['text']) ?>
+                            <?php elseif ($question['type'] == "image"): ?>
+                            <img src="<?= $answer['text'] ?>" />
+                            <?php endif; ?>
                         </td>
                             
                         <td class="comment">

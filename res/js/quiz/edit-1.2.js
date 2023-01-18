@@ -21,9 +21,27 @@ window.addEventListener("load", () => {
         document.getElementById("addQuestionText").focus();
     };
 
+    // make question type select work
+    const md_answer = document.getElementById("md_answer");
+    const img_answer = document.getElementById("img_answer");
+    const add_form = document.getElementById('add_form');
+    document.querySelector('#typeSelect select').onchange = function() {
+        add_form.elements.type.value = this.value;
+        if (this.value == "image") {
+            md_answer.style.display = "none";
+            img_answer.style.display = "block"
+        } else {
+            img_answer.style.display = "none"
+            md_answer.style.display = "block";
+        }
+    };
+
     // ceasar shift question text and model answer text when on add submit
     document.getElementById('add_form').onsubmit = function() {
         const qtext = this.elements.text;
+        if (qtext.value == "") {
+            return false;
+        } 
         const atext = this.elements.model_answer;
         const qshifted = MARKDOWN.ceasarShift(qtext.value);
         const ashifted = MARKDOWN.ceasarShift(atext.value);
@@ -86,21 +104,32 @@ window.addEventListener("load", () => {
     // enable markdown previews
     MARKDOWN.enablePreview("../../markdown");
 
-    // automatically save changes to text and answer
+    // automatically save changes to points, text and model answer
     function saveQuestionChange() {
-        const parent = this.parentNode;
-        const id = parent.dataset.id;
-        const text = parent.querySelector('textarea.text').value;
-        const model_answer = parent.querySelector('textarea.model_answer').value;
-        const prev = parent.previousElementSibling;
-        const points = prev.querySelector(".points input").value;
+        let parent = this.parentNode;
+        while (!parent.classList.contains('qcontainer')) {
+            parent = parent.parentNode;
+        }
 
+        const id = parent.querySelector('.question').dataset.id;
+        const type = parent.querySelector('.qType').dataset.type;
+        const text = parent.querySelector('textarea.text').value;
+        const points = parent.querySelector(".points input").value;
         const qshifted = MARKDOWN.ceasarShift(text);
-        const ashifted = MARKDOWN.ceasarShift(model_answer);
+
+        let body = `type=${type}&text=${qshifted}&points=${points}`;
+        if (type == "markdown") {
+            const model_answer = parent.querySelector('textarea.model_answer').value;
+            const ashifted = MARKDOWN.ceasarShift(model_answer);
+            body += `&model_answer=${ashifted}`;
+        } else if (type == "image") {
+            const src = parent.querySelector("img").getAttribute('src');
+            body += `&model_answer=${src}`;
+        }
 
         fetch(`question/${id}`, {
             method : "POST",
-            body : `text=${qshifted}&model_answer=${ashifted}&points=${points}`,
+            body : body,
             headers :
                 {'Content-Type' : 'application/x-www-form-urlencoded'},
         });
@@ -109,25 +138,40 @@ window.addEventListener("load", () => {
     for (const area of areas) {
         area.onchange = saveQuestionChange;
     }
-    function savePointsChange() {
-        const points = this.value;
-        const parent = this.parentNode.parentNode;
-        const next = parent.nextElementSibling;
-        const id = next.dataset.id;
-        const text = next.querySelector('textarea.text').value;
-        const model_answer = next.querySelector('textarea.model_answer').value;
-
-        fetch(`question/${id}`, {
-            method : "POST",
-            body : `text=${text}&model_answer=${model_answer}&points=${points}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
-        });
-    }
     const inputs = document.querySelectorAll(".about input");
     for (const input of inputs) {
-        input.onchange = savePointsChange;
+        input.onchange = saveQuestionChange;
     }
+
+    // enable image replacement
+    function uploadReplacement() {
+        const img = this.parentNode.parentNode.querySelector('img');
+        const qid = this.parentNode.parentNode.dataset.id;
+        const spinner = this.parentNode.querySelector('i.fa-circle-notch');
+        spinner.classList.add('rotate');
+        const data = new FormData();
+        data.append("image", this.files[0]);
+
+        fetch(`question/${qid}/modelAnswerImage`, {
+            method: "POST",
+            body: data
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                img.src = data.dst;
+            }
+            spinner.classList.remove('rotate');    
+        });
+
+    }
+    const files = document.querySelectorAll("div.question input[type=file]");
+    for (const file of files) {
+        file.onchange = uploadReplacement;
+    }
+
 
     // enable delete question
     function deleteQuestion() {

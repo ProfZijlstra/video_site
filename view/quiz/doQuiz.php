@@ -8,11 +8,11 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.1.css">
+        <link rel="stylesheet" href="res/css/quiz-1.2.css">
         <script src="res/js/prism.js"></script>
         <script src="res/js/markdown.js"></script>
         <script src="res/js/quiz/countdown.js"></script>
-        <script src="res/js/quiz/quiz-1.1.js"></script>
+        <script src="res/js/quiz/quiz-1.2.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -37,16 +37,35 @@
                             <div class="points">Points: <?= $question['points'] ?></div>
                         </div>
                         <div class="question" data-id="<?= $question['id']?>">
+                            <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == 'markdown' ? "Markdown Text" : "Image Upload" ?></div>
                             <div>Question Text:</div> 
                             <div class="questionText">
                                 <?= $parsedown->text($question['text']) ?>
                             </div>
                             <div>Your Answer:</div> 
+                            <?php if($question['type'] == 'markdown'): ?>
                             <textarea class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answers[$question['id']]['text']?></textarea>
                             <div>
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
+                            <?php elseif ($question['type'] == "image"): ?>
+                                <?php if ($answers[$question['id']]): ?>
+                                    <img class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" src="<?= $answers[$question['id']]['text'] ?>" />
+                                <?php else: ?>
+                                    <img class="answer hide" />
+                                <?php endif; ?>
+                            <div>
+                                <?php if ($answers[$question['id']]): ?>
+                                    <label>Upload Replacement: </label>
+                                <?php else: ?>
+                                    <label>Upload Answer: </label>
+                                <?php endif; ?>
+                                <input type="file" class="img_replace" />
+                                <i class="fa-solid fa-circle-notch"></i>
+                            </div>
+                            
+                            <?php endif; ?>    
                         </div>
                     </div>
                 <?php endforeach; ?>

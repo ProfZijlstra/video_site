@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
-        <link rel="stylesheet" href="res/css/quiz-1.1.css">
+        <link rel="stylesheet" href="res/css/quiz-1.2.css">
         <style>
             div#content label {
                 display: inline-block;

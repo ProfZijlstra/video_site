@@ -27,6 +27,11 @@ class QuizAdminCtrl {
      */
     public $markdownCtrl;
 
+    /**
+     * @Inject('ImageCtrl')
+     */
+    public $imageCtrl;
+
 
     /**
      * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz$!", sec="applicant")
@@ -147,14 +152,30 @@ class QuizAdminCtrl {
         $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
         $type = filter_input(INPUT_POST, "type");
         $qshifted = filter_input(INPUT_POST, "text");
-        $ashifted = filter_input(INPUT_POST, "model_answer");
         $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
         $seq = filter_input(INPUT_POST, "seq", FILTER_SANITIZE_NUMBER_INT);
-
         $text = $this->markdownCtrl->ceasarShift($qshifted);
-        $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
 
-        $this->questionDao->add($quiz_id, $type, $text, $model_answer, $points, $seq);
+        $model_answer = "";
+        if ($type == "markdown") {
+            $ashifted = filter_input(INPUT_POST, "model_answer");
+            if ($ashifted) {
+                $model_answer = $this->markdownCtrl->ceasarShift($ashifted);    
+            }            
+        } 
+
+        $question_id = $this->questionDao->
+            add($quiz_id, $type, $text, $model_answer, $points, $seq);
+
+        if ($type == "image" && $_FILES['image']['tmp_name']) {
+            $user_id = $_SESSION['user']['id'];
+            $res = $this->imageCtrl->process("image", $question_id, $user_id);
+            if (isset($res['error'])) {
+                return $res;
+            } 
+            $this->questionDao->
+                update($question_id, $text, $res['dst'], $points, $seq);
+        }
 
         return "Location: ../${quiz_id}/edit";
     }
@@ -166,14 +187,35 @@ class QuizAdminCtrl {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[1];
-        $qshifted = filter_input(INPUT_POST, "text");
-        $ashifted = filter_input(INPUT_POST, "model_answer");
+        $type = filter_input(INPUT_POST, "type");
         $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
-
+        $qshifted = filter_input(INPUT_POST, "text");
         $text = $this->markdownCtrl->ceasarShift($qshifted);
-        $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
+
+        $model_answer = "";
+        if ($type == "markdown") {
+            $ashifted = filter_input(INPUT_POST, "model_answer");
+            $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
+        } else if ($type == "image") {
+            $model_answer = filter_input(INPUT_POST, "model_answer");
+        }
 
         $this->questionDao->update($id, $text, $model_answer, $points);
+    }
+
+    /**
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/(\d+)/modelAnswerImage$!", sec="instructor")
+     */
+    public function uploadReplacementModelImage() {
+        global $URI_PARAMS;
+
+        $question_id = $URI_PARAMS[4];
+        $user_id = $_SESSION['user']['id'];
+
+        $res = $this->imageCtrl->process("image", $question_id, $user_id);
+        $this->questionDao->updateModelAnswer($question_id, $res['dst']);
+
+        return $res;
     }
 
     /**

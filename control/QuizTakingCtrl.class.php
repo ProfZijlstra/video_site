@@ -32,6 +32,11 @@ class QuizTakingCtrl {
      */
     public $markdownCtrl;
 
+    /**
+     * @Inject('ImageCtrl')
+     */
+    public $imageCtrl;
+
 
     /**
      * This function is really a 3 in one. 
@@ -118,34 +123,40 @@ class QuizTakingCtrl {
     }
 
     /**
-     * @POST(uri="!^/question/(\d+)/image$!", sec="applicant")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/(\d+)/image$!", sec="applicant")
      **/
-    /*
     public function answerImageQuestion() {
-        // TODO implement image questions 
         global $URI_PARAMS;
 
-        $question_id = $URI_PARAMS[1];
-        $user_id = $_SESSION['user']['id'];
+        $quiz_id = $URI_PARAMS[3];
+        $question_id = $URI_PARAMS[4];
 
-        // make sure it's an image
-        // from: https://www.php.net/manual/en/features.file-upload.php
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        if (false === $ext = array_search(
-            $finfo->file($_FILES['answer']['tmp_name']),
-            array(
-                'jpg' => 'image/jpeg',
-                'png' => 'image/png',
-                'gif' => 'image/gif',
-            ),
-            true
-        )) {
-            return "notImage.php"; 
+        // reject answers after quiz stop time
+        if ($this->quizEnded($quiz_id, 30)) { 
+            return "error/403.php";
         }
 
-        // move image to res/${course}/${block}/quiz/${quiz_id}
+        $user_id = $_SESSION['user']['id'];
+        $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
+        $res = $this->imageCtrl->process("image", $question_id, $user_id);
+
+        if (isset($res['error'])) {
+            return $res;
+        } else {
+            $dst = $res['dst'];
+        }
+
+        // create / update answer in the db
+        if ($answer_id) {
+            $this->answerDao->update($answer_id, $dst, $user_id);
+        } else {
+            $answer_id = $this->answerDao->add($dst, $question_id, $user_id);
+        }
+
+        return [ "dst" => $dst, "answer_id" => $answer_id ];
     } 
-    */
 
     /**
      * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/finish$!", sec="applicant")
@@ -179,5 +190,6 @@ class QuizTakingCtrl {
         }
         return $result;
     }
+
 }
 ?>

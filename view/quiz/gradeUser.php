@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.1.css">
+        <link rel="stylesheet" href="res/css/quiz-1.2.css">
         <style>
             #content > h3 {
                 margin-bottom: 0px;
@@ -59,7 +59,11 @@
                             <?php if($question['modelAnswer']): ?>
                             <div>Model Answer:</div> 
                             <div class="answerText">
+                                <?php if($question['type'] == 'markdown'): ?>
                                 <?= $parsedown->text($question['modelAnswer']) ?>
+                                <?php elseif ($question['type'] == "image"): ?>
+                                <img src="<?= $question['modelAnswer'] ?>" />
+                                <?php endif; ?>
                             </div>
                             <?php endif; ?>
 
@@ -75,6 +79,13 @@
                             </div> 
                             <div class="answerText">
                                 <?= $parsedown->text($answers[$question['id']]['text']) ?>
+
+                                <?php if($question['type'] == 'markdown'): ?>
+                                <?= $parsedown->text($answers[$question['id']]['text']) ?>
+                                <?php elseif ($question['type'] == "image"): ?>
+                                <img src="<?= $answers[$question['id']]['text'] ?>" />
+                                <?php endif; ?>
+
                             </div>
                             
                             <?php else: ?>
