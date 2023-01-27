@@ -10,7 +10,7 @@
 class VideoDao {
 
 	public function forOffering($course_num, $block) {
-		chdir("res/${course_num}/${block}/");
+		chdir("res/{$course_num}/{$block}/");
 		$dirs = glob('*', GLOB_ONLYDIR);
 		chdir("../../../");
 		$result = array();
@@ -21,7 +21,7 @@ class VideoDao {
 	}
 
     public function forDay($course_num, $block, $day) {
-		chdir("res/${course_num}/${block}/${day}/vid/");
+		chdir("res/{$course_num}/{$block}/{$day}/vid/");
 		$files = glob("*.mp4");
 		$file_info = array();
 		$totalDuration = 0;
@@ -36,10 +36,10 @@ class VideoDao {
 			$duration = $hundreth + ($seconds * 100) + ($minutes * 60 * 100) + ($hours * 60 * 60 * 100);
 			$totalDuration += $duration;
 			$parts = explode("_", $file);
-			$file_info["${parts[0]}_${parts[1]}"] = array();
-			$file_info["${parts[0]}_${parts[1]}"]["file"] = $file;
-			$file_info["${parts[0]}_${parts[1]}"]["duration"] = $duration;
-			$file_info["${parts[0]}_${parts[1]}"]["parts"] = $parts;
+			$file_info["{$parts[0]}_{$parts[1]}"] = array();
+			$file_info["{$parts[0]}_{$parts[1]}"]["file"] = $file;
+			$file_info["{$parts[0]}_{$parts[1]}"]["duration"] = $duration;
+			$file_info["{$parts[0]}_{$parts[1]}"]["parts"] = $parts;
 		}
 		$totalHours = floor($totalDuration / (60 * 60 * 100));
 		$totalMinutes = floor($totalDuration / (60*100) % 60);
@@ -58,11 +58,11 @@ class VideoDao {
     }
 
 	public function duration($course_num, $block, $day, $video) {
-		chdir("res/${course_num}/${block}/${day}/vid/");
+		chdir("res/{$course_num}/{$block}/{$day}/vid/");
 		$files = glob("*.mp4");
 		foreach ($files as $file) {
 			$matches = array();
-			if (preg_match("/${video}.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $file, $matches)) {
+			if (preg_match("/{$video}.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $file, $matches)) {
 				$hours = $matches[1];
 				$minutes = $matches[2];
 				$seconds = $matches[3];
@@ -94,24 +94,24 @@ class VideoDao {
 			// make symlinks to previous offering videos
 			mkdir("vid");
 			// find previoud video files
-			if (chdir("../../${old_block}/$dir/vid")) {
+			if (chdir("../../{$old_block}/$dir/vid")) {
 				$videos = glob("*.mp4");
 				// make links in new vid directory
-				chdir("../../../${block}/$dir/vid");
+				chdir("../../../{$block}/$dir/vid");
 				foreach ($videos as $video) {
-					symlink("../../../${old_block}/$dir/vid/$video", $video);
+					symlink("../../../{$old_block}/$dir/vid/$video", $video);
 				}    
 				chdir(".."); // exit vid dir
 			}
 			// make symlinks to previous offering pdfs
 			mkdir("pdf");
 			// find previoud pdf files
-			if (chdir("../../${old_block}/$dir/pdf")) {
+			if (chdir("../../{$old_block}/$dir/pdf")) {
 				$pdfs = glob("*.pdf");
 				// make links in new pdf directory
-				chdir("../../../${block}/$dir/pdf");        
+				chdir("../../../{$block}/$dir/pdf");        
 				foreach ($pdfs as $pdf) {
-					symlink("../../../${old_block}/$dir/pdf/$pdf", $pdf);
+					symlink("../../../{$old_block}/$dir/pdf/$pdf", $pdf);
 				}
 				chdir(".."); // exit pdf dir    
 			}
@@ -128,8 +128,8 @@ class VideoDao {
 
 		for ($week = 1; $week <= $lessonRows; $week++) {
 			for ($day = 1; $day <= $lessonsPerRow; $day++) {
-				mkdir("W${week}D${day}");
-				chdir("W${week}D${day}");
+				mkdir("W{$week}D{$day}");
+				chdir("W{$week}D{$day}");
 				mkdir("vid");
 				mkdir("pdf");
 				chdir("..");

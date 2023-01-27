@@ -26,7 +26,7 @@ class ReplyDao
 			JOIN user u ON r.user_id = u.id
 			LEFT JOIN reply_vote v ON r.id = v.reply_id AND v.user_id = :user_id
 			LEFT JOIN reply_vote t ON r.id = t.reply_id
-            WHERE r.comment_id IN (${inject})
+            WHERE r.comment_id IN ({$inject})
 			GROUP BY r.id
 			ORDER BY vote_total DESC"
         );

@@ -110,7 +110,7 @@ window.addEventListener("load", () => {
                             <i title="Add Quiz" class="far fa-plus-square"></i>
                         <?php endif; ?>
 
-                        <?php foreach ($days["W${w}D${d}"]['quizzes'] as $quiz): ?>
+                        <?php foreach ($days["W{$w}D{$d}"]['quizzes'] as $quiz): ?>
                             <div>
                             <a href="<?= "quiz/". $quiz['id'] ?>" 
                                 class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?>"

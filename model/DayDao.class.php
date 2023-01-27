@@ -79,7 +79,7 @@ class DayDao {
 		for ($week = 1; $week <= $lessonRows; $week++) {
 			for ($day = 1; $day <= $lessonsPerRow; $day++) {
 				$stmt->execute(array(
-					"offering_id" => $offering_id, "abbr" => "W${week}D${day}"
+					"offering_id" => $offering_id, "abbr" => "W{$week}D{$day}"
 				));
 			}
 		}
@@ -103,7 +103,7 @@ class DayDao {
 
 		$tz = new DateTimeZone(TIMEZONE);
 		$date = new DateTimeImmutable($result['start'], $tz);
-		return $date->add(new DateInterval("P${add}D"));
+		return $date->add(new DateInterval("P{$add}D"));
 	}
 }
 

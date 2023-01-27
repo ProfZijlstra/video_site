@@ -120,7 +120,7 @@ class CourseCtrl {
         $desc = filter_input(INPUT_POST, "desc", FILTER_UNSAFE_RAW);
 
         $this->dayDao->update($day_id, $desc);
-        return "Location: ../${block}/";
+        return "Location: ../{$block}/";
     }
 
     /**

@@ -85,7 +85,7 @@ foreach($files as $info) :
         </a>
         <?php endif; ?>
         <video controls>
-            <source src="<?= "res/${course}/${block}/${day}/vid/${info["file"]}" ?>" type="video/mp4"/>
+            <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4"/>
         </video>
         <div class="progress">
             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>

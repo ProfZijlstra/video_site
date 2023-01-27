@@ -57,11 +57,11 @@ class VideoCtrl {
 			$offering = $this->offeringDao->getOfferingById($enrolled["offering_id"]);
 			$course = $offering['course_number'];
 			$block = $offering['block'];
-			return "Location: $MY_BASE/${course}/${block}/";
+			return "Location: $MY_BASE/{$course}/{$block}/";
 		} else {
 			// default to latest offering
 			$data = $this->offeringDao->getLatestForCourse($course_num); 
-			return "Location: $MY_BASE/${data['number']}/${data['block']}/";
+			return "Location: $MY_BASE/{$data['number']}/{$data['block']}/";
 		}
 
     }

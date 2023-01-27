@@ -178,7 +178,7 @@ class QuizTakingCtrl {
         $now = new DateTimeImmutable("now", $tz);
         $stop = new DateTimeImmutable($quiz['stop'], $tz);
         // give leeway second 
-        $stop = $stop->add(new DateInterval("PT${leewaySecs}S"));
+        $stop = $stop->add(new DateInterval("PT{$leewaySecs}S"));
         $stopDiff = $now->diff($stop);
         return $stopDiff->invert == 1; // is it in the past?
     }

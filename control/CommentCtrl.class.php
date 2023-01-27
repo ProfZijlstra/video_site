@@ -60,12 +60,12 @@ class CommentCtrl
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
             " asks:\n\n$comment\n
-See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
         $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
-        mail("mzijlstra@miu.edu", "${course} Comment or Comment", $message, $headers);
+        mail("mzijlstra@miu.edu", "{$course} Comment or Comment", $message, $headers);
 
-        return "Location: ${tab}#q${id}";
+        return "Location: {$tab}#q{$id}";
     }
 
     /**
@@ -80,7 +80,7 @@ See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${i
         if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
             $this->commentDao->del($id);
         }
-        return "Location: ${tab}#commentForm";
+        return "Location: {$tab}#commentForm";
     }
 
     /**
@@ -108,7 +108,7 @@ See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${i
             $this->commentDao->update($id, $text);
         }
 
-        return "Location: ${tab}#q${id}";
+        return "Location: {$tab}#q{$id}";
     }
 
     /**
@@ -207,13 +207,13 @@ See comment at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${i
 
         $message = $user["knownAs"] . " " . $user["lastname"] . 
             " says:\n\n$text\n
-See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}";
+See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
         $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
         mail($op_email, "$course Reply", $message, $headers);
-        mail("mzijlstra@miu.edu", "${course} Reply", $message, $headers);
+        mail("mzijlstra@miu.edu", "{$course} Reply", $message, $headers);
 
-        return "Location: ${tab}#r${id}";
+        return "Location: {$tab}#r{$id}";
     }
 
     /**
@@ -240,7 +240,7 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
             $this->replyDao->update($id, $text);
         }
         
-        return "Location: ${tab}#r${id}";
+        return "Location: {$tab}#r{$id}";
     }
 
     /**
@@ -256,7 +256,7 @@ See reply at: http://manalabs.org/videos/${course}/${block}/${day}/${tab}#r${id}
             $this->replyDao->del($id);
         }
 
-        return "Location: ${tab}#q" . $reply['comment_id'];
+        return "Location: {$tab}#q" . $reply['comment_id'];
     }
 
 }

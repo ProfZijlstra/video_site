@@ -57,7 +57,7 @@ class AnswerDao {
         $stmt = $this->db->prepare(
             "UPDATE answer 
             SET `points` = :points, `comment` = :comment
-            WHERE id IN (${answer_ids})"
+            WHERE id IN ({$answer_ids})"
         );
 		$stmt->execute(array(
             "points" => $points,

@@ -46,9 +46,9 @@ class ImageCtrl {
 
         $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
         $ts = $time->format("Y-m-d_H:i:s");
-        $dst = "res/${course}/${block}/quiz/${question_id}/${ts}_${user_id}.${ext}";
-        $this->ensureDirCreated("res/${course}/${block}/quiz/");
-        $this->ensureDirCreated("res/${course}/${block}/quiz/${question_id}");
+        $dst = "res/{$course}/{$block}/quiz/{$question_id}/{$ts}_{$user_id}.{$ext}";
+        $this->ensureDirCreated("res/{$course}/{$block}/quiz/");
+        $this->ensureDirCreated("res/{$course}/{$block}/quiz/{$question_id}");
         move_uploaded_file($img_file, $dst);
 
         return $dst;

@@ -15,7 +15,7 @@ function isLoggedIn() {
 
         // Then show login page
         $_SESSION['error'] = "Please Login:";
-        header("Location: ${MY_BASE}/login");
+        header("Location: {$MY_BASE}/login");
         exit();
     }
 }

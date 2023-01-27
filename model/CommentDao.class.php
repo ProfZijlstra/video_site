@@ -80,7 +80,7 @@ class CommentDao {
 			$stmt = $this->db->prepare(
 				"DELETE
 				FROM reply_vote 
-				WHERE reply_id IN (${inject})"
+				WHERE reply_id IN ({$inject})"
 			);
 			$stmt->execute();	
 		}

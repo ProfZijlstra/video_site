@@ -30,9 +30,9 @@ window.addEventListener("load", () => {
     document.getElementById('plane').onclick = () => {
         if (confirm('Email International Students below Minimum?')) {
             const minPhys = document.getElementById('minPhys').value;
-            fetch(`${week}/email`, {
+            fetch(`{$week}/email`, {
                 method : "POST",
-                body : `minPhys=${minPhys}`,
+                body : `minPhys={$minPhys}`,
                 headers :
                     {'Content-Type' : 'application/x-www-form-urlencoded'},
             }).then(() => {alert("Emails sent")});

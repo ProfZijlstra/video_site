@@ -254,7 +254,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
                 $session_id, 
                 $start
             );
-            return "Location: meeting/${meeting_id}";
+            return "Location: meeting/{$meeting_id}";
         }
 
         return "Location: attendance";

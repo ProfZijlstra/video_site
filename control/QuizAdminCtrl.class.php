@@ -75,11 +75,11 @@ class QuizAdminCtrl {
         $starttime = filter_input(INPUT_POST, "starttime");
         $stoptime = filter_input(INPUT_POST, "stoptime");
 
-        $start = "${startdate} ${starttime}";
-        $stop = "${stopdate} ${stoptime}";
+        $start = "{$startdate} {$starttime}";
+        $stop = "{$stopdate} {$stoptime}";
         $id = $this->quizDao->add($name, $day_id, $start, $stop);
     
-        return "Location: quiz/${id}/edit"; // edit quiz view
+        return "Location: quiz/{$id}/edit"; // edit quiz view
     }
 
     /**
@@ -117,8 +117,8 @@ class QuizAdminCtrl {
         $starttime = filter_input(INPUT_POST, "starttime");
         $stoptime = filter_input(INPUT_POST, "stoptime");
 
-        $start = "${startdate} ${starttime}";
-        $stop = "${stopdate} ${stoptime}";
+        $start = "{$startdate} {$starttime}";
+        $stop = "{$stopdate} {$stoptime}";
 
         $this->quizDao->update($id, $name, $start, $stop);
     }
@@ -177,7 +177,7 @@ class QuizAdminCtrl {
                 update($question_id, $text, $res['dst'], $points, $seq);
         }
 
-        return "Location: ../${quiz_id}/edit";
+        return "Location: ../{$quiz_id}/edit";
     }
 
     /**

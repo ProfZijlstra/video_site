@@ -27,7 +27,7 @@ window.addEventListener("load", () => {
     function goToUser() {
         const tr = this.parentNode;
         const user_id = tr.dataset.user_id;
-        window.location = `user/${user_id}`
+        window.location = `user/{$user_id}`
     }
     for (const td of tds) {
         td.onclick = goToUser;
