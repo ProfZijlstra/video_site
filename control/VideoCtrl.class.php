@@ -38,7 +38,7 @@ class VideoCtrl {
 	 */
 	public $videoDao;
 	/**
-	 * @Inject("OverviewCtrl")
+	 * @Inject("OverviewHlpr")
 	 */
 	public $overviewCtrl;
 

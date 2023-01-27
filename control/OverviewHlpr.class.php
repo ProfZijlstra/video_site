@@ -8,7 +8,7 @@
  * 
  * @Controller
  */
-class OverviewCtrl {
+class OverviewHlpr {
 	/**
 	 * @Inject("OfferingDao")
 	 */

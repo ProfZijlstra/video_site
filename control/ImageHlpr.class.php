@@ -6,7 +6,7 @@
  * 
  * @Controller
  */
-class ImageCtrl {
+class ImageHlpr {
 
     public function process($img_name, $question_id, $user_id) {
         // stop if there was an upload error

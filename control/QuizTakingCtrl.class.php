@@ -28,12 +28,12 @@ class QuizTakingCtrl {
     public $quizEventDao;
 
     /**
-     * @Inject('MarkdownCtrl')
+     * @Inject('MarkdownHlpr')
      */
     public $markdownCtrl;
 
     /**
-     * @Inject('ImageCtrl')
+     * @Inject('ImageHlpr')
      */
     public $imageCtrl;
 

@@ -6,7 +6,7 @@
  * 
  * @Controller
  */
-class MarkdownCtrl {
+class MarkdownHlpr {
     /**
      * AJAX call to get a markdown preview
      * 

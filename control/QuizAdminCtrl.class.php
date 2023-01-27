@@ -18,17 +18,17 @@ class QuizAdminCtrl {
     public $questionDao;
 
     /**
-     * @Inject("OverviewCtrl")
+     * @Inject("OverviewHlpr")
      */
     public $overviewCtrl;
 
     /**
-     * @Inject('MarkdownCtrl')
+     * @Inject('MarkdownHlpr')
      */
     public $markdownCtrl;
 
     /**
-     * @Inject('ImageCtrl')
+     * @Inject('ImageHlpr')
      */
     public $imageCtrl;
 

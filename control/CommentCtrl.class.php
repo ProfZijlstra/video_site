@@ -35,7 +35,7 @@ class CommentCtrl
     public $userDao;
 
     /**
-     * @Inject('MarkdownCtrl')
+     * @Inject('MarkdownHlpr')
      */
     public $markdownCtrl;
 

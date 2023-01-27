@@ -9,7 +9,7 @@
 class AttendanceCtrl
 {
     /**
-     * @Inject("OverviewCtrl")
+     * @Inject("OverviewHlpr")
      */
     public $overviewCtr;
     /**
