@@ -303,3 +303,6 @@ ENGINE = InnoDB;
 ------------- 4th of Feb 2023
 ALTER TABLE offering ADD COLUMN `hasQuiz` TINYINT UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE offering ADD COLUMN `hasLab` TINYINT UNSIGNED NOT NULL DEFAULT 0;
+
+------------- 5th of Feb 2023
+ALTER TABLE `session` RENAME class_session;

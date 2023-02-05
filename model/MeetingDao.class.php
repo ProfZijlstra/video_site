@@ -23,7 +23,7 @@ class MeetingDao {
     public function allForOffering($offering_id) {
         $stmt = $this->db->prepare("SELECT m.id, m.title, d.abbr, s.type as stype
                 FROM meeting AS m
-                JOIN `session` AS s ON m.session_id = s.id
+                JOIN `class_session` AS s ON m.session_id = s.id
                 JOIN `day` AS d ON s.day_id = d.id 
                 WHERE d.offering_id = :offering_id ");
         $stmt->execute(["offering_id" => $offering_id]);

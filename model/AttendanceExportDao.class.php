@@ -59,7 +59,7 @@ class AttendanceExportDao {
 			u.firstname, u.lastname, u.email,
 			SUM(ex.inClass) AS inClass
             FROM `day` d 
-			JOIN `session` s ON s.day_id = d.id
+			JOIN `class_session` s ON s.day_id = d.id
 			JOIN attendance_export ex ON ex.session_id = s.id
 			JOIN user u ON ex.studentID = u.studentID
             WHERE d.offering_id = :offering_id
@@ -76,7 +76,7 @@ class AttendanceExportDao {
 			u.firstname, u.lastname, u.email,
 			SUM(ex.inClass) AS inClass
             FROM `day` d 
-			JOIN `session` s ON s.day_id = d.id
+			JOIN `class_session` s ON s.day_id = d.id
 			JOIN attendance_export ex ON ex.session_id = s.id
 			JOIN user u ON ex.studentID = u.studentID
             WHERE d.offering_id = :offering_id

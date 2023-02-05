@@ -25,9 +25,9 @@ class MeetingCtrl
      */
     public $enrollmentDao;
      /**
-     * @Inject("SessionDao")
+     * @Inject("ClassSessionDao")
      */
-    public $sessionDao;
+    public $classSessionDao;
     /**
      * @Inject("AttendanceImportDao")
      */
@@ -280,7 +280,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         );
         
         // attach all enrolled students as 'present', no tardies
-        $offering_id = $this->sessionDao->getOfferingId($session_id);
+        $offering_id = $this->classSessionDao->getOfferingId($session_id);
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
         $attendance = [];
         foreach ($enrolled as $attendant) {
@@ -346,7 +346,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         }
 
         // generate report
-        $offering_id = $this->sessionDao->getOfferingId($session_id);
+        $offering_id = $this->classSessionDao->getOfferingId($session_id);
         $this->generateReport($offering_id, $meeting_id, $meeting_start, $meeting_stop);
 
         return $meeting_id;

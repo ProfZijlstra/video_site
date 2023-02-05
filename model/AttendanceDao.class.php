@@ -144,7 +144,7 @@ class AttendanceDao {
                 else 0 end)) AS minsLeave
             FROM attendance AS a
             JOIN meeting AS m ON a.meeting_id = m.id
-            JOIN `session` AS s ON m.session_id = s.id
+            JOIN `class_session` AS s ON m.session_id = s.id
             JOIN `day` AS d ON s.day_id = d.id
             JOIN user AS u ON a.teamsName = u.teamsName
             JOIN enrollment AS e ON e.user_id = u.id

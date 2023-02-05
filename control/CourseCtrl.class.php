@@ -27,9 +27,9 @@ class CourseCtrl {
      */
     public $userDao;
     /**
-     * @Inject('SessionDao')
+     * @Inject('ClassSessionDao')
      */
-    public $sessionDao;
+    public $classSessionDao;
 
     /**
      * @GET(uri="!^/?$!", sec="applicant")
@@ -70,7 +70,7 @@ class CourseCtrl {
         $new_offering = $this->offeringDao->create($number, $block, $start, $fac_user_id, 
                                 $daysPerLesson, $lessonsPerRow, $lessonRows);
         $this->dayDao->create($new_offering, $lessonsPerRow, $lessonRows);
-        $this->sessionDao->createForOffering($new_offering);
+        $this->classSessionDao->createForOffering($new_offering);
         // create directory structure last, as it cannot be rolled back
         // that is, if I actually implement transactions...
         $this->videoDao->create($number, $block, $lessonsPerRow, $lessonRows);
@@ -100,7 +100,7 @@ class CourseCtrl {
                                     $start, $fac_user_id, 
                                     $daysPerLesson, $lessonsPerRow, $lessonRows);
         $this->dayDao->cloneDays($offering_id, $new_offering);
-        $this->sessionDao->createForOffering($new_offering);
+        $this->classSessionDao->createForOffering($new_offering);
 
         return "Location: ../$block/";
     }

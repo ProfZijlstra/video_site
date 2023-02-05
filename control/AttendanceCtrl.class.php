@@ -13,9 +13,9 @@ class AttendanceCtrl
      */
     public $overviewCtr;
     /**
-     * @Inject("SessionDao")
+     * @Inject("ClassSessionDao")
      */
-    public $sessionDao;
+    public $classSessionDao;
     /**
      * @Inject("MeetingDao")
      */
@@ -50,7 +50,7 @@ class AttendanceCtrl
         $days = $VIEW_DATA["days"];
 
         // get sessions for these days
-        $sessions = $this->sessionDao->allForOffering($VIEW_DATA["offering_id"]);
+        $sessions = $this->classSessionDao->allForOffering($VIEW_DATA["offering_id"]);
         foreach ($sessions as $session) {
             $session["meetings"] = [];
             $days[$session["abbr"]][$session["type"]] = $session;
@@ -188,15 +188,15 @@ Manalabs Attendance System.
         $day_abbr = $URI_PARAMS[3];
         $stype = $URI_PARAMS[4]; // AM or  PM
 
-        $session = $this->sessionDao->getSession(
+        $session = $this->classSessionDao->getSession(
             $course_number, $block, $day_abbr, $stype);
-        $status = $this->sessionDao->calcStatus($session['id']);
+        $status = $this->classSessionDao->calcStatus($session['id']);
 
         if ($session['generated'] != $status['meetings'] || 
                 ($session["status"] != "GENERATED" && 
                  $session["status"] != "EXPORTED")) {
             $this->generateExportReport($session["id"]);
-            $session = $this->sessionDao->getSessionById($session["id"]);
+            $session = $this->classSessionDao->getSessionById($session["id"]);
         }
         $exports = $this->attendanceExportDao->forSession($session["id"]);
 
@@ -221,7 +221,7 @@ Manalabs Attendance System.
         $day_abbr = $URI_PARAMS[3];
         $stype = $URI_PARAMS[4]; // AM or  PM
 
-        $session = $this->sessionDao->getSession(
+        $session = $this->classSessionDao->getSession(
             $course_number, $block, $day_abbr, $stype);
 
         $this->generateExportReport($session['id']);
@@ -239,18 +239,18 @@ Manalabs Attendance System.
 
     private function generateExportReport($session_id) {
         // update session with status, start, stop, meetings
-        $stats = $this->sessionDao->calcStatus($session_id);
+        $stats = $this->classSessionDao->calcStatus($session_id);
         $stats["status"] = "GENERATED";
         if ($stats["meetings"] == 0) {
             $stats["status"] = "NO_DATA";
         }
-        $this->sessionDao->setStatus($stats);
+        $this->classSessionDao->setStatus($stats);
         if ($stats['status'] == "NO_DATA") {
             return; // nothing to do
         }
 
         // get enrollemnt for offering
-        $offering_id = $this->sessionDao->getOfferingId($session_id);
+        $offering_id = $this->classSessionDao->getOfferingId($session_id);
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
 
         // make an enrolled lookup table

@@ -9,7 +9,7 @@
  * @author mzijlstra 2021-11-29
  * @Repository
  */
-class SessionDao
+class ClassSessionDao
 {
     /**
      * @var PDO PDO database connection object
@@ -32,7 +32,7 @@ class SessionDao
 
     public function setStatus($stats) {
         $stmt = $this->db->prepare(
-            "UPDATE session SET 
+            "UPDATE class_session SET 
             `status` = :status,
             `start` = :start,
             `stop` = :stop,
@@ -49,7 +49,7 @@ class SessionDao
     {
         $stmt = $this->db->prepare(
             "SELECT s.id, s.type, s.generated, s.day_id, d.abbr 
-            FROM `session` AS s
+            FROM `class_session` AS s
             JOIN `day` AS d ON s.day_id = d.id 
             WHERE d.offering_id = :offering_id "
         );
@@ -61,7 +61,7 @@ class SessionDao
     {
         $stmt = $this->db->prepare(
             "SELECT d.offering_id 
-            FROM `session` AS s
+            FROM `class_session` AS s
             JOIN `day` AS d ON s.day_id = d.id 
             WHERE s.id = :session_id "
         );
@@ -78,7 +78,7 @@ class SessionDao
         $days = $stmt->fetchAll();
 
         $stmt = $this->db->prepare(
-            "INSERT INTO `session` 
+            "INSERT INTO `class_session` 
             VALUES(NULL, :day_id, :type, NULL, NULL, NULL, NULL)");
         foreach ($days as $day) {
             $stmt->execute(["day_id" => $day["id"], "type" => "AM"]);
@@ -91,7 +91,7 @@ class SessionDao
             "SELECT s.id, s.day_id, s.type, s.status, s.start, s.stop, s.generated 
             FROM offering AS o
             JOIN day AS d ON o.id = d.offering_id
-            JOIN session AS s ON d.id = s.day_id  
+            JOIN class_session AS s ON d.id = s.day_id  
             WHERE o.course_number = :course
             AND o.block = :offering
             AND d.abbr = :day
@@ -103,7 +103,7 @@ class SessionDao
 
     public function getSessionById($id) {
         $stmt = $this->db->prepare(
-            "SELECT * FROM `session` WHERE id = :id ");
+            "SELECT * FROM `class_session` WHERE id = :id ");
         $stmt->execute(["id" => $id]);
         return $stmt->fetch();
         
