@@ -145,21 +145,61 @@ class OfferingDao
 		$fac_user_id,
 		$daysPerLesson,
 		$lessonsPerPart,
-		$lessonParts
+		$lessonParts,
+		$hasQuiz,
+		$hasLab
 	) {
 		$stmt = $this->db->prepare(
 			"INSERT INTO offering 
 			VALUES(NULL, :course_number, :block, 
 					:start, :fac_user_id,
-					:daysPerLesson, :lessonsPerPart, :lessonParts)"
+					:daysPerLesson, :lessonsPerPart, :lessonParts, 
+					:hasQuiz, :hasLab)"
 		);
 		$stmt->execute(array(
 			"course_number" => $course_number, "block" => $block,
 			"start" => $start, "fac_user_id" => $fac_user_id,
 			"daysPerLesson" => $daysPerLesson, 
 			"lessonsPerPart" => $lessonsPerPart,
-			"lessonParts" => $lessonParts
+			"lessonParts" => $lessonParts,
+			"hasQuiz" => $hasQuiz,
+			"hasLab" => $hasLab
 		));
 		return $this->db->lastInsertId();
+	}
+
+	/**
+	 * Update an offering
+	 */
+	public function update(
+		$id,
+		$block,
+		$start,
+		$daysPerLesson,
+		$lessonsPerPart,
+		$lessonParts,
+		$hasQuiz,
+		$hasLab
+	) {
+		print($id);
+
+		$stmt = $this->db->prepare(
+			"UPDATE offering 
+			SET `block` = :block, `start` = :start, 
+			daysPerLesson = :daysPerLesson, lessonsPerPart = :lessonsPerPart,
+			lessonParts = :lessonParts, hasQuiz = :hasQuiz, hasLab = :hasLab
+			WHERE id = :id"
+		);
+		$stmt->execute(array(
+			"id" => $id, 
+			"block" => $block,
+			"start" => $start, 
+			"daysPerLesson" => $daysPerLesson, 
+			"lessonsPerPart" => $lessonsPerPart,
+			"lessonParts" => $lessonParts,
+			"hasQuiz" => $hasQuiz,
+			"hasLab" => $hasLab
+		));
+
 	}
 }

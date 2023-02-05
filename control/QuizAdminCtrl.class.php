@@ -20,7 +20,7 @@ class QuizAdminCtrl {
     /**
      * @Inject("OverviewHlpr")
      */
-    public $overviewCtrl;
+    public $overviewHlpr;
 
     /**
      * @Inject('MarkdownHlpr')
@@ -39,7 +39,7 @@ class QuizAdminCtrl {
     public function courseOverview() {
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
-        $this->overviewCtrl->overview();
+        $this->overviewHlpr->overview();
 
         global $VIEW_DATA;
 

@@ -33,8 +33,12 @@
             </nav>
             <nav class="areas">
                 <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
+                <?php if ($offering['hasQuiz']): ?>
                 <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
+                <?php endif; ?>
+                <?php if ($offering['hasLab']): ?>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
+                <?php endif; ?>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrollment" class="active"><i class="fas fa-user-friends"></i></div>
                 <div title="Back to My Courses">

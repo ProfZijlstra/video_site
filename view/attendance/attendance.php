@@ -38,8 +38,12 @@ if ($cols < 7) {
     <main>
         <nav class="areas">
             <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
+            <?php if ($offering['hasQuiz']): ?>
             <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
+            <?php endif; ?>
+            <?php if ($offering['hasLab']): ?>
             <div title="Labs"><i class="fas fa-flask"></i></div>
+            <?php endif; ?>
             <div title="Attendance" class="active"><i class="fas fa-user-check"></i></div>
             <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
             <div title="Back to My Courses">

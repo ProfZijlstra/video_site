@@ -83,8 +83,10 @@ window.addEventListener("load", () => {
         <nav class="areas">
             <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
             <div title="Quizzes" class="active"><i class="fas fa-vial"></i></div>
-            <?php if ($_user_type === 'admin') : ?>
+            <?php if ($offering['hasLab']): ?>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
+            <?php endif; ?>
+            <?php if ($_user_type === 'admin') : ?>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
             <?php endif; ?>

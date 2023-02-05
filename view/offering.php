@@ -27,6 +27,9 @@
         <main>
             <?php if ($_user_type === 'admin') : ?>
             <nav class="tools">
+                <a href="settings">
+                    <i title="Offering Settings" class="fa-solid fa-gear"></i>
+                </a>
                 <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                 <i title="Clone Offering" id="clone" class="far fa-copy"></i>
@@ -35,9 +38,13 @@
 
             <nav class="areas">
                 <div title="Videos" class="active"><i class="fas fa-film"></i></div>
+                <?php if ($offering['hasQuiz']): ?>
                 <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
-                <?php if ($_user_type === 'admin') : ?>
+                <?php endif; ?>
+                <?php if ($offering['hasLab']): ?>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
+                <?php endif; ?>
+                <?php if ($_user_type === 'admin') : ?>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
                 <?php endif; ?>

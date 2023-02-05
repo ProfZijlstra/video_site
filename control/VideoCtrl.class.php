@@ -40,7 +40,7 @@ class VideoCtrl {
 	/**
 	 * @Inject("OverviewHlpr")
 	 */
-	public $overviewCtrl;
+	public $overviewHlpr;
 
     /**
      * Redirects to latest offering for a course
@@ -81,7 +81,7 @@ class VideoCtrl {
 	public function offering() {
 		// We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
-		$this->overviewCtrl->overview();
+		$this->overviewHlpr->overview();
 
         global $URI_PARAMS;
 		global $VIEW_DATA;
