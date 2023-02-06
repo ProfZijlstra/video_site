@@ -101,13 +101,13 @@ window.addEventListener("load", () => {
                         <input type="checkbox" id="hasQuiz" <?= $offering['hasQuiz'] ? "checked" : "" ?> />
                     </div>
                     <div>
-                        Quizzes Enabled for this Offering
+                        <label for="hasQuiz">Quizzes Enabled for this Offering</label>
                     </div>
                     <div>
                         <input type="checkbox" id="hasLab" <?= $offering['hasLab'] ? "checked" : "" ?> />
                     </div>
                     <div>
-                        Labs Enabled for this Offering
+                        <label for="hasLab">Labs Enabled for this Offering</label>
                     </div>
                 </div>
             </div>
