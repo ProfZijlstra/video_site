@@ -70,14 +70,15 @@ class QuizDao {
         ));
     }
 
-    public function update($id, $name, $start, $stop) {
+    public function update($id, $day_id, $name, $start, $stop) {
         $stmt = $this->db->prepare(
 			"UPDATE quiz 
-            SET `name` = :name, `start` = :start, `stop` = :stop
+            SET day_id = :day_id, `name` = :name, `start` = :start, `stop` = :stop
             WHERE id = :id"
 		);
 		$stmt->execute(array(
             "id" =>  $id, 
+            "day_id" => $day_id,
             "name" => $name,
             "start" => $start,
             "stop" => $stop

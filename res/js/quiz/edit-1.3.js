@@ -68,6 +68,7 @@ window.addEventListener("load", () => {
     function updateDetails() {
         const form = document.getElementById("updateQuiz");
         const id = form.dataset.id;
+        const day_id = form.querySelector("select").value;
         const name = form.querySelector("input.name").value;
         const startdate = form.querySelector("input.startdate").value;
         const starttime = form.querySelector("input.starttime").value;
@@ -76,7 +77,7 @@ window.addEventListener("load", () => {
 
         fetch(`../${id}`, {
             method : "POST",
-            body : `name=${name}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}`,
+            body : `day_id=${day_id}&name=${name}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}`,
             headers :
                 {'Content-Type' : 'application/x-www-form-urlencoded'},
         });
@@ -85,6 +86,7 @@ window.addEventListener("load", () => {
     for (const field of fields) {
         field.onchange = updateDetails;
     }
+    document.getElementById("day_id").onchange = updateDetails;
 
     // delete quiz
     function deleteQuiz() {

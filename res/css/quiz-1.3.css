@@ -29,6 +29,9 @@ div.quiz form label {
 div.quiz input.name {
     width: 310px;
 }
+div.quiz select {
+    width: 320px;
+}
 div.quiz input[type="time"], div.quiz input[type="date"] {
     width: 150px;
 }

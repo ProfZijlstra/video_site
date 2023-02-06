@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.2.css">
+        <link rel="stylesheet" href="res/css/quiz-1.3.css">
         <script src="res/js/prism.js"></script>
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/quiz/edit-1.2.js"></script>
+        <script src="res/js/quiz/edit-1.3.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -31,6 +31,16 @@
                         <label><input id="visible" type="checkbox" class="visible" value="<?= $quiz['visible'] ?>" <?= $quiz['visible'] ? 'checked' : '' ?> /> Visible</label>
                     </div>
                     <form id="updateQuiz" action="<?= "../" . $quiz['id'] ?>" method="POST" data-id="<?= $quiz['id']?>">
+                        <div>
+                            <label>Day:</label>
+                            <select name="day_id" id="day_id">
+                                <?php foreach ($days as $day): ?>
+                                <option value="<?= $day['id'] ?>" <?= $day['id'] == $quiz['day_id'] ? "selected" : "" ?>>
+                                    <?= $day['abbr'] . " - " . $day['desc'] ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                         <div>
                             <label>Name:</label>
                             <input type="text" name="name" class="name" value="<?= $quiz['name'] ?>" /> 

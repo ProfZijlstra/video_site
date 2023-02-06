@@ -32,6 +32,15 @@ class QuizAdminCtrl {
      */
     public $imageCtrl;
 
+    /**
+     * @Inject('OfferingDao')
+     */
+    public $offeringDao;
+
+    /**
+     * @Inject('DayDao')
+     */
+    public $dayDao;
 
     /**
      * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz$!", sec="applicant")
@@ -93,6 +102,10 @@ class QuizAdminCtrl {
         $block = $URI_PARAMS[2];
         $quiz_id = $URI_PARAMS[3];
 
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $days = $this->dayDao->getDays($offering['id']);
+
+        $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['quiz'] = $this->quizDao->byId($quiz_id);
@@ -111,6 +124,7 @@ class QuizAdminCtrl {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[3];
+        $day_id = filter_input(INPUT_POST, "day_id");
         $name = filter_input(INPUT_POST, "name");
         $startdate = filter_input(INPUT_POST, "startdate");
         $stopdate = filter_input(INPUT_POST, "stopdate");
@@ -120,7 +134,7 @@ class QuizAdminCtrl {
         $start = "{$startdate} {$starttime}";
         $stop = "{$stopdate} {$stoptime}";
 
-        $this->quizDao->update($id, $name, $start, $stop);
+        $this->quizDao->update($id, $day_id, $name, $start, $stop);
     }
 
     /**

@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.2.css">
+        <link rel="stylesheet" href="res/css/quiz-1.3.css">
         <script src="res/js/prism.js"></script>
     </head>
     <body>
