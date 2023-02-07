@@ -97,6 +97,12 @@ window.addEventListener("load", () => {
             </div>
         </nav>
 
+        <nav class="tools">
+            <a href=""> <!-- TOOD create a totals report -->
+                <i title="Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
+            </a>
+        </nav>
+
         <div id="days">
             <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
                 <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
@@ -120,11 +126,11 @@ window.addEventListener("load", () => {
                                 <?= $quiz['name'] ?>
                             </a>
                             <?php if ($_user_type == "admin"): ?>
+                                <a class="edit" href="<?= "quiz/". $quiz['id'] . "/edit" ?>">
+                                    <i title="Edit Quiz" class="fa-solid fa-gear"></i>
+                                </a>
                                 <a href="<?= "quiz/". $quiz['id'] . "/grade" ?>">
                                     <i title="Grade Quiz" class="fa-solid fa-magnifying-glass"></i>
-                                </a>
-                                <a class="edit" href="<?= "quiz/". $quiz['id'] . "/edit" ?>">
-                                    <i title="Edit Quiz" class="fa-regular fa-pen-to-square"></i>
                                 </a>
                             <?php endif; ?>
                             </div>
