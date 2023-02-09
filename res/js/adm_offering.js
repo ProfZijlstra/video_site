@@ -30,12 +30,14 @@ window.addEventListener("load", () => {
 
   document.getElementById("clone").onclick = function () {
     document.getElementById("overlay").classList.add("visible");
-    document.getElementById('clone_modal').classList.remove('hide'); // document.getElementById('delete_modal').classList.add('hide');
+    document.getElementById('clone_modal').classList.remove('hide');
+    document.getElementById('delete_modal').classList.add('hide');
   };
 
   document.getElementById("delete").onclick = function () {
     document.getElementById("overlay").classList.add("visible");
-    document.getElementById('clone_modal').classList.add('hide'); // document.getElementById('delete_modal').classList.remove('hide');
+    document.getElementById('clone_modal').classList.add('hide');
+    document.getElementById('delete_modal').classList.remove('hide');
   };
 
   function editDay(day_id, desc, evt) {

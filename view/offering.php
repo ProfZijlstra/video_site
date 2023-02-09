@@ -33,7 +33,7 @@
                 <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                 <i title="Clone Offering" id="clone" class="far fa-copy"></i>
-                <!-- <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i> -->
+                <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
             </nav>
             <?php endif; ?>
 
@@ -124,7 +124,6 @@
                         </div>
                     </form>
                 </div>
-                <!-- TODO implement: see issue #20 on github
                 <div id="delete_modal" class="modal">
                     <h2>Delete Offering</h2>
                     <p>
@@ -137,7 +136,7 @@
                             <button type="submit" id="ok_delete">OK</button>
                         </div>
                     </form>
-                </div> -->
+                </div>
 
             </div>
         <?php endif; ?>

@@ -22,8 +22,11 @@ class OfferingDao
 	 */
 	public function getOfferingByCourse($course_number, $block)
 	{
-		$stmt = $this->db->prepare("SELECT * FROM offering
-			WHERE course_number = :course_number AND block = :block");
+		$stmt = $this->db->prepare(
+			"SELECT * FROM offering
+			WHERE course_number = :course_number 
+			AND active = 1
+			AND block = :block");
 		$stmt->execute(array("course_number" => $course_number, "block" => $block));
 		return $stmt->fetch();
 	}
@@ -35,8 +38,11 @@ class OfferingDao
 	 */
 	public function getOfferingById($id)
 	{
-		$stmt = $this->db->prepare("SELECT * FROM offering
-			WHERE id = :id");
+		$stmt = $this->db->prepare(
+			"SELECT * 
+			FROM offering
+			WHERE id = :id
+			AND active = 1");
 		$stmt->execute(array("id" => $id));
 		return $stmt->fetch();
 	}
@@ -51,6 +57,7 @@ class OfferingDao
 			"SELECT * 
 			FROM offering AS o
 			JOIN course AS c ON o.course_number = c.number
+			WHERE o.active = 1
 			ORDER BY o.block DESC
 			LIMIT 1
 			"
@@ -71,6 +78,7 @@ class OfferingDao
 			FROM offering AS o
 			JOIN course AS c ON o.course_number = c.number
 			WHERE o.course_number = :course_number
+			AND o.active = 1
 			ORDER BY o.block DESC
 			LIMIT 1
 			"
@@ -90,6 +98,7 @@ class OfferingDao
 			FROM offering AS o 
 			JOIN course AS c ON c.number = o.course_number
 			JOIN user AS u ON o.fac_user_id = u.id
+			WHERE o.active = 1
 			ORDER BY o.block DESC"
 		);
 		$stmt->execute();
@@ -104,6 +113,7 @@ class OfferingDao
 			JOIN user AS u ON o.fac_user_id = u.id
 			JOIN enrollment AS e ON o.id = e.offering_id
 			WHERE e.user_id = :user_id
+			AND o.active = 1
 			ORDER BY o.block DESC"
 		);
 		$stmt->execute(array("user_id" => $user_id));
@@ -112,8 +122,11 @@ class OfferingDao
 
 	public function allForCourse($course_num)
 	{
-		$stmt = $this->db->prepare("SELECT * FROM offering 
-		WHERE course_number = :course_num ORDER BY `block`");
+		$stmt = $this->db->prepare(
+			"SELECT * FROM offering 
+			WHERE course_number = :course_num 
+			AND active = 1
+			ORDER BY `block`");
 		$stmt->execute(["course_num" => $course_num]);
 		return $stmt->fetchAll();
 	}
@@ -128,6 +141,7 @@ class OfferingDao
 			"SELECT MAX(id) AS id, course_number, MAX(`block`) AS `block`, 
 			MAX(`start`) AS start, MAX(`stop`) as `stop` 
 			FROM offering
+			WHERE active = 1
 			GROUP BY course_number
 		"
 		);
@@ -154,7 +168,7 @@ class OfferingDao
 			VALUES(NULL, :course_number, :block, 
 					:start, :fac_user_id,
 					:daysPerLesson, :lessonsPerPart, :lessonParts, 
-					:hasQuiz, :hasLab)"
+					:hasQuiz, :hasLab, 1)"
 		);
 		$stmt->execute(array(
 			"course_number" => $course_number, "block" => $block,
@@ -181,8 +195,6 @@ class OfferingDao
 		$hasQuiz,
 		$hasLab
 	) {
-		print($id);
-
 		$stmt = $this->db->prepare(
 			"UPDATE offering 
 			SET `block` = :block, `start` = :start, 
@@ -200,6 +212,18 @@ class OfferingDao
 			"hasQuiz" => $hasQuiz,
 			"hasLab" => $hasLab
 		));
-
 	}
+
+	/**
+	 * Delete an offering by setting active = 0
+	 */
+	public function delete($id) {
+		$stmt = $this->db->prepare(
+			"UPDATE offering 
+			SET `active` = 0
+			WHERE id = :id"
+		);
+		$stmt->execute(array("id" => $id));
+	}
+
 }

@@ -94,6 +94,7 @@ class ClassSessionDao
             JOIN class_session AS s ON d.id = s.day_id  
             WHERE o.course_number = :course
             AND o.block = :offering
+            AND o.active = 1
             AND d.abbr = :day
             AND s.type = :stype");
         $stmt->execute(["course" => $course, "offering" => $offering, 

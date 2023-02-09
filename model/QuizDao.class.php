@@ -22,7 +22,8 @@ class QuizDao {
             FROM quiz AS q
             JOIN day AS d ON q.day_id = d.id
             JOIN offering AS o ON d.offering_id = o.id
-            WHERE o.id = :offering_id" 
+            WHERE o.id = :offering_id
+            AND o.active = 1" 
 		);
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();
@@ -35,7 +36,8 @@ class QuizDao {
             JOIN day AS d ON q.day_id = d.id
             JOIN offering AS o ON d.offering_id = o.id
             WHERE o.id = :offering_id 
-            AND q.visible = 1"
+            AND q.visible = 1
+            AND o.active = 1"
 		);
 		$stmt->execute(array("offering_id" => $offering_id));
 		return $stmt->fetchAll();

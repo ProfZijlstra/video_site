@@ -173,4 +173,12 @@ class CourseCtrl {
                             $lessonsPerPart, $lessonParts, $hasQuiz, $hasLab);
     }
 
+    /**
+     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/delete$!", sec="admin")
+     */
+    public function delete() {
+        $id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+        $this->offeringDao->delete($id);
+        return "Location: ../../";
+    }
 }

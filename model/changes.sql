@@ -306,3 +306,15 @@ ALTER TABLE offering ADD COLUMN `hasLab` TINYINT UNSIGNED NOT NULL DEFAULT 0;
 
 ------------- 5th of Feb 2023
 ALTER TABLE `session` RENAME class_session;
+
+------------- 9th of Feb 2023
+ALTER TABLE `offering` ADD COLUMN `active` TINYINT UNSIGNED NOT NULL DEFAULT 1;
+
+------------- 10th of Feb 2023
+ALTER TABLE `user` ADD COLUMN `isAdmin` TINYINT UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `user` ADD COLUMN `isFaculty` TINYINT UNSIGNED NOT NULL DEFAULT 0;
+UPDATE `user` SET isAdmin = 1 WHERE id = 5;
+UPDATE `user` SET isFaculty = 1 WHERE type = 'admin';
+ALTER TABLE `user` DROP `type`;
+ALTER TABLE `user` DROP hasPicture; -- cleanup, still not using this 
+

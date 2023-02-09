@@ -29,9 +29,10 @@ class DayDao {
 		$stmt = $this->db->prepare("SELECT d.id 
 			from day as d 
 			JOIN offering as o on d.offering_id = o.id 
-			where o.course_number = :course 
-			and o.block = :block 
-			and d.abbr = :day ");
+			WHERE o.course_number = :course 
+			AND o.block = :block 
+			AND o.active = 1
+			AND d.abbr = :day ");
 		$stmt->execute(
 			array("course" => $course, "block" => $block, "day" => $day)
 		);
@@ -91,7 +92,8 @@ class DayDao {
 			o.daysPerLesson, o.lessonsPerPart, o.lessonParts
 			FROM day d
 			JOIN offering o ON d.offering_id = o.id
-			WHERE d.id = :day_id");
+			WHERE d.id = :day_id
+			AND o.active = 1");
 		$stmt->execute(["day_id" => $day_id]);
 		$result = $stmt->fetch();
 		$abbr = $result['abbr'];
