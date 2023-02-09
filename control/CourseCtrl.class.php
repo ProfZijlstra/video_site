@@ -30,6 +30,10 @@ class CourseCtrl {
      * @Inject('ClassSessionDao')
      */
     public $classSessionDao;
+    /**
+     * @Inject('QuizDao')
+     */
+    public $quizDao;
 
     /**
      * @GET(uri="!^/?$!", sec="applicant")
@@ -90,17 +94,28 @@ class CourseCtrl {
 		$offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
 		$fac_user_id = filter_input(INPUT_POST, "fac_user_id", FILTER_SANITIZE_NUMBER_INT);
         $block = filter_input(INPUT_POST, "block", FILTER_UNSAFE_RAW);
-        $start = filter_input(INPUT_POST, "date", FILTER_UNSAFE_RAW);
+        $start = filter_input(INPUT_POST, "start", FILTER_UNSAFE_RAW);
         $daysPerLesson = filter_input(INPUT_POST, "daysPerLesson", FILTER_SANITIZE_NUMBER_INT);
         $lessonsPerRow = filter_input(INPUT_POST, "lessonsPerPart", FILTER_SANITIZE_NUMBER_INT);
         $lessonRows = filter_input(INPUT_POST, "lessonParts", FILTER_SANITIZE_NUMBER_INT);
+        $hasQuiz = filter_input(INPUT_POST, "hasQuiz", FILTER_SANITIZE_NUMBER_INT);
+        $hasLab = filter_input(INPUT_POST, "hasLab", FILTER_SANITIZE_NUMBER_INT);
+
+        if ($hasQuiz == null) {
+            $hasQuiz = 0;
+        }
+        if ($hasLab == null) {
+            $hasLab = 0;
+        }
 
         $this->videoDao->clone($course_number, $block, $old_block);
-        $new_offering = $this->offeringDao->create($course_number, $block, 
+        $new_offering_id = $this->offeringDao->create($course_number, $block, 
                                     $start, $fac_user_id, 
-                                    $daysPerLesson, $lessonsPerRow, $lessonRows);
-        $this->dayDao->cloneDays($offering_id, $new_offering);
-        $this->classSessionDao->createForOffering($new_offering);
+                                    $daysPerLesson, $lessonsPerRow, $lessonRows,
+                                    $hasQuiz, $hasLab);
+        $this->dayDao->cloneDays($offering_id, $new_offering_id);
+        $this->classSessionDao->createForOffering($new_offering_id);
+        $this->quizDao->clone($offering_id, $new_offering_id);
 
         return "Location: ../$block/";
     }

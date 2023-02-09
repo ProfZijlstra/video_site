@@ -76,9 +76,19 @@ div.modal label {
     width: 100px;
     margin-bottom: 10px;
 }
+div.modal label.checkbox {
+    display: inline;
+}
 div.modal input, div.modal select {
     width: 575px;
     height: 25px;
+}
+div.modal input[type=checkbox] {
+    width: auto;
+    height: auto;
+}
+div.modal div.indent {
+    margin-left: 100px;
 }
 div.modal .submit {
     text-align: right;

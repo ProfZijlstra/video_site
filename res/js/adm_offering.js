@@ -29,62 +29,14 @@ window.addEventListener("load", () => {
   };
 
   document.getElementById("clone").onclick = function () {
-    fetch('/videos/user/faculty').then(response => response.json()).then(response => createCloneModal(response));
+    document.getElementById("overlay").classList.add("visible");
+    document.getElementById('clone_modal').classList.remove('hide'); // document.getElementById('delete_modal').classList.add('hide');
   };
 
-  function createCloneModal(fac_users) {
-    const fac_user_opts = fac_users.map(user => {
-      return /*#__PURE__*/React.createElement("option", {
-        value: user.id
-      }, user.firstname, " ", user.lastname);
-    });
-    const content = document.getElementById("content");
-    const offering_id = document.getElementById("offering").dataset.id;
-    ReactDOM.unmountComponentAtNode(content);
-    const clone = /*#__PURE__*/React.createElement("div", {
-      class: "modal"
-    }, /*#__PURE__*/React.createElement("h2", null, "Clone Offering"), /*#__PURE__*/React.createElement("form", {
-      method: "POST",
-      action: "clone"
-    }, /*#__PURE__*/React.createElement("input", {
-      type: "hidden",
-      name: "offering_id",
-      value: offering_id
-    }), /*#__PURE__*/React.createElement("div", {
-      class: "line"
-    }, /*#__PURE__*/React.createElement("label", null, "New Block:"), /*#__PURE__*/React.createElement("input", {
-      name: "block"
-    })), /*#__PURE__*/React.createElement("div", {
-      class: "line"
-    }, /*#__PURE__*/React.createElement("label", null, "Faculty"), /*#__PURE__*/React.createElement("select", {
-      name: "fac_user_id"
-    }, fac_user_opts)), /*#__PURE__*/React.createElement("div", {
-      class: "line"
-    }, /*#__PURE__*/React.createElement("label", null, "Start Date:"), /*#__PURE__*/React.createElement("input", {
-      type: "date",
-      name: "date"
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, "Days per Lesson"), /*#__PURE__*/React.createElement("input", {
-      type: "number",
-      name: "daysPerLesson"
-    }), /*#__PURE__*/React.createElement("label", null, "Lessons per Part"), /*#__PURE__*/React.createElement("input", {
-      type: "number",
-      name: "lessonsPerPart"
-    }), /*#__PURE__*/React.createElement("label", null, "Parts"), /*#__PURE__*/React.createElement("input", {
-      type: "number",
-      name: "lessonParts"
-    })), /*#__PURE__*/React.createElement("div", {
-      class: "submit"
-    }, /*#__PURE__*/React.createElement("button", null, "Submit"))));
-    ReactDOM.render(clone, content);
+  document.getElementById("delete").onclick = function () {
     document.getElementById("overlay").classList.add("visible");
-  }
-
-  ;
-
-  function updValue(e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
+    document.getElementById('clone_modal').classList.add('hide'); // document.getElementById('delete_modal').classList.remove('hide');
+  };
 
   function editDay(day_id, desc, evt) {
     evt.preventDefault();

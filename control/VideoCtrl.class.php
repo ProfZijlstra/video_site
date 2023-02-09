@@ -41,6 +41,10 @@ class VideoCtrl {
 	 * @Inject("OverviewHlpr")
 	 */
 	public $overviewHlpr;
+	/**
+	 * @Inject('UserDao');
+	 */
+	public $userDao;
 
     /**
      * Redirects to latest offering for a course
@@ -91,6 +95,10 @@ class VideoCtrl {
 
 		if (!$course_detail) {
 			return "error/404.php";
+		}
+
+		if ($_SESSION['user']['type'] == 'admin') {
+			$VIEW_DATA['faculty'] = $this->userDao->faculty();
 		}
 
 		$VIEW_DATA["course"] = strtoupper($course_num);

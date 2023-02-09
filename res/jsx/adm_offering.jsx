@@ -35,58 +35,16 @@ window.addEventListener("load", () => {
     };
 
     document.getElementById("clone").onclick = function () { 
-        fetch('/videos/user/faculty')
-            .then(response => response.json())
-            .then(response => createCloneModal(response));
-    };
-
-    function createCloneModal(fac_users) {
-        const fac_user_opts = fac_users.map((user) => {
-            return (
-                <option value={user.id}>{user.firstname} {user.lastname}</option>
-            )});
-        const content = document.getElementById("content");
-        const offering_id = document.getElementById("offering").dataset.id;
-        ReactDOM.unmountComponentAtNode(content);
-        const clone = (
-            <div class="modal">
-                <h2>Clone Offering</h2>
-                <form method="POST" action="clone">
-                    <input type="hidden" name="offering_id" value={offering_id} />
-                    <div class="line">
-                        <label>New Block:</label>
-                        <input name="block" />
-                    </div>
-                    <div class="line">
-                        <label>Faculty</label>
-                        <select name="fac_user_id">{fac_user_opts}</select>
-                    </div>
-                    <div class="line">
-                        <label>Start Date:</label>
-                        <input type="date" name="date" />
-                    </div>
-                    <div>
-                        <label>Days per Lesson</label>
-                        <input type="number" name="daysPerLesson" />
-                        <label>Lessons per Part</label>
-                        <input type="number" name="lessonsPerPart" />
-                        <label>Parts</label>
-                        <input type="number" name="lessonParts" />
-                    </div>
-                    <div class="submit">
-                        <button>Submit</button>
-                    </div>
-                </form>
-            </div>
-        );
-        ReactDOM.render(clone, content);
         document.getElementById("overlay").classList.add("visible");
+        document.getElementById('clone_modal').classList.remove('hide');
+        // document.getElementById('delete_modal').classList.add('hide');
     };
 
-    function updValue(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    document.getElementById("delete").onclick = function() {
+        document.getElementById("overlay").classList.add("visible");
+        document.getElementById('clone_modal').classList.add('hide');
+        // document.getElementById('delete_modal').classList.remove('hide');
+    };
 
     function editDay(day_id, desc, evt) {
         evt.preventDefault();

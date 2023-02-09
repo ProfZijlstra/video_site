@@ -11,6 +11,11 @@ class QuizDao {
      */
     public $db;
 
+    /**
+     * @Inject("QuestionDao")
+     */
+    public $questionDao;
+
     public function allForOffering($offering_id) {
         $stmt = $this->db->prepare(
 			"SELECT q.id, q.name, q.visible, d.abbr
@@ -91,6 +96,68 @@ class QuizDao {
             WHERE id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
+    }
+
+    /**
+     * Clones all quizzes for an offering (which is being cloned)
+     */
+    public function clone($offering_id, $new_offering_id) {
+        // find difference in days between the two offerings
+        $inject = "{$offering_id}, {$new_offering_id}";
+        $stmt = $this->db->prepare(
+            "SELECT id, `start` FROM offering
+            WHERE id IN ({$inject})
+            ORDER BY `start`");
+        $stmt->execute(array("offering_id" => $new_offering_id));
+        $dates = $stmt->fetchAll();
+        $earlier = new DateTime(substr($dates[0]['start'], 0, 10));
+        $later = new DateTime(substr($dates[1]['start'], 0, 10));
+        $daysDiff = $earlier->diff($later)->format("%r%a");
+        $interval = new DateInterval("P{$daysDiff}D");
+
+        // create a lookup table for abbr to new day id
+        $stmt = $this->db->prepare(
+            "SELECT id, abbr FROM day
+            WHERE offering_id = :offering_id");
+        $stmt->execute(array("offering_id" => $new_offering_id));
+        $rows = $stmt->fetchAll();
+
+        $days = [];
+        foreach ($rows as $row) {
+            $days[$row['abbr']] = $row['id'];
+        }
+
+        // get all the old quizzes
+        $stmt = $this->db->prepare(
+            "SELECT q.id, q.name, q.start, q.stop, d.abbr FROM quiz AS q
+            JOIN `day` AS d on q.day_id = d.id
+            WHERE d.offering_id = :offering_id");
+        $stmt->execute(array("offering_id" => $offering_id));
+        $quizzes = $stmt->fetchAll();
+
+        // create a clone for each on the same day in the new offering
+        $stmt = $this->db->prepare(
+			"INSERT INTO quiz 
+			VALUES(NULL, :name, :day_id, :start, :stop, 0)"
+		);
+        foreach ($quizzes as $quiz) {
+            // move start date by date difference between offerings
+            $start = new DateTime($quiz['start']);
+            $stop = new DateTime($quiz['stop']);
+            $start->add($interval);
+            $stop->add($interval);
+
+            $stmt->execute(array(
+                "name" => $quiz['name'],
+                "day_id" => $days[$quiz['abbr']],
+                "start" => $start->format("Y-m-d H:i:s"),
+                "stop" => $stop->format("Y-m-d H:i:s"),
+            ));
+            $new_quiz_id = $this->db->lastInsertId();
+
+            // also clone the questions for each quiz
+            $this->questionDao->clone($quiz['id'], $new_quiz_id);
+        }
     }
 }
 ?>

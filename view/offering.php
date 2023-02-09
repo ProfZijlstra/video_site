@@ -33,6 +33,7 @@
                 <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                 <i title="Clone Offering" id="clone" class="far fa-copy"></i>
+                <!-- <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i> -->
             </nav>
             <?php endif; ?>
 
@@ -80,7 +81,64 @@
         <?php if ($_user_type === 'admin') : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
-                <div id="content"></div>
+                <div id="clone_modal" class="modal">
+                    <h2>Clone Offering</h2>
+                    <form method="POST" action="clone">
+                        <input type="hidden" name="offering_id" value=<?= $offering['id'] ?> />
+                        <div class="line">
+                            <label>New Block:</label>
+                            <input name="block" />
+                        </div>
+                        <div class="line">
+                            <label>Faculty</label>
+                            <select name="fac_user_id" id="fac_user_id">
+                                <?php foreach($faculty as $user): ?>
+                                    <option value="<?= $user['id'] ?>"><?= $user['firstname'] . " " .  $user['lastname'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="line">
+                            <label>Start Date:</label>
+                            <input type="date" name="start" />
+                        </div>
+                        <div>
+                            <label>Days per Lesson</label>
+                            <input type="number" name="daysPerLesson" value="<?= $offering['daysPerLesson'] ?>" />
+                            <label>Lessons per Part (cols)</label>
+                            <input type="number" name="lessonsPerPart" value="<?= $offering['lessonsPerPart']?>" />
+                            <label>Parts (rows)</label>
+                            <input type="number" name="lessonParts" value="<?= $offering['lessonParts'] ?>"  />
+                        </div>
+                        <div class="indent">
+                            <label class="checkbox">
+                                <input type="checkbox" name="hasQuiz" value="1" <?= $offering['hasQuiz'] ? "checked" : ""?> />
+                                Has Quiz
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="hasLab" value="1" <?= $offering['hasLab'] ? "checked" : ""?> />
+                                Has Lab
+                            </label>
+                        </div>
+                        <div class="submit">
+                            <button>Submit</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- TODO implement: see issue #20 on github
+                <div id="delete_modal" class="modal">
+                    <h2>Delete Offering</h2>
+                    <p>
+                        Please confirm that you want to delete this offering.
+                    </p>
+                    <form method="POST" action="delete">
+                        <input type="hidden" name="offering_id" value=<?= $offering['id'] ?> />
+                        <div class="submit">
+                            <button type="button" id="cancel_delete">Cancel</button>
+                            <button type="submit" id="ok_delete">OK</button>
+                        </div>
+                    </form>
+                </div> -->
+
             </div>
         <?php endif; ?>
 

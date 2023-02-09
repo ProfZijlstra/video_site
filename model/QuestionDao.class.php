@@ -91,5 +91,31 @@ class QuestionDao {
             "seq" => $question['seq'], 
             "quiz_id" => $question['id']]);
     }
+
+    /**
+     * Clones all questions for a quiz, adding them to the new quiz
+     */
+    public function clone($quiz_id, $new_quiz_id) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM question 
+            WHERE quiz_id = :quiz_id");
+		$stmt->execute(array( "quiz_id" =>  $quiz_id ));
+        $questions = $stmt->fetchAll();
+
+        $stmt = $this->db->prepare(
+			"INSERT INTO question 
+			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type)"
+		);
+        foreach ($questions as $question) {
+            $stmt->execute(array(
+                "quiz_id" => $new_quiz_id,
+                "type" => $question['type'],
+                "text" => $question['text'],
+                "model_answer" => $question['model_answer'],
+                "points" => $question['points'],
+                "seq" => $question['seq']
+            ));    
+        }
+    }
 }
 ?>
