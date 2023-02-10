@@ -162,7 +162,10 @@ class QuizGradingCtrl {
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
         $shifted = filter_input(INPUT_POST, "comment");
 
-        $comment = $this->markdownCtrl->ceasarShift($shifted);
+        $comment = "";
+        if ($shifted) {
+            $comment = $this->markdownCtrl->ceasarShift($shifted);
+        }
 
         $this->answerDao->grade($answer_ids, $points, $comment);
     }
@@ -179,7 +182,10 @@ class QuizGradingCtrl {
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
         $shifted = filter_input(INPUT_POST, "comment");
 
-        $comment = $this->markdownCtrl->ceasarShift($shifted);
+        $comment = "";
+        if ($shifted) {
+            $comment = $this->markdownCtrl->ceasarShift($shifted);
+        }
 
         if ($answer_id) {
             $this->answerDao->grade($answer_id, $points, $comment);

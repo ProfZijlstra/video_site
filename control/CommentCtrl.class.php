@@ -54,7 +54,10 @@ class CommentCtrl
         $shifted = filter_input(INPUT_POST, "text");
         $tab = filter_input(INPUT_POST, "tab");
 
-        $comment = $this->markdownCtrl->ceasarShift($shifted);
+        $comment = "";
+        if ($shifted) {
+            $comment = $this->markdownCtrl->ceasarShift($shifted);
+        }
         $id = $this->commentDao->add($comment, $user_id, $video);
         $user = $this->userDao->retrieve($user_id);
 
@@ -101,7 +104,10 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         $tab = filter_input(INPUT_POST, "tab");
         $shifted = filter_input(INPUT_POST, "text");
 
-        $text = $this->markdownCtrl->ceasarShift($shifted);
+        $text = "";
+        if ($shifted) {
+            $text = $this->markdownCtrl->ceasarShift($shifted);
+        }
         $comment = $this->commentDao->get($id);
 
         if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
@@ -199,7 +205,10 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         $shifted = filter_input(INPUT_POST, "text");
         $user_id = $_SESSION['user']['id'];
 
-        $text = $this->markdownCtrl->ceasarShift($shifted);
+        $text = "";
+        if ($shifted) {
+            $text = $this->markdownCtrl->ceasarShift($shifted);
+        }
         $user = $this->userDao->retrieve($user_id);
         $qid = filter_input(INPUT_POST, "id");
         $op_email = $this->commentDao->getUserEmail($qid);
@@ -234,7 +243,10 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
         $tab = filter_input(INPUT_POST, "tab");
         $shifted =filter_input(INPUT_POST, "text");
 
-        $text = $this->markdownCtrl->ceasarShift($shifted);
+        $text = "";
+        if ($shifted) {
+            $text = $this->markdownCtrl->ceasarShift($shifted);
+        }
         $reply = $this->replyDao->get($id);
         if ($_SESSION['user']['type'] === 'admin' || $reply['user_id'] == $_SESSION['user']['id']) {
             $this->replyDao->update($id, $text);
