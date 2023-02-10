@@ -33,6 +33,7 @@ class EnrollmentCtrl {
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["enrollment"] = $enrollment;
         $VIEW_DATA["block"] = $block;
