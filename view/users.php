@@ -45,6 +45,7 @@
             <thead>
             <tr>
                 <th>ID</th>
+                <th>StudentId</th>
                 <th>KnownAs</th>
                 <th>Given</th>
                 <th>Family</th>
@@ -58,6 +59,7 @@
             <?php foreach ($users as $user) : ?>
                 <tr class="user">
                     <td class="num"><a href="user/<?= $user['id'] ?>"><?= $user['id'] ?></a></td>
+                    <td class="num"><?= $user['studentID']?></td>
                     <td><?= $user['knownAs'] ?></td>
                     <td><?= $user['firstname'] ?></td>
                     <td><?= $user['lastname'] ?></td>
