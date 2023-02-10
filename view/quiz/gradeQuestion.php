@@ -138,19 +138,19 @@
 
                 <div class="done">
                     <?php if ($next_id): ?>
-                    <a href="<?= $next_id ?>">
-                        <button>Next Question</button>
-                    </a>
+                        <a href="<?= $next_id ?>" tabindex="-1">
+                            <button>Next Question</button>
+                        </a>
                     <?php endif; ?>
 
                     <?php if ($prev_id): ?>
-                        <a href="<?= $prev_id ?>">
+                        <a href="<?= $prev_id ?>" tabindex="-1">
                             <button>Previous Question</button>
                         </a>
                     <?php endif; ?>
 
 
-                    <a href="../grade">
+                    <a href="../grade" tabindex="-1">
                         <button id="finish">Finish Grading</button>
                     </a>
                 </div>
