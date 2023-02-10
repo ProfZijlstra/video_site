@@ -140,7 +140,7 @@ class QuizDao {
         // create a clone for each on the same day in the new offering
         $stmt = $this->db->prepare(
 			"INSERT INTO quiz 
-			VALUES(NULL, :name, :day_id, :start, :stop, 0)"
+			VALUES(NULL, :name, :day_id, :start, :stop, :visible)"
 		);
         foreach ($quizzes as $quiz) {
             // move start date by date difference between offerings
@@ -154,6 +154,7 @@ class QuizDao {
                 "day_id" => $days[$quiz['abbr']],
                 "start" => $start->format("Y-m-d H:i:s"),
                 "stop" => $stop->format("Y-m-d H:i:s"),
+                "visible" => $quiz['visible'],
             ));
             $new_quiz_id = $this->db->lastInsertId();
 
