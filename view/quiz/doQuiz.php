@@ -46,7 +46,7 @@
                             <?php if($question['type'] == 'markdown'): ?>
                             <textarea class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answers[$question['id']]['text']?></textarea>
                             <div>
-                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                <div class="preview"><button tabindex="-1" class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
                             <?php elseif ($question['type'] == "image"): ?>
