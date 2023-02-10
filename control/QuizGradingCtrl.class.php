@@ -83,6 +83,7 @@ class QuizGradingCtrl {
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Overview";
+        $VIEW_DATA['quiz'] = $this->quizDao->byId($quiz_id);
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['absent'] = $absent;
         $VIEW_DATA['taken'] = $taken;

@@ -8,6 +8,9 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <style>
+            #content h2 {
+                margin-bottom: 15px;
+            }
             h3 {
                 margin-bottom: 0px;
             }
@@ -44,6 +47,7 @@ window.addEventListener("load", () => {
                 </a>
             </nav>
             <div id="content">
+                <h2>Quiz: <?= $quiz['name'] ?></h2>
                 <!-- Links to grade by question -->
                 <div id="questions">
                     <strong>Grade Question:</strong>
