@@ -101,6 +101,71 @@ class QuizDao {
     }
 
     /**
+     * Gets a report of quiz totals for all students enrolled in this offering
+     */
+    public function report($offering_id) {
+        // get all quizzes for offering
+        $stmt = $this->db->prepare(
+            "SELECT q.id, q.name, d.abbr
+            FROM quiz AS q
+            JOIN `day` AS d ON q.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            ORDER BY q.start");
+        $stmt->execute(array("offering_id" => $offering_id));
+        $quizzes = $stmt->fetchAll();
+
+        // build CSV header and query for data fetching 
+        $count= 1;
+        $header = '"studentId","firstName","lastName",';
+        $select = "";
+        $join = "";
+        $and = "";
+        $params = [];
+        foreach ($quizzes as $quiz) {
+            // build CSV header line
+            $header .= '"' . $quiz['abbr'] . '",';
+
+            // build SQL SELECT statement parts
+            /* The joins make a giant cartesian product, which we then collapse 
+            down by using aggregate functions. The SUM will have too many rows
+            we divide by the total amount of rows, and then multiply by the ones
+            we actually needed to get the right SUM out. */
+            $select .= "SUM(a{$count}.points) / COUNT(a{$count}.id) * COUNT(DISTINCT a{$count}.id) AS q{$count}, "; 
+            $join .= "JOIN answer AS a{$count} ON u.id = a{$count}.user_id
+            JOIN question AS qu{$count} ON qu{$count}.id = a{$count}.question_id
+            JOIN quiz AS qz{$count} ON qz{$count}.id = qu{$count}.quiz_id ";
+            $and .= "AND qz{$count}.id = :qz{$count} ";
+
+            // build SQL bind params
+            $params["qz{$count}"] = $quiz['id'];
+
+            $count++;
+        }
+        $select = rtrim($select, ", ");
+
+        // get the actual data
+        $stmt = $this->db->prepare(
+            "SELECT u.studentID, u.firstname, u.lastname, {$select}
+            FROM user AS u
+            {$join}
+            WHERE u.id IN (SELECT user_id 
+                        FROM enrollment 
+                        WHERE offering_id = {$offering_id})
+            {$and}
+            GROUP BY u.id
+            ORDER BY u.firstname, u.lastname"    
+        );
+        $stmt->execute($params);
+        $data = $stmt->fetchAll();
+
+        return [
+            "colCount" => ($count + 3), // 3 are: sid, first, last
+            "header" => $header,
+            "data" => $data,
+        ];
+    }
+
+    /**
      * Clones all quizzes for an offering (which is being cloned)
      */
     public function clone($offering_id, $new_offering_id) {

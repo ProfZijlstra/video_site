@@ -209,7 +209,9 @@ class QuizAdminCtrl {
         $model_answer = "";
         if ($type == "markdown") {
             $ashifted = filter_input(INPUT_POST, "model_answer");
-            $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
+            if ($ashifted) {
+                $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
+            }
         } else if ($type == "image") {
             $model_answer = filter_input(INPUT_POST, "model_answer");
         }
@@ -237,10 +239,29 @@ class QuizAdminCtrl {
      */
     public function delQuestion() {
         global $URI_PARAMS;
-        $quiz_id = $URI_PARAMS[1];
         $question_id = $URI_PARAMS[2];
         $this->questionDao->delete($question_id);
         return "Location: ../../edit";
+    }
+
+    /**
+     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/report$!", sec="instructor");
+     */
+    public function resultsReport() {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
+        $report = $this->quizDao->report($offering['id']);
+
+        $VIEW_DATA['colCount'] = $report['colCount'];
+        $VIEW_DATA['header'] = $report['header'];
+        $VIEW_DATA['data'] = $report['data'];
+
+        return "quiz/csv.php";
     }
 }
 

@@ -98,8 +98,8 @@ window.addEventListener("load", () => {
         </nav>
 
         <nav class="tools">
-            <a href=""> <!-- TOOD create a totals report -->
-                <i title="Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
+            <a href="quiz/report">
+                <i title="Download Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
             </a>
         </nav>
 
