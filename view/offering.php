@@ -27,10 +27,10 @@
         <main>
             <?php if ($_user_type === 'admin') : ?>
             <nav class="tools">
+                <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <a href="settings">
                     <i title="Offering Settings" class="fa-solid fa-gear"></i>
                 </a>
-                <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                 <i title="Clone Offering" id="clone" class="far fa-copy"></i>
                 <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
