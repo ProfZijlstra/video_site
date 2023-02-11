@@ -16,6 +16,11 @@ class QuizDao {
      */
     public $questionDao;
 
+    /**
+     * @Inject("EnrollmentDao")
+     */
+    public $enrollmentDao;
+
     public function allForOffering($offering_id) {
         $stmt = $this->db->prepare(
 			"SELECT q.id, q.name, q.visible, d.abbr
@@ -104,6 +109,18 @@ class QuizDao {
      * Gets a report of quiz totals for all students enrolled in this offering
      */
     public function report($offering_id) {
+        // get enrollment for offering
+        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
+
+        // create data two dimensional array and initialize first 3 columns
+        $data = [];
+        foreach ($enrolled as $user) {
+            $data[$user['id']] = [];
+            $data[$user['id']][] = $user['studentID'];
+            $data[$user['id']][] = $user['firstname'];
+            $data[$user['id']][] = $user['lastname'];
+        }
+
         // get all quizzes for offering
         $stmt = $this->db->prepare(
             "SELECT q.id, q.name, d.abbr
@@ -117,46 +134,17 @@ class QuizDao {
         // build CSV header and query for data fetching 
         $count= 1;
         $header = '"studentId","firstName","lastName",';
-        $select = "";
-        $join = "";
-        $and = "";
-        $params = [];
         foreach ($quizzes as $quiz) {
             // build CSV header line
             $header .= '"' . $quiz['abbr'] . '",';
 
-            // build SQL SELECT statement parts
-            /* The joins make a giant cartesian product, which we then collapse 
-            down by using aggregate functions. The SUM will have too many rows
-            we divide by the total amount of rows, and then multiply by the ones
-            we actually needed to get the right SUM out. */
-            $select .= "SUM(a{$count}.points) / COUNT(a{$count}.id) * COUNT(DISTINCT a{$count}.id) AS q{$count}, "; 
-            $join .= "JOIN answer AS a{$count} ON u.id = a{$count}.user_id
-            JOIN question AS qu{$count} ON qu{$count}.id = a{$count}.question_id
-            JOIN quiz AS qz{$count} ON qz{$count}.id = qu{$count}.quiz_id ";
-            $and .= "AND qz{$count}.id = :qz{$count} ";
-
-            // build SQL bind params
-            $params["qz{$count}"] = $quiz['id'];
-
+            // build data column for this quiz
+            $pts = $this->getQuizTotalsForEnrolled($quiz['id'], $offering_id);
+            foreach ($pts as $pt) {
+                $data[$pt['user_id']][] = $pt['points'];
+            }
             $count++;
         }
-        $select = rtrim($select, ", ");
-
-        // get the actual data
-        $stmt = $this->db->prepare(
-            "SELECT u.studentID, u.firstname, u.lastname, {$select}
-            FROM user AS u
-            {$join}
-            WHERE u.id IN (SELECT user_id 
-                        FROM enrollment 
-                        WHERE offering_id = {$offering_id})
-            {$and}
-            GROUP BY u.id
-            ORDER BY u.firstname, u.lastname"    
-        );
-        $stmt->execute($params);
-        $data = $stmt->fetchAll();
 
         return [
             "colCount" => ($count + 3), // 3 are: sid, first, last
@@ -226,6 +214,23 @@ class QuizDao {
             // also clone the questions for each quiz
             $this->questionDao->clone($quiz['id'], $new_quiz_id);
         }
+    }
+
+    private function getQuizTotalsForEnrolled($quiz_id, $offering_id) {
+        $stmt = $this->db->prepare(
+			"SELECT e.user_id, sum(a.points) AS points
+            FROM enrollment AS e 
+            LEFT JOIN answer AS a ON a.user_id = e.user_id 
+            LEFT JOIN question AS q ON a.question_id = q.id
+            WHERE e.offering_id = :offering_id
+            AND q.quiz_id = :quiz_id 
+            GROUP BY a.user_id "
+		);
+		$stmt->execute(array(
+            "quiz_id" => $quiz_id,
+            "offering_id" => $offering_id
+        ));
+		return $stmt->fetchAll();
     }
 }
 ?>
