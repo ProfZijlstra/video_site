@@ -30,7 +30,7 @@ window.addEventListener("load", () => {
     function goToUser() {
         const tr = this.parentNode;
         const user_id = tr.dataset.user_id;
-        window.location = `user/{$user_id}`
+        window.location = `user/${user_id}`
     }
     for (const td of tds) {
         td.onclick = goToUser;
@@ -68,7 +68,7 @@ window.addEventListener("load", () => {
                     <tr data-user_id="<?= $result['id'] ?>">
                         <td>
                             <a href="user/<?= $id ?>">
-                                <?= $result['knownAs'] ?> <?= $result['lastname'] ?>
+                                <?= $result['knownAs'] ?> (<?= $result['firstname'] ?>) <?= $result['lastname'] ?>
                             </a>                        
                         </td>
                     </tr>
@@ -89,7 +89,7 @@ window.addEventListener("load", () => {
                     </tr>
                     <?php foreach ($taken as $result): ?>
                     <tr data-user_id="<?= $result['id'] ?>">
-                        <td><?= $result['knownAs'] ?> <?= $result['lastname'] ?></td>
+                        <td><?= $result['knownAs'] ?> (<?= $result['firstname'] ?>) <?= $result['lastname'] ?></td>
                         <td class="start" title="<?= $starts[$result['id']] ?>"><?= substr($starts[$result['id']], 11) ?></td>
                         <td class="stop" title="<?= $stops[$result['id']] ?>"><?= substr($stops[$result['id']],11) ?></td>
                         <td class="answers"><?= $result['answers'] ?></td>
@@ -112,7 +112,7 @@ window.addEventListener("load", () => {
                     </tr>
                     <?php foreach ($extra as $result): ?>
                     <tr data-user_id="<?= $result['id'] ?>">
-                        <td><?= $result['knownAs'] ?> <?= $result['lastname'] ?></td>
+                        <td><?= $result['knownAs'] ?> (<?= $result['firstname'] ?>) <?= $result['lastname'] ?></td>
                         <td class="start" title="<?= $starts[$result['id']] ?>"><?= substr($starts[$result['id']], 11) ?></td>
                         <td class="stop" title="<?= $stops[$result['id']] ?>"><?= substr($stops[$result['id']],11) ?></td>
                         <td class="answers"><?= $result['answers'] ?></td>

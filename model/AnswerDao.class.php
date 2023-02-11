@@ -103,7 +103,7 @@ class AnswerDao {
 
     public function overview($quiz_id) {
         $stmt = $this->db->prepare(
-			"SELECT u.id, u.knownAs, u.lastname, 
+			"SELECT u.id, u.knownAs, u.firstname, u.lastname, 
                 count(a.id) AS answers, 
                 sum(a.points) AS points
             FROM answer AS a 
