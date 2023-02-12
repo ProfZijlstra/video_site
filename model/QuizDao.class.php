@@ -109,6 +109,8 @@ class QuizDao {
      * Gets a report of quiz totals for all students enrolled in this offering
      */
     public function report($offering_id) {
+        // TODO move the logic in this method back into the controller
+
         // get enrollment for offering
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
 
@@ -157,6 +159,8 @@ class QuizDao {
      * Clones all quizzes for an offering (which is being cloned)
      */
     public function clone($offering_id, $new_offering_id) {
+        // TODO move the logic in this method back into the controller
+
         // find difference in days between the two offerings
         $inject = "{$offering_id}, {$new_offering_id}";
         $stmt = $this->db->prepare(
