@@ -6,8 +6,7 @@
  *
  * @Controller
  */
-class CommentCtrl
-{
+class CommentCtrl {
 
     /**
      * @Inject("CommentDao")
@@ -40,10 +39,9 @@ class CommentCtrl
     public $markdownCtrl;
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/comment$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/comment$!", sec="observer")
      */
-    public function add()
-    {
+    public function add() {
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -61,7 +59,7 @@ class CommentCtrl
         $id = $this->commentDao->add($comment, $user_id, $video);
         $user = $this->userDao->retrieve($user_id);
 
-        $message = $user["knownAs"] . " " . $user["lastname"] . 
+        $message = $user["knownAs"] . " " . $user["lastname"] .
             " asks:\n\n$comment\n
 See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
@@ -72,34 +70,30 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delComment$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delComment$!", sec="observer")
      */
-    public function del()
-    {
-        $user_id = $_SESSION['user']['id'];
+    public function del() {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         $comment = $this->commentDao->get($id);
-        if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
+        if ($_SESSION['user']['isAdmin'] == 1 || $comment['user_id'] == $_SESSION['user']['id']) {
             $this->commentDao->del($id);
         }
         return "Location: {$tab}#commentForm";
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getComment$!", sec="applicant")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getComment$!", sec="observer")
      */
-    public function get()
-    {
+    public function get() {
         $id = filter_input(INPUT_GET, "id");
         return $this->commentDao->get($id);
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updComment$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updComment$!", sec="observer")
      */
-    public function update()
-    {
+    public function update() {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         $shifted = filter_input(INPUT_POST, "text");
@@ -110,7 +104,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         }
         $comment = $this->commentDao->get($id);
 
-        if ($_SESSION['user']['type'] === 'admin' || $comment['user_id'] == $_SESSION['user']['id']) {
+        if ($_SESSION['user']['isAdmin'] == 1 || $comment['user_id'] == $_SESSION['user']['id']) {
             $this->commentDao->update($id, $text);
         }
 
@@ -118,39 +112,42 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/upvote$!", sec="applicant")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upvote$!", sec="observer")
      */
-    public function upvote()
-    {
+    public function upvote() {
         return array("vid" => $this->vote("q", 1), "type" => "up");
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/downvote$!", sec="applicant")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downvote$!", sec="observer")
      */
-    public function downvote()
-    {
+    public function downvote() {
         return array("vid" => $this->vote("q", -1), "type" => "down");
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/upreply$!", sec="applicant")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upreply$!", sec="observer")
      */
-    public function upreply()
-    {
+    public function upreply() {
         return array("vid" => $this->vote("r", 1), "type" => "up");
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/downreply$!", sec="applicant")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downreply$!", sec="observer")
      */
-    public function downreply()
-    {
+    public function downreply() {
         return array("vid" => $this->vote("r", -1), "type" => "down");
     }
 
-    private function vote($q_r, $up_down)
-    {
+    private function vote($q_r, $up_down) {
         $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $vid = filter_input(INPUT_POST, "vid");
@@ -169,7 +166,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
             $value = 0;
         }
         // admin votes weigh a lot more
-        if ($_SESSION['user']['type'] === 'admin') {
+        if ($_SESSION['user']['isAdmin'] == 1) {
             $value *= 10;
         }
 
@@ -193,10 +190,9 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/addReply$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/addReply$!", sec="observer")
      */
-    public function addReply()
-    {
+    public function addReply() {
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -214,7 +210,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         $op_email = $this->commentDao->getUserEmail($qid);
         $id = $this->replyDao->add($text, $user_id, $qid);
 
-        $message = $user["knownAs"] . " " . $user["lastname"] . 
+        $message = $user["knownAs"] . " " . $user["lastname"] .
             " says:\n\n$text\n
 See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
@@ -226,49 +222,45 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/getReply$!", sec="applicant")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getReply$!", sec="observer")
      */
-    public function getReply()
-    {
+    public function getReply() {
         $id = filter_input(INPUT_GET, "id");
         return $this->replyDao->get($id);
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/updReply$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updReply$!", sec="observer")
      */
-    public function updateReply()
-    {
+    public function updateReply() {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
-        $shifted =filter_input(INPUT_POST, "text");
+        $shifted = filter_input(INPUT_POST, "text");
 
         $text = "";
         if ($shifted) {
             $text = $this->markdownCtrl->ceasarShift($shifted);
         }
         $reply = $this->replyDao->get($id);
-        if ($_SESSION['user']['type'] === 'admin' || $reply['user_id'] == $_SESSION['user']['id']) {
+        if ($_SESSION['user']['isAdmin'] == 1 || $reply['user_id'] == $_SESSION['user']['id']) {
             $this->replyDao->update($id, $text);
         }
-        
+
         return "Location: {$tab}#r{$id}";
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/W[1-4]D[1-7]/delReply$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delReply$!", sec="observer")
      */
-    public function delReply()
-    {
+    public function delReply() {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
 
         $reply = $this->replyDao->get($id);
-        if ($_SESSION['user']['type'] === 'admin' || $reply['user_id'] == $_SESSION['user']['id']) {
+        if ($_SESSION['user']['isAdmin'] == 1 || $reply['user_id'] == $_SESSION['user']['id']) {
             $this->replyDao->del($id);
         }
 
         return "Location: {$tab}#q" . $reply['comment_id'];
     }
-
 }

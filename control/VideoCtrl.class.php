@@ -48,7 +48,7 @@ class VideoCtrl {
 
     /**
      * Redirects to latest offering for a course
-     * @GET(uri="!^/(cs\d{3})/?$!", sec="applicant")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/?$!", sec="observer")
      */
     public function loggedIn() {
         global $URI_PARAMS;
@@ -73,14 +73,14 @@ class VideoCtrl {
 	/**
 	 * If the URL doesn't contain a video selection, just a day
 	 * 
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/([A-Z][1-4][A-Z][1-7])/$!", sec="applicant")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/([A-Z][1-4][A-Z][1-7])/$!", sec="observer")
 	 */
 	public function only_day() {
 		return "Location: 01";
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/$!", sec="applicant");
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/$!", sec="observer");
 	 */
 	public function offering() {
 		// We're building on top of  overview -- run it first
@@ -108,7 +108,7 @@ class VideoCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/(\d{2})$!", sec="applicant")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$!", sec="observer")
 	 */
 	public function video() {
         global $URI_PARAMS;
@@ -214,7 +214,7 @@ class VideoCtrl {
 	}
 
 	/**
-	 * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/autoplay$!", sec="applicant")
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/autoplay$!", sec="observer")
 	 */
 	public function autoplay() {
 		$toggle = filter_input(INPUT_POST, "toggle");
@@ -222,7 +222,7 @@ class VideoCtrl {
 	}
 
 		/**
-	 * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/theater$!", sec="applicant")
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/theater$!", sec="observer")
 	 */
 	public function theater() {
 		$toggle = filter_input(INPUT_POST, "toggle");

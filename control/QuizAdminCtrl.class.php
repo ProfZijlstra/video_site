@@ -43,7 +43,12 @@ class QuizAdminCtrl {
     public $dayDao;
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz$!", sec="applicant")
+     * @Inject('EnrollmentDao')
+     */
+    public $enrollmentDao;
+
+    /**
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec="observer")
      */
     public function courseOverview() {
         // We're building on top of  overview -- run it first
@@ -74,7 +79,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec="instructor")
      */
     public function addQuiz() {
         $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
@@ -92,7 +97,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/edit$!", sec="instructor")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/edit$!", sec="instructor")
      */
     public function editQuiz() {
         global $URI_PARAMS;
@@ -118,7 +123,7 @@ class QuizAdminCtrl {
     /**
      * Expects AJAX
      *  
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec="instructor")
      */
     public function updateQuiz() {
         global $URI_PARAMS;
@@ -140,7 +145,7 @@ class QuizAdminCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/status$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/status$!", sec="instructor")
      */
     public function setQuizStatus() {
         global $URI_PARAMS;
@@ -150,7 +155,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/del$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/del$!", sec="instructor")
      */
     public function deleteQuiz() {
         global $URI_PARAMS;
@@ -160,7 +165,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question$!", sec="instructor")
      */
     public function addQuestion() {
         $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
@@ -220,7 +225,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/(\d+)/modelAnswerImage$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/modelAnswerImage$!", sec="instructor")
      */
     public function uploadReplacementModelImage() {
         global $URI_PARAMS;
@@ -245,7 +250,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/report$!", sec="instructor");
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/report$!", sec="instructor");
      */
     public function resultsReport() {
         global $URI_PARAMS;
@@ -255,11 +260,37 @@ class QuizAdminCtrl {
         $block = $URI_PARAMS[2];
 
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
-        $report = $this->quizDao->report($offering['id']);
+        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
-        $VIEW_DATA['colCount'] = $report['colCount'];
-        $VIEW_DATA['header'] = $report['header'];
-        $VIEW_DATA['data'] = $report['data'];
+        // create data two dimensional array and initialize first 3 columns
+        $data = [];
+        foreach ($enrolled as $user) {
+            $data[$user['id']] = [];
+            $data[$user['id']][] = $user['studentID'];
+            $data[$user['id']][] = $user['firstname'];
+            $data[$user['id']][] = $user['lastname'];
+        }
+
+        $quizzes = $this->quizDao->allForOffering($offering['id']);
+
+        // build CSV header and query for data fetching 
+        $count= 1;
+        $header = '"studentId","firstName","lastName",';
+        foreach ($quizzes as $quiz) {
+            // build CSV header line
+            $header .= '"' . $quiz['abbr'] . '",';
+
+            // build data column for this quiz
+            $pts = $this->quizDao->getQuizTotalsForEnrolled($quiz['id'], $offering['id']);
+            foreach ($pts as $pt) {
+                $data[$pt['user_id']][] = $pt['points'];
+            }
+            $count++;
+        }
+
+        $VIEW_DATA['colCount'] = $count + 3; // 3 are sid, first, last
+        $VIEW_DATA['header'] = $header;
+        $VIEW_DATA['data'] = $data;
 
         return "quiz/csv.php";
     }

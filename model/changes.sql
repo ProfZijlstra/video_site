@@ -318,3 +318,7 @@ UPDATE `user` SET isFaculty = 1 WHERE type = 'admin';
 ALTER TABLE `user` DROP `type`;
 ALTER TABLE `user` DROP hasPicture; -- cleanup, still not using this 
 
+ALTER TABLE `enrollment` ADD COLUMN `auth` VARCHAR(45) NOT NULL DEFAULT 'observer';
+UPDATE `enrollment` SET `auth` = 'student';
+INSERT INTO `enrollment` (id, user_id, offering_id, auth) SELECT NULL, `fac_user_id`, `id`, 'instructor' FROM `offering`;
+ALTER TABLE `offering` DROP `fac_user_id`;

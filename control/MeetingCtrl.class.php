@@ -34,7 +34,7 @@ class MeetingCtrl
     public $attendanceImportDao;
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$!", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
      */
     public function getMeeting()
     {
@@ -77,7 +77,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/(\d+)$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
      */
     public function updMeeting()
     {
@@ -94,7 +94,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/regen/(\d+)$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/regen/(\d+)$!", sec="assistant")
      */
     public function regenReport()
     {
@@ -108,7 +108,7 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting/attend/(\d+)$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/attend/(\d+)$!", sec="assistant")
      */
     public function updateAttendance()
     {
@@ -118,13 +118,13 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/absent$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/absent$!", sec="assistant")
      */
     public function markAbsent()
     {
         global $URI_PARAMS;
 
-        $meeting_id = $URI_PARAMS[1];
+        $meeting_id = $URI_PARAMS[3];
         $attendance_id = filter_input(INPUT_POST, "attendance_id", FILTER_SANITIZE_NUMBER_INT);
         $this->attendanceDao->markAbsent($attendance_id, 1);
 
@@ -132,13 +132,13 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/present$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/present$!", sec="assistant")
      */
     public function markPresent()
     {
         global $URI_PARAMS;
 
-        $meeting_id = $URI_PARAMS[1];
+        $meeting_id = $URI_PARAMS[3];
         $attendance_id = filter_input(INPUT_POST, "attendance_id", FILTER_SANITIZE_NUMBER_INT);
         $this->attendanceDao->markAbsent($attendance_id, 0);
 
@@ -146,17 +146,17 @@ class MeetingCtrl
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailAbsent$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailAbsent$!", sec="assistant")
      */
     public function emailAbsent() {
         global $URI_PARAMS;
-        $meeting_id = $URI_PARAMS[1];
+        $meeting_id = $URI_PARAMS[3];
         $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
         "Reply-To:<mzijlstra@miu.edu> ";
         $template = 
 "
 
-If you let your instructor know ahead of time when you are unable to attend it 
+If you let your assistant know ahead of time when you are unable to attend it 
 is possible to have an excused absence.
 
 As is this unexcused absence will be added to your professionalism record
@@ -187,16 +187,16 @@ We noticed you were absent from the ". $absent["title"]." meeting from its start
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/emailTardy$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailTardy$!", sec="assistant")
      */
     public function emailTardy() {
         global $URI_PARAMS;
-        $meeting_id = $URI_PARAMS[1];
+        $meeting_id = $URI_PARAMS[3];
         $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
         "Reply-To:<mzijlstra@miu.edu> ";
         $template = 
 "
-If you let your instructor know ahead of time when you are unable to attend it 
+If you let your assistant know ahead of time when you are unable to attend it 
 is possible to have an excused absence.
 
 As is, the minutes of unexcused absence will be added to your professionalism 
@@ -241,7 +241,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
 
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
      */
     public function addMeeting()
     {
@@ -261,7 +261,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/meeting$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting$!", sec="assistant")
      */
     public function createMeeting() {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -300,12 +300,12 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/meeting/(\d+)/delete$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/delete$!", sec="assistant")
      */
     public function deleteMeeting() {
         global $URI_PARAMS;
 
-        $meeting_id = $URI_PARAMS[1];
+        $meeting_id = $URI_PARAMS[3];
         $this->attendanceImportDao->deleteForMeeting($meeting_id);
         $this->attendanceDao->deleteForMeeting($meeting_id);
         $this->meetingDao->delete($meeting_id);

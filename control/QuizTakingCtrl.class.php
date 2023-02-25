@@ -44,7 +44,7 @@ class QuizTakingCtrl {
      * 2. If it is used after the stop time it shows a status for each question
      * 3. If between start and stop the user can give answers
      * 
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)$!", sec="applicant")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec="observer")
      */
     public function viewQuiz() {
         global $URI_PARAMS;
@@ -96,7 +96,7 @@ class QuizTakingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/(\d+)/markdown$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/markdown$!", sec="observer")
      */
     public function answerMarkdownQuestion() {
         global $URI_PARAMS;
@@ -125,7 +125,7 @@ class QuizTakingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/(\d+)/image$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/image$!", sec="observer")
      **/
     public function answerImageQuestion() {
         global $URI_PARAMS;
@@ -159,7 +159,7 @@ class QuizTakingCtrl {
     } 
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/finish$!", sec="applicant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/finish$!", sec="observer")
      */
     public function finishQuiz() {
         global $URI_PARAMS;

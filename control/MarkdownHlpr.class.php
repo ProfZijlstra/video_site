@@ -10,7 +10,7 @@ class MarkdownHlpr {
     /**
      * AJAX call to get a markdown preview
      * 
-     * @GET(uri="!^/cs\d{3}/20\d{2}-\d{2}/markdown$!", sec="applicant")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/markdown$!", sec="observer")
      */
     public function markdownPreview() {
         global $VIEW_DATA;

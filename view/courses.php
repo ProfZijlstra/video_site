@@ -30,18 +30,28 @@
 <body>
     <?php include("header.php"); ?>
     <main>
-        <?php if ($_user_type === 'admin') : ?>
-            <nav class="tools"><i id="createCourse" class="fa-regular fa-square-plus"></i></nav>
+        <?php if (hasMinAuth('admin')) : ?>
+            <nav class="tools">
+                <?php if ($type == "my"): ?>
+                <a href="all">
+                    <i class="fa-solid fa-globe" title="All Courses"></i>
+                </a>
+                <?php elseif ($type == "all"): ?>
+                <a href="../videos/">
+                    <i class="fa-solid fa-user" title="My Courses"></i>
+                </a>
+                <?php endif; ?>
+                <i id="createCourse" title="Create Course" class="fa-regular fa-square-plus"></i>
+            </nav>
         <?php endif; ?>
         <div id="content">
-
             <?php foreach ($offerings as $offering) : ?>
                 <div class="offering">
                     <a href="<?= $offering["number"] . "/" . $offering["block"] . "/" ?>">
                         <span class="number"><?= strtoupper($offering["number"]) ?></span>
                         <span class="block"><?= $offering["block"] ?></span>
-                        <span class="name"><?= $offering["name"] ?></span>
-                        <span class="faculty"><?= $offering["knownAs"] ?> <?= $offering["lastname"] ?></span>
+                        <span class="name"><?= $offering['name'] ?></span>
+                        <span class="faculty"><?= $names[$offering['id']] ?></span>
                     </a>
                 </div>
             <?php endforeach; ?>
@@ -49,7 +59,7 @@
         </div>
     </main>
 
-    <?php if ($_user_type === 'admin') : ?>
+    <?php if (hasMinAuth('admin')) : ?>
         <div id="overlay">
             <i id="close-overlay" class="fas fa-times-circle"></i>
             <div id="createCourseModal" class="modal">

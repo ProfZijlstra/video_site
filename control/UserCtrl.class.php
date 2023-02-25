@@ -64,18 +64,10 @@ class UserCtrl {
                 "id" => $row['id'],
                 "first" => $row['firstname'],
                 "last" => $row['lastname'],
-                "type" => $row['type'],
+                "isAdmin" => $row['isAdmin'],
+                "isFaculty" => $row['isFaculty'],
                 "autoplay" => "off"
             );
-            // save enrollment in session (to limit access to enrolled)
-            if ($row['type'] === 'applicant' || $row['type' === 'student']) {
-                $rows = $this->offeringDao->enrolled($row['id']);
-                $enrollment = array();
-                foreach ($rows as $off) {
-                    $enrollment[] = ["number" => $off['number'], "block" => $off['block']];
-                }
-                $_SESSION['user']['enrolled'] = $enrollment;
-            }
             $_SESSION['user']['speed'] = $_COOKIE['view_speed'] ? $_COOKIE['view_speed'] : 1;
 
             // update the last accessed time
@@ -241,6 +233,8 @@ class UserCtrl {
      * Updates a user 
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
+     * 
+     * // TODO FIXME update is broken and should be changed to an AJAX update
      * 
      * @POST(uri="!^/user/(\d+)$!", sec="admin")
      */

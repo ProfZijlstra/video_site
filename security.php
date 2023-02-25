@@ -20,49 +20,80 @@ function isLoggedIn() {
     }
 }
 
-// helper function to check if logged in applicant / student is enrolled
-function allowOnlyEnrolledAt($url_pattern) {
-    global $MY_URI;
+// helper function to check if a user has the minimum requested authentication
+function hasMinAuth($req_auth) {
+    global $MY_BASE;
+    global $SEC_LVLS;
+    global $URI_PARAMS;
+    global $context;
 
-    $matches = array();
-    // only check for course urls
-    if (preg_match($url_pattern, $MY_URI, $match)) {
-        $enrolled = false;
-        foreach ($_SESSION['user']['enrolled'] as $off) {
-            if ($off['number'] === $match[1] && $off['block'] === $match[2]) {
-                $enrolled = true;
-            }
-        }
-        if (!$enrolled) {
-            require "view/error/403.php";
-            exit();    
+    if ($_SESSION['user']['isAdmin']) {
+        return true;
+    } 
+
+    if (count($URI_PARAMS) < 3) {
+        return false;
+    }
+
+    $course = $URI_PARAMS[1];
+    $block = $URI_PARAMS[2];
+    $user_id = $_SESSION['user']['id'];
+    if (!preg_match('/[a-z]{2,3}\d{3,4}/', $course) || 
+        !preg_match('!20\d{2}-\d{2}[^/]*!', $block)) {
+        return false;
+    }
+
+    if (!$_SESSION[$course]) {
+        $_SESSION[$course] = [];
+    }
+    if (!$_SESSION[$course][$block]) {
+        $enrollmentDao = $context->get("EnrollmentDao");
+        $enroll = $enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
+        $_SESSION[$course][$block] = $enroll;
+        if (!$enroll) {
+            include("view/notEnrolled.php");
+            return false;
         }
     }
+
+    $has_auth  = $_SESSION[$course][$block]['auth'];
+    for ($i = 0; $i < count($SEC_LVLS); $i++) {
+        $lvl = $SEC_LVLS[$i];
+        if ($req_auth == $lvl) {
+            $req_auth_lvl = $i;
+        }
+        if ($has_auth == $lvl) {
+            $has_auth_lvl = $i;
+        }
+    }
+    if ($req_auth_lvl > $has_auth_lvl) {
+        return false;
+    }
+
+    return true;
 }
 
 // apply the security policy
 switch ($MY_MAPPING['sec']) {
     case "none":
         break;
-    case "applicant":
+    case "login":
         isLoggedIn();
-        // has to be enrolled to see anything in an offering
-        if ($_SESSION['user']['type'] === 'applicant') {
-            allowOnlyEnrolledAt("!^/(cs\d{3})/(20\d{2}-\d{2})/.*!"); 
-        }
-        // has to be enrolled to see quiz or lab for an offering
-        // if ($_SESSION['user']['type'] === 'student') {
-        //    allowOnlyEnrolledAt("!^/(cs\d{3})/(20\d{2}-\d{2})/(quiz|lab)/.*!");
-        // }
         break;
+    case "observer":
     case "student":
+    case "assistant":
     case "instructor":        
         isLoggedIn();
+        if (!hasMinAuth($MY_MAPPING['sec'])) {
+            require "view/error/403.php";
+            exit();
+        }
         break;
     case "admin":
     default:
         isLoggedIn();
-        if ($_SESSION['user']['type'] !== 'admin') {
+        if (!$_SESSION['user']['isAdmin']) {
             require "view/error/403.php";
             exit();
         }

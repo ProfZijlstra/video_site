@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
 		<link rel="stylesheet" href="res/css/offering-1.1.css">
         <script src="res/js/offering.js"></script>
-        <?php if ($_user_type === 'admin') : ?>
+        <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
             <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
@@ -25,7 +25,7 @@
     <body>
         <?php include("header.php"); ?>
         <main>
-            <?php if ($_user_type === 'admin') : ?>
+            <?php if (hasMinAuth('instructor')) : ?>
             <nav class="tools">
                 <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <a href="settings">
@@ -45,8 +45,10 @@
                 <?php if ($offering['hasLab']): ?>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
                 <?php endif; ?>
-                <?php if ($_user_type === 'admin') : ?>
+                <?php if (hasMinAuth('assistant')) : ?>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
+                <?php endif; ?>
+                <?php if (hasMinAuth('instructor')) : ?>
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
                 <?php endif; ?>
                 <div title="Back to My Courses">
@@ -78,7 +80,7 @@
             </div>
 			<div id="total"><div class="info"></div></div>
         </main>
-        <?php if ($_user_type === 'admin') : ?>
+        <?php if (hasMinAuth('instructor')) : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
                 <div id="clone_modal" class="modal">

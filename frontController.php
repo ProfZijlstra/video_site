@@ -9,7 +9,7 @@ require("settings.php");
 define("DEVELOPMENT", true);
 define("TIMEZONE", "America/Chicago");
 date_default_timezone_set(TIMEZONE);
-$SEC_LVLS = array("none", "applicant", "student", "instructor", "admin");
+$SEC_LVLS = array("none", "login", "observer", "student", "assistant", "instructor", "admin");
 error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
 
 // try to extend session to 12 hours, based on: 
@@ -33,8 +33,8 @@ preg_match("|$MY_BASE(/.*)|", $the_uri, $matches);
 $MY_URI = $matches[1];
 
 $MY_METHOD = $_SERVER["REQUEST_METHOD"];
-$MY_MAPPING = array(); // populated by the code below
-$URI_PARAMS = array(); // populated with URI parameters on URI match in security
+$MY_MAPPING = array(); // populated when looking for a route
+$URI_PARAMS = array(); // populated with URI parameters on URI match in routing
 $VIEW_DATA = array(); // populated by controller, and used by view
 
 /* *****************************
@@ -57,6 +57,7 @@ spl_autoload_register(function ($class) {
     }
 });
 
+// create the context
 if (DEVELOPMENT) {
     require 'AnnotationReader.class.php';
     $ac = new AnnotationReader();
@@ -66,34 +67,16 @@ if (DEVELOPMENT) {
 } else {
     require 'context.php';
 }
+$context = new Context();
 
-// find our mapping (first step for security and routing)
-$uris = $mappings[$MY_METHOD];
-foreach ($uris as $pattern => $mapping) {
-    if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
-        $MY_MAPPING = $mapping;
-        break;
-    }
-}
-
-// If there was no mapping send out a 404
-if ($MY_MAPPING === []) {
-	if (DEVELOPMENT) {
-		print("Mapping not found");
-	}
-    require "view/error/404.php";
-    exit();
-}
-
-// always start the session context
+// always start the session
 session_start();
 
-/* ****************************** 
- * Check Security based on context security array
- * **************************** */
-require 'security.php';
 
 /* ****************************** 
- * Do Routing based on context routing arrays
+ * Do Routing based on the routing arrays found in the context
+ * 
+ * Once we have a route mapping it will check with security.php 
+ * to check the indicated authorization level for that route
  * **************************** */
 require 'routing.php';

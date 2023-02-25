@@ -38,7 +38,7 @@ class ViewCtrl {
 
 
    	/**
-	 * @GET(uri="!^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?start.*$!", sec="applicant")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/start.*$!", sec="observer")
 	 */
 	public function start() {
 		$user_id = $_SESSION['user']['id'];
@@ -48,7 +48,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/stop$!", sec="none")
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/stop$!", sec="none")
 	 */
 	public function stop() {
         global $URI_PARAMS;
@@ -58,7 +58,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?speed$!", sec="applicant")
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/speed$!", sec="observer")
 	 */
 	public function speed() {
 		$speed = filter_input(INPUT_POST, "speed");
@@ -67,7 +67,7 @@ class ViewCtrl {
 	}
 
    	/**
-	 * @GET(uri="!^/cs\d{3}/20\d{2}-\d{2}/(W[1-4]D[1-7]/)?pdf.*$!", sec="applicant")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/pdf.*$!", sec="observer")
 	 */
 	public function pdf() {
 		$user_id = $_SESSION['user']['id'];
@@ -77,7 +77,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W\dD\d/)?views/(\d+)?$!", sec="admin");
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/views/(\d+)?$!", sec="instructor");
 	 */
 	public function views() {
         global $URI_PARAMS;
@@ -85,7 +85,7 @@ class ViewCtrl {
 
 		$course_num = $URI_PARAMS[1];
 		$block = $URI_PARAMS[2];
-		$user_id = $URI_PARAMS[4];
+		$user_id = $URI_PARAMS[3];
 
 		$course_detail = $this->courseDao->getCourse($course_num);
 		$offering_detail = $this->offeringDao->getOfferingByCourse($course_num, $block);
@@ -124,7 +124,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/info/?$!", sec="admin");
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/info/?$!", sec="instructor");
 	 */
 	public function offering_info() {
         global $URI_PARAMS;
@@ -145,7 +145,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/info/?$!", sec="admin")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/info/?$!", sec="instructor")
 	 */
 	public function videos_info() {
 		$day_id = filter_input(INPUT_GET, "day_id");
@@ -159,7 +159,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/viewers$!", sec="admin")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/viewers$!", sec="instructor")
 	 */
 	public function offering_viewers() {
 		$offering_id = filter_input(INPUT_GET, "offering_id");
@@ -167,7 +167,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7]/)+viewers$!", sec="admin")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/viewers$!", sec="instructor")
 	 */
 	public function day_viewers() {
 		$day_id = filter_input(INPUT_GET, "day_id");
@@ -175,7 +175,7 @@ class ViewCtrl {
 	}
 
 	/**
-	 * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/(W[1-4]D[1-7])/\d{2}/viewers$!", sec="admin")
+	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/\d{2}/viewers$!", sec="instructor")
 	 */
 	public function video_viewers() {
 		$day_id = filter_input(INPUT_GET, "day_id");
@@ -185,7 +185,7 @@ class ViewCtrl {
 
 
     /**
-     * @GET(uri="!.+/enrollment$!")
+     * @GET(uri="!/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/.+/enrollment$!", sec="instructor")
      */
     public function enrollemnt() {
 		$offering_id = filter_input(INPUT_GET, "offering_id");

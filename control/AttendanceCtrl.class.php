@@ -38,7 +38,7 @@ class AttendanceCtrl
     public $attendanceExportDao;
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/attendance$!", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
      */
     public function overview() {
         // We're building on top of  overview -- run it first
@@ -68,7 +68,7 @@ class AttendanceCtrl
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/professionalism$!", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$!", sec="assistant")
      */
     public function professionalismReport() {
         global $URI_PARAMS;
@@ -117,7 +117,7 @@ class AttendanceCtrl
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])$!", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$!", sec="assistant")
      */
     public function physicalAttendanceReport() {
         global $URI_PARAMS;
@@ -139,10 +139,13 @@ class AttendanceCtrl
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/physical/(W[1-4])/email$!", sec="admin")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)/email$!", sec="assistant")
      */
     public function emailLowPhysical() {
         global $URI_PARAMS;
+
         $course_number = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $week = $URI_PARAMS[3];
@@ -171,13 +174,12 @@ With kind regards,
 Manalabs Attendance System.
 
 ";
-            echo $message;
             mail($to, "Unexcused Absence", $message, $headers);
         }
     }
 
     /**
-     * @GET(uri="~^/(cs\d{3})/(20\d{2}-\d{2})/attendance/(W[1-4]D[1-6])/(AM|PM)$~", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM)$!", sec="assistant")
      */
     public function exportReport() {
         global $URI_PARAMS;
@@ -211,7 +213,7 @@ Manalabs Attendance System.
     }
 
     /**
-     * @POST(uri="~^/(cs\d{3})/(20\d{2}-\d{2})/attendance/(W[1-4]D[1-6])/(AM|PM)$~", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM)$!", sec="assistant")
      */
     public function regenExportReport() {
         global $URI_PARAMS;
@@ -229,7 +231,9 @@ Manalabs Attendance System.
     }
 
     /**
-     * @POST(uri="~^/cs\d{3}/20\d{2}-\d{2}/attendance/W[1-4]D[1-6]/(AM|PM)/(\d+)$~", sec="admin")
+     * Expects AJAX
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM)/(\d+)$!", sec="assistant")
      */
     public function updateExportRow() {
         $json = file_get_contents('php://input');

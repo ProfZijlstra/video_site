@@ -1,4 +1,3 @@
-<?php if ($_user_type === 'admin') : ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -119,4 +118,3 @@ window.addEventListener("load", () => {
         </main>
     </body>
 </html>
-<?php endif; ?>

@@ -48,12 +48,76 @@
                 </div>
             </nav>
             <div id="content">
-            <?php if (!$enrollment): ?>
-                <h2>No Enrollment Yet</h2>
+            <?php if ($error) : ?>
+                <p class="error"><?= $error ?></p>
+            <?php endif; ?>
+
+            <?php if (!$instructors): ?>
+                <h2>No Instructor(s) Yet</h2>
             <?php else: ?>
-                <?php if ($error) : ?>
-                    <p class="error"><?= $error ?></p>
-                <?php endif; ?>
+            <h2>Instructor(s)</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>KnowAs</th>
+                    <th>Given</th>
+                    <th>Family</th>
+                    <th>Email</th>
+                    <th>Del</th>
+                </tr>
+                <?php foreach ($instructors as $instructor): ?>
+                <tr>
+                    <td class="center studentID"><?= $instructor["studentID"] ?></td>
+                    <td class="name"><?= $instructor["knownAs"] ?></td>
+                    <td>
+                        <a href="../../user/<?= $instructor["id"]?>">
+                            <?= $instructor["firstname"] ?>
+                        </a>
+                    </td>
+                    <td><?= $instructor["lastname"] ?></td>
+                    <td><?= $instructor["email"] ?></td>
+                    <td class="center"><i class="fa-solid fa-trash-can" title="Unenroll" data-uid="<?= $instructor['id'] ?>"></i></td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+            <?php endif; ?>
+
+            <?php if (!$students): ?>
+                <h2>No Student(s) Yet</h2>
+            <?php else: ?>
+            <h2>Student(s)</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>KnowAs</th>
+                    <th>Given</th>
+                    <th>Family</th>
+                    <th>Email</th>
+                    <th><i class="fa-solid fa-handshake-angle" title="Assistant"></i></th>
+                    <th>Del</th>
+                </tr>
+                <?php foreach ($students as $student): ?>
+                <tr>
+                    <td class="center studentID">
+                        <?= $student["studentID"] ?>
+                    </td>
+                    <td class="name"><?= $student["knownAs"] ?></td>
+                    <td>
+                        <a href="../../user/<?= $student["id"]?>">
+                            <?= $student["firstname"] ?>
+                        </a>
+                    </td>
+                    <td><?= $student["lastname"] ?></td>
+                    <td><?= $student["email"] ?></td>
+                    <td><input type="checkbox" /><!-- TODO implement --> </td>
+                    <td class="center"><i class="fa-solid fa-trash-can" title="Unenroll" data-uid="<?= $student['id'] ?>"></i></td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+            <?php endif; ?>
+
+            <?php if ($observers): ?>
+            <h2>Observer(s)</h2>
             <table>
                 <tr>
                     <th>ID</th>
@@ -64,8 +128,11 @@
                     <th>Del</th>
                 </tr>
                 <?php foreach ($enrollment as $student): ?>
+                    <?php if($student['auth'] == 'observer' ): ?>
                 <tr>
-                    <td class="center studentID"><?= $student["studentID"] ?></td>
+                    <td class="center studentID">
+                        <?= $student["studentID"] ?>
+                    </td>
                     <td class="name"><?= $student["knownAs"] ?></td>
                     <td>
                         <a href="../../user/<?= $student["id"]?>">
@@ -74,11 +141,13 @@
                     </td>
                     <td><?= $student["lastname"] ?></td>
                     <td><?= $student["email"] ?></td>
-                    <td class="center"><i class="fa-solid fa-trash-can" data-uid="<?= $student['id'] ?>"></i></td>
+                    <td class="center"><i class="fa-solid fa-trash-can" title="Unenroll" data-uid="<?= $student['id'] ?>"></i></td>
                 </tr>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </table>
-            <?php endif; ?>
+            <?php endif; // observers ?>
+            
             </div>
         </main>
         <div id="overlay">
@@ -97,7 +166,18 @@
                 <p>The student already has to have an account <a href="/videos/user">(be a user)</a></p>
                 <form action="enroll" method="post" id="enroll_form">
                     <input type="hidden" name="offering_id" value="<?= $offering_id ?>" id="offering_id"/>
-                    6 digit Student ID: <input type="text" name="studentID" id="enrollID" />
+                    <div>
+                        <label>User ID:</label>
+                        <input type="text" name="user_id" id="enrollID" /> 
+                    </div>
+                    <div>
+                        <label>Auth:</label>
+                        <select name="auth">
+                            <option>observer</option>
+                            <option>student</option>
+                            <option>instructor</option>
+                        </select>
+                    </div>
                     <div class="btn">
                         <button>Enroll</button>
                     </div>

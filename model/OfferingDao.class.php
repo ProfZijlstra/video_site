@@ -94,10 +94,9 @@ class OfferingDao
 	public function all()
 	{
 		$stmt = $this->db->prepare(
-			"SELECT c.number, c.name, o.block, u.knownAs, u.lastname 
+			"SELECT c.number, c.name, o.block, o.id 
 			FROM offering AS o 
 			JOIN course AS c ON c.number = o.course_number
-			JOIN user AS u ON o.fac_user_id = u.id
 			WHERE o.active = 1
 			ORDER BY o.block DESC"
 		);
@@ -107,10 +106,9 @@ class OfferingDao
 
 	public function enrolled($user_id) {
 		$stmt = $this->db->prepare(
-			"SELECT c.number, c.name, o.block, u.knownAs, u.lastname 
+			"SELECT c.number, c.name, o.block, o.id
 			FROM offering AS o 
 			JOIN course AS c ON c.number = o.course_number
-			JOIN user AS u ON o.fac_user_id = u.id
 			JOIN enrollment AS e ON o.id = e.offering_id
 			WHERE e.user_id = :user_id
 			AND o.active = 1
@@ -156,7 +154,6 @@ class OfferingDao
 		$course_number,
 		$block,
 		$start,
-		$fac_user_id,
 		$daysPerLesson,
 		$lessonsPerPart,
 		$lessonParts,
@@ -165,14 +162,14 @@ class OfferingDao
 	) {
 		$stmt = $this->db->prepare(
 			"INSERT INTO offering 
-			VALUES(NULL, :course_number, :block, 
-					:start, :fac_user_id,
+			VALUES(NULL, :course_number, :block, :start,
 					:daysPerLesson, :lessonsPerPart, :lessonParts, 
 					:hasQuiz, :hasLab, 1)"
 		);
 		$stmt->execute(array(
-			"course_number" => $course_number, "block" => $block,
-			"start" => $start, "fac_user_id" => $fac_user_id,
+			"course_number" => $course_number, 
+			"block" => $block,
+			"start" => $start,
 			"daysPerLesson" => $daysPerLesson, 
 			"lessonsPerPart" => $lessonsPerPart,
 			"lessonParts" => $lessonParts,

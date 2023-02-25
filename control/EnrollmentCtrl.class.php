@@ -21,7 +21,7 @@ class EnrollmentCtrl {
 
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$!", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec="instructor")
      */
     public function viewEnrollment() {
         global $URI_PARAMS;
@@ -33,9 +33,25 @@ class EnrollmentCtrl {
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
+        $instructors = [];
+        $students = [];
+        $observers = [];
+
+        foreach ($enrollment as $person) {
+            if ($person['auth'] == "instructor") {
+                $instructors[] = $person;
+            } else if ($person['auth'] == "student" || $person['auth'] == "assistant") {
+                $students[] = $person;
+            } else {
+                $observers[] = $person;
+            }
+        }
+
+        $VIEW_DATA['instructors'] = $instructors;
+        $VIEW_DATA['students'] = $students;
+        $VIEW_DATA['observers'] = $observers;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA["course"] = $course_number;
-        $VIEW_DATA["enrollment"] = $enrollment;
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["offering_id"] = $offering["id"];
         $VIEW_DATA["title"] = "Enrollment";
@@ -43,13 +59,13 @@ class EnrollmentCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enrolled$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec="instructor")
      */
     public function replaceEnrollment() {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         if ($offering_id && $_FILES["list"]) {
             // delete current enrollment
-            $this->enrollmentDao->deleteEnrollment($offering_id);
+            $this->enrollmentDao->deleteStudentEnrollment($offering_id);
 
             // parse file for new students
             $this->enrollStudentsInFile($_FILES["list"]["tmp_name"], $offering_id);
@@ -59,25 +75,38 @@ class EnrollmentCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/enroll$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/observe$!", sec="login")
+     */
+    public function observe() {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $user_id = $_SESSION['user']['id'];
+        $first = $_SESSION['user']['first'];
+        $last = $_SESSION['user']['last'];
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
+        $this->enrollmentDao->enroll($user_id, $offering['id'], "observer");
+
+        $msg = "{$first} {$last} has joined {$course} {$block} as observer";
+        mail("mzijlstra@miu.edu", "Observer Enrolled", $msg);
+        
+        return "Location: ../$block/";
+    }
+
+    /**
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enroll$!", sec="instructor")
      */
     public function enroll() {
-        global $VIEW_DATA;
-
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-		$studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
+		$user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
+        $auth = filter_input(INPUT_POST, "auth");
 
-        $stu_user_id = $this->userDao->getUserIdByStudentId($studentID);
-        if ($stu_user_id) {
-            $this->enrollmentDao->enroll($stu_user_id, $offering_id);
-        } else {
-            $VIEW_DATA['error'] = "User with student ID: $studentID not found";
-        }
+        $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
         return "Location: enrolled";
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/unenroll$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/unenroll$!", sec="instructor")
      */
     public function unenroll() {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
@@ -103,7 +132,7 @@ class EnrollmentCtrl {
                 }
         
                 # enroll in the offering
-                $this->enrollmentDao->enroll($user_id, $offering_id);
+                $this->enrollmentDao->enroll($user_id, $offering_id, "student");
             }
         }
     }

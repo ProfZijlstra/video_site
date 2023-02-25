@@ -36,12 +36,12 @@ class AnnotationReader {
             $content = "value=" . $content;
         }
         $result = array();
-        if (!$attrs = preg_split("#,\s*#", $content)) {
+        if (!$attrs = preg_split("#,\s+#", $content)) {
             $attrs = array($content);
         }
         foreach ($attrs as $attr) {
             if (!preg_match("#(\w+)\s*=\s*['\"](.*?)['\"]#", $attr, $matches)) {
-                throw new Exception("Malformed annotation attribute in "
+                throw new Exception("Malformed annotation attribute {$attr} in "
                 . $annotation . " found in " . $text);
             }
             $key = $matches[1];

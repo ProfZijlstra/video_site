@@ -34,24 +34,45 @@ class CourseCtrl {
      * @Inject('QuizDao')
      */
     public $quizDao;
+    /**
+     * @Inject('EnrollmentDao')
+     */
+    public $enrollmentDao;
 
     /**
-     * @GET(uri="!^/?$!", sec="applicant")
+     * @GET(uri="!^/?$!", sec="login")
      */
-    public function showCourses() {
+    public function showMyCourses() {
         global $VIEW_DATA;
 
-        if ($_SESSION['user']['type'] === 'applicant') {
-            $offerings = $this->offeringDao->enrolled($_SESSION['user']['id']);
-        } else {
-            $offerings = $this->offeringDao->all();
-        }
-        
+        $user_id = $_SESSION['user']['id'];
+        $offerings = $this->offeringDao->enrolled($user_id);      
+        $names = $this->instructorNames($offerings);
         $faculty = $this->userDao->faculty();
 
-        $VIEW_DATA["title"] = "Course Offerings";
+        $VIEW_DATA["title"] = "My Course Offerings";
         $VIEW_DATA["offerings"] = $offerings;
+        $VIEW_DATA['names'] = $names;
         $VIEW_DATA["faculty"] = $faculty;
+        $VIEW_DATA['type'] = "my";
+        return "courses.php";
+    }
+
+    /**
+     * @GET(uri="!^/all$!", sec="login")
+     */
+    public function showAllCourses() {
+        global $VIEW_DATA;
+
+        $offerings = $this->offeringDao->all();
+        $names = $this->instructorNames($offerings);
+        $faculty = $this->userDao->faculty();
+
+        $VIEW_DATA["title"] = "All Course Offerings";
+        $VIEW_DATA["offerings"] = $offerings;
+        $VIEW_DATA['names'] = $names;
+        $VIEW_DATA["faculty"] = $faculty;
+        $VIEW_DATA['type'] = "all";
         return "courses.php";
     }
 
@@ -71,8 +92,9 @@ class CourseCtrl {
         $lessonRows = filter_input(INPUT_POST, "lessonParts", FILTER_SANITIZE_NUMBER_INT);
 
         $this->courseDao->create($number, $name);
-        $new_offering = $this->offeringDao->create($number, $block, $start, $fac_user_id, 
-                                $daysPerLesson, $lessonsPerRow, $lessonRows);
+        $new_offering = $this->offeringDao->create($number, $block, $start, 
+                                $daysPerLesson, $lessonsPerRow, $lessonRows, 0, 0);
+        $this->enrollmentDao->enroll($fac_user_id, $new_offering, "instructor");
         $this->dayDao->create($new_offering, $lessonsPerRow, $lessonRows);
         $this->classSessionDao->createForOffering($new_offering);
         // create directory structure last, as it cannot be rolled back
@@ -83,7 +105,7 @@ class CourseCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/clone$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/clone$!", sec="admin")
      */
     public function cloneOffering() {
         global $URI_PARAMS;
@@ -110,9 +132,9 @@ class CourseCtrl {
 
         $this->videoDao->clone($course_number, $block, $old_block);
         $new_offering_id = $this->offeringDao->create($course_number, $block, 
-                                    $start, $fac_user_id, 
-                                    $daysPerLesson, $lessonsPerRow, $lessonRows,
-                                    $hasQuiz, $hasLab);
+                                    $start, $daysPerLesson, $lessonsPerRow,
+                                    $lessonRows, $hasQuiz, $hasLab);
+        $this->enrollmentDao->enroll($fac_user_id, $new_offering_id, "instructor");
         $this->dayDao->cloneDays($offering_id, $new_offering_id);
         $this->classSessionDao->createForOffering($new_offering_id);
         $this->quizDao->clone($offering_id, $new_offering_id);
@@ -121,7 +143,7 @@ class CourseCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/edit$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/edit$!", sec="instructor")
      */
     public function editDay() {
         global $URI_PARAMS;
@@ -135,7 +157,7 @@ class CourseCtrl {
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/settings$!", sec="admin")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec="instructor")
      */
     public function viewSettings() {
         global $URI_PARAMS;
@@ -157,7 +179,7 @@ class CourseCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/settings$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec="instructor")
      */
     public function updateSettings() {
         $id = filter_input(INPUT_POST, "id", FILTER_SANITIZE_NUMBER_INT);
@@ -174,11 +196,32 @@ class CourseCtrl {
     }
 
     /**
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/delete$!", sec="admin")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delete$!", sec="admin")
      */
     public function delete() {
         $id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         $this->offeringDao->delete($id);
         return "Location: ../../";
+    }
+
+    private function instructorNames($offerings) {
+        $ids = [];
+        foreach ($offerings as $offering) {
+            $ids[] = $offering['id'];
+        }
+        $instructors = $this->enrollmentDao->getInstructorsForOfferings($ids);
+        $names = [];
+        foreach ($instructors as $ins) {
+            if (!$names[$ins['offering_id']]) {
+                $names[$ins['offering_id']] = 
+                    $ins['knownAs'][0] . ". " . $ins['lastname'];
+            } else {
+                $names[$ins['offering_id']] .= 
+                    ", " .$ins['firstname'][0] . ". " . $ins['lastname'];
+
+            }
+        }
+
+        return $names;
     }
 }

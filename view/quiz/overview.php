@@ -86,8 +86,10 @@ window.addEventListener("load", () => {
             <?php if ($offering['hasLab']): ?>
                 <div title="Labs"><i class="fas fa-flask"></i></div>
             <?php endif; ?>
-            <?php if ($_user_type === 'admin') : ?>
+            <?php if (hasMinAuth('assistant')) : ?>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
+            <?php endif; ?>
+            <?php if (hasMinAuth('instructor')) : ?>
                 <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
             <?php endif; ?>
             <div title="Back to My Courses">
@@ -114,7 +116,7 @@ window.addEventListener("load", () => {
                         data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
                         data-date="<?= date("Y-m-d", $date) ?>">
 
-                        <?php if ($_user_type == "admin"): ?>
+                        <?php if (hasMinAuth('instructor')): ?>
                             <i title="Add Quiz" class="far fa-plus-square"></i>
                         <?php endif; ?>
 
@@ -125,10 +127,12 @@ window.addEventListener("load", () => {
                                 title="<?= $quiz['visible'] ? 'visible' : 'invisible' ?>">
                                 <?= $quiz['name'] ?>
                             </a>
-                            <?php if ($_user_type == "admin"): ?>
+                            <?php if (hasMinAuth('instructor')): ?>
                                 <a class="edit" href="<?= "quiz/". $quiz['id'] . "/edit" ?>">
                                     <i title="Edit Quiz" class="fa-solid fa-gear"></i>
                                 </a>
+                            <?php endif; ?>
+                            <?php if (hasMinAuth('assistant')): ?>
                                 <a href="<?= "quiz/". $quiz['id'] . "/grade" ?>">
                                     <i title="Grade Quiz" class="fa-solid fa-magnifying-glass"></i>
                                 </a>

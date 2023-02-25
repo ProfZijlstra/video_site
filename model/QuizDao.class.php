@@ -16,11 +16,6 @@ class QuizDao {
      */
     public $questionDao;
 
-    /**
-     * @Inject("EnrollmentDao")
-     */
-    public $enrollmentDao;
-
     public function allForOffering($offering_id) {
         $stmt = $this->db->prepare(
 			"SELECT q.id, q.name, q.visible, d.abbr
@@ -106,61 +101,9 @@ class QuizDao {
     }
 
     /**
-     * Gets a report of quiz totals for all students enrolled in this offering
-     */
-    public function report($offering_id) {
-        // TODO move the logic in this method back into the controller
-
-        // get enrollment for offering
-        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
-
-        // create data two dimensional array and initialize first 3 columns
-        $data = [];
-        foreach ($enrolled as $user) {
-            $data[$user['id']] = [];
-            $data[$user['id']][] = $user['studentID'];
-            $data[$user['id']][] = $user['firstname'];
-            $data[$user['id']][] = $user['lastname'];
-        }
-
-        // get all quizzes for offering
-        $stmt = $this->db->prepare(
-            "SELECT q.id, q.name, d.abbr
-            FROM quiz AS q
-            JOIN `day` AS d ON q.day_id = d.id
-            WHERE d.offering_id = :offering_id
-            ORDER BY q.start");
-        $stmt->execute(array("offering_id" => $offering_id));
-        $quizzes = $stmt->fetchAll();
-
-        // build CSV header and query for data fetching 
-        $count= 1;
-        $header = '"studentId","firstName","lastName",';
-        foreach ($quizzes as $quiz) {
-            // build CSV header line
-            $header .= '"' . $quiz['abbr'] . '",';
-
-            // build data column for this quiz
-            $pts = $this->getQuizTotalsForEnrolled($quiz['id'], $offering_id);
-            foreach ($pts as $pt) {
-                $data[$pt['user_id']][] = $pt['points'];
-            }
-            $count++;
-        }
-
-        return [
-            "colCount" => ($count + 3), // 3 are: sid, first, last
-            "header" => $header,
-            "data" => $data,
-        ];
-    }
-
-    /**
      * Clones all quizzes for an offering (which is being cloned)
      */
     public function clone($offering_id, $new_offering_id) {
-        // TODO move the logic in this method back into the controller
-
         // find difference in days between the two offerings
         $inject = "{$offering_id}, {$new_offering_id}";
         $stmt = $this->db->prepare(
@@ -220,7 +163,7 @@ class QuizDao {
         }
     }
 
-    private function getQuizTotalsForEnrolled($quiz_id, $offering_id) {
+    public function getQuizTotalsForEnrolled($quiz_id, $offering_id) {
         $stmt = $this->db->prepare(
 			"SELECT e.user_id, sum(a.points) AS points
             FROM enrollment AS e 

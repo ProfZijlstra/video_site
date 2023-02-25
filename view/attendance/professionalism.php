@@ -1,4 +1,3 @@
-<?php if ($_user_type === 'admin') : ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -58,4 +57,3 @@
         </main>
     </body>
 </html>
-<?php endif; ?>

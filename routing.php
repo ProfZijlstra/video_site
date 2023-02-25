@@ -20,10 +20,9 @@ function htmlView($view) {
         }
         header($view);
     } else {
-        // if logged in also add user_id and user_type (used in header.php)
+        // if logged in also add user_id (used in header.php)
         if ($_SESSION['user']) {
             $VIEW_DATA['_user_id'] = $_SESSION['user']['id'];
-            $VIEW_DATA['_user_type'] = $_SESSION['user']['type'];
         }
 
         // make keys in VIEW_DATA available as regular variables
@@ -40,7 +39,6 @@ function htmlView($view) {
  * 
  * @param type $data either string for HTML view or data for JSON
  */
-
 function view($data) {
     if (is_string($data)) {
         htmlView($data);
@@ -61,12 +59,37 @@ if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
     unset($_SESSION['flash_data']);
 }
 
-// start the routing process
+
+// find our mapping (first step for routing and security)
+$uris = $mappings[$MY_METHOD];
+foreach ($uris as $pattern => $mapping) {
+    if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
+        $MY_MAPPING = $mapping;
+        break;
+    }
+}
+
+// If there was no mapping send out a 404
+if ($MY_MAPPING === []) {
+	if (DEVELOPMENT) {
+		print("Mapping not found");
+	}
+    require "view/error/404.php";
+    exit();
+}
+
+/* ****************************** 
+ * Check Authorization based on the security level in the mapping 
+ * **************************** */
+require 'security.php';
+
+
+// do the actual routing process
 list($class, $method) = explode("@",  $MY_MAPPING['route']);
 try {
-    $context = new Context();
     $db = $context->get("DB");
     $controler = $context->get($class);
+    $output = "error/500.php";
     try {
         $db->beginTransaction();
         $output = $controler->{$method}();

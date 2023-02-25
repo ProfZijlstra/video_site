@@ -48,7 +48,7 @@ class QuizGradingCtrl {
     public $markdownCtrl;
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/grade$!", sec="instructor")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/grade$!", sec="instructor")
      */
     public function gradeQuiz() {
         global $URI_PARAMS;
@@ -94,7 +94,7 @@ class QuizGradingCtrl {
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/(\d+)$!", sec="instructor")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)$!", sec="instructor")
      */
     public function gradeQuestion() {
         global $URI_PARAMS;
@@ -130,7 +130,7 @@ class QuizGradingCtrl {
     }
 
     /**
-     * @GET(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/user/(\d+)$!", sec="instructor")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/(\d+)$!", sec="instructor")
      */
     public function gradeUser() {
         global $URI_PARAMS;
@@ -156,7 +156,7 @@ class QuizGradingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/question/grade$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/grade$!", sec="instructor")
      */
     public function grade() {
         $answer_ids = filter_input(INPUT_POST, "answer_ids");
@@ -174,7 +174,7 @@ class QuizGradingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/(cs\d{3})/(20\d{2}-\d{2})/quiz/(\d+)/user/grade$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/grade$!", sec="instructor")
      */
     public function gradeByUser() {
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);

@@ -20,7 +20,7 @@ class EnrollmentDao {
 	 */
 	public function getEnrollmentForOffering($offering_id) {
 		$stmt = $this->db->prepare("SELECT u.id, u.knownAs, u.studentID, 
-			u.firstname, u.lastname, u.email, u.teamsName
+			u.firstname, u.lastname, u.email, u.teamsName, e.auth
             FROM enrollment e JOIN user u ON e.user_id = u.id 
             WHERE offering_id = :offering_id
 			ORDER BY u.firstname");
@@ -40,17 +40,34 @@ class EnrollmentDao {
 		return $stmt->fetch();
 	}
 
-	public function deleteEnrollment($offering_id) {
+	public function getInstructorsForOfferings($offering_ids) {
+		$inject = implode(",", $offering_ids);
+		$stmt = $this->db->prepare(
+			"SELECT e.offering_id, u.knownAs, u.lastname 
+			FROM enrollment AS e 
+			JOIN user AS u ON e.user_id = u.id
+			WHERE e.auth = 'instructor'
+			AND e.offering_id IN ({$inject})");
+		$stmt->execute();
+		return $stmt->fetchAll();
+	}
+
+	public function deleteStudentEnrollment($offering_id) {
 		$stmt = $this->db->prepare(
 			"DELETE FROM enrollment 
-				WHERE offering_id = :offering_id");
+				WHERE offering_id = :offering_id
+				AND auth = 'student'");
 		$stmt->execute(["offering_id" => $offering_id]);
 	}
 
-	public function enroll($user_id, $offering_id) {
+	public function enroll($user_id, $offering_id, $auth) {
 		$stmt = $this->db->prepare("INSERT INTO enrollment 
-				VALUES(NULL, :user_id, :offering_id)");
-		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);
+				VALUES(NULL, :user_id, :offering_id, :auth)");
+		$stmt->execute([
+			"user_id" => $user_id, 
+			"offering_id" => $offering_id,
+			"auth" => $auth
+		]);
 	}
 
 	public function unenroll($user_id, $offering_id) {
@@ -58,6 +75,22 @@ class EnrollmentDao {
 				WHERE user_id = :user_id 
 				AND offering_id = :offering_id");
 		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);		
+	}
+
+	public function checkEnrollmentAuth($user_id, $course, $block) {
+		$stmt = $this->db->prepare(
+			"SELECT e.auth FROM enrollment AS e 
+			JOIN offering AS o ON e.offering_id = o.id
+			WHERE e.user_id = :user_id
+			AND o.course_number = :course
+			AND o.block = :block");
+		$stmt->execute(array(
+			"user_id" =>  $user_id,
+			"course" => $course,
+			"block" => $block
+		));
+		return $stmt->fetch();
+
 	}
 }
 

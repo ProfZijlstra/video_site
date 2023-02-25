@@ -22,7 +22,7 @@ class UserDao {
      */
     public function checkLogin($email) {
         $find = $this->db->prepare(
-                "SELECT id, firstname, lastname, password, type 
+                "SELECT id, firstname, lastname, password, isFaculty, isAdmin 
                 FROM user 
                 WHERE email = :email 
                 AND active = TRUE ");
@@ -52,15 +52,19 @@ class UserDao {
         return $stmt->fetchAll();        
     }
 
+    /**
+     * Get all users with isFaculty = 1
+     * @return array of arrays of user data
+     */
     public function faculty() {
         $stmt = $this->db->prepare(
             "SELECT * FROM user 
-            WHERE `type` = 'admin' 
+            WHERE `isFaculty` = 1 
             AND active = 1");
         $stmt->execute();
         return $stmt->fetchAll();        
     }
-    
+
     /**
      * Gets user data based on id
      * @param int $id user id
@@ -86,13 +90,13 @@ class UserDao {
      * @return int id of created row
      */
     public function insert($first, $last, $knownAs, $email, $studentID, 
-                                $teamsName, $hash, $type, $active) {
+                                $teamsName, $hash, $active) {
         $stmt = $this->db->prepare("INSERT INTO user values 
                 (NULL, :first, :last, :knownAs, :email, :studentID, :teamsName, 
-                :pass, :type, NOW(), NOW(), :active, 0, NULL)");
+                :pass, NOW(), NOW(), :active, NULL, 0, 0)");
         $stmt->execute(array(
             "first" => $first, "last" => $last, "email" => $email, 
-            "pass" => $hash, "type" => $type, "active" => $active,
+            "pass" => $hash, "active" => $active,
             "studentID" => $studentID, "knownAs" => $knownAs, "teamsName" =>
             $teamsName
         ));
@@ -108,22 +112,31 @@ class UserDao {
      * @param string $email
      * @param string $studentID
      * @param string $teamsName
-     * @param string $type user type
      * @param int $active
+     * @param int $isAdmin
+     * @param int $isFaculty
      * @param string $pass password hash
      */
     public function update($uid, $first, $last, $knownAs, $email, $studentID, 
-                            $teamsName, $type, $active, $pass) {
+                            $teamsName, $active, $isFaculty, $isAdmin, 
+                            $pass) {
         $stmt = $this->db->prepare("UPDATE user SET 
                 firstname = :first, lastname = :last, knownAs = :knownAs, 
                 email = :email, studentID = :studentID, teamsName = :teamsName, 
-                type = :type, active = :active WHERE id = :uid"
+                active = :active, isAdmin = :isAdmin, isFaculty = :isFaculty 
+                WHERE id = :uid"
         );
         $stmt->execute(array(
-            "first" => $first, "last" => $last, "knownAs" => $knownAs, 
-            "email" => $email, "studentID" => $studentID, 
+            "first" => $first, 
+            "last" => $last, 
+            "knownAs" => $knownAs, 
+            "email" => $email, 
+            "studentID" => $studentID, 
             "teamsName" => $teamsName,
-            "type" => $type, "active" => $active, "uid" => $uid
+            "active" => $active, 
+            "isFaculty" => $isFaculty,
+            "isAdmin" => $isAdmin,
+            "uid" => $uid
         ));
 
         if ($pass) {

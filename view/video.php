@@ -11,7 +11,7 @@
         <script src="res/js/markdown.js"></script>
         <script src="res/js/video-1.2.js"></script>
         <script src="res/js/prism.js"></script>
-        <?php if ($_user_type === 'admin') : ?>
+        <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
             <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
@@ -25,7 +25,7 @@
         <div id="container" data-oid="<?= $offering_id ?>">
         <nav id="videos" class="<?= $theater ?>">
             <nav>
-                <?php if ($_user_type === 'admin') : ?>
+                <?php if (hasMinAuth('instructor')) : ?>
                     <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                 <?php endif; ?>
                 <table id="days">
@@ -182,7 +182,7 @@ foreach($files as $info) :
                     <?php if ($comment["edited"]) : ?>
                         <span class="date">edited: <?= $comment["edited"]?></span>
                     <?php endif; ?>
-                    <?php if ($_user_type === 'admin' || $_user_id == $comment["user_id"]) : ?>
+                    <?php if (hasMinAuth('instructor') || $_user_id == $comment["user_id"]) : ?>
                         <form method="post" action="delComment">
                             <input type="hidden" name="id" value="<?= $comment['id']?>" />
                             <input type="hidden" name="tab" value="<?= $video ?>" />
@@ -211,7 +211,7 @@ foreach($files as $info) :
                             <?php if ($reply["edited"]) : ?>
                                 <span class="date">edited: <?= $reply["edited"]?></span>
                             <?php endif; ?>
-                            <?php if ($_user_type === 'admin' || $_user_id == $reply["user_id"]) : ?>
+                            <?php if (hasMinAuth('instructor') || $_user_id == $reply["user_id"]) : ?>
                                 <form method="post" action="delReply">
                                     <input type="hidden" name="id" value="<?= $reply['id']?>" />
                                     <input type="hidden" name="tab" value="<?= $video ?>" />
@@ -264,7 +264,7 @@ endforeach;
         </main>
         </div> <!-- close container-->
 
-        <?php if ($_user_type === 'admin') : ?>
+        <?php if (hasMinAuth('instructor')) : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
                 <div id="content"></div>
