@@ -181,7 +181,6 @@ Manalabs Attendance System.
 We noticed you were absent from the ". $absent["title"]." meeting from its start
  at: ". $absent["start"]. " trough its end at: " . $absent["stop"]. "." .$template;
 
-            echo $message;
             mail($to, "Unexcused Absence", $message, $headers);
         }
     }
@@ -234,7 +233,6 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
             }
             $message .= $template;
 
-            echo $message;
             mail($to, "Unexcused Absence", $message, $headers);
         }
     }
