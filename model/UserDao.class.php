@@ -120,7 +120,6 @@ class UserDao {
     public function update($uid, $first, $last, $knownAs, $email, $studentID, 
                             $teamsName, $active, $isAdmin, $isFaculty,  
                             $pass) {
-        var_dump($knownAs);
         $stmt = $this->db->prepare("UPDATE user SET 
                 firstname = :first, lastname = :last, knownAs = :knownAs, 
                 email = :email, studentID = :studentID, teamsName = :teamsName, 

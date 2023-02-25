@@ -142,8 +142,6 @@ $stmt = $db->prepare("INSERT INTO attendance VALUES(NULL, :meeting_id,
     :teamsName, :notEnrolled, :absent, :arriveLate, :leaveEarly, :middleMissing, 
     0)");
 foreach ($attendance as $teamsName => $attend) {
-    print($teamsName);
-    var_dump($attend);
     $stmt->execute(["meeting_id" => $meeting_id, "teamsName" => $teamsName, 
         "notEnrolled" => $attend["notEnrolled"], "absent" => $attend["absent"], 
         "arriveLate" => $attend["arriveLate"], "leaveEarly" => $attend["leaveEarly"], 
