@@ -27,6 +27,7 @@ window.addEventListener("load", () => {
     document.getElementById("addUser").addEventListener("click", () => {
         overlay.classList.add("visible");
         document.getElementById("enroll_modal").classList.remove("hide");
+        document.getElementById("enrollID").focus();
     });
 
     // hide overlay and any/all modal(s)
