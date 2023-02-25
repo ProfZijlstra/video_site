@@ -217,7 +217,7 @@ class CourseCtrl {
                     $ins['knownAs'][0] . ". " . $ins['lastname'];
             } else {
                 $names[$ins['offering_id']] .= 
-                    ", " .$ins['firstname'][0] . ". " . $ins['lastname'];
+                    ", " .$ins['knownAs'][0] . ". " . $ins['lastname'];
 
             }
         }
