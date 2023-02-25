@@ -51,12 +51,4 @@ window.addEventListener("load", () => {
             return false;
         }
     };
-
-    // validate the add user form
-    document.getElementById("enroll_form").onsubmit = () => {
-        const studentID = document.getElementById('enrollID').value;
-        if (!studentID.match(/\d{6}/)) {
-            return false;
-        }
-    };
 });

@@ -179,7 +179,7 @@
                         </select>
                     </div>
                     <div class="btn">
-                        <button>Enroll</button>
+                        <button type="submit">Enroll</button>
                     </div>
                 </form>
             </div>
