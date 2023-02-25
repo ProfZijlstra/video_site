@@ -146,9 +146,12 @@ class UserCtrl {
         global $VIEW_DATA;
         global $URI_PARAMS;
         global $SEC_LVLS;
-        $uid = $URI_PARAMS[1];
 
+        $uid = $URI_PARAMS[1];
+        $error = filter_input(INPUT_GET, "error", FILTER_UNSAFE_RAW);
         $user = $this->userDao->retrieve($uid);
+
+        $VIEW_DATA['msg'] = $error;
         $VIEW_DATA['user'] = $user;
         $VIEW_DATA["title"] = "User Details";
         $VIEW_DATA['types'] = $SEC_LVLS;
@@ -234,12 +237,11 @@ class UserCtrl {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
      * 
-     * // TODO FIXME update is broken and should be changed to an AJAX update
-     * 
      * @POST(uri="!^/user/(\d+)$!", sec="admin")
      */
     public function update() {
         global $URI_PARAMS;
+        
         $uid = $URI_PARAMS[1];
         $first = filter_input(INPUT_POST, "first", FILTER_UNSAFE_RAW);
         $last = filter_input(INPUT_POST, "last", FILTER_UNSAFE_RAW);
@@ -247,8 +249,9 @@ class UserCtrl {
         $email = filter_input(INPUT_POST, "email", FILTER_UNSAFE_RAW);
         $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_UNSAFE_RAW);
-        $type = filter_input(INPUT_POST, "type");
-        $active = filter_input(INPUT_POST, "active");
+        $active = filter_input(INPUT_POST, "active", FILTER_SANITIZE_NUMBER_INT);
+        $isAdmin = filter_input(INPUT_POST, "isAdmin", FILTER_SANITIZE_NUMBER_INT);
+        $isFaculty = filter_input(INPUT_POST, "isFaculty", FILTER_SANITIZE_NUMBER_INT);
         $pass = filter_input(INPUT_POST, "pass");
 
         $error = "";
@@ -261,16 +264,15 @@ class UserCtrl {
         if (!$email) {
             $error .= "email ";
         }
+        if (!$studentID) {
+            $error .= "Student ID ";
+        }
         if ($error) {
             return "Location: $uid?error=" . urlencode("Incorrect $error");
         }
 
-        $actv = 1;
-        if (!$active) {
-            $actv = 0;
-        }
         $this->userDao->update($uid, $first, $last, $knownAs, $email, 
-                $studentID, $teamsName, $type, $actv, $pass);
+                $studentID, $teamsName, $active, $isAdmin, $isFaculty, $pass);
         return "Location: $uid";
     }
 

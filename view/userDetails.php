@@ -70,23 +70,31 @@ if (!isset($user)) {
             <div id="pass" class="text">
                 <input type="password" name="pass" /> <br />
             </div>
-            <div id="label_type" >
-                <span>Type:</span>
+            <div id="label_isAdmin" >
+                <span>Is Admin:</span>
             </div>
-            <div id="type">
-                <select name="type">
-                    <?php foreach ($types as $type): ?>
-                        <option <?= $user['type'] == $type ? 'selected' : ''?>><?= $type ?></option>
-                    <?php endforeach; ?>                    
+            <div id="isAdmin">
+                <select name="isAdmin">
+                    <option value="1">Yes</option>
+                    <option value="0" <?= $user && $user['isAdmin']==1 ? "" : "selected" ?>>No</option>
                 </select> <br />
-                </div>
+            </div>
+            <div id="label_isFaculty" >
+                <span>Is Faculty:</span>
+            </div>
+            <div id="isFaculty">
+                <select name="isFaculty">
+                    <option value="1">Yes</option>
+                    <option value="0" <?= $user && $user['isFaculty']==1 ? "" : "selected" ?>>No</option>
+                </select> <br />
+            </div>
             <div id="label_active" >
                 <span>Active:</span>
             </div>
             <div id="active">
                 <select name="active">
-                    <option value="true">Yes</option>
-                    <option value="" <?= $user && $user['active']==1 ? "" : "selected" ?>>No</option>
+                    <option value="1">Yes</option>
+                    <option value="0" <?= $user && $user['active']==1 ? "" : "selected" ?>>No</option>
                 </select>
                 <div id="btn">
                     <button><?= $user ? 'Update' : 'Add' ?></button> 
