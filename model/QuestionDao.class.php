@@ -109,11 +109,11 @@ class QuestionDao {
         foreach ($questions as $question) {
             $stmt->execute(array(
                 "quiz_id" => $new_quiz_id,
-                "type" => $question['type'],
                 "text" => $question['text'],
                 "model_answer" => $question['model_answer'],
                 "points" => $question['points'],
-                "seq" => $question['seq']
+                "seq" => $question['seq'],
+                "type" => $question['type']
             ));    
         }
     }

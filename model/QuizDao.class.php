@@ -110,7 +110,7 @@ class QuizDao {
             "SELECT id, `start` FROM offering
             WHERE id IN ({$inject})
             ORDER BY `start`");
-        $stmt->execute(array("offering_id" => $new_offering_id));
+        $stmt->execute();
         $dates = $stmt->fetchAll();
         $earlier = new DateTime(substr($dates[0]['start'], 0, 10));
         $later = new DateTime(substr($dates[1]['start'], 0, 10));
