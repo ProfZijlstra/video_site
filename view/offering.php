@@ -139,6 +139,19 @@
                         </div>
                     </form>
                 </div>
+                <div id="edit_modal" class="modal">
+                    <h2>Edit Day Title</h2>
+                    <form method="POST" action="edit">
+                        <input type="hidden" name="day_id" id="day_id" value="" />
+                        <div class="line">
+                            <label>Title:</label>
+                            <input name="desc" id="day_desc" placeholder="" />
+                        </div>
+                        <div class="submit">
+                            <button>Submit</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         <?php endif; ?>

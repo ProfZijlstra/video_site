@@ -38,36 +38,25 @@ window.addEventListener("load", () => {
         document.getElementById("overlay").classList.add("visible");
         document.getElementById('clone_modal').classList.remove('hide');
         document.getElementById('delete_modal').classList.add('hide');
+        document.getElementById('edit_modal').classList.add('hide');
     };
 
     document.getElementById("delete").onclick = function() {
         document.getElementById("overlay").classList.add("visible");
         document.getElementById('clone_modal').classList.add('hide');
+        document.getElementById('edit_modal').classList.add('hide');
         document.getElementById('delete_modal').classList.remove('hide');
     };
 
     function editDay(day_id, desc, evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        const content = document.getElementById("content");
-        ReactDOM.unmountComponentAtNode(content);
-        const edit = (
-            <div class="modal">
-                <h2>Edit Day Title</h2>
-                <form method="POST" action="edit">
-                    <input type="hidden" name="day_id" value={day_id} />
-                    <div class="line">
-                        <label>Title:</label>
-                        <input name="desc" placeholder={desc} />
-                    </div>
-                    <div class="submit">
-                        <button>Submit</button>
-                    </div>
-                </form>
-            </div>
-        );
-        ReactDOM.render(edit, content);
         document.getElementById("overlay").classList.add("visible");
+        document.getElementById('clone_modal').classList.add('hide');
+        document.getElementById('delete_modal').classList.add('hide');
+        document.getElementById('edit_modal').classList.remove('hide');
+        document.getElementById('day_id').value = day_id;
+        document.getElementById('day_desc').setAttribute("placeholder", desc);
     }
 
     document.getElementById("edit").onclick = function() {
