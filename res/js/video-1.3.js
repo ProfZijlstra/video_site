@@ -213,8 +213,10 @@ window.addEventListener('load', () => {
     }
 
     // disable right-clicking on PDF (no download without view)
-    document.getElementById('pdf').oncontextmenu =
-        function(evt) { evt.preventDefault(); };
+    const pdf = document.getElementById('pdf');
+    if (pdf) {
+        pdf.oncontextmenu = function(evt) { evt.preventDefault(); };
+    }
 
     // make clicking on autoplay work
     document.getElementById("autoplay").onclick = function() {
