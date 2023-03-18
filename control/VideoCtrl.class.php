@@ -97,7 +97,7 @@ class VideoCtrl {
 			return "error/404.php";
 		}
 
-		if ($_SESSION['user']['type'] == 'admin') {
+		if ($_SESSION['user']['isAdmin']) {
 			$VIEW_DATA['faculty'] = $this->userDao->faculty();
 		}
 
