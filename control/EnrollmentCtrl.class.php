@@ -77,7 +77,7 @@ class EnrollmentCtrl {
     /**
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/observe$!", sec="login")
      */
-    public function observe() {
+    public function requestObserve() {
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -85,13 +85,81 @@ class EnrollmentCtrl {
         $first = $_SESSION['user']['first'];
         $last = $_SESSION['user']['last'];
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
-        $this->enrollmentDao->enroll($user_id, $offering['id'], "observer");
+        $oid = $offering['id'];
+        //$this->enrollmentDao->enroll($user_id, $offering['id'], "observer");
 
-        $msg = "{$first} {$last} has joined {$course} {$block} as observer";
-        mail("mzijlstra@miu.edu", "Observer Enrolled", $msg);
+        $msg = <<<EOD
+$first $last would like to join $course $block as observer.
+
+Approve or deny this request at:
+https://manalabs.org/videos/observe?uid=$user_id&oid=$oid
+
+EOD;
+        mail("mzijlstra@miu.edu", "Observer Request", $msg);
+
+        $msg = <<<EOD
+Your request to join $course $block as observer has been emailed to the
+system administrator. You will receive another email when your request has been
+granted or denied.
+
+Note: this is an automated email
+EOD;
+        mail($_SESSION['user']['email'], "Observer Request", $msg);
         
         return "Location: ../$block/";
     }
+
+    /**
+     * @GET(uri="!^/observe$!", sec="instructor")
+     */
+    public function showRequest() {
+        global $VIEW_DATA;
+        
+        $offering_id = filter_input(INPUT_GET, "oid", FILTER_SANITIZE_NUMBER_INT);
+        $user_id = filter_input(INPUT_GET, "uid", FILTER_SANITIZE_NUMBER_INT);
+
+        $user = $this->userDao->retrieve($user_id);
+        $offering = $this->offeringDao->getOfferingById($offering_id);
+        
+        $VIEW_DATA['first'] = $user['firstname'];
+        $VIEW_DATA['last'] = $user['lastname'];
+        $VIEW_DATA['course'] = $offering['course_number'];
+        $VIEW_DATA['block'] = $offering['block'];
+        $VIEW_DATA['offering_id'] = $offering_id;
+        $VIEW_DATA['user_id'] = $user_id;
+        $VIEW_DATA['title'] = "Review Request";
+        return "reviewRequest.php";
+    }
+
+    /**
+     * @POST(uri="!^/observe$!", sec="instructor")
+     */
+    public function observerAllowDeny() {
+        $offering_id = filter_input(INPUT_POST, "oid", FILTER_SANITIZE_NUMBER_INT);
+        $user_id = filter_input(INPUT_POST, "uid", FILTER_SANITIZE_NUMBER_INT);
+        $allow = filter_input(INPUT_POST, "allow", FILTER_SANITIZE_NUMBER_INT);
+        
+        $user = $this->userDao->retrieve($user_id);
+        $offering = $this->offeringDao->getOfferingById($offering_id);
+        
+        $email = $user['email'];
+        $course = $offering['course_number'];
+        $block = $offering['block'];
+
+        if ($allow) {
+            $this->enrollmentDao->enroll($user_id, $offering_id, "observer");
+            $subject = "Request Accepted";
+            $msg = "Your request to join $course $block has been accepted.";
+        } else {
+            $subject = "Request Denied";
+            $msg = "Your request to join $course $block has been denied.";
+        }
+
+        mail($email, $subject, $msg);
+
+        return "Location: ../videos/";
+    }
+
 
     /**
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enroll$!", sec="instructor")

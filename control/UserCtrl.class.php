@@ -64,6 +64,7 @@ class UserCtrl {
                 "id" => $row['id'],
                 "first" => $row['firstname'],
                 "last" => $row['lastname'],
+                "email" => $row['email'],
                 "isAdmin" => $row['isAdmin'],
                 "isFaculty" => $row['isFaculty'],
                 "autoplay" => "off"
