@@ -190,7 +190,6 @@ class UserCtrl {
         $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_UNSAFE_RAW);
         $pass = filter_input(INPUT_POST, "pass");
-        $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
 
         $error = [];
@@ -219,7 +218,7 @@ class UserCtrl {
 
         try {
             $uid = $this->userDao->insert($first, $last, $knownAs, $email, 
-                                $studentID, $teamsName, $hash, $type, $actv);
+                                $studentID, $teamsName, $hash, $actv);
         } catch (Exception $e) {
             $error = true;
         }
