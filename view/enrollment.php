@@ -127,7 +127,7 @@
                     <th>Email</th>
                     <th>Del</th>
                 </tr>
-                <?php foreach ($enrollment as $student): ?>
+                <?php foreach ($observers as $student): ?>
                     <?php if($student['auth'] == 'observer' ): ?>
                 <tr>
                     <td class="center studentID">
