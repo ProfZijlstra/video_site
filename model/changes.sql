@@ -322,3 +322,8 @@ ALTER TABLE `enrollment` ADD COLUMN `auth` VARCHAR(45) NOT NULL DEFAULT 'observe
 UPDATE `enrollment` SET `auth` = 'student';
 INSERT INTO `enrollment` (id, user_id, offering_id, auth) SELECT NULL, `fac_user_id`, `id`, 'instructor' FROM `offering`;
 ALTER TABLE `offering` DROP `fac_user_id`;
+
+-- add indexes to: user.isAdmin user.isFaculty and enrollment.auth
+CREATE INDEX user_isAdmin ON user (isAdmin);
+CREATE INDEX user_isFaculty ON user (isFaculty);
+CREATE INDEX enrollment_auth ON enrollment (auth);
