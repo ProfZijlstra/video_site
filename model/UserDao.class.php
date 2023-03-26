@@ -115,7 +115,7 @@ class UserDao {
      * @param int $active
      * @param int $isAdmin
      * @param int $isFaculty
-     * @param string $pass password hash
+     * @param string $pass optional new password 
      */
     public function update($uid, $first, $last, $knownAs, $email, $studentID, 
                             $teamsName, $active, $isAdmin, $isFaculty,  

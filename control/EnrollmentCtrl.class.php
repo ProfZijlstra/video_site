@@ -216,7 +216,7 @@ EOD;
         $hash = password_hash($id6, PASSWORD_DEFAULT);
 
         $user_id = $this->userDao->insert($given, $last, $first, 
-            $email, $id6, $teamsName, $hash, "user", 1);
+            $email, $id6, $teamsName, $hash, 1);
     
         # create custom welcome message
         $message = 

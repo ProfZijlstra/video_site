@@ -264,13 +264,12 @@ class UserCtrl {
         if (!$email) {
             $error .= "email ";
         }
-        if (!$studentID) {
-            $error .= "Student ID ";
-        }
         if ($error) {
-            return "Location: $uid?error=" . urlencode("Incorrect $error");
+            $VIEW_DATA["msg"] = "Missing: " . json_encode($error);
+            return "Location: $uid";
         }
 
+        // if given an empty password it does not update password
         $this->userDao->update($uid, $first, $last, $knownAs, $email, 
                 $studentID, $teamsName, $active, $isAdmin, $isFaculty, $pass);
         return "Location: $uid";
