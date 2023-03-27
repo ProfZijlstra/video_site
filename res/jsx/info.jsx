@@ -7,8 +7,8 @@ const INFO = (function () {
     function Users(props) {
         if (props.users) {
             return (
-                <span class="users" onClick={props.showUsers}>
-                    <i class="far fa-user"></i> {props.users}
+                <span className="users" onClick={props.showUsers}>
+                    <i className="far fa-user"></i> {props.users}
                 </span>
             );
         } else {
@@ -19,8 +19,8 @@ const INFO = (function () {
     function Views(props) {
         if (props.views) {
             return (
-                <span class="views">
-                    <i class="fas fa-eye"></i> {props.views}
+                <span className="views">
+                    <i className="fas fa-eye"></i> {props.views}
                 </span>
             );
         } else {
@@ -31,8 +31,8 @@ const INFO = (function () {
     function Time(props) {
         if (props.time) {
             return (
-                <span class="time">
-                    <i class="far fa-clock"></i> {props.time}
+                <span className="time">
+                    <i className="far fa-clock"></i> {props.time}
                 </span>
             );
         } else {
@@ -167,12 +167,12 @@ const INFO = (function () {
 
             return (
                 <tr>
-                    <th onClick={firstClick}>Given Names <i class={firstSort}></i></th>
-                    <th onClick={lastClick}>Family Names <i class={lastSort}></i></th>
-                    <th onClick={pdfClick}>PDF <i class={pdfSort}></i></th>
-                    <th onClick={videoClick}>Video <i class={videoSort}></i></th>
-                    <th onClick={hoursClick}>Hours <i class={hoursSort}></i></th>
-                    <th onClick={nullsClick}>Nulls <i class={nullsSort}></i></th>
+                    <th onClick={firstClick}>Given Names <i className={firstSort}></i></th>
+                    <th onClick={lastClick}>Family Names <i className={lastSort}></i></th>
+                    <th onClick={pdfClick}>PDF <i className={pdfSort}></i></th>
+                    <th onClick={videoClick}>Video <i className={videoSort}></i></th>
+                    <th onClick={hoursClick}>Hours <i className={hoursSort}></i></th>
+                    <th onClick={nullsClick}>Nulls <i className={nullsSort}></i></th>
                 </tr>
             );
         }
@@ -183,10 +183,10 @@ const INFO = (function () {
             <tr>
                 <td><a href={"views/" + props.id + (day ? `#${day}` : '')}>{props.firstname}</a></td>
                 <td><a href={"views/" + props.id + (day ? `#${day}` : '')}>{props.lastname} </a></td>
-                <td class="num">{props.pdf}</td>
-                <td class="num">{props.video}</td>
-                <td class="num">{props.hours}</td>
-                <td class="num">{props.nulls}</td>
+                <td className="num">{props.pdf}</td>
+                <td className="num">{props.video}</td>
+                <td className="num">{props.hours}</td>
+                <td className="num">{props.nulls}</td>
             </tr>
         );
     }

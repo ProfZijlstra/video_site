@@ -8,10 +8,10 @@ const INFO = function () {
   function Users(props) {
     if (props.users) {
       return /*#__PURE__*/React.createElement("span", {
-        class: "users",
+        className: "users",
         onClick: props.showUsers
       }, /*#__PURE__*/React.createElement("i", {
-        class: "far fa-user"
+        className: "far fa-user"
       }), " ", props.users);
     } else {
       return "";
@@ -20,9 +20,9 @@ const INFO = function () {
   function Views(props) {
     if (props.views) {
       return /*#__PURE__*/React.createElement("span", {
-        class: "views"
+        className: "views"
       }, /*#__PURE__*/React.createElement("i", {
-        class: "fas fa-eye"
+        className: "fas fa-eye"
       }), " ", props.views);
     } else {
       return "";
@@ -31,9 +31,9 @@ const INFO = function () {
   function Time(props) {
     if (props.time) {
       return /*#__PURE__*/React.createElement("span", {
-        class: "time"
+        className: "time"
       }, /*#__PURE__*/React.createElement("i", {
-        class: "far fa-clock"
+        className: "far fa-clock"
       }), " ", props.time);
     } else {
       return "";
@@ -156,27 +156,27 @@ const INFO = function () {
       return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
         onClick: firstClick
       }, "Given Names ", /*#__PURE__*/React.createElement("i", {
-        class: firstSort
+        className: firstSort
       })), /*#__PURE__*/React.createElement("th", {
         onClick: lastClick
       }, "Family Names ", /*#__PURE__*/React.createElement("i", {
-        class: lastSort
+        className: lastSort
       })), /*#__PURE__*/React.createElement("th", {
         onClick: pdfClick
       }, "PDF ", /*#__PURE__*/React.createElement("i", {
-        class: pdfSort
+        className: pdfSort
       })), /*#__PURE__*/React.createElement("th", {
         onClick: videoClick
       }, "Video ", /*#__PURE__*/React.createElement("i", {
-        class: videoSort
+        className: videoSort
       })), /*#__PURE__*/React.createElement("th", {
         onClick: hoursClick
       }, "Hours ", /*#__PURE__*/React.createElement("i", {
-        class: hoursSort
+        className: hoursSort
       })), /*#__PURE__*/React.createElement("th", {
         onClick: nullsClick
       }, "Nulls ", /*#__PURE__*/React.createElement("i", {
-        class: nullsSort
+        className: nullsSort
       })));
     }
   }
@@ -186,13 +186,13 @@ const INFO = function () {
     }, props.firstname)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("a", {
       href: "views/" + props.id + (day ? `#${day}` : '')
     }, props.lastname, " ")), /*#__PURE__*/React.createElement("td", {
-      class: "num"
+      className: "num"
     }, props.pdf), /*#__PURE__*/React.createElement("td", {
-      class: "num"
+      className: "num"
     }, props.video), /*#__PURE__*/React.createElement("td", {
-      class: "num"
+      className: "num"
     }, props.hours), /*#__PURE__*/React.createElement("td", {
-      class: "num"
+      className: "num"
     }, props.nulls));
   }
   class ViewersTable extends React.Component {

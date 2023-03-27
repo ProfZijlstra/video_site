@@ -185,7 +185,7 @@ class ViewCtrl {
 
 
     /**
-     * @GET(uri="!/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/.+/enrollment$!", sec="instructor")
+     * @GET(uri="!/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)(/.+)?/enrollment$!", sec="instructor")
      */
     public function enrollemnt() {
 		$offering_id = filter_input(INPUT_GET, "offering_id");

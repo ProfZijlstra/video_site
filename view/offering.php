@@ -83,7 +83,7 @@
         <?php if (hasMinAuth('instructor')) : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
-                <div id="clone_modal" class="modal">
+                <div id="clone_modal" class="modal hide">
                     <h2>Clone Offering</h2>
                     <form method="POST" action="clone">
                         <input type="hidden" name="offering_id" value=<?= $offering['id'] ?> />
@@ -126,7 +126,7 @@
                         </div>
                     </form>
                 </div>
-                <div id="delete_modal" class="modal">
+                <div id="delete_modal" class="modal hide">
                     <h2>Delete Offering</h2>
                     <p>
                         Please confirm that you want to delete this offering.
@@ -139,7 +139,7 @@
                         </div>
                     </form>
                 </div>
-                <div id="edit_modal" class="modal">
+                <div id="edit_modal" class="modal hide">
                     <h2>Edit Day Title</h2>
                     <form method="POST" action="edit">
                         <input type="hidden" name="day_id" id="day_id" value="" />
@@ -153,6 +153,9 @@
                     </form>
                 </div>
 
+                <div id="content">
+                    <!-- React puts it's table with view data here -->
+                </div>
             </div>
         <?php endif; ?>
 
