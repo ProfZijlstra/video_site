@@ -47,7 +47,7 @@ class UserDao {
      */
     public function all() {
         // maybe add parameters for constraints and order by
-        $stmt = $this->db->prepare("SELECT * FROM user");
+        $stmt = $this->db->prepare("SELECT * FROM user ORDER BY accessed DESC");
         $stmt->execute();
         return $stmt->fetchAll();        
     }
