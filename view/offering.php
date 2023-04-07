@@ -10,8 +10,8 @@
         <script src="res/js/offering.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
-            <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-            <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+            <script src="https://fb.me/react-0.14.3.min.js"></script>
+            <script src="https://fb.me/react-dom-0.14.3.min.js"></script>
             <script src="res/js/info.js"></script>
             <script src="res/js/adm_offering.js"></script>
         <?php endif; ?>
