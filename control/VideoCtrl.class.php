@@ -172,7 +172,7 @@ class VideoCtrl {
 
 		// fix video play speed if broken
 		if (!$_SESSION['user']['speed'] || $_SESSION['user']['speed'] < 0.4) {
-			$_SESSION['user']['speed'] = 0.4;
+			$_SESSION['user']['speed'] = 1;
 		}
 		
 		// settings
