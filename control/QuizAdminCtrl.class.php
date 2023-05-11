@@ -59,8 +59,8 @@ class QuizAdminCtrl {
 
         // get all quizzes for this offering
         $oid = $VIEW_DATA["offering_id"];
-        if ($_SESSION['user']['type'] == "instructor"  ||
-            $_SESSION['user']['type'] == "admin") {
+        if ($_SESSION['user']['isAdmin'] ||
+            $_SESSION['user']['isFaculty']) {
             $quizzes = $this->quizDao->allForOffering($oid);
         } else {
             $quizzes = $this->quizDao->visibleForOffering($oid);
