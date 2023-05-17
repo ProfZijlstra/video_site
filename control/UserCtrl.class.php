@@ -67,9 +67,28 @@ class UserCtrl {
                 "email" => $row['email'],
                 "isAdmin" => $row['isAdmin'],
                 "isFaculty" => $row['isFaculty'],
-                "autoplay" => "off"
+                "isRemembered" => false
             );
-            $_SESSION['user']['speed'] = $_COOKIE['view_speed'] ? $_COOKIE['view_speed'] : 1;
+            $_SESSION['user']['speed'] = 1;
+            if ($_COOKIE['viewspeed']) {
+                $_SESSION['user']['speed'] = $_COOKIE['viewspeed'];
+                setcookie("viewspeed", $_SESSION['user']['speed'], 7*24*60*60, "/videos");
+            };
+            $_SESSION['user']['autoplay'] = "off";
+            if ($_COOKIE['autoplay']) {
+                $_SESSION['user']['autoplay'] = $_COOKIE['autoplay'];
+                setcookie("autoplay", $_SESSION['user']['autoplay'], 7*24*60*60, "/videos");
+            }
+
+            // create a remember me cookie
+            $reme = $row["id"] . ":" .
+                    $row['firstname'] . ":" .
+                    $row['lastname'] . ":" .
+                    $row['email'] . ":" .
+                    $row['isAdmin'] . ":" .
+                    $row['isFaculty'];
+            $reme = password_hash($reme . SALT, PASSWORD_DEFAULT) . ":" . $reme;
+            setcookie("ReMe", $reme, time() + 7*24*60*60, "/videos");
 
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);

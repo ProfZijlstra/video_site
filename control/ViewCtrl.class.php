@@ -63,7 +63,7 @@ class ViewCtrl {
 	public function speed() {
 		$speed = filter_input(INPUT_POST, "speed");
 		$_SESSION['user']['speed'] = $speed;
-		setcookie("view_speed", $speed, time() + 7*24*60*60, "/videos");
+		setcookie("viewspeed", $speed, time() + 7*24*60*60, "/videos");
 	}
 
    	/**

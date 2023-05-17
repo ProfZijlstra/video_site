@@ -6,6 +6,28 @@
 
 // helper function to check if user is logged in
 function isLoggedIn() {
+    if (isset($_SESSION['user'])) {
+        return;
+    }
+    if (isset($_COOKIE['ReMe'])) {
+        $data = explode(":", $_COOKIE['ReMe']);
+        $pos = strpos($_COOKIE['ReMe'], ":");
+        $reme = substr($_COOKIE["ReMe"], $pos + 1);
+
+        // check that the hash matches 
+        if (password_verify($reme . SALT, $data[0])) {
+            $_SESSION['user'] = array(
+                "id" => $data[1],
+                "first" => $data[2],
+                "last" => $data[3],
+                "email" => $data[4],
+                "isAdmin" => $data[5],
+                "isFaculty" => $data[6],
+                "isRemembered" => true
+            );    
+        }
+
+    }
     if (!isset($_SESSION['user'])) {
         global $MY_BASE;
         global $MY_URI;
@@ -15,6 +37,21 @@ function isLoggedIn() {
 
         // Then show login page
         $_SESSION['error'] = "Please Login:";
+        header("Location: {$MY_BASE}/login");
+        exit();
+    }
+}
+
+function reAuthRemembered() {
+    if ($_SESSION['user']['isRemembered']) {
+        global $MY_BASE;
+        global $MY_URI;
+
+        // the original url the user requested
+        $_SESSION['login_to'] = $MY_URI;
+
+        // Then show login page
+        $_SESSION['error'] = "Authorization Check";
         header("Location: {$MY_BASE}/login");
         exit();
     }
@@ -73,6 +110,13 @@ function hasMinAuth($req_auth) {
     return true;
 }
 
+function isAuthorized($lvl) {
+    if (!hasMinAuth($lvl)) {
+        require "view/error/403.php";
+        exit();
+    }
+}
+
 // apply the security policy
 switch ($MY_MAPPING['sec']) {
     case "none":
@@ -82,19 +126,15 @@ switch ($MY_MAPPING['sec']) {
         break;
     case "observer":
     case "student":
-    case "assistant":
-    case "instructor":        
         isLoggedIn();
-        if (!hasMinAuth($MY_MAPPING['sec'])) {
-            require "view/error/403.php";
-            exit();
-        }
+        isAuthorized($MY_MAPPING['sec']);
         break;
+    case "assistant":
+    case "instructor": 
     case "admin":
     default:
         isLoggedIn();
-        if (!$_SESSION['user']['isAdmin']) {
-            require "view/error/403.php";
-            exit();
-        }
+        reAuthRemembered();
+        isAuthorized($MY_MAPPING['sec']);
+        break;
 }
