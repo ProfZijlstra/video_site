@@ -94,8 +94,8 @@ if (!isset($user)) {
                 </div>
                 <div id="isAdmin">
                     <select name="isAdmin">
-                        <option value="0" <?= $user && $user['isAdmin'] == 1 ? "" : "selected" ?>>No</option>
-                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                        <option value="1" <?= $user && $user['isAdmin'] == 1 ? "selected" : "" ?>>Yes</option>
                     </select> <br />
                 </div>
                 <div id="label_isFaculty">
@@ -103,8 +103,8 @@ if (!isset($user)) {
                 </div>
                 <div id="isFaculty">
                     <select name="isFaculty">
-                        <option value="0" <?= $user && $user['isFaculty'] == 1 ? "" : "selected" ?>>No</option>
-                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                        <option value="1" <?= $user && $user['isFaculty'] == 1 ? "selected" : "" ?>>Yes</option>
                     </select> <br />
                 </div>
                 <div id="label_active">
@@ -112,8 +112,8 @@ if (!isset($user)) {
                 </div>
                 <div id="active">
                     <select name="active">
-                        <option value="0" <?= $user && $user['active'] == 1 ? "" : "selected" ?>>No</option>
-                        <option value="1" <?= !$user ? "selected" : ""?>>Yes</option>
+                        <option value="1" <?= $user && $user['active'] == 1 ? "selected" : "" ?>>Yes</option>
+                        <option value="0" <?= $user && $user['active'] == 0 ? "selected" : "" ?>>No</option>
                     </select>
                     <div id="btn">
                         <button><?= $user ? 'Update' : 'Add' ?></button>
