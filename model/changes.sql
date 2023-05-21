@@ -327,3 +327,7 @@ ALTER TABLE `offering` DROP `fac_user_id`;
 CREATE INDEX user_isAdmin ON user (isAdmin);
 CREATE INDEX user_isFaculty ON user (isFaculty);
 CREATE INDEX enrollment_auth ON enrollment (auth);
+
+-- 21st of May 2023 updates to offering to help MSD admissions
+ALTER TABLE `offering` ADD COLUMN `showDates` TINYINT UNSIGNED NOT NULL DEFAULT 1;
+ALTER TABLE `offering` ADD COLUMN `usesFlowcharts` TINYINT UNSIGNED NOT NULL DEFAULT 0;

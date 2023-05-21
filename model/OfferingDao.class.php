@@ -158,13 +158,15 @@ class OfferingDao
 		$lessonsPerPart,
 		$lessonParts,
 		$hasQuiz,
-		$hasLab
+		$hasLab,
+		$showDates,
+		$usesFlowcharts
 	) {
 		$stmt = $this->db->prepare(
 			"INSERT INTO offering 
 			VALUES(NULL, :course_number, :block, :start,
 					:daysPerLesson, :lessonsPerPart, :lessonParts, 
-					:hasQuiz, :hasLab, 1)"
+					:hasQuiz, :hasLab, 1, :showDates, :usesFlowcharts)"
 		);
 		$stmt->execute(array(
 			"course_number" => $course_number, 
@@ -174,7 +176,9 @@ class OfferingDao
 			"lessonsPerPart" => $lessonsPerPart,
 			"lessonParts" => $lessonParts,
 			"hasQuiz" => $hasQuiz,
-			"hasLab" => $hasLab
+			"hasLab" => $hasLab,
+			"showDates" => $showDates,
+			"usesFlowcharts" => $usesFlowcharts
 		));
 		return $this->db->lastInsertId();
 	}
@@ -190,13 +194,16 @@ class OfferingDao
 		$lessonsPerPart,
 		$lessonParts,
 		$hasQuiz,
-		$hasLab
+		$hasLab,
+		$showDates,
+		$usesFlowcharts
 	) {
 		$stmt = $this->db->prepare(
 			"UPDATE offering 
 			SET `block` = :block, `start` = :start, 
 			daysPerLesson = :daysPerLesson, lessonsPerPart = :lessonsPerPart,
-			lessonParts = :lessonParts, hasQuiz = :hasQuiz, hasLab = :hasLab
+			lessonParts = :lessonParts, hasQuiz = :hasQuiz, hasLab = :hasLab,
+			showDates = :showDates, usesFlowcharts = :usesFlowcharts
 			WHERE id = :id"
 		);
 		$stmt->execute(array(
@@ -207,7 +214,9 @@ class OfferingDao
 			"lessonsPerPart" => $lessonsPerPart,
 			"lessonParts" => $lessonParts,
 			"hasQuiz" => $hasQuiz,
-			"hasLab" => $hasLab
+			"hasLab" => $hasLab,
+			"showDates" => $showDates,
+			"usesFlowcharts" => $usesFlowcharts 
 		));
 	}
 

@@ -72,7 +72,9 @@
                             <span class="day"><?= "W{$w}D{$d}" ?></span>
                             <span class="text"><?= $days["W{$w}D{$d}"]["desc"] ?></span>
                         </a>
-                        <time><?= date("M j Y", $date);?></time>
+                        <?php if ($offering['showDates']): ?>
+                            <time><?= date("M j Y", $date);?></time>
+                        <?php endif; ?>
                     </div>
 
                     <?php endfor ?>
@@ -120,6 +122,15 @@
                                 <input type="checkbox" name="hasLab" value="1" <?= $offering['hasLab'] ? "checked" : ""?> />
                                 Has Lab
                             </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="showDates" value="1" <?= $offering['showDates'] ? "checked" : ""?> />
+                                Show Dates
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="usesFlowcharts" value="1" <?= $offering['usesFlowcharts'] ? "checked" : ""?> />
+                                Flowcharts
+                            </label>
+
                         </div>
                         <div class="submit">
                             <button>Submit</button>
