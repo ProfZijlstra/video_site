@@ -77,6 +77,18 @@ class EnrollmentDao {
 		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);		
 	}
 
+	public function update($user_id, $offering_id, $auth) {
+		$stmt = $this->db->prepare("UPDATE enrollment 
+				SET auth = :auth
+				WHERE user_id = :user_id 
+				AND offering_id = :offering_id");
+		$stmt->execute([
+			"auth" => $auth,
+			"user_id" => $user_id, 
+			"offering_id" => $offering_id
+		]);		
+	}
+
 	public function checkEnrollmentAuth($user_id, $course, $block) {
 		$stmt = $this->db->prepare(
 			"SELECT e.auth FROM enrollment AS e 

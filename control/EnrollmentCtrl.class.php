@@ -34,13 +34,16 @@ class EnrollmentCtrl {
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
 
         $instructors = [];
+        $assistants = [];
         $students = [];
         $observers = [];
 
         foreach ($enrollment as $person) {
             if ($person['auth'] == "instructor") {
                 $instructors[] = $person;
-            } else if ($person['auth'] == "student" || $person['auth'] == "assistant") {
+            } else if ($person['auth'] == "assistant") {
+                $assistants[] = $person;
+            } else if ($person['auth'] == "student") {
                 $students[] = $person;
             } else {
                 $observers[] = $person;
@@ -48,6 +51,7 @@ class EnrollmentCtrl {
         }
 
         $VIEW_DATA['instructors'] = $instructors;
+        $VIEW_DATA['assistants'] = $assistants;
         $VIEW_DATA['students'] = $students;
         $VIEW_DATA['observers'] = $observers;
         $VIEW_DATA['offering'] = $offering;
@@ -170,6 +174,17 @@ EOD;
         $auth = filter_input(INPUT_POST, "auth");
 
         $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
+        return "Location: enrolled";
+    }
+    /**
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/config_enroll$!", sec="instructor")
+     */
+    public function update() {
+        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+		$user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
+        $auth = filter_input(INPUT_POST, "auth");
+
+        $this->enrollmentDao->update($user_id, $offering_id, $auth);
         return "Location: enrolled";
     }
 
