@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <link rel="stylesheet" href="res/css/meeting.css">
-   <script src="res/js/meeting-1.1.js"></script>
+    <link rel="stylesheet" href="res/css/meeting-1.1css">
+   <script src="res/js/meeting-1.2.js"></script>
    <script src="res/js/lib/html5-qrcode.min.js"></script>
    <script src="res/js/sounds.js"></script>
 </head>
@@ -21,12 +21,23 @@
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
 
-        <nav id="barcodeReader" class="tools" title="Start/Stop Reader">
-            <div id="stripe"></div>
-            <i class="fa-solid fa-barcode"></i>
+        <nav class="tools">
+            <span class="iconContainer" id="barcodeReader" title="Start/Stop Camera Reader">
+                <div class="stripe"></div>
+                <i class="fa-solid fa-camera"></i>
+            </span>
+            <span class="iconContainer" id="barcodeScanner" title="Start/Stop Barcode Scanner">
+                <div class="stripe"></div>
+                <i class="fa-solid fa-barcode"></i>
+            </span>
         </nav>
 
-        <div id="readerContainer" class="hide">
+        <div id="scannerContainer" class="sideContainer hide">
+            <div><i class="fa-solid fa-barcode"></i></div>
+            <div><input id="barcode" placeholder="barcode number" /></div>
+        </div> 
+
+        <div id="readerContainer" class="sideContainer hide">
             <div id="rotate" class="hide">
                 <i class="fas fa-sync"></i>
                 <div id="camera_icon">
@@ -35,6 +46,9 @@
             </div>
             <div id="readerStripe"></div>
             <div id="reader"></div>
+        </div>
+
+        <div id="msgContainer" class="hidden">
             <div id="attendMsg" class="msg hidden">
                 Thanks <strong id="physicallyPresent"></strong> your attendance is recorded
             </div>

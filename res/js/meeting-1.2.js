@@ -170,23 +170,76 @@ window.addEventListener("load", () => {
         }
     }
 
-    // toggle barcode reader
-    document.getElementById("barcodeReader").onclick = function() {
-        document.getElementById("content").classList.toggle("left");
-        document.getElementById("readerContainer").classList.toggle("hide");
-        if (!html5QrCode) {
-            startScanning();
+    // variables used multiple times in the upcoming functions
+    const content = document.getElementById("content");
+    const scanner = document.getElementById("scannerContainer");
+    const reader = document.getElementById("readerContainer");
+    const input = document.getElementById("barcode");
+    const box = document.getElementById('msgContainer');
+
+
+    // input field for the laser barcode scanner
+    input.onkeyup = function(evt) {
+        if (evt.key ===  "Enter") {
+            processCode(this.value);
+            this.value = "";
+        }
+    }
+
+    // toggle laser barcode scanner
+    document.getElementById("barcodeScanner").onclick = function() {
+        // stop camera if open
+        reader.classList.add("hide");
+        if (html5QrCode) {
+            stopCamera();
+        }
+        // open barcode input pane (or close it)
+        if (scanner.classList.contains("hide")) {
+            scanner.classList.remove("hide");
+            box.classList.remove("hide");
+            if (!content.classList.contains("left")) {
+                content.classList.add("left");
+            }
+            input.focus();
         } else {
-            stopScanning();
+            scanner.classList.add("hide");
+            box.classList.add("hide");
+            content.classList.remove("left");
         }
     };
 
-    function stopScanning() {
+    // toggle camera barcode reader
+    document.getElementById("barcodeReader").onclick = function() {
+        // hide barcode input pane
+        scanner.classList.add("hide");
+        // open camera barcode reader (or close it)
+        if (!html5QrCode) {
+            if (!content.classList.contains("left")) {
+                content.classList.add("left");
+            }
+            reader.classList.remove("hide");
+            startCamera();
+        } else {
+            content.classList.remove("left");
+            reader.classList.add("hide");
+            box.classList.add("hide");
+            stopCamera();
+        }
+    };
+
+    function processCode(barcode) {
+        if (!codesRead[barcode]) {
+            setPhysicalAttendance(barcode);
+            codesRead[barcode] = true;
+        }
+    }
+
+    function stopCamera() {
         html5QrCode.stop();
         html5QrCode = null;
     }
 
-    function startScanning() {
+    function startCamera() {
         // from: https://blog.minhazav.dev/research/html5-qrcode.html
         html5QrCode = new Html5Qrcode("reader");
         // This method will trigger user permissions
@@ -203,13 +256,12 @@ window.addEventListener("load", () => {
                     let cameraId = devices[currentCamera].id;
                     // this will also trigger a user permissions check
                     html5QrCode
-                        .start(cameraId, {fps : 10, qrbox: {width: 800, height: 300 }, formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128 ]},
-                               barcode => {
-                                    if (!codesRead[barcode]) {
-                                        setPhysicalAttendance(barcode);
-                                        codesRead[barcode] = true;
-                                    }
-                                })
+                        .start(
+                            cameraId, 
+                            {fps : 10, qrbox: {width: 800, height: 300 }, 
+                            formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128 ]},
+                            processCode
+                        )
                         .catch(err => {
                             // Start failed, handle it. For example,
                             console.log(
@@ -241,11 +293,16 @@ window.addEventListener("load", () => {
             const name = links[1].textContent;
             document.getElementById("physicallyPresent").textContent = name;
             const msg = document.getElementById("attendMsg");
+            box.classList.remove('hidden');
             msg.classList.remove('hidden');
             SOUNDS.present();
-            setTimeout(() => {msg.classList.add("hidden")}, 7000);
+            setTimeout(() => {
+                box.classList.add("hidden"); 
+                msg.classList.add("hidden")
+            }, 7000);
         } else {
             SOUNDS.notFound();
+            box.classList.remove('hidden');
             document.getElementById('registerMsg').classList.remove('hidden');
             document.getElementById('unknownBadge').innerText = barcode;
             unknownBadge = barcode;
@@ -255,6 +312,7 @@ window.addEventListener("load", () => {
     function clearRegisterMsg() {
         unknownBadge = null;
         document.getElementById('registerMsg').classList.add('hidden');
+        box.classList.add('hidden');
     }
     document.getElementById("cancelRegister").onclick = clearRegisterMsg;
 });

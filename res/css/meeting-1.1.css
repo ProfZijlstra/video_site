@@ -1,4 +1,10 @@
-nav.tools #stripe {
+.iconContainer {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+nav.tools .stripe {
     position: absolute;
     top: 17px;
     right: -5px;
@@ -7,13 +13,28 @@ nav.tools #stripe {
     border: 1px solid red;
     cursor: pointer;
 }
-#readerContainer {
+.sideContainer {
     width: 45vw;
     min-height: 200px;
-    background-color: white;
     position: fixed;
     top: 150px;
     right: 50px;
+}
+#scannerContainer {
+    text-align: center;
+}
+#scannerContainer .fa-barcode {
+    font-size: 100px;
+}
+#readerContainer {
+    background-color: white;
+}
+#msgContainer {
+    position: fixed;
+    width: 45vw;
+    top: 125px;
+    right: 50px;
+    text-align: center;
 }
 .hide {
     display: none;
@@ -56,11 +77,6 @@ nav.tools #stripe {
 }
 #registerMsg {
     position: relative;
-}
-#registerMsg button {
-    position: absolute;
-    top: 0px;
-    right: 5px;
 }
 #content {
     width: 800px;
