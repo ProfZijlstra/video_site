@@ -114,6 +114,7 @@ class UserCtrl {
      */
     public function logout() {
         session_destroy();
+        setcookie("ReMe", "", time() - 10, "/videos");
         $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
