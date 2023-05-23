@@ -42,7 +42,9 @@
             }
             .error {
                 font-size: 15px;
-                padding-bottom: 3px;
+                margin-bottom: 10px;
+                text-align: center;
+                font-weight: bold;
             }
             input[type=text], input[type=password] { 
                 background-color: white;
@@ -80,8 +82,8 @@
             <h1>Lecture Videos</h1>
             <div class="container">
                 <form action="login" method="post">
-                    <?php if (isset($_error)) : ?>
-                        <span class="error"><?= $_error ?></span>
+                    <?php if (isset($error)) : ?>
+                        <div class="error"><?= $error ?></div>
                         <br />
                     <?php endif; ?>
                     <input type="text" name="email" placeholder="Email or Username" autofocus />

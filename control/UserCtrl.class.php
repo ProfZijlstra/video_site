@@ -27,13 +27,9 @@ class UserCtrl {
      */
     public function getLogin() {
         global $VIEW_DATA;
-
-        // if found add and remove error
-        if ($_SESSION['error']) {
-            $VIEW_DATA['_error'] = $_SESSION['error'];
-            unset($_SESSION['error']);
+        if ($_COOKIE['logout']) {
+            $VIEW_DATA['error'] = $_COOKIE['logout'];
         }
-        
         return "login.php";
     }
 
@@ -46,8 +42,7 @@ class UserCtrl {
      */
     public function login() {
         global $MY_BASE;
-        // start session, and clean any login errors 
-        unset($_SESSION['error']);
+        global $VIEW_DATA;
 
         $email = filter_input(INPUT_POST, "email");
         $pass = filter_input(INPUT_POST, "pass");
@@ -101,7 +96,7 @@ class UserCtrl {
 			} 
 			return $redirect;
         } else {
-            $_SESSION['error'] = "Error: try again";
+            $VIEW_DATA['error'] = "Error: try again";
             return "Location: login";
         }
     }
@@ -115,7 +110,7 @@ class UserCtrl {
     public function logout() {
         session_destroy();
         setcookie("ReMe", "", time() - 10, "/videos");
-        $_SESSION['error'] = "Logged Out";
+        setcookie("logout", "Logged Out", time() + 3, "/videos");
         return "Location: login";
     }
 
