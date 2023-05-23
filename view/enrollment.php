@@ -27,8 +27,15 @@
                 font-size: 20px;
                 cursor: pointer;
             }
+            #enroll_modal label {
+                width: 125px;
+            }
+            #enroll_modal input, div.modal select {
+                width: 560px;
+            }
+
         </style>
-        <script src="res/js/enrollment-1.1.js"></script>
+        <script src="res/js/enrollment-1.2.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -54,8 +61,8 @@
                 </div>
             </nav>
             <div id="content">
-            <?php if ($error) : ?>
-                <p class="error"><?= $error ?></p>
+            <?php if ($msg) : ?>
+                <p class="error"><?= $msg ?></p>
             <?php endif; ?>
 
             <?php if (!$instructors): ?>
@@ -253,21 +260,45 @@
             </div>
             <div id="enroll_modal" class="modal hide">
                 <h3>Enroll User</h3>
-                <p>The student already has to have an account <a href="/videos/user">(be a user)</a></p>
+                <p>Only email and auth are needed for previously enrolled users</a></p>
                 <form action="enroll" method="post" id="enroll_form">
                     <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
                     <div>
-                        <label>User ID:</label>
-                        <input type="text" name="user_id" id="enrollID" /> 
+                        <label>Email</label>
+                        <input type="text" name="email" id="emailField" /> 
                     </div>
                     <div>
                         <label>Auth:</label>
                         <select name="auth">
                             <option>observer</option>
+                            <option selected>student</option>
                             <option>assistant</option>
-                            <option>student</option>
                             <option>instructor</option>
                         </select>
+                    </div>
+                    <div>
+                        <label>Given Name(s):</label>
+                        <input type="text" name="first" id="first" placeholder="Including middle name as shown on passport / drivers license" /> <br />
+                    </div>
+                    <div>
+                        <label>Family Name(s):</label>
+                        <input type="text" name="last"  placeholder="As on passport / drivers license" /> <br />
+                    </div>
+                    <div>
+                        <label>Known As:</label>
+                        <input type="text" name="knownAs" id="knownAs" placeholder="As used in conversation" /> <br />
+                    </div>
+                    <div>
+                        <label>Password:</label>
+                        <input type="password" name="pass" /> <br />
+                    </div>
+                    <div>
+                        <label>MIU Student ID:</label>
+                        <input type="text" name="studentID" placeholder="If available"  /> <br />
+                    </div>
+                    <div>
+                        <label>Teams Name:</label>
+                        <input type="text" name="teamsName" placeholder="If available" /> <br />
                     </div>
                     <div class="btn">
                         <button type="submit">Enroll</button>
@@ -285,8 +316,8 @@
                         <label>Auth:</label>
                         <select name="auth" id="config_auth">
                             <option value="observer">observer</option>
-                            <option value="assistant">assistant</option>
                             <option value="student">student</option>
+                            <option value="assistant">assistant</option>
                             <option value="instructor">instructor</option>
                         </select>
                     </div>

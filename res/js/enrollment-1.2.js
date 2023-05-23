@@ -35,7 +35,7 @@ window.addEventListener("load", () => {
     document.getElementById("addUser").addEventListener("click", () => {
         overlay.classList.add("visible");
         document.getElementById("enroll_modal").classList.remove("hide");
-        document.getElementById("enrollID").focus();
+        document.getElementById("emailField").focus();
     });
 
     // hide overlay and any/all modal(s)
@@ -59,5 +59,18 @@ window.addEventListener("load", () => {
         if (!file.value) {
             return false;
         }
+    };
+
+    // auto populate knownAs with given names
+    const first = document.getElementById('first');
+    const knownAs = document.getElementById('knownAs');
+    first.onkeyup = () => {
+        if (!knownAs.dataset.provided) {
+            knownAs.value = first.value;
+        }
+    };
+
+    knownAs.onkeyup = () => {
+        knownAs.dataset.provided = knownAs.value;
     };
 });

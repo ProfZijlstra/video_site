@@ -169,13 +169,48 @@ EOD;
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enroll$!", sec="instructor")
      */
     public function enroll() {
+        global $VIEW_DATA;
+        // receive offering_id, email and auth
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-		$user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
         $auth = filter_input(INPUT_POST, "auth");
+        $email = filter_input(INPUT_POST, "email");
 
+        // if email missing return "missing email"
+        if (!$email) {
+            $VIEW_DATA['msg'] = "Error: Missing Email Address";
+            return "Location: enrolled";
+        }
+
+        // check if user exists by email (receive user_id)
+        $user_id = $this->userDao->getUserId($email);
+        if ($user_id) {
+            $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
+            $VIEW_DATA['msg'] = "Existing user {$email} enrolled";
+            return "Location: enrolled";
+        } 
+
+        // receive first, last, knownAs, studentId, teamsName, pass 
+        $first = filter_input(INPUT_POST, "first");
+        $last = filter_input(INPUT_POST, "last");
+        $knownAs = filter_input(INPUT_POST, "knownAs");
+        $pass = filter_input(INPUT_POST, "pass");
+        $studentID = filter_input(INPUT_POST, "studentID");
+        $teamsName = filter_input(INPUT_POST, "teamsName");
+        if (!$first || !$last || !$pass) {
+            $VIEW_DATA['msg'] = "Error: Missing given names, family names, or password";
+            return "Location: enrolled";
+        }
+        if ($studentID == "" || !is_int($studentID)) {
+            $studentID = 0;
+        }
+        $hash = password_hash($pass, PASSWORD_DEFAULT);
+        $user_id = $this->userDao->insert($first, $last, $knownAs, $email, $studentID, $teamsName, $hash, 1);
         $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
+
+        $VIEW_DATA['msg'] = "Enrolled new user {$email}";
         return "Location: enrolled";
     }
+
     /**
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/config_enroll$!", sec="instructor")
      */
