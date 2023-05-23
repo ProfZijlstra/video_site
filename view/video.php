@@ -33,8 +33,8 @@
                     <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
                     <tr>
                         <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
-                        <td class="<?= $w < $curr_w || $w == $curr_w && $d <= $curr_d ? "done": ""?>
-                            <?= $w == $page_w && $d == $page_d ? "curr": ""?>">
+                        <td class="<?= $offering['showDates'] && $w <= $curr_w && $d <= $curr_d ? "done": ""?>
+                            <?= $offering['showDates'] && $w == $page_w && $d == $page_d ? "curr": ""?>">
                             <a href="../W<?=$w?>D<?=$d?>/">&nbsp;</a></td>
                         <?php endfor; // td loop ?>
                     </tr>
