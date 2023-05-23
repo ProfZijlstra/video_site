@@ -62,7 +62,7 @@
                     <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
                         <?php $date = $start + ($w - 1)*60*60*24*$offering['daysPerLesson']*$offering['lessonsPerPart'] + ($d - 1)*60*60*24*$offering["daysPerLesson"]; ?>
 
-                        <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
+                        <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $offering['showDates'] && $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
                             id="<?= "W{$w}D{$d}" ?>"
                             data-day="<?= "W{$w}D{$d}" ?>" 
                             data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
