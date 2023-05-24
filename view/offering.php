@@ -27,13 +27,22 @@
         <main>
             <?php if (hasMinAuth('instructor')) : ?>
             <nav class="tools">
-                <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                <?php if (!$isRemembered): ?>
+                    <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                    <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
+                    <i title="Clone Offering" id="clone" class="far fa-copy"></i>
+                    <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
+                <?php else: ?>
+                    <a href="reAuth">
+                        <i title="View Info" class="fas fa-info-circle"></i>
+                        <i title="Edit Calendar" class="far fa-edit"></i>
+                        <i title="Clone Offering" class="far fa-copy"></i>
+                        <i title="Delete Offering" class="far fa-trash-alt"></i>
+                    </a>
+                <?php endif; ?>
                 <a href="settings">
                     <i title="Offering Settings" class="fa-solid fa-gear"></i>
                 </a>
-                <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
-                <i title="Clone Offering" id="clone" class="far fa-copy"></i>
-                <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
             </nav>
             <?php endif; ?>
 

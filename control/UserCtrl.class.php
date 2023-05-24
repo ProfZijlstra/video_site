@@ -34,6 +34,19 @@ class UserCtrl {
     }
 
     /**
+     * @GET(uri="!^/.*reAuth$!", sec="none")
+     */
+    public function reAuth() {
+        global $MY_BASE;
+        global $VIEW_DATA;
+        $matches = [];
+        preg_match("!.*{$MY_BASE}(.*)!", $_SERVER['HTTP_REFERER'], $matches);
+        $_SESSION['login_to'] = $matches[1];
+        $VIEW_DATA['error'] = "Please Authenticate";
+        return "Location: login";
+    }
+
+    /**
      * Attempts to login to the application
      * @global type $MY_BASE base URI of our application
      * @return string appropriate redirect for success or failure
