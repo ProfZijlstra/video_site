@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="res/css/adm.css">
         <style>
             #content {
-                width: 1000px;
+                width: 1200px;
             }
             td.center {
                 text-align: center;
@@ -78,6 +78,7 @@
                     <th>Email</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <?php if($offering['usesFlowcharts']): ?>
                         <th></th>
                     <?php endif; ?>
@@ -95,7 +96,11 @@
                         </a>
                     </td>
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $instructor['id'] ?>" data-auth="instructor"></i></td>
+                        data-uid="<?= $instructor['id'] ?>" data-auth="instructor"></i>
+                    </td>
+                    <td class="center">
+                        <a href="W1D1/views/<?= $instructor['id'] ?>"><i class="fa-solid fa-eye"></i></a>
+                    </td>
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
                             <a title="Flowcharts" href="/flowcharts/projects/<?= $instructor["id"] ?>">
@@ -120,6 +125,7 @@
                     <th>Email</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <?php if($offering['usesFlowcharts']): ?>
                         <th></th>
                     <?php endif; ?>
@@ -137,7 +143,12 @@
                         </a>
                     </td>
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $assistant['id'] ?>" data-auth="assistant"></i></td>
+                        data-uid="<?= $assistant['id'] ?>" data-auth="assistant"></i>
+                    </td>
+                    <td class="center">
+                        <a href="W1D1/views/<?= $assistant['id'] ?>"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
                             <a title="Flowcharts" href="/flowcharts/projects/<?= $assistant["id"] ?>">
@@ -166,6 +177,7 @@
                     <th>Email</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <?php if($offering['usesFlowcharts']): ?>
                         <th></th>
                     <?php endif; ?>
@@ -185,7 +197,11 @@
                         </a>
                     </td>
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $student['id'] ?>" data-auth="student"></i></td>
+                        data-uid="<?= $student['id'] ?>" data-auth="student"></i>
+                    </td>
+                    <td class="center">
+                        <a href="W1D1/views/<?= $student['id'] ?>"><i class="fa-solid fa-eye"></i></a>
+                    </td>
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
                             <a title="Flowcharts" href="/flowcharts/projects/<?= $student["id"] ?>">
@@ -210,6 +226,7 @@
                     <th>Email</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <?php if($offering['usesFlowcharts']): ?>
                         <th></th>
                     <?php endif; ?>
@@ -230,7 +247,11 @@
                         </a>
                     </td>                    
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $student['id'] ?>" data-auth="observer"></i></td>
+                        data-uid="<?= $student['id'] ?>" data-auth="observer"></i>
+                    </td>
+                    <td class="center">
+                        <a href="W1D1/views/<?= $student['id'] ?>"><i class="fa-solid fa-eye"></i></a>
+                    </td>
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
                             <a title="Flowcharts" href="/flowcharts/projects/<?= $student["id"] ?>">
