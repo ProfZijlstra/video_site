@@ -132,6 +132,12 @@ class CourseCtrl {
         if ($hasLab == null) {
             $hasLab = 0;
         }
+        if ($showDates == null) {
+            $showDates = 0;
+        }
+        if ($usesFlowcharts == null) {
+            $usesFlowcharts = 0;
+        }
 
         $this->videoDao->clone($course_number, $block, $old_block);
         $new_offering_id = $this->offeringDao->create($course_number, $block, 
