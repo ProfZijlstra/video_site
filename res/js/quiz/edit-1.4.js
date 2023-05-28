@@ -69,7 +69,7 @@ window.addEventListener("load", () => {
         const form = document.getElementById("updateQuiz");
         const id = form.dataset.id;
         const day_id = form.querySelector("select").value;
-        const name = form.querySelector("input.name").value;
+        const name = encodeURIComponent(form.querySelector("input.name").value);
         const startdate = form.querySelector("input.startdate").value;
         const starttime = form.querySelector("input.starttime").value;
         const stopdate = form.querySelector("input.stopdate").value;
@@ -117,15 +117,15 @@ window.addEventListener("load", () => {
         const type = parent.querySelector('.qType').dataset.type;
         const text = parent.querySelector('textarea.text').value;
         const points = parent.querySelector(".points input").value;
-        const qshifted = MARKDOWN.ceasarShift(text);
+        const qshifted = encodeURIComponent(MARKDOWN.ceasarShift(text));
 
         let body = `type=${type}&text=${qshifted}&points=${points}`;
         if (type == "markdown") {
             const model_answer = parent.querySelector('textarea.model_answer').value;
-            const ashifted = MARKDOWN.ceasarShift(model_answer);
+            const ashifted = encodeURIComponent(MARKDOWN.ceasarShift(model_answer));
             body += `&model_answer=${ashifted}`;
         } else if (type == "image") {
-            const src = parent.querySelector("img").getAttribute('src');
+            const src = encodeURIComponent(parent.querySelector("img").getAttribute('src'));
             body += `&model_answer=${src}`;
         }
 

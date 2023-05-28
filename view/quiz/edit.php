@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="res/css/quiz-1.3.css">
         <script src="res/js/prism.js"></script>
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/quiz/edit-1.3.js"></script>
+        <script src="res/js/quiz/edit-1.4.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
