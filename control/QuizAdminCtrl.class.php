@@ -75,6 +75,7 @@ class QuizAdminCtrl {
         }
 
         $VIEW_DATA['title'] = 'Quizzes';
+        $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
         return "quiz/overview.php";
     }
 

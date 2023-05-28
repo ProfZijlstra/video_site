@@ -117,7 +117,13 @@ window.addEventListener("load", () => {
                         data-date="<?= date("Y-m-d", $date) ?>">
 
                         <?php if (hasMinAuth('instructor')): ?>
-                            <i title="Add Quiz" class="far fa-plus-square"></i>
+                            <?php if (!$isRemembered): ?>
+                                <i title="Add Quiz" class="far fa-plus-square"></i>                                
+                            <?php else: ?>
+                                <a href="reAuth">
+                                    <i title="Add Quiz" class="far fa-plus-square"></i>                                
+                                </a>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php foreach ($days["W{$w}D{$d}"]['quizzes'] as $quiz): ?>
