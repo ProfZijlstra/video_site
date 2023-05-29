@@ -14,6 +14,12 @@ div.session.AM {
 div.session .fa-plus-square {
     cursor: pointer;
 }
+div.session .fa-user-xmark {
+    cursor: pointer;
+}
+div.session .fa-user-xmark.inactive {
+    color: #999;
+}
 div.meeting {
     max-height: 15px;
     margin-left: 10px;
@@ -54,4 +60,15 @@ div.meeting a {
 .fa-cloud-upload-alt {
     position: absolute;
     right: 15px;
+}
+.hidden {
+    display: none;
+}
+#excused_list li {
+    position: relative;
+}
+#excused_list li i.fa-xmark {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
 }

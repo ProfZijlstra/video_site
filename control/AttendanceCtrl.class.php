@@ -36,6 +36,10 @@ class AttendanceCtrl
      * @Inject("AttendanceExportDao")
      */
     public $attendanceExportDao;
+    /**
+     * @Inject("ExcusedDao")
+     */
+    public $excusedDao;
 
     /**
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
@@ -47,24 +51,60 @@ class AttendanceCtrl
 
         global $VIEW_DATA;
 
+        $offering_id = $VIEW_DATA["offering_id"];
         $days = $VIEW_DATA["days"];
 
         // get sessions for these days
-        $sessions = $this->classSessionDao->allForOffering($VIEW_DATA["offering_id"]);
+        $sessions = $this->classSessionDao->allForOffering($offering_id);
         foreach ($sessions as $session) {
             $session["meetings"] = [];
             $days[$session["abbr"]][$session["type"]] = $session;
         }
 
         // Add attendance data
-        $meetings = $this->meetingDao->allForOffering($VIEW_DATA["offering_id"]);
+        $meetings = $this->meetingDao->allForOffering($offering_id);
         foreach ($meetings as $meeting) {
             $days[$meeting["abbr"]][$meeting["stype"]]["meetings"][] = $meeting;
         }
+
+        $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
+        $excused_raw = $this->excusedDao->allForOffering($offering_id);
+        $excused = [];
+        foreach ($excused_raw as $student) {
+            if (!isset($excused[$student['class_session_id']])) {
+                $excused[$student['class_session_id']] = [];
+            }
+            $excused[$student['class_session_id']][] = $student;
+        }
+
+
         $VIEW_DATA["days"] = $days;
         $VIEW_DATA["title"] = "Attendance";
+        $VIEW_DATA['enrollment'] = $enrollment;
+        $VIEW_DATA['excused'] = $excused;
 
         return "attendance/attendance.php";
+    }
+
+    /**
+     *  @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$!", sec="assistant")
+     */
+    public function excuseAbsence() {
+        $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
+        $teamsName = filter_input(INPUT_POST, "teamsName");
+        $this->excusedDao->add($session_id, $teamsName);
+        return "Location: attendance";
+    }
+
+    /**
+     * Expects AJAX 
+     * 
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delExcuse$!", sec="assistant")
+     */
+    public function deleteExcuse() {
+        $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
+        $teamsName = filter_input(INPUT_POST, "teamsName");
+        $this->excusedDao->delete($session_id, $teamsName);
     }
 
     /**

@@ -87,7 +87,7 @@ window.addEventListener("load", () => {
         }
         if (has_phys &&
             !confirm(
-                "Regenerate and delete all excused and all physical attendance?")) {
+                "Regenerate and delete all physical attendance and manually excused?")) {
             return false;
         }
         return true;

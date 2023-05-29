@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/meeting-1.1.css">
-   <script src="res/js/meeting-1.2.js"></script>
+   <script src="res/js/meeting-1.3.js"></script>
    <script src="res/js/lib/html5-qrcode.min.js"></script>
    <script src="res/js/sounds.js"></script>
 </head>
@@ -94,7 +94,7 @@
 
             <div class="btns">
                 <form method="post" action="regen/<?= $meeting["id"] ?>">
-                    <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
+                    <input type="hidden" name="session_id" value="<?= $meeting['session_id'] ?>" />
                     <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" id="meeting_id"/>
                     <input type="hidden" name="start" value="<?= $meeting["start"]?>" />
                     <input type="hidden" name="stop" value="<?= $meeting["stop"]?>" />

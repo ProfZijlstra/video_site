@@ -32,6 +32,10 @@ class MeetingCtrl
      * @Inject("AttendanceImportDao")
      */
     public $attendanceImportDao;
+    /**
+     * @Inject("ExcusedDao")
+     */
+    public $excusedDao;
 
     /**
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
@@ -47,8 +51,6 @@ class MeetingCtrl
         $meeting_id = $URI_PARAMS[3];
         $meeting = $this->meetingDao->get($meeting_id);
         $attendance = $this->attendanceDao->forMeeting($meeting_id);
-
-        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
 
         $visitors = [];
         $absent = [];
@@ -66,7 +68,6 @@ class MeetingCtrl
 
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["block"] = $block;
-        $VIEW_DATA["offering_id"] = $offering["id"];
         $VIEW_DATA["meeting"] = $meeting;
         $VIEW_DATA["visitors"] = $visitors;
         $VIEW_DATA["absent"] = $absent;
@@ -98,11 +99,11 @@ class MeetingCtrl
      */
     public function regenReport()
     {
-        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
+        $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
         $meeting_id = filter_input(INPUT_POST, "meeting_id", FILTER_SANITIZE_NUMBER_INT);
         $start = filter_input(INPUT_POST, "start");
         $stop = filter_input(INPUT_POST, "stop");
-        $this->generateReport($offering_id, $meeting_id, $start, $stop);
+        $this->generateReport($session_id, $meeting_id, $start, $stop);
 
         return "Location: ../$meeting_id";
     }
@@ -276,7 +277,13 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
             $start,
             $stop
         );
-        
+
+        $excused_raw = $this->excusedDao->forClassSession($session_id);
+        $excused = [];
+        foreach ($excused_raw as $attendant) {
+            $excused[$attendant['teamsName']] = true;
+        }
+
         // attach all enrolled students as 'present', no tardies
         $offering_id = $this->classSessionDao->getOfferingId($session_id);
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
@@ -288,6 +295,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
                 "arriveLate" => 0,
                 "leaveEarly" => 0,
                 "middleMissing" => 0,
+                "excused" => isset($excused[$attendant["teamsName"]]),
                 "start" => $start,
                 "stop" => $stop
             ];
@@ -344,15 +352,15 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         }
 
         // generate report
-        $offering_id = $this->classSessionDao->getOfferingId($session_id);
-        $this->generateReport($offering_id, $meeting_id, $meeting_start, $meeting_stop);
+        $this->generateReport($session_id, $meeting_id, $meeting_start, $meeting_stop);
 
         return $meeting_id;
     }
 
-    private function generateReport($offering_id, $meeting_id, $start, $stop)
+    private function generateReport($session_id, $meeting_id, $start, $stop)
     {
         // get initial data
+        $offering_id = $this->classSessionDao->getOfferingId($session_id);
         $attendants = $this->attendanceImportDao->forMeeting($meeting_id);
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
 
@@ -371,6 +379,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
                 "arriveLate" => 0,
                 "leaveEarly" => 0,
                 "middleMissing" => 0,
+                "excused" => 0,
                 "start" => null,
                 "stop" => null
             ];
@@ -389,6 +398,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
                     "arriveLate" => 0,
                     "leaveEarly" => 0,
                     "middleMissing" => 0,
+                    "excused" => 0,
                     "start" => null,
                     "stop" => null
                 ];
@@ -426,6 +436,12 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
             if ($attendant['duration'] < $meeting_duration) {
                 $attendance[$attendant["teamsName"]]['middleMissing'] = 1;
             }
+        }
+
+        // mark previously excused as being excused
+        $excused = $this->excusedDao->forClassSession($session_id);
+        foreach ($excused as $attendant) {
+            $attendance[$attendant["teamsName"]]['excused'] = 1;
         }
 
         // remove previous report (if in DB)

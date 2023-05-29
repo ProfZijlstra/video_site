@@ -331,3 +331,17 @@ CREATE INDEX enrollment_auth ON enrollment (auth);
 -- 21st of May 2023 updates to offering to help MSD admissions
 ALTER TABLE `offering` ADD COLUMN `showDates` TINYINT UNSIGNED NOT NULL DEFAULT 1;
 ALTER TABLE `offering` ADD COLUMN `usesFlowcharts` TINYINT UNSIGNED NOT NULL DEFAULT 0;
+
+-- 26th of May 2023 create excused table
+CREATE TABLE IF NOT EXISTS `manalabs`.`excused` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `class_session_id`INT UNSIGNED NOT NULL,
+  `teamsName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_class_session_idx` (`class_session_id`),
+  CONSTRAINT `fk_class_session_id1`
+    FOREIGN KEY (`class_session_id`)
+    REFERENCES `class_session` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)ENGINE = InnoDB;

@@ -18,8 +18,8 @@ if ($cols < 7) {
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/offering-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <link rel="stylesheet" href="res/css/attendance.css">
-    <script src="res/js/attendance.js"></script>
+    <link rel="stylesheet" href="res/css/attendance-1.0.css">
+    <script src="res/js/attendance-1.0.js"></script>
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $cols; $i++): ?>auto <?php endfor; ?>;
@@ -76,17 +76,22 @@ if ($cols < 7) {
                             <?php endif; ?>
                         <?php else : ?>
                             <?php foreach (["AM", "PM"] as $stype): ?>
-                                <div class="session <?= $stype ?>" data-session_id="<?= $days["W{$w}D{$d}"][$stype]["id"] ?>"
+                                <?php $session = $days["W{$w}D{$d}"][$stype]; ?>
+                                <div class="session <?= $stype ?>" data-session_id="<?= $session["id"] ?>"
                                     data-stype="<?= $stype ?>">
                                     <?= $stype ?>
                                     <i title="Add Meeting" class="far fa-plus-square"></i>
-                                    <?php if ($days["W{$w}D{$d}"][$stype]["meetings"]) : ?>
-                                    <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
-                                        <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
-                                    </a>
+                                    <i title="Excused Absences" 
+                                        class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>"
+                                        data-excused='<?= json_encode($excused[$session['id']]) ?>'>
+                                    </i>
+                                    <?php if ($session["meetings"]) : ?>
+                                        <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
+                                            <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
+                                        </a>
                                     <?php endif; ?>
 
-                                <?php foreach ($days["W{$w}D{$d}"][$stype]["meetings"] as $meeting) : ?>
+                                <?php foreach ($session["meetings"] as $meeting) : ?>
                                     <div class="meeting">
                                         <a href="meeting/<?= $meeting["id"] ?>">
                                             <?= $meeting["title"] ?>
@@ -119,7 +124,7 @@ if ($cols < 7) {
 
     <div id="overlay">
         <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div class="modal">
+        <div id="add_meeting" class="modal hide">
             <h3>Add a Meeting</h3>
 
             <h4>Upload a Teams Meeting</h4>
@@ -162,6 +167,27 @@ if ($cols < 7) {
             </form>
         </div>
 
+        <div id="add_excused" class="modal hide">
+            <h3>Excused Absences</h3>
+            <div id="none">None so far</div>
+            <div id="excused_list" class="hidden"></div>
+            <h3>Add a Student</h3>
+            <p>Only works for excuses added before a meeting happens</p>
+            <form method="post" action="excuse">
+                <input type="hidden" name="session_id" id="excused_session_id" />
+                <div>
+                    <label>Add Student</label>
+                    <select name="teamsName">
+                        <?php foreach($enrollment as $student): ?>
+                            <option><?= $student["teamsName"]?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="btn">
+                    <button type="submit">Mark Excused</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </body>
