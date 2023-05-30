@@ -104,7 +104,9 @@ window.addEventListener('load', () => {
         }
         switch (e.code) {
         case "Space":
-            e.preventDefault();
+            if (document.activeElement == video) {
+                break;
+            }
         case "KeyK":
             if (video.paused) {
                 video.play()
