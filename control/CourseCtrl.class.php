@@ -46,14 +46,20 @@ class CourseCtrl {
         global $VIEW_DATA;
 
         $user_id = $_SESSION['user']['id'];
-        $offerings = $this->offeringDao->enrolled($user_id);      
-        $names = $this->instructorNames($offerings);
-        $faculty = $this->userDao->faculty();
+        $offerings = $this->offeringDao->enrolled($user_id);
+        
+        if ($offerings) {
+            $names = $this->instructorNames($offerings);
+            $VIEW_DATA['names'] = $names;
+        }      
+
+        if (hasMinAuth('admin')) {
+            $faculty = $this->userDao->faculty();
+            $VIEW_DATA["faculty"] = $faculty;
+        }
 
         $VIEW_DATA["title"] = "My Course Offerings";
         $VIEW_DATA["offerings"] = $offerings;
-        $VIEW_DATA['names'] = $names;
-        $VIEW_DATA["faculty"] = $faculty;
         $VIEW_DATA['type'] = "my";
         return "courses.php";
     }
@@ -66,12 +72,15 @@ class CourseCtrl {
 
         $offerings = $this->offeringDao->all();
         $names = $this->instructorNames($offerings);
-        $faculty = $this->userDao->faculty();
+
+        if (hasMinAuth('admin')) {
+            $faculty = $this->userDao->faculty();
+            $VIEW_DATA["faculty"] = $faculty;
+        }
 
         $VIEW_DATA["title"] = "All Course Offerings";
         $VIEW_DATA["offerings"] = $offerings;
         $VIEW_DATA['names'] = $names;
-        $VIEW_DATA["faculty"] = $faculty;
         $VIEW_DATA['type'] = "all";
         return "courses.php";
     }
