@@ -60,17 +60,4 @@ window.addEventListener("load", () => {
             return false;
         }
     };
-
-    // auto populate knownAs with given names
-    const first = document.getElementById('first');
-    const knownAs = document.getElementById('knownAs');
-    first.onkeyup = () => {
-        if (!knownAs.dataset.provided) {
-            knownAs.value = first.value;
-        }
-    };
-
-    knownAs.onkeyup = () => {
-        knownAs.dataset.provided = knownAs.value;
-    };
 });

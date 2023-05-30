@@ -11,7 +11,6 @@
     grid-row-gap: 15px;
     grid-column-gap: 0px;
     grid-template-columns: 110px auto;
-    grid-template-rows: 9;
 }
 input, select {
     width: 100%;

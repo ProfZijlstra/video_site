@@ -78,27 +78,24 @@ class UserDao {
 
     /**
      * Creates a new user in the database based on given values
-     * @param string $first
-     * @param string $last
-     * @param string $knownAs
-     * @param string $email
-     * @param string $studentID
-     * @param string $teamsName
-     * @param string $hash password hash
-     * @param string $type user type
-     * @param int $active
-     * @return int id of created row
      */
-    public function insert($first, $last, $knownAs, $email, $studentID, 
-                                $teamsName, $hash, $active) {
+    public function insert($first, $last, $knownAs, $email, 
+                            $studentID, $teamsName, $hash, 
+                            $active, $isAdmin, $isFaculty) {
         $stmt = $this->db->prepare("INSERT INTO user values 
                 (NULL, :first, :last, :knownAs, :email, :studentID, :teamsName, 
-                :pass, NOW(), NOW(), :active, NULL, 0, 0)");
+                :pass, NOW(), NOW(), :active, NULL, :isAdmin, :isFaculty)");
         $stmt->execute(array(
-            "first" => $first, "last" => $last, "email" => $email, 
-            "pass" => $hash, "active" => $active,
-            "studentID" => $studentID, "knownAs" => $knownAs, "teamsName" =>
-            $teamsName
+            "first" => $first, 
+            "last" => $last, 
+            "knownAs" => $knownAs, 
+            "email" => $email, 
+            "studentID" => $studentID, 
+            "teamsName" => $teamsName,
+            "pass" => $hash, 
+            "active" => $active,
+            "isAdmin" => $isAdmin,
+            "isFaculty" => $isFaculty,
         ));
         return $this->db->lastInsertId();
     }
@@ -115,11 +112,9 @@ class UserDao {
      * @param int $active
      * @param int $isAdmin
      * @param int $isFaculty
-     * @param string $pass optional new password 
      */
     public function update($uid, $first, $last, $knownAs, $email, $studentID, 
-                            $teamsName, $active, $isAdmin, $isFaculty,  
-                            $pass) {
+                            $teamsName, $active, $isAdmin, $isFaculty) {
         $stmt = $this->db->prepare("UPDATE user SET 
                 firstname = :first, lastname = :last, knownAs = :knownAs, 
                 email = :email, studentID = :studentID, teamsName = :teamsName, 
@@ -138,13 +133,12 @@ class UserDao {
             "isAdmin" => $isAdmin,
             "uid" => $uid
         ));
+    }
 
-        if ($pass) {
-            $hash = password_hash($pass, PASSWORD_DEFAULT);
-            $reset = $this->db->prepare("UPDATE user SET password = :pass 
-                                            WHERE id = :uid");
-            $reset->execute(array("pass" => $hash, "uid" => $uid));
-        }
+    public function updatePass($id, $hash) {
+        $reset = $this->db->prepare("UPDATE user SET password = :pass 
+                                        WHERE id = :uid");
+        $reset->execute(array("pass" => $hash, "uid" => $id));
     }
 
     public function getUserId($email) {

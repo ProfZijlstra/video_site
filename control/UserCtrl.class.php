@@ -148,10 +148,8 @@ class UserCtrl {
      */
     public function addUser() {
         global $VIEW_DATA;
-        global $SEC_LVLS;
-        $VIEW_DATA["title"] = "User Details";
-        $VIEW_DATA['types'] = $SEC_LVLS; 
-        return "userDetails.php";
+        $VIEW_DATA["title"] = "Add User";
+        return "userAdd.php";
     }
 
     /**
@@ -174,7 +172,6 @@ class UserCtrl {
     public function details() {
         global $VIEW_DATA;
         global $URI_PARAMS;
-        global $SEC_LVLS;
 
         $uid = $URI_PARAMS[1];
         $error = filter_input(INPUT_GET, "error", FILTER_UNSAFE_RAW);
@@ -183,7 +180,6 @@ class UserCtrl {
         $VIEW_DATA['msg'] = $error;
         $VIEW_DATA['user'] = $user;
         $VIEW_DATA["title"] = "User Details";
-        $VIEW_DATA['types'] = $SEC_LVLS;
         
         return "userDetails.php";
     }
@@ -219,7 +215,9 @@ class UserCtrl {
         $studentID = filter_input(INPUT_POST, "studentID", FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, "teamsName", FILTER_UNSAFE_RAW);
         $pass = filter_input(INPUT_POST, "pass");
-        $active = filter_input(INPUT_POST, "active");
+        $isAdmin = filter_input(INPUT_POST, "isAdmin", FILTER_SANITIZE_NUMBER_INT);
+        $isFaculty = filter_input(INPUT_POST, "isFaculty", FILTER_SANITIZE_NUMBER_INT);
+        $active = filter_input(INPUT_POST, "active", FILTER_SANITIZE_NUMBER_INT);
 
         $error = [];
         if (!$first) {
@@ -231,6 +229,9 @@ class UserCtrl {
         if (!$email) {
             $error[] = "email address";
         }
+        if ($studentID == "" || !is_numeric($studentID)) {
+            $studentID = 0;
+        }
         if (!$pass) {
             $error[] = "password";
         }
@@ -240,20 +241,16 @@ class UserCtrl {
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
-        $actv = 1;
-        if (!$active) {
-            $actv = 0;
-        }
-
         try {
             $uid = $this->userDao->insert($first, $last, $knownAs, $email, 
-                                $studentID, $teamsName, $hash, $actv);
+                                $studentID, $teamsName, $hash, $active, 
+                                $isAdmin, $isFaculty);
         } catch (Exception $e) {
             $error = true;
         }
 
         if ($error) {
-            $VIEW_DATA["msg"] = "Error: email address already in db";
+            $VIEW_DATA["msg"] = "DB Error: email address already in db?";
             return "Location: user/add";
         } else {
             return "Location: user";            
@@ -261,6 +258,8 @@ class UserCtrl {
     }
 
     /**
+     * Expects AJAX
+     * 
      * Updates a user 
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
@@ -280,7 +279,6 @@ class UserCtrl {
         $active = filter_input(INPUT_POST, "active", FILTER_SANITIZE_NUMBER_INT);
         $isAdmin = filter_input(INPUT_POST, "isAdmin", FILTER_SANITIZE_NUMBER_INT);
         $isFaculty = filter_input(INPUT_POST, "isFaculty", FILTER_SANITIZE_NUMBER_INT);
-        $pass = filter_input(INPUT_POST, "pass");
 
         $error = "";
         if (!$first) {
@@ -293,14 +291,28 @@ class UserCtrl {
             $error .= "email ";
         }
         if ($error) {
-            $VIEW_DATA["msg"] = "Missing: " . json_encode($error);
-            return "Location: $uid";
+            return ["msg" => "Missing: " . json_encode($error)];
         }
 
         // if given an empty password it does not update password
         $this->userDao->update($uid, $first, $last, $knownAs, $email, 
-                $studentID, $teamsName, $active, $isAdmin, $isFaculty, $pass);
-        return "Location: $uid";
+                $studentID, $teamsName, $active, $isAdmin, $isFaculty);
+    }
+
+    /**
+     * Expects AJAX
+     * 
+     * Updates Password
+     * 
+     * @POST(uri="!^/user/(\d+)/pass$!", sec="admin")
+     */
+    public function updatePass() {
+        global $URI_PARAMS;
+        
+        $uid = $URI_PARAMS[1];
+        $pass = filter_input(INPUT_POST, "pass");
+        $hash = password_hash($pass, PASSWORD_DEFAULT);
+        $this->userDao->updatePass($uid, $hash);
     }
 
     /**

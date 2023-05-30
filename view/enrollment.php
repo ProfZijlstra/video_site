@@ -4,7 +4,7 @@
         <title><?= $block ?> Enrollment</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
+		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <style>
@@ -36,6 +36,7 @@
 
         </style>
         <script src="res/js/enrollment-1.2.js"></script>
+        <script src="res/js/user.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
