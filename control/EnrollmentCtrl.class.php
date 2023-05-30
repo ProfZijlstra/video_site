@@ -200,7 +200,7 @@ EOD;
             $VIEW_DATA['msg'] = "Error: Missing given names, family names, or password";
             return "Location: enrolled";
         }
-        if ($studentID == "" || !is_int($studentID)) {
+        if ($studentID == "" || !is_numeric($studentID)) {
             $studentID = 0;
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
