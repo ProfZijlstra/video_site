@@ -14,7 +14,7 @@ if (!isset($user)) {
     <title>User Details</title>
     <meta name=viewport content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="res/css/font-awesome-all.min.css">
+    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/user.css">
     <script src="res/js/back.js"></script>

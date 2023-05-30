@@ -4,12 +4,12 @@
         <title>Grade Question</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="res/css/font-awesome-all.min.css">
+		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
-        <link rel="stylesheet" href="res/css/prism.css">
+        <link rel="stylesheet" href="res/css/lib/prism.css">
         <link rel="stylesheet" href="res/css/quiz-1.3.css">
-        <script src="res/js/prism.js"></script>
+        <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown.js"></script>
         <script src="res/js/quiz/gradeQuestion.js"></script>
         <style>
