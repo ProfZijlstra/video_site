@@ -278,7 +278,7 @@ window.addEventListener("load", () => {
     document.getElementById("rotate").onclick = function() {
         html5QrCode.stop().then(() => {
             currentCamera = (currentCamera + 1) % cameraCount;
-            startScanning();
+            startCamera();
         });
     };
 
