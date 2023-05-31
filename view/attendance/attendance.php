@@ -1,12 +1,3 @@
-<?php
-$de = false;
-$cols = $offering['lessonsPerPart'];
-if ($cols < 7) {
-    $de = true;
-    $cols += 1;
-}
-?>
-
 <!DOCTYPE html>
 <html>
 
@@ -19,23 +10,24 @@ if ($cols < 7) {
     <link rel="stylesheet" href="res/css/offering-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/attendance-1.0.css">
-    <script src="res/js/attendance-1.0.js"></script>
+    <script src="res/js/attendance-1.1.js"></script>
     <style>
         div#days {
-            grid-template-columns: <?php for ($i = 0; $i < $cols; $i++): ?>auto <?php endfor; ?>;
-            width: <?= 9 * $cols ?>vw;
+            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++): ?>auto <?php endfor; ?>;
+            width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
-        <?php if ($de): ?>
-            #days .fa-black-tie {
-                right: 4vw;
-            }
-        <?php endif; ?>
     </style>
 </head>
 
 <body>
     <?php include("header.php"); ?>
     <main>
+        <nav class="tools">
+            <i id="physical_icon" title="Physical Classroom Attendance" class="fas fa-chalkboard-teacher"></i>
+            <a href="professionalism">
+                <i title="Professionalism Report" class="fab fa-black-tie"></i>
+            </a>
+        </nav>
         <nav class="areas">
             <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
             <?php if ($offering['hasQuiz']): ?>
@@ -65,58 +57,36 @@ if ($cols < 7) {
                         data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
                         data-date="<?= date("Y-m-d", $date) ?>">
 
-                        <?php if ($d == 7): ?>
-                            <a href="physical/W<?= $w ?>">
-                                <i title="Physical Classroom Attendance Report" class="fas fa-chalkboard-teacher"></i>
-                            </a>
-                            <?php if ($w == 4) : ?>
-                                <a href="professionalism">
-                                    <i title="Professionalism Report" class="fab fa-black-tie"></i>
-                                </a>
-                            <?php endif; ?>
-                        <?php else : ?>
-                            <?php foreach (["AM", "PM"] as $stype): ?>
-                                <?php $session = $days["W{$w}D{$d}"][$stype]; ?>
-                                <div class="session <?= $stype ?>" data-session_id="<?= $session["id"] ?>"
-                                    data-stype="<?= $stype ?>">
-                                    <?= $stype ?>
-                                    <i title="Add Meeting" class="far fa-plus-square"></i>
-                                    <i title="Excused Absences" 
-                                        class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>"
-                                        data-excused='<?= json_encode($excused[$session['id']]) ?>'>
-                                    </i>
-                                    <?php if ($session["meetings"]) : ?>
-                                        <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
-                                            <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
-                                        </a>
-                                    <?php endif; ?>
+                        <?php foreach (["AM", "PM"] as $stype): ?>
+                            <?php $session = $days["W{$w}D{$d}"][$stype]; ?>
+                            <div class="session <?= $stype ?>" data-session_id="<?= $session["id"] ?>"
+                                data-stype="<?= $stype ?>">
+                                <?= $stype ?>
+                                <i title="Add Meeting" class="far fa-plus-square"></i>
+                                <i title="Excused Absences" 
+                                    class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>"
+                                    data-excused='<?= json_encode($excused[$session['id']]) ?>'>
+                                </i>
+                                <?php if ($session["meetings"]) : ?>
+                                    <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
+                                        <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
+                                    </a>
+                                <?php endif; ?>
 
-                                <?php foreach ($session["meetings"] as $meeting) : ?>
-                                    <div class="meeting">
-                                        <a href="meeting/<?= $meeting["id"] ?>">
-                                            <?= $meeting["title"] ?>
-                                        </a>
-                                    </div>
-                                <?php endforeach; ?>
+                            <?php foreach ($session["meetings"] as $meeting) : ?>
+                                <div class="meeting">
+                                    <a href="meeting/<?= $meeting["id"] ?>">
+                                        <?= $meeting["title"] ?>
+                                    </a>
                                 </div>
                             <?php endforeach; ?>
-                        <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
 
                         <time>
                             <?= date("M j Y", $date); ?>
                         </time>
                     </div>
-
-                    <?php // for DE courses add a column to show professionalism link ?>
-                    <?php if($d == $offering['lessonsPerPart'] && $d < $cols): ?>
-                        <div class="data <?= $w == 1 ? "w1" : "" ?>">
-                            <?php if ($w == $offering['lessonParts']): ?>
-                                <a href="professionalism">
-                                    <i title="Professionalism Report" class="fab fa-black-tie"></i>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
                 <?php endfor ?>
             <?php endfor ?>
         </div>
@@ -187,6 +157,21 @@ if ($cols < 7) {
                     <button type="submit">Mark Excused</button>
                 </div>
             </form>
+        </div>
+
+        <div id="physical_modal" class="modal hide">
+            <h3>Physical Attendance Report</h3>
+            <div>
+                <label>Week</label>
+                <select id="week">
+                    <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
+                        <option value="<?= $w ?>">Week <?= $w ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+            <div class="btn">
+                <button type="button" id="physical_btn">Get Report</button>
+            </div>            
         </div>
     </div>
 

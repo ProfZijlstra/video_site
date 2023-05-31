@@ -98,4 +98,15 @@ window.addEventListener("load", () => {
     for (const btn of excuBtns) {
         btn.onclick = addExcused;
     }
+
+    // physical attendance modal
+    document.getElementById("physical_icon").onclick = function() {
+        document.getElementById('physical_modal').classList.remove('hide');
+        overlay.classList.add("visible");
+    };
+
+    document.getElementById("physical_btn").onclick = function() {
+        const week = document.getElementById("week").value;
+        window.location = "physical/W" + week;
+    };
 });
