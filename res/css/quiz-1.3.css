@@ -43,6 +43,7 @@ div.qcontainer {
 }
 div.qcontainer div.about {
     flex-basis: 150px;
+    flex-shrink: 0;
     border-right: 1px solid black;
     text-align: center;
     position: relative;
