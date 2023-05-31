@@ -6,10 +6,10 @@
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
         <link rel="stylesheet" href="res/css/common-1.1.css">
-        <link rel="stylesheet" type="text/css" href="res/css/video-1.2.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/video-1.3.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/video-1.5.js"></script>
+        <script src="res/js/video-1.6.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">

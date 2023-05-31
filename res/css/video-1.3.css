@@ -59,6 +59,12 @@ div#container {
     background-color: #fff;
     z-index: 10;
 }
+#bars {
+    transition: all 1s;
+}
+#bars.theater {
+    transform: rotate(180deg);
+}
 nav#videos {
     cursor: pointer;
     border-top: 1px solid black;
@@ -367,12 +373,12 @@ textarea.commentText {
         top: 0px;
         left: 0px;
         bottom: 0px;
-        right: 0px;
-        width: auto;
+        width: 100vw;
         z-index: 25;
+        transition: width 1s, opacity 1s;
     }
     div#container nav#videos.hidden {
-        display: none;
+        width: 0px;
     }
     div#controls {
         right: 10px;
