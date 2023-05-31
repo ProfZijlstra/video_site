@@ -218,6 +218,7 @@ window.addEventListener('load', () => {
     function stopBeforeClick(evt) {
         if (!video.paused) {
             evt.preventDefault();
+            evt.stopImmediatePropagation();
             pauseAction = function() {
                 evt.target.click();
             };

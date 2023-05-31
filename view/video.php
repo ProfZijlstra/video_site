@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="res/css/video-1.3.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/video-1.6.js"></script>
+        <script src="res/js/video-1.7.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
