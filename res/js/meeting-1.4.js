@@ -148,27 +148,24 @@ window.addEventListener("load", () => {
     }
 
     // enable email absent
-    const emailAbsent = document.getElementById("email_absent");
-    if (emailAbsent) {
-        emailAbsent.onclick = function() {
-            if (confirm("Email Unexcused Absent?")) {
-                const meeting_id = document.getElementById("meeting_id").value;
-                fetch(`${meeting_id}/emailAbsent`, {
-                    method : 'POST',
-                }).then(() => {alert("Emails sent")});
-            }
+    document.getElementById("email_absent")?.addEventListener("click", () => {
+        if (confirm("Email Unexcused Absent?")) {
+            const meeting_id = document.getElementById("meeting_id").value;
+            fetch(`${meeting_id}/emailAbsent`, {
+                method : 'POST',
+            }).then(() => {alert("Emails sent")});
         }    
-    }
+    });
 
     // enable email tardy
-    document.getElementById("email_tardy").onclick = function() {
+    document.getElementById("email_tardy")?.addEventListener("click", () => {
         if (confirm("Email Unexcused Tardy?")) {
             const meeting_id = document.getElementById("meeting_id").value;
             fetch(`${meeting_id}/emailTardy`, {
                 method : 'POST',
             }).then(() => {alert("Emails sent")});
         }
-    }
+    });
 
     // variables used multiple times in the upcoming functions
     const content = document.getElementById("content");
@@ -176,6 +173,7 @@ window.addEventListener("load", () => {
     const reader = document.getElementById("readerContainer");
     const input = document.getElementById("barcode");
     const box = document.getElementById('msgContainer');
+    let interval = false;
 
 
     // input field for the laser barcode scanner
@@ -184,6 +182,10 @@ window.addEventListener("load", () => {
             processCode(this.value);
             this.value = "";
         }
+    }
+
+    function focusInput() {
+        input.focus();
     }
 
     // toggle laser barcode scanner
@@ -200,11 +202,12 @@ window.addEventListener("load", () => {
             if (!content.classList.contains("left")) {
                 content.classList.add("left");
             }
-            input.focus();
+            interval = setInterval(focusInput, 200);
         } else {
             scanner.classList.add("hide");
             box.classList.add("hide");
             content.classList.remove("left");
+            clearInterval(interval);
         }
     };
 
@@ -212,6 +215,7 @@ window.addEventListener("load", () => {
     document.getElementById("barcodeReader").onclick = function() {
         // hide barcode input pane
         scanner.classList.add("hide");
+        clearInterval(interval);
         // open camera barcode reader (or close it)
         if (!html5QrCode) {
             if (!content.classList.contains("left")) {

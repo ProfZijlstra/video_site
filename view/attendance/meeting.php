@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/meeting-1.1.css">
-   <script src="res/js/meeting-1.3.js"></script>
+   <script src="res/js/meeting-1.4.js"></script>
    <script src="res/js/lib/html5-qrcode.min.js"></script>
    <script src="res/js/sounds.js"></script>
 </head>
