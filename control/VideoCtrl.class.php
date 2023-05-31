@@ -180,6 +180,7 @@ class VideoCtrl {
 		$VIEW_DATA['speed'] = $_SESSION['user']['speed'];
 		$VIEW_DATA['theater'] = $_SESSION['user']['theater'];
 		$VIEW_DATA['autoplay'] = $_SESSION['user']['autoplay'];
+		$VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
 
 		// general course related
 		$VIEW_DATA["course"] = $course_num;

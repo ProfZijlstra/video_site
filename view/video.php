@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="res/css/video-1.2.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/video-1.4.js"></script>
+        <script src="res/js/video-1.5.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
@@ -26,7 +26,13 @@
         <nav id="videos" class="<?= $theater ?>">
             <nav>
                 <?php if (hasMinAuth('instructor')) : ?>
-                    <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                    <?php if (!$isRemembered): ?>
+                        <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                    <?php else: ?>
+                        <a href="reAuth">
+                            <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                        </a>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <table id="days">
                     <!-- <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr> -->

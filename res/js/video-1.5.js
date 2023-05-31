@@ -214,6 +214,16 @@ window.addEventListener('load', () => {
         a.addEventListener('click', stopBeforeClick);
     }
 
+     // make clicking on the PDF icon work while communicating with server
+     document.getElementById('pdf').onclick = function(evt) {
+        const file = this.dataset.file;
+        const href = this.href;
+        const url = `./pdf?day_id=${day_id}&file=${file}`;
+        fetch(url, {
+            cache : 'no-cache'
+        }).then(() => {window.open(href, '_blank')});
+        evt.preventDefault();
+    };
     // disable right-clicking on PDF (no download without view)
     const pdf = document.getElementById('pdf');
     if (pdf) {
