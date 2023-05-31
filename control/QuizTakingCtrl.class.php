@@ -103,7 +103,7 @@ class QuizTakingCtrl {
 
         // reject answers after quiz stop time
         $quiz_id = $URI_PARAMS[3];
-        if ($this->quizEnded($quiz_id, 30)) { 
+        if ($this->quizEnded($quiz_id, 180)) { 
             return "error/403.php";
         }
 
@@ -134,7 +134,7 @@ class QuizTakingCtrl {
         $question_id = $URI_PARAMS[4];
 
         // reject answers after quiz stop time
-        if ($this->quizEnded($quiz_id, 30)) { 
+        if ($this->quizEnded($quiz_id, 180)) { 
             return "error/403.php";
         }
 
