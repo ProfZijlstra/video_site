@@ -104,7 +104,7 @@
                     </td>
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
-                            <a title="Flowcharts" href="/flowcharts/projects/<?= $instructor["id"] ?>">
+                            <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $instructor["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
                         </td>
@@ -152,7 +152,7 @@
 
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
-                            <a title="Flowcharts" href="/flowcharts/projects/<?= $assistant["id"] ?>">
+                            <a title="Flowcharts" target="_blank"  href="/flowcharts/projects/<?= $assistant["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
                         </td>
@@ -205,7 +205,7 @@
                     </td>
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
-                            <a title="Flowcharts" href="/flowcharts/projects/<?= $student["id"] ?>">
+                            <a title="Flowcharts" target="_blank"  href="/flowcharts/projects/<?= $student["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
                         </td>
@@ -255,7 +255,7 @@
                     </td>
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center">
-                            <a title="Flowcharts" href="/flowcharts/projects/<?= $student["id"] ?>">
+                            <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $student["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
                         </td>
