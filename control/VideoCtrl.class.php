@@ -56,10 +56,12 @@ class VideoCtrl {
 
 		$course_num = $URI_PARAMS[1];
 		$user_id = $_SESSION['user']['id'];
+
+		// check enrollment
 		$enrolled = $this->enrollmentDao->getEnrollmentForStudent($user_id);
-		if ($enrolled) {
-			$offering = $this->offeringDao->getOfferingById($enrolled["offering_id"]);
-			$course = $offering['course_number'];
+		$offering = $this->offeringDao->getOfferingById($enrolled["offering_id"]);
+		$course = $offering['course_number'];
+		if ($enrolled && $course_num == $course) {
 			$block = $offering['block'];
 			return "Location: $MY_BASE/{$course}/{$block}/";
 		} else {
