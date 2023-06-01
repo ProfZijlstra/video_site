@@ -62,7 +62,8 @@ window.addEventListener("load", () => {
             const ul = document.createElement("ul")
             for (const student of excused) {
                 const li = document.createElement("li");
-                const text = document.createTextNode(student.teamsName);
+                const excu = student.teamsName + ": " + student.reason;
+                const text = document.createTextNode(excu);
                 li.appendChild(text)
                 const rem = document.createElement("i");
                 rem.classList.add("fa-solid");

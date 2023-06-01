@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="res/css/offering-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/attendance-1.0.css">
-    <script src="res/js/attendance-1.1.js"></script>
+    <script src="res/js/attendance-1.2.js"></script>
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++): ?>auto <?php endfor; ?>;
@@ -152,6 +152,10 @@
                             <option><?= $student["teamsName"]?></option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div>
+                    <label>Reason</label>
+                    <input name="reason" />
                 </div>
                 <div class="btn">
                     <button type="submit">Mark Excused</button>

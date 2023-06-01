@@ -11,19 +11,20 @@ class ExcusedDao {
 	 */
 	public $db;
 
-    public function add($session_id, $teamsName) {
+    public function add($session_id, $teamsName, $reason) {
         $stmt = $this->db->prepare("INSERT INTO excused VALUES(
-            NULL, :session_id, :teamsName)");
+            NULL, :session_id, :teamsName, :reason)");
         $stmt->execute([
             "session_id" => $session_id,
-            "teamsName" => $teamsName
+            "teamsName" => $teamsName,
+            "reason" => $reason,
         ]);
         return $this->db->lastInsertId();        
     }
 
     public function allForOffering($offering_id) {
         $stmt = $this->db->prepare(
-            "SELECT e.id, e.class_session_id, e.teamsName 
+            "SELECT e.id, e.class_session_id, e.teamsName, e.reason 
             FROM excused AS e
             JOIN `class_session` AS s ON e.class_session_id  = s.id
             JOIN `day` AS d ON s.day_id = d.id
@@ -34,7 +35,7 @@ class ExcusedDao {
 
     public function forClassSession($session_id) {
         $stmt = $this->db->prepare(
-            "SELECT e.id, e.class_session_id, e.teamsName 
+            "SELECT e.id, e.class_session_id, e.teamsName, e.reason 
             FROM excused AS e
             WHERE e.class_session_id = :session_id");
         $stmt->execute(["session_id" => $session_id]);

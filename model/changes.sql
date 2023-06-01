@@ -345,3 +345,6 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`excused` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )ENGINE = InnoDB;
+
+-- 1st of June 2023
+ALTER TABLE `excused` ADD COLUMN `reason` VARCHAR(45) NOT NULL;

@@ -92,7 +92,8 @@ class AttendanceCtrl
     public function excuseAbsence() {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, "teamsName");
-        $this->excusedDao->add($session_id, $teamsName);
+        $reason = filter_input(INPUT_POST, "reason");
+        $this->excusedDao->add($session_id, $teamsName, $reason);
         return "Location: attendance";
     }
 
