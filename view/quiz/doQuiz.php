@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="res/css/quiz-1.3.css">
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/quiz/countdown-1.0.js"></script>
+        <script src="res/js/quiz/countdown-1.1.js"></script>
         <script src="res/js/quiz/quiz-1.2.js"></script>
     </head>
     <body>

@@ -5,14 +5,17 @@ const COUNTDOWN = (function() {
     let minutes = null;
     let seconds = null;
     let intid = null;
+    let callback = null;
 
     function updateTime() {
         const stamp = Math.floor((new Date()).getTime() / 1000);
-        const diff = prevStamp - stamp; // mostly -1, but may be -2 due to drift
+        // mostly -1, but may be -2 due to drift
+        // or even much bigger due to suspending the machine!
+        const diff = prevStamp - stamp; 
         prevStamp = stamp;
         seconds += diff;
 
-        if (seconds < 0) {
+        while (seconds < 0) {
             minutes -= 1;
             seconds += 60;
             if (minutes < 0) {
@@ -36,7 +39,7 @@ const COUNTDOWN = (function() {
         }
         document.getElementById("seconds").innerText = secondsText;
         
-        if (seconds == 0 && minutes == 0 && hours == 0) {
+        if (seconds <= 0 && minutes <= 0 && hours <= 0) {
             clearInterval(intid);
             const inputs = document.querySelectorAll("input");
             for (const input of inputs) {
@@ -46,7 +49,8 @@ const COUNTDOWN = (function() {
         }
     }
 
-    function start(callback) {
+    function start(cb) {
+        callback = cb;
         hours = parseInt(document.getElementById("hours").innerText);
         minutes = parseInt(document.getElementById("minutes").innerText);
         seconds = parseInt(document.getElementById("seconds").innerText);
