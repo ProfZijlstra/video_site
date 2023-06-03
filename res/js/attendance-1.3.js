@@ -61,15 +61,22 @@ window.addEventListener("load", () => {
 
             const ul = document.createElement("ul")
             for (const student of excused) {
-                const li = document.createElement("li");
-                const excu = student.teamsName + ": " + student.reason;
-                const text = document.createTextNode(excu);
-                li.appendChild(text)
+                // text parts
+                const span = document.createElement("span");
+                span.className.add("teamsName");
+                const teamsNameTxt = document.createTextNode(student.teamsName);
+                span.appendChild(teamsNameTxt);
+                const excuseTxt = document.createTextNode(excu);
+                // remove icon
                 const rem = document.createElement("i");
                 rem.classList.add("fa-solid");
                 rem.classList.add("fa-xmark");
                 rem.setAttribute("title", "Remove");
                 rem.onclick = removeExcused;
+                // list element
+                const li = document.createElement("li");
+                li.appendChild(span);
+                li.appendChild(excuseTxt)
                 li.appendChild(rem);
                 ul.appendChild(li);
             }
@@ -86,7 +93,9 @@ window.addEventListener("load", () => {
         const li = this.parentNode;
         const ul = this.parentNode.parentNode;
         const session_id = document.getElementById("excused_session_id").value;
-        const teamsName = encodeURIComponent(this.parentNode.textContent);
+        const span = this.parentNode.querySelector("span.teamsName");
+        const teamsNameTxt = span.textContent;
+        const teamsName = encodeURIComponent(teamsNameTxt);
         fetch('delExcuse', {
             method : 'POST',
             body : `session_id=${session_id}&teamsName=${teamsName}`,
