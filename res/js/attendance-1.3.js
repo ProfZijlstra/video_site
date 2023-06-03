@@ -63,10 +63,10 @@ window.addEventListener("load", () => {
             for (const student of excused) {
                 // text parts
                 const span = document.createElement("span");
-                span.className.add("teamsName");
+                span.classList.add("teamsName");
                 const teamsNameTxt = document.createTextNode(student.teamsName);
                 span.appendChild(teamsNameTxt);
-                const excuseTxt = document.createTextNode(excu);
+                const excuseTxt = document.createTextNode(student.reason);
                 // remove icon
                 const rem = document.createElement("i");
                 rem.classList.add("fa-solid");
