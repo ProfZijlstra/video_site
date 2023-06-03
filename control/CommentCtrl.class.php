@@ -64,7 +64,7 @@ class CommentCtrl {
 See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
         $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
-        mail("mzijlstra@miu.edu", "{$course} Comment or Comment", $message, $headers);
+        mail("mzijlstra@miu.edu", "{$course} Question or Comment", $message, $headers);
 
         return "Location: {$tab}#q{$id}";
     }

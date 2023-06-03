@@ -243,7 +243,7 @@ foreach($files as $info) :
                 </div>
             <?php endforeach; // comment ?>
             <?php if (count($comments) == 0) : ?>
-                <div>No comments or comments yet</div>
+                <div>No questions or comments yet</div>
             <?php endif; ?>
             <h3>Add a question or comment:</h3>
             <form method="post" action="comment" id="commentForm">
