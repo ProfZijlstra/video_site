@@ -39,6 +39,11 @@ class CommentCtrl {
     public $markdownCtrl;
 
     /**
+     * @Inject('MailHlpr')
+     */
+    public $mailHlpr;
+
+    /**
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/comment$!", sec="observer")
      */
     public function add() {
@@ -63,8 +68,9 @@ class CommentCtrl {
             " asks:\n\n$comment\n
 See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
-        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
-        mail("mzijlstra@miu.edu", "{$course} Question or Comment", $message, $headers);
+        $to = "mzijlstra@miu.edu";
+        $subject = "{$course} Question or Comment";
+        $this->mailHlpr->mail($to, $subject, $message);
 
         return "Location: {$tab}#q{$id}";
     }
@@ -214,9 +220,8 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
             " says:\n\n$text\n
 See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
-        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n';
-        mail($op_email, "$course Reply", $message, $headers);
-        mail("mzijlstra@miu.edu", "{$course} Reply", $message, $headers);
+        $this->mailHlpr->mail($op_email, "{$course} Reply", $message);
+        $this->mailHlpr->mail("mzijlstra@miu.edu", "{$course} Reply", $message);
 
         return "Location: {$tab}#r{$id}";
     }

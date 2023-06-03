@@ -40,6 +40,10 @@ class AttendanceCtrl
      * @Inject("ExcusedDao")
      */
     public $excusedDao;
+    /**
+     * @Inject("MailHlpr")
+     */
+    public $mailHlpr;
 
     /**
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
@@ -195,8 +199,6 @@ class AttendanceCtrl
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $below = $this->attendanceExportDao->internationalPhysicalBelow($offering['id'], $week, $minPhys);
 
-        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
-        "Reply-To:<mzijlstra@miu.edu> ";
         foreach ($below as $student) {
             $to = $student['email'];
             $knownAs =trim($student['knownAs']);
@@ -215,7 +217,7 @@ With kind regards,
 Manalabs Attendance System.
 
 ";
-            mail($to, "Unexcused Absence", $message, $headers);
+            $this->mailHlpr->mail($to, "Unexcused Absence", $message);
         }
     }
 

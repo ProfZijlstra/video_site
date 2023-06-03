@@ -36,6 +36,10 @@ class MeetingCtrl
      * @Inject("ExcusedDao")
      */
     public $excusedDao;
+    /**
+     * @Inject("MailHlpr")
+     */
+    public $mailHlpr;
 
     /**
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
@@ -152,8 +156,6 @@ class MeetingCtrl
     public function emailAbsent() {
         global $URI_PARAMS;
         $meeting_id = $URI_PARAMS[3];
-        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
-        "Reply-To:<mzijlstra@miu.edu> ";
         $template = 
 "
 
@@ -182,7 +184,7 @@ Manalabs Attendance System.
 We noticed you were absent from the ". $absent["title"]." meeting from its start
  at: ". $absent["start"]. " trough its end at: " . $absent["stop"]. "." .$template;
 
-            mail($to, "Unexcused Absence", $message, $headers);
+            $this->mailHlpr->mail($to, "Unexcused Absence", $message);
         }
     }
 
@@ -192,8 +194,6 @@ We noticed you were absent from the ". $absent["title"]." meeting from its start
     public function emailTardy() {
         global $URI_PARAMS;
         $meeting_id = $URI_PARAMS[3];
-        $headers = 'From: "Manalabs Video System" <videos@manalabs.org> \r\n' .
-        "Reply-To:<mzijlstra@miu.edu> ";
         $template = 
 "
 If you let your assistant know ahead of time when you are unable to attend it 
@@ -234,7 +234,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
             }
             $message .= $template;
 
-            mail($to, "Unexcused Absence", $message, $headers);
+            $this->mailHlpr->mail($to, "Unexcused Absence", $message);
         }
     }
 

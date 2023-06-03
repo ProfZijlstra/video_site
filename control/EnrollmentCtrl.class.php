@@ -18,6 +18,10 @@ class EnrollmentCtrl {
      * @Inject('UserDao')
      */
     public $userDao;
+    /**
+     * @Inject('MailHlpr')
+     */
+    public $mailHlpr;
 
 
     /**
@@ -99,7 +103,7 @@ Approve or deny this request at:
 https://manalabs.org/videos/observe?uid=$user_id&oid=$oid
 
 EOD;
-        mail("mzijlstra@miu.edu", "Observer Request", $msg);
+        $this->mailHlpr->mail("mzijlstra@miu.edu", "Observer Request", $msg);
 
         $msg = <<<EOD
 Your request to join $course $block as observer has been emailed to the
@@ -108,7 +112,7 @@ granted or denied.
 
 Note: this is an automated email
 EOD;
-        mail($_SESSION['user']['email'], "Observer Request", $msg);
+        $this->mailHlpr->mail($_SESSION['user']['email'], "Observer Request", $msg);
         
         return "Location: ../$block/";
     }
@@ -159,7 +163,7 @@ EOD;
             $msg = "Your request to join $course $block has been denied.";
         }
 
-        mail($email, $subject, $msg);
+        $this->mailHlpr->mail($email, $subject, $msg);
 
         return "Location: ../videos/";
     }
@@ -204,7 +208,8 @@ EOD;
             $studentID = 0;
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
-        $user_id = $this->userDao->insert($first, $last, $knownAs, $email, $studentID, $teamsName, $hash, 1);
+        $user_id = $this->userDao->insert($first, $last, $knownAs, $email, 
+                                    $studentID, $teamsName, $hash, 1, 0, 0);
         $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
 
         $VIEW_DATA['msg'] = "Enrolled new user {$email}";
@@ -287,8 +292,7 @@ Manalabs.org Automated Account Creator
 ";
 
         #email the user about his newly created account
-        $headers ='From: "Manalabs Video System" <videos@manalabs.org> \r\n';
-        mail($email, "Prof Zijlstra's manalabs.org account", $message, $headers);
+        $this->mailHlpr->mail($email, "Prof Zijlstra's manalabs.org account", $message);
         return $user_id;
     }
 }
