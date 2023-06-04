@@ -60,6 +60,10 @@ div.modal.hide {
 #content tr:nth-child(2n+1) {
     background-color: #DDD;
 }
+#content ttr pre {
+    max-width: 1000px;
+    overflow: auto;
+}
 #content a:hover {
     text-decoration: underline;
 }
