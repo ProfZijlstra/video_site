@@ -198,9 +198,11 @@ class AttendanceCtrl
 
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $below = $this->attendanceExportDao->internationalPhysicalBelow($offering['id'], $week, $minPhys);
+        $ins = $this->enrollmentDao->getTopInstructorFor($course_number, $block);
+        $replyTo = [$ins['email'], $ins['teamsName']];
 
         foreach ($below as $student) {
-            $to = $student['email'];
+            $to = [ $student['email'], $student['teamsName'] ];
             $knownAs =trim($student['knownAs']);
             $inClass = $student['inClass']; 
             $remaining = $minPhys - $inClass;
@@ -217,7 +219,7 @@ With kind regards,
 Manalabs Attendance System.
 
 ";
-            $this->mailHlpr->mail($to, "Unexcused Absence", $message);
+            $this->mailHlpr->mail($to, "Unexcused Absence", $message, $replyTo);
         }
     }
 

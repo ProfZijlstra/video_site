@@ -103,7 +103,9 @@ Approve or deny this request at:
 https://manalabs.org/videos/observe?uid=$user_id&oid=$oid
 
 EOD;
-        $this->mailHlpr->mail("mzijlstra@miu.edu", "Observer Request", $msg);
+        $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
+        $to = [ $ins['email'], $ins['teamsName'] ];
+        $this->mailHlpr->mail($to, "Observer Request", $msg);
 
         $msg = <<<EOD
 Your request to join $course $block as observer has been emailed to the
@@ -112,7 +114,11 @@ granted or denied.
 
 Note: this is an automated email
 EOD;
-        $this->mailHlpr->mail($_SESSION['user']['email'], "Observer Request", $msg);
+        
+        $email = $_SESSION['user']['email'];
+        $name = "{$first} {$last}";
+        $to = [$email, $name]; 
+        $this->mailHlpr->mail($to, "Observer Request", $msg);
         
         return "Location: ../$block/";
     }
@@ -153,6 +159,8 @@ EOD;
         $email = $user['email'];
         $course = $offering['course_number'];
         $block = $offering['block'];
+        $teamsName = $user['teamsName'];
+        $to = [$email, $teamsName];
 
         if ($allow) {
             $this->enrollmentDao->enroll($user_id, $offering_id, "observer");
@@ -163,7 +171,7 @@ EOD;
             $msg = "Your request to join $course $block has been denied.";
         }
 
-        $this->mailHlpr->mail($email, $subject, $msg);
+        $this->mailHlpr->mail($to, $subject, $msg);
 
         return "Location: ../videos/";
     }
@@ -292,7 +300,8 @@ Manalabs.org Automated Account Creator
 ";
 
         #email the user about his newly created account
-        $this->mailHlpr->mail($email, "Prof Zijlstra's manalabs.org account", $message);
+        $to = [$email, $teamsName];
+        $this->mailHlpr->mail($to, "Prof Zijlstra's manalabs.org account", $message);
         return $user_id;
     }
 }

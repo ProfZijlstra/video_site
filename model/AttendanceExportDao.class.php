@@ -73,7 +73,7 @@ class AttendanceExportDao {
     public function internationalPhysicalBelow($offering_id, $week, $min) {
 		$stmt = $this->db->prepare(
 			"SELECT u.id, u.knownAs, u.studentID, 
-			u.firstname, u.lastname, u.email,
+			u.firstname, u.lastname, u.email, u.teamsName,
 			SUM(ex.inClass) AS inClass
             FROM `day` d 
 			JOIN `class_session` s ON s.day_id = d.id

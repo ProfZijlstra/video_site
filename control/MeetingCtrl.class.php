@@ -177,7 +177,7 @@ Manalabs Attendance System.
 
         // for each absent student
         foreach ($absentees as $absent) {
-            $to = $absent["email"];
+            $to = [$absent["email"], $absent['teamsName']];
             $message = 
 "Hi " . trim($absent['knownAs']) . ",
 
@@ -214,7 +214,7 @@ Manalabs Attendance System.
 
         // for each absent student
         foreach ($tardies as $tardy) {
-            $to = $tardy["email"];
+            $to = [$tardy["email"], $tardy['teamsName']];
             $message = 
 "Hi " . trim($tardy['knownAs']) . ",
 

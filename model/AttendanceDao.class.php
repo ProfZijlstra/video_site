@@ -53,7 +53,7 @@ class AttendanceDao {
 
     public function unexcusedAbsentForMeeting($meeting_id) {
         $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
-                    m.title, m.start, m.stop
+                    m.title, m.start, m.stop, a.teamsName
                 FROM attendance AS a
                 JOIN meeting AS m ON a.meeting_id = m.id
                 JOIN user AS u on a.teamsName = u.teamsName
@@ -66,7 +66,7 @@ class AttendanceDao {
 
     public function unexcusedTardyForMeeting($meeting_id) {
         $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
-                    m.title, m.start, m.stop,
+                    m.title, m.start, m.stop, a.teamsName,
                     a.arriveLate, a.leaveEarly, a.middleMissing,
                     a.start as `arrive`, a.stop as `left`
                 FROM attendance AS a

@@ -15,11 +15,19 @@ require 'lib/PHPMailer/src/SMTP.php';
  */
 class MailHlpr {
 
-    public function mail($to, $subject, $msg) {
+    /**
+     * $to and $replyTo arguments can either be an array of two elements 
+     *      ["email@address", "firstname lastname"]
+     * or a single string containing just the email address
+     *      "email@address"
+     * 
+     * replyTo can also be null, in which case it is ignored
+     */
+    public function mail($to, $subject, $msg, $replyTo=null) {  
         $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
         try {
             //Server settings
-            $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+            //$mail->SMTPDebug = 2;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = 'smtp.dreamhost.com';                  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
@@ -30,8 +38,16 @@ class MailHlpr {
         
             //Recipients
             $mail->setFrom('videos@manalabs.org', 'Manalabs Video System');          //This is the email your form sends From
-            $mail->addAddress($to); // Add a recipient address
-            $mail->addReplyTo('mzijlstra@miu.edu', 'Michael Zijlstra');
+            if(is_array($to)) {
+                $mail->addAddress($to[0], $to[1]);
+            } else if (is_string($to)) {
+                $mail->addAddress($to);
+            }
+            if(is_array($replyTo)) {
+                $mail->addReplyTo($replyTo[0], $replyTo[1]);
+            } else if (is_string($replyTo)) {
+                $mail->addReplyTo($replyTo);
+            }
                 
             //Content
             $mail->isHTML(false);                                  // Set email format to HTML

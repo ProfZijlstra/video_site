@@ -52,6 +52,23 @@ class EnrollmentDao {
 		return $stmt->fetchAll();
 	}
 
+	public function getTopInstructorFor($course, $block) {
+		$stmt = $this->db->prepare(
+				"SELECT u.firstname, u.lastname, u.teamsName, u.email 
+				FROM enrollment AS e  
+				JOIN offering AS o ON e.offering_id = o.id
+				JOIN user AS u ON e.user_id = u.id
+				WHERE e.auth = 'instructor'
+				AND o.block = :block
+				AND o.course_number = :course
+				LIMIT 1");
+		$stmt->execute([
+			"course" => $course,
+			"block" => $block,
+		]);
+		return $stmt->fetch();
+	}
+
 	public function deleteStudentEnrollment($offering_id) {
 		$stmt = $this->db->prepare(
 			"DELETE FROM enrollment 

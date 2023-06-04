@@ -42,14 +42,14 @@ class CommentDao {
 
 	public function getUserEmail($id) {
 		$stmt = $this->db->prepare(
-			"SELECT u.email
+			"SELECT u.teamsName, u.email
             FROM comment AS q 
 			JOIN user AS u ON q.user_id = u.id
             WHERE q.id = :id"
 		);
 		$stmt->execute(array("id" =>  $id));
 		$result = $stmt->fetch();
-		return $result["email"];
+		return [ $result["email"], $result['teamsName'] ];
 	}
 
 	public function add($comment, $user_id, $video) {

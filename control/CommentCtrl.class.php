@@ -44,6 +44,11 @@ class CommentCtrl {
     public $mailHlpr;
 
     /**
+     * @Inject('EnrollmentDao')
+     */
+    public $enrollmentDao;
+
+    /**
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/comment$!", sec="observer")
      */
     public function add() {
@@ -57,6 +62,8 @@ class CommentCtrl {
         $shifted = filter_input(INPUT_POST, "text");
         $tab = filter_input(INPUT_POST, "tab");
 
+        $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
+        $to = [ $ins['email'], $ins['teamsName'] ];
         $comment = "";
         if ($shifted) {
             $comment = $this->markdownCtrl->ceasarShift($shifted);
@@ -68,7 +75,6 @@ class CommentCtrl {
             " asks:\n\n$comment\n
 See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
-        $to = "mzijlstra@miu.edu";
         $subject = "{$course} Question or Comment";
         $this->mailHlpr->mail($to, $subject, $message);
 
@@ -215,13 +221,15 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         $qid = filter_input(INPUT_POST, "id");
         $op_email = $this->commentDao->getUserEmail($qid);
         $id = $this->replyDao->add($text, $user_id, $qid);
+        $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
+        $ins_to = [ $ins['email'], $ins['teamsName'] ];
 
         $message = $user["knownAs"] . " " . $user["lastname"] .
             " says:\n\n$text\n
 See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}";
 
         $this->mailHlpr->mail($op_email, "{$course} Reply", $message);
-        $this->mailHlpr->mail("mzijlstra@miu.edu", "{$course} Reply", $message);
+        $this->mailHlpr->mail($ins_to, "{$course} Reply", $message);
 
         return "Location: {$tab}#r{$id}";
     }
