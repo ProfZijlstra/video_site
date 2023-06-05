@@ -177,12 +177,12 @@ class QuizAdminCtrl {
         $text = $this->markdownCtrl->ceasarShift($qshifted);
 
         $model_answer = "";
-        if ($type == "markdown") {
+        if ($type == "markdown" || $type == "plain_text") {
             $ashifted = filter_input(INPUT_POST, "model_answer");
             if ($ashifted) {
                 $model_answer = $this->markdownCtrl->ceasarShift($ashifted);    
             }            
-        } 
+        }
 
         $question_id = $this->questionDao->
             add($quiz_id, $type, $text, $model_answer, $points, $seq);
@@ -213,7 +213,7 @@ class QuizAdminCtrl {
         $text = $this->markdownCtrl->ceasarShift($qshifted);
 
         $model_answer = "";
-        if ($type == "markdown") {
+        if ($type == "markdown" || $type == "plain_text") {
             $ashifted = filter_input(INPUT_POST, "model_answer");
             if ($ashifted) {
                 $model_answer = $this->markdownCtrl->ceasarShift($ashifted);

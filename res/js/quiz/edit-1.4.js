@@ -30,9 +30,14 @@ window.addEventListener("load", () => {
         if (this.value == "image") {
             md_answer.style.display = "none";
             img_answer.style.display = "block"
-        } else {
+        } else if (this.value == "markdown"){
             img_answer.style.display = "none"
             md_answer.style.display = "block";
+            md_answer.setAttribute("placeholder", md_answer.dataset.ph);
+        } else if (this.value == "plain_text") {
+            img_answer.style.display = "none"
+            md_answer.style.display = "block";
+            md_answer.setAttribute("placeholder", "Model answer goes here");
         }
     };
 

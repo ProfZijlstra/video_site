@@ -59,7 +59,9 @@
                             <?php if($question['modelAnswer']): ?>
                             <div>Model Answer:</div> 
                             <div class="answerText">
-                                <?php if($question['type'] == 'markdown'): ?>
+                                <?php if($question['type'] == 'plain_text'): ?>
+                                <pre><?= $question['modelAnswer'] ?></pre>
+                                <?php elseif($question['type'] == 'markdown'): ?>
                                 <?= $parsedown->text($question['modelAnswer']) ?>
                                 <?php elseif ($question['type'] == "image"): ?>
                                 <img src="<?= $question['modelAnswer'] ?>" />
@@ -78,9 +80,10 @@
 
                             </div> 
                             <div class="answerText">
-                                <?= $parsedown->text($answers[$question['id']]['text']) ?>
 
-                                <?php if($question['type'] == 'markdown'): ?>
+                                <?php if($question['type'] == 'plain_text'): ?>
+                                <pre><?= $answers[$question['id']]['text'] ?></pre>
+                                <?php elseif($question['type'] == 'markdown'): ?>
                                 <?= $parsedown->text($answers[$question['id']]['text']) ?>
                                 <?php elseif ($question['type'] == "image"): ?>
                                 <img src="<?= $answers[$question['id']]['text'] ?>" />

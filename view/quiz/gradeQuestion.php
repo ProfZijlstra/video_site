@@ -88,7 +88,9 @@
                         </div>
                         <div>Model Answer:</div> 
                         <div class="text">
-                            <?php if($question['type'] == 'markdown'): ?>
+                            <?php if($question['type'] == 'plain_text'): ?>
+                            <pre><?= $question['modelAnswer'] ?></pre>
+                            <?php elseif($question['type'] == 'markdown'): ?>
                             <?= $parsedown->text($question['modelAnswer']) ?>
                             <?php elseif ($question['type'] == "image"): ?>
                             <img src="<?= $question['modelAnswer'] ?>" />
@@ -119,7 +121,9 @@
                             <input type="hidden" name="answer_ids" class="answer_ids" value="<?= implode(",", $ids) ?>" />
                         </td>
                         <td class="answer">
-                            <?php if($question['type'] == 'markdown'): ?>
+                            <?php if($question['type'] == 'plain_text'): ?>
+                            <pre><?= $answer['text'] ?></pre>
+                            <?php elseif($question['type'] == 'markdown'): ?>
                             <?= $parsedown->text($answer['text']) ?>
                             <?php elseif ($question['type'] == "image"): ?>
                             <img src="<?= $answer['text'] ?>" />

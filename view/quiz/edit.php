@@ -71,7 +71,16 @@
                             </form>
                         </div>
                         <div class="question" data-id="<?= $question['id']?>">
-                            <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == 'markdown' ? "Markdown Text" : "Image Upload" ?></div>
+                            <div class="qType" data-type="<?= $question['type'] ?>">
+                                Type: 
+                                <?php if($question['type'] == "plain_text"): ?>
+                                    Plain Text
+                                <?php elseif($question['type'] == 'markdown'): ?>
+                                    Markdown Text
+                                <?php elseif ($question['type'] == "image"): ?>
+                                    Image Upload
+                                <?php endif; ?>
+                            </div>
                             <div>Question Text:</div> 
                             <textarea class="text" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $question['text']?></textarea>
                             <div>
@@ -79,7 +88,9 @@
                                 <div class="previewArea"></div>
                             </div>
                             <div>Model Answer:</div> 
-                            <?php if($question['type'] == 'markdown'): ?>
+                            <?php if($question['type'] == "plain_text"): ?>
+                            <textarea class="model_answer" placeholder="Model answer goes here"><?= $question['modelAnswer']?></textarea>
+                            <?php elseif($question['type'] == 'markdown'): ?>
                             <textarea class="model_answer" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $question['modelAnswer']?></textarea>
                             <div>
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
@@ -107,6 +118,7 @@
                     Type:
                     <select>
                         <option value="markdown">Markdown Text</option>
+                        <option value="plain_text">Plain Text</option>
                         <option value="image">Image Upload</option>
                     </select>
                 </div>
@@ -118,7 +130,9 @@
                     <div>Question Text:</div>
                     <textarea id="addQuestionText" name="text" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
                     <div>Model Answer:</div> 
-                    <textarea id="md_answer" name="model_answer" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
+                    <textarea id="md_answer" name="model_answer" 
+                        data-ph="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"
+                        placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
                     <input id="img_answer" type="file" name="image" />
                     <div class="btn"><button>Add Question</button></div>
                 </form>
