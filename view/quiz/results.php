@@ -56,7 +56,6 @@ $not_graded = false;
                                         <?= $parsedown->text($question['modelAnswer']) ?>
                                     </div>
                                 <?php elseif($question['type'] == "image"): ?>
-                                    <!-- TODO test image answers -->
                                     <img src="<?= $question['modelAnswer'] ?>" />
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -80,8 +79,7 @@ $not_graded = false;
                                         <?= $parsedown->text($answers[$question['id']]['text']) ?>
                                     </div>
                                 <?php elseif($question['type'] == "image"): ?>
-                                    <!-- TODO test image answers -->
-                                    <img src="<?= $answer['text'] ?>" />
+                                    <img src="<?= $answers[$question['id']]['text'] ?>" />
                                 <?php endif; ?>
 
                             <?php else: ?>

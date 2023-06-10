@@ -63,6 +63,7 @@ div.modal.hide {
 #content tr pre {
     max-width: 1000px;
     overflow: auto;
+    white-space: pre-wrap;
 }
 #content a:hover {
     text-decoration: underline;
