@@ -12,9 +12,8 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/user.css">
-    <script src="res/js/back.js"></script>
     <script src="res/js/user.js"></script>
-    <script src="res/js/userDetails.js"></script>
+    <script src="res/js/userDetails-1.0.js"></script>
 </head>
 
 <body>

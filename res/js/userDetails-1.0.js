@@ -50,4 +50,9 @@ window.addEventListener("load", () => {
                 {'Content-Type' : 'application/x-www-form-urlencoded'},
         });
     }
+
+    document.querySelector(".fa-arrow-left").addEventListener("click", () => {
+        // wait a 500ms to make sure that the onchange save handlers have run
+        setTimeout(() => window.history.go(-1), 500);
+    });
 });
