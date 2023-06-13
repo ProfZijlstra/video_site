@@ -3,7 +3,7 @@ window.addEventListener("load", () => {
     const quiz_id = document.getElementById('quiz_id').dataset.id;
 
     // timer code
-    COUNTDOWN.start(() => window.location.refresh());
+    COUNTDOWN.start(() => window.location.reload());
 
     // enable markdown previews
     MARKDOWN.enablePreview("../markdown");
