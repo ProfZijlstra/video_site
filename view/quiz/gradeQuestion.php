@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="res/css/quiz-1.3.css">
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown.js"></script>
-        <script src="res/js/quiz/gradeQuestion.js"></script>
+        <script src="res/js/quiz/gradeQuestion-1.0.js"></script>
         <style>
             div#content {
                 width: 90%;
