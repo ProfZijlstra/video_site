@@ -243,7 +243,7 @@ class QuizAdminCtrl {
         $user_id = $_SESSION['user']['id'];
 
         $res = $this->imageCtrl->process("image", $question_id, $user_id);
-        $this->questionDao->updateModelAnswer($question_id, $res['dst']);
+        $this->questionDao->updateModelAnswer($question_id, $res['dst'], 0);
 
         return $res;
     }
