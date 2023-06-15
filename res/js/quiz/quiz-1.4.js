@@ -7,26 +7,32 @@ window.addEventListener("load", () => {
 
     // enable markdown previews
     MARKDOWN.enablePreview("../markdown");
+    MARKDOWN.activateButtons(saveQuestionChange)
 
     // automatically save changes to answers
     function saveQuestionChange() {
-        const textarea = this;
-        const parent = this.parentNode;
+        let parent = this.parentNode;
+        while (!parent.classList.contains('question')) {
+            parent = parent.parentNode;
+        }
+        const text = parent.querySelector("textarea.answer");
+
         const qid = parent.dataset.id;
-        const text = parent.querySelector('textarea.answer');
         const aid = text.dataset.id;
         const shifted = MARKDOWN.ceasarShift(text.value);
         const answer = encodeURIComponent(shifted);
+        const hasMD = text.parentNode.querySelector("i")
+                .classList.contains("active") ? 1 : 0;
 
-        fetch(`${quiz_id}/question/${qid}/markdown`, {
+        fetch(`${quiz_id}/question/${qid}/text`, {
             method : "POST",
-            body : `answer=${answer}&answer_id=${aid}`,
+            body : `answer=${answer}&answer_id=${aid}&hasMarkDown=${hasMD}`,
             headers :
                 {'Content-Type' : 'application/x-www-form-urlencoded'},
         })
         .then((response) => response.json())
         .then((data) => {
-            textarea.dataset.id = data.answer_id;
+            text.dataset.id = data.answer_id;
         });
     }
     const areas = document.querySelectorAll('.qcontainer textarea');

@@ -70,9 +70,28 @@ div.qcontainer div.question div.qType{
     margin-top: 5px;
     margin-bottom: 10px;
 }
+div.qcontainer div.question div.textContainer {
+    position: relative;
+}
+div.textContainer i.fa-markdown {
+    position: absolute;
+    top: -18px;
+    right: 0px;
+    cursor: pointer;
+    color: gray;
+}
+div.textContainer i.fa-markdown.active {
+    color: black;
+}
 div.qcontainer div.question textarea {
     width: 100%;
     height: 10em;
+}
+div.qcontainer div.mdContainer {
+    display: none;
+}
+div.qcontainer div.mdContainer.active {
+    display: block;
 }
 div.qcontainer div.preview {
     margin: 5px 0px;
@@ -81,6 +100,12 @@ div.qcontainer div.preview {
 div.qcontainer div.pcontainer {
     padding: 5px;
     border: 1px solid gray;
+}
+div.question textarea {
+    max-width: 600px;
+}
+div.question pre {
+    max-width: 550px;
 }
 div.question img {
     width: 585px;

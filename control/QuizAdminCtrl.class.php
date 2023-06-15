@@ -177,7 +177,7 @@ class QuizAdminCtrl {
         $text = $this->markdownCtrl->ceasarShift($qshifted);
 
         $model_answer = "";
-        if ($type == "markdown" || $type == "plain_text") {
+        if ($type == "text") {
             $ashifted = filter_input(INPUT_POST, "model_answer");
             if ($ashifted) {
                 $model_answer = $this->markdownCtrl->ceasarShift($ashifted);    
@@ -201,19 +201,27 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/quiz/\d+/question/(\d+)$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/\d+/question/(\d+)$!", sec="instructor")
      */
     public function updateQuestion() {
         global $URI_PARAMS;
 
-        $id = $URI_PARAMS[1];
+        $id = $URI_PARAMS[3];
         $type = filter_input(INPUT_POST, "type");
         $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
         $qshifted = filter_input(INPUT_POST, "text");
         $text = $this->markdownCtrl->ceasarShift($qshifted);
+        $hasMarkdown = filter_input(INPUT_POST, "hasMarkDown", FILTER_VALIDATE_INT);
+        $mdlAnsHasMd = filter_input(INPUT_POST, "mdlAnsHasMD", FILTER_VALIDATE_INT);
+        if (!$hasMarkdown) {
+            $hasMarkdown = 0;
+        }
+        if (!$mdlAnsHasMd) {
+            $mdlAnsHasMd = 0;
+        }
 
         $model_answer = "";
-        if ($type == "markdown" || $type == "plain_text") {
+        if ($type == "text") {
             $ashifted = filter_input(INPUT_POST, "model_answer");
             if ($ashifted) {
                 $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
@@ -221,8 +229,8 @@ class QuizAdminCtrl {
         } else if ($type == "image") {
             $model_answer = filter_input(INPUT_POST, "model_answer");
         }
-
-        $this->questionDao->update($id, $text, $model_answer, $points);
+        
+        $this->questionDao->update($id, $text, $model_answer, $points, $hasMarkdown, $mdlAnsHasMd);
     }
 
     /**
@@ -241,7 +249,7 @@ class QuizAdminCtrl {
     }
 
     /**
-     * @POST(uri="!^/cs\d{3}/20\d{2}-\d{2}/quiz/(\d+)/question/(\d+)/del$!", sec="instructor")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/del$!", sec="instructor")
      */
     public function delQuestion() {
         global $URI_PARAMS;

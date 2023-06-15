@@ -96,28 +96,29 @@ class QuizTakingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/markdown$!", sec="observer")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/text$!", sec="observer")
      */
-    public function answerMarkdownQuestion() {
+    public function answerTextQuestion() {
         global $URI_PARAMS;
 
         // reject answers after quiz stop time
         $quiz_id = $URI_PARAMS[3];
-        if ($this->quizEnded($quiz_id, 180)) { 
+        if ($this->quizEnded($quiz_id, 30)) { 
             return "error/403.php";
         }
 
         $question_id = $URI_PARAMS[4];
         $user_id = $_SESSION['user']['id'];
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
+        $hasMarkdown = filter_input(INPUT_POST, "hasMarkDown", FILTER_VALIDATE_INT);
         $shifted = filter_input(INPUT_POST, "answer");
 
         $answer = $this->markdownCtrl->ceasarShift($shifted);
 
         if ($answer_id) {
-            $this->answerDao->update($answer_id, $answer, $user_id);
+            $this->answerDao->update($answer_id, $answer, $user_id, $hasMarkdown);
         } else {
-            $answer_id = $this->answerDao->add($answer, $question_id, $user_id);
+            $answer_id = $this->answerDao->add($answer, $question_id, $user_id, $hasMarkdown);
         }
         return [ 'answer_id' => $answer_id ];
     }
@@ -134,7 +135,7 @@ class QuizTakingCtrl {
         $question_id = $URI_PARAMS[4];
 
         // reject answers after quiz stop time
-        if ($this->quizEnded($quiz_id, 180)) { 
+        if ($this->quizEnded($quiz_id, 30)) { 
             return "error/403.php";
         }
 

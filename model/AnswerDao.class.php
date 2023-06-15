@@ -11,30 +11,35 @@ class AnswerDao {
      */
     public $db;
 
-    public function add($text, $question_id, $user_id) {
+    public function add($text, $question_id, $user_id, $hasMarkDown) {
         $stmt = $this->db->prepare(
 			"INSERT INTO answer 
-			VALUES(NULL, :text, :question_id, :user_id, NOW(), NULL, NULL, NULL)"
+			VALUES(NULL, :text, :question_id, :user_id, 
+            NOW(), NULL, NULL, NULL, :hasMarkDown)"
 		);
 		$stmt->execute(array(
             "text" => $text,
             "question_id" => $question_id,
-            "user_id" => $user_id
+            "user_id" => $user_id,
+            "hasMarkDown" => $hasMarkDown,
 		));
 		return $this->db->lastInsertId();
     }
 
-    public function update($id, $text, $user_id) {
+    public function update($id, $text, $user_id, $hasMarkDown) {
         $stmt = $this->db->prepare(
 			"UPDATE answer 
-            SET `text` = :text, `updated` = NOW()
+            SET `text` = :text,
+            `hasMarkDown` = :hasMarkDown, 
+            `updated` = NOW()
             WHERE id = :id 
             AND user_id = :user_id "
 		);
 		$stmt->execute(array(
             "id" =>  $id, 
             "text" => $text, 
-            "user_id" => $user_id
+            "user_id" => $user_id,
+            "hasMarkDown" => $hasMarkDown,
         ));
     }
 
@@ -43,7 +48,8 @@ class AnswerDao {
         $stmt = $this->db->prepare(
 			"SELECT a.id, a.text, a.user_id, a.points, a.comment,
                 u.knownAs, u.lastname,
-                a.created, a.updated
+                a.created, a.updated,
+                a.hasMarkDown
             FROM answer AS a
             JOIN user AS u ON a.user_id = u.id
             WHERE a.question_id = :question_id
@@ -85,7 +91,8 @@ class AnswerDao {
         $stmt = $this->db->prepare(
 			"SELECT a.text, a.id, a.question_id, 
                 a.points, a.comment,
-                a.created, a.updated
+                a.created, a.updated,
+                a.hasMarkDown
             FROM answer AS a
             JOIN question AS q on a.question_id = q.id
             WHERE q.quiz_id = :quiz_id

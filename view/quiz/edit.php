@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.3.css">
+        <link rel="stylesheet" href="res/css/quiz-1.4.css">
         <script src="res/js/lib/prism.js"></script>
-        <script src="res/js/markdown.js"></script>
-        <script src="res/js/quiz/edit-1.4.js"></script>
+        <script src="res/js/markdown-1.0.js"></script>
+        <script src="res/js/quiz/edit-1.5.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -73,37 +73,46 @@
                         <div class="question" data-id="<?= $question['id']?>">
                             <div class="qType" data-type="<?= $question['type'] ?>">
                                 Type: 
-                                <?php if($question['type'] == "plain_text"): ?>
-                                    Plain Text
-                                <?php elseif($question['type'] == 'markdown'): ?>
-                                    Markdown Text
+                                <?php if($question['type'] == "text"): ?>
+                                    Text
                                 <?php elseif ($question['type'] == "image"): ?>
                                     Image Upload
                                 <?php endif; ?>
                             </div>
                             <div>Question Text:</div> 
-                            <textarea class="text" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $question['text']?></textarea>
-                            <div>
-                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                                <div class="previewArea"></div>
+                            <div class="textContainer">
+                                <textarea class="text" 
+                                    placeholder="Write your question text here" 
+                                    data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"
+                                    data-txt="Write your question text here" ><?= $question['text']?></textarea>
+
+                                <i title="Markdown" class="txt fa-brands fa-markdown <?= $question['hasMarkDown'] ? "active" : ""?>"></i>
+                                <div class="mdContainer <?= $question['hasMarkDown'] ? "active" : ""?>">
+                                    <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                    <div class="previewArea"></div>
+                                </div>
                             </div>
                             <div>Model Answer:</div> 
-                            <?php if($question['type'] == "plain_text"): ?>
-                            <textarea class="model_answer" placeholder="Model answer goes here"><?= $question['modelAnswer']?></textarea>
-                            <?php elseif($question['type'] == 'markdown'): ?>
-                            <textarea class="model_answer" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $question['modelAnswer']?></textarea>
-                            <div>
-                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                                <div class="previewArea"></div>
-                            </div>
+                            <?php if($question['type'] == 'text'): ?>
+                                <div class="textContainer">
+                                    <textarea class="model_answer" 
+                                    placeholder="Write your model answer here"
+                                    data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"
+                                    data-txt="Write your model answer here"><?= $question['modelAnswer']?></textarea>
+
+                                    <i title="Markdown" class="mdl fa-brands fa-markdown <?= $question['mdlAnsHasMD'] ? "active" : ""?>"></i>
+                                    <div class="mdContainer <?= $question['mdlAnsHasMD'] ? "active" : ""?>">
+                                        <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                        <div class="previewArea"></div>
+                                    </div>
+                                </div>
                             <?php elseif ($question['type'] == "image"): ?>
-                            <img src="<?= $question['modelAnswer'] ?>" />
-                            <div>
-                                Upload Replacement: 
-                                <input type="file" class="img_replace" />
-                                <i class="fa-solid fa-circle-notch"></i>
-                            </div>
-                            
+                                <img src="<?= $question['modelAnswer'] ?>" />
+                                <div>
+                                    Upload Replacement: 
+                                    <input type="file" class="img_replace" />
+                                    <i class="fa-solid fa-circle-notch"></i>
+                                </div>                            
                             <?php endif; ?>
                         </div>
                     </div>

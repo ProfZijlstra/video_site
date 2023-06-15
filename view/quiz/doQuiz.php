@@ -8,11 +8,11 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.3.css">
+        <link rel="stylesheet" href="res/css/quiz-1.4.css">
         <script src="res/js/lib/prism.js"></script>
-        <script src="res/js/markdown.js"></script>
+        <script src="res/js/markdown-1.0.js"></script>
         <script src="res/js/quiz/countdown-1.1.js"></script>
-        <script src="res/js/quiz/quiz-1.3.js"></script>
+        <script src="res/js/quiz/quiz-1.4.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -37,20 +37,30 @@
                             <div class="points">Points: <?= $question['points'] ?></div>
                         </div>
                         <div class="question" data-id="<?= $question['id']?>">
-                            <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == 'markdown' ? "Markdown Text" : "Image Upload" ?></div>
+                            <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == "text" ? "Text" : "Image Upload" ?></div>
                             <div>Question Text:</div> 
                             <div class="questionText">
-                                <?= $parsedown->text($question['text']) ?>
+                                <?php if($question['hasMarkDown']): ?>
+                                    <?= $parsedown->text($question['text']) ?>
+                                <?php else: ?>
+                                    <pre><?= $question['text'] ?></pre>
+                                <?php endif; ?>
                             </div>
                             <div>Your Answer:</div> 
-                            <?php if($question['type'] == "plain_text"): ?>
-                            <textarea class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Write your answer here"><?= $answers[$question['id']]['text']?></textarea>
-                            <?php elseif($question['type'] == 'markdown'): ?>
-                            <textarea class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answers[$question['id']]['text']?></textarea>
-                            <div>
-                                <div class="preview"><button tabindex="-1" class="previewBtn">Preview Markdown</button></div>
-                                <div class="previewArea"></div>
-                            </div>
+                            <?php if($question['type'] == "text"): ?>
+                                <div class="textContainer">
+                                    <i title="Markdown" class="fa-brands fa-markdown <?= $answers[$question['id']]['hasMarkDown'] ? 'active' : "" ?>"></i>
+                                    <textarea class="answer" 
+                                        data-id="<?= $answers[$question['id']]['id'] ?>" 
+                                        data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"
+                                        data-txt="Write your answer here"
+                                        placeholder="Write your answer here"
+                                        ><?= $answers[$question['id']]['text']?></textarea>
+                                    <div class="mdContainer <?= $answers[$question['id']]['hasMarkDown'] ? 'active' : "" ?>">
+                                        <div class="preview"><button tabindex="-1" class="previewBtn">Preview Markdown</button></div>
+                                        <div class="previewArea"></div>
+                                    </div>
+                                </div>
                             <?php elseif ($question['type'] == "image"): ?>
                                 <?php if ($answers[$question['id']]): ?>
                                     <img class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" src="<?= $answers[$question['id']]['text'] ?>" />

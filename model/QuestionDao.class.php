@@ -14,7 +14,8 @@ class QuestionDao {
     public function add($quiz_id, $type, $text, $model_answer, $points, $seq) {
         $stmt = $this->db->prepare(
 			"INSERT INTO question 
-			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type)"
+			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
+                    :hasMarkDown, :mdlAnsHasMd)"
 		);
 		$stmt->execute(array(
             "quiz_id" => $quiz_id,
@@ -22,7 +23,9 @@ class QuestionDao {
             "text" => $text,
             "model_answer" => $model_answer,
             "points" => $points,
-            "seq" => $seq
+            "seq" => $seq,
+            "hasMarkDown" => 0,
+            "mdlAnsHasMD" => 0,
 		));
 		return $this->db->lastInsertId();
     }
@@ -44,29 +47,38 @@ class QuestionDao {
         return $stmt->fetch();
     }
 
-    public function update($id, $text, $model_answer, $points) {
+    public function update($id, $text, $model_answer, $points,
+                        $hasMarkDown, $mdlAnsHasMD) {
         $stmt = $this->db->prepare(
 			"UPDATE question 
-            SET `text` = :text, modelAnswer = :model_answer, points = :points
+            SET `text` = :text, 
+                modelAnswer = :model_answer, 
+                points = :points,
+                hasMarkDown = :hasMarkDown,
+                mdlAnsHasMD = :mdlAnsHasMD
             WHERE id = :id "
 		);
 		$stmt->execute(array(
             "id" =>  $id, 
             "text" => $text, 
             "model_answer" => $model_answer,
-            "points" => $points
+            "points" => $points,
+            "hasMarkDown" => $hasMarkDown,
+            "mdlAnsHasMD" => $mdlAnsHasMD,
         ));
     }
 
-    public function updateModelAnswer($id, $model_answer) {
+    public function updateModelAnswer($id, $model_answer, $mdlAnsHasMD) {
         $stmt = $this->db->prepare(
 			"UPDATE question 
-            SET `modelAnswer` = :model_answer
+            SET `modelAnswer` = :model_answer,
+                mdlAnsHasMd = :mdlAnsHasMd
             WHERE id = :id "
 		);
 		$stmt->execute(array(
             "id" =>  $id, 
             "model_answer" => $model_answer,
+            "mdlAnsHasMd" => $mdlAnsHasMD,
         ));
     }
 
@@ -113,7 +125,9 @@ class QuestionDao {
                 "model_answer" => $question['model_answer'],
                 "points" => $question['points'],
                 "seq" => $question['seq'],
-                "type" => $question['type']
+                "type" => $question['type'],
+                "hasMarkDown" => $question['hasMarkDown'],
+                "mdlAnsHasMD" => $question['mdlAnsHasMD'],
             ));    
         }
     }

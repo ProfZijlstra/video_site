@@ -30,14 +30,10 @@ window.addEventListener("load", () => {
         if (this.value == "image") {
             md_answer.style.display = "none";
             img_answer.style.display = "block"
-        } else if (this.value == "markdown"){
+        } else if (this.value == "text"){
             img_answer.style.display = "none"
             md_answer.style.display = "block";
             md_answer.setAttribute("placeholder", md_answer.dataset.ph);
-        } else if (this.value == "plain_text") {
-            img_answer.style.display = "none"
-            md_answer.style.display = "block";
-            md_answer.setAttribute("placeholder", "Model answer goes here");
         }
     };
 
@@ -110,6 +106,7 @@ window.addEventListener("load", () => {
 
     // enable markdown previews
     MARKDOWN.enablePreview("../../markdown");
+    MARKDOWN.activateButtons(saveQuestionChange);
 
     // automatically save changes to points, text and model answer
     function saveQuestionChange() {
@@ -123,12 +120,20 @@ window.addEventListener("load", () => {
         const text = parent.querySelector('textarea.text').value;
         const points = parent.querySelector(".points input").value;
         const qshifted = encodeURIComponent(MARKDOWN.ceasarShift(text));
-
         let body = `type=${type}&text=${qshifted}&points=${points}`;
-        if (type == "markdown") {
+
+        const txtMdBtn = parent.querySelector("i.fa-markdown.txt");
+        const hasMarkdown = txtMdBtn.classList.contains('active') ? 1 : 0;
+        body += `&hasMarkDown=${hasMarkdown}`;
+
+        if (type == "text") {
             const model_answer = parent.querySelector('textarea.model_answer').value;
             const ashifted = encodeURIComponent(MARKDOWN.ceasarShift(model_answer));
             body += `&model_answer=${ashifted}`;
+
+            const ansMdBtn = parent.querySelector("i.fa-markdown.mdl");
+            const mdlAnsHasMD = ansMdBtn.classList.contains('active') ? 1 : 0;
+            body += `&mdlAnsHasMD=${mdlAnsHasMD}`;
         } else if (type == "image") {
             const src = encodeURIComponent(parent.querySelector("img").getAttribute('src'));
             body += `&model_answer=${src}`;

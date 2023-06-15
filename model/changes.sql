@@ -348,3 +348,11 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`excused` (
 
 -- 1st of June 2023
 ALTER TABLE `excused` ADD COLUMN `reason` VARCHAR(45) NOT NULL;
+
+-- 14th of June 2023
+UPDATE `question` SET `type` = 'text' WHERE `type` = 'markdown' OR `type` = 'plain_text';
+ALTER TABLE `answer` ADD COLUMN `hasMarkDown` TINYINT UNSIGNED DEFAULT 0;
+UPDATE `answer` SET `hasMarkDown` = 1;
+ALTER TABLE `question` ADD COLUMN `hasMarkDown` TINYINT UNSIGNED DEFAULT 0;
+ALTER TABLE `question` ADD COLUMN `mdlAnsHasMD` TINYINT UNSIGNED DEFAULT 0;
+UPDATE `question` SET `hasMarkDown` = 1, `mdlAnsHasMD` = 1 WHERE `type` = 'text';

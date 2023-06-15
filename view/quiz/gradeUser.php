@@ -8,14 +8,14 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.3.css">
+        <link rel="stylesheet" href="res/css/quiz-1.4.css">
         <style>
             #content > h3 {
                 margin-bottom: 0px;
             }
         </style>
         <script src="res/js/lib/prism.js"></script>
-        <script src="res/js/markdown.js"></script>
+        <script src="res/js/markdown-1.0.js"></script>
         <script src="res/js/quiz/gradeUser.js"></script>
     </head>
     <body>
@@ -54,17 +54,23 @@
                         <div class="question" data-id="<?= $question['id']?>">
                             <div>Question Text:</div> 
                             <div class="questionText">
-                                <?= $parsedown->text($question['text']) ?>
+                                <?php if($question['hasMarkDown']): ?>
+                                    <?= $parsedown->text($question['text']) ?>
+                                <?php else: ?>
+                                    <pre><?= $question['text'] ?></pre>
+                                <?php endif; ?>
                             </div>
                             <?php if($question['modelAnswer']): ?>
                             <div>Model Answer:</div> 
                             <div class="answerText">
-                                <?php if($question['type'] == 'plain_text'): ?>
-                                <pre><?= $question['modelAnswer'] ?></pre>
-                                <?php elseif($question['type'] == 'markdown'): ?>
-                                <?= $parsedown->text($question['modelAnswer']) ?>
+                                <?php if($question['type'] == "text"): ?>
+                                    <?php if($question['mdlAnsHasMD']): ?>
+                                        <?= $parsedown->text($question['modelAnswer']) ?>
+                                    <?php else: ?>
+                                        <pre><?= $question['modelAnswer'] ?></pre>
+                                    <?php endif; ?>
                                 <?php elseif ($question['type'] == "image"): ?>
-                                <img src="<?= $question['modelAnswer'] ?>" />
+                                    <img src="<?= $question['modelAnswer'] ?>" />
                                 <?php endif; ?>
                             </div>
                             <?php endif; ?>
@@ -81,12 +87,14 @@
                             </div> 
                             <div class="answerText">
 
-                                <?php if($question['type'] == 'plain_text'): ?>
-                                <pre><?= $answers[$question['id']]['text'] ?></pre>
-                                <?php elseif($question['type'] == 'markdown'): ?>
-                                <?= $parsedown->text($answers[$question['id']]['text']) ?>
+                                <?php if($question['type'] == 'text'): ?>
+                                    <?php if($answers[$question['id']]['hasMarkDown']): ?>
+                                        <?= $parsedown->text($answers[$question['id']]['text']) ?>
+                                    <?php else: ?>
+                                        <pre><?= $answers[$question['id']]['text'] ?></pre>
+                                    <?php endif; ?>
                                 <?php elseif ($question['type'] == "image"): ?>
-                                <img src="<?= $answers[$question['id']]['text'] ?>" />
+                                    <img src="<?= $answers[$question['id']]['text'] ?>" />
                                 <?php endif; ?>
 
                             </div>
