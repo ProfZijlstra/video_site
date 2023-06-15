@@ -253,7 +253,7 @@ class QuizAdminCtrl {
      */
     public function delQuestion() {
         global $URI_PARAMS;
-        $question_id = $URI_PARAMS[2];
+        $question_id = $URI_PARAMS[4];
         $this->questionDao->delete($question_id);
         return "Location: ../../edit";
     }
