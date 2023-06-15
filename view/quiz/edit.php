@@ -126,14 +126,13 @@
                 <div id="typeSelect">
                     Type:
                     <select>
-                        <option value="markdown">Markdown Text</option>
-                        <option value="plain_text">Plain Text</option>
-                        <option value="image">Image Upload</option>
+                        <option value="text">Text</option>
+                        <option value="image">Image</option>
                     </select>
                 </div>
                 <form action="question" method="post" id="add_form" enctype="multipart/form-data">
                     <input type="hidden" name="quiz_id" value="<?= $quiz['id'] ?>" id="quiz_id"/>
-                    <input type="hidden" name="type" value="markdown" />
+                    <input type="hidden" name="type" value="text" />
                     <input type="hidden" name="seq" value="<?= $questions ? count($questions) + 1 : 1?>" />
                     Points: <input type="number" name="points" value="1" />
                     <div>Question Text:</div>

@@ -15,7 +15,7 @@ class QuestionDao {
         $stmt = $this->db->prepare(
 			"INSERT INTO question 
 			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
-                    :hasMarkDown, :mdlAnsHasMd)"
+                    0, 0)"
 		);
 		$stmt->execute(array(
             "quiz_id" => $quiz_id,
@@ -24,8 +24,6 @@ class QuestionDao {
             "model_answer" => $model_answer,
             "points" => $points,
             "seq" => $seq,
-            "hasMarkDown" => 0,
-            "mdlAnsHasMD" => 0,
 		));
 		return $this->db->lastInsertId();
     }
