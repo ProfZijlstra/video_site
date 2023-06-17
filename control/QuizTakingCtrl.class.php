@@ -153,7 +153,7 @@ class QuizTakingCtrl {
         if ($answer_id) {
             $this->answerDao->update($answer_id, $dst, $user_id);
         } else {
-            $answer_id = $this->answerDao->add($dst, $question_id, $user_id);
+            $answer_id = $this->answerDao->add($dst, $question_id, $user_id, 0);
         }
 
         return [ "dst" => $dst, "answer_id" => $answer_id ];
