@@ -8,7 +8,7 @@ require 'lib/PHPMailer/src/SMTP.php';
 
 
 /**
- * Image Quiz Upload Helper Class
+ * Email Helper Class
  * @author mzijlstra 01/08/2023
  * 
  * @Controller
