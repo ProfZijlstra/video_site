@@ -321,7 +321,7 @@ Manalabs Attendance System.
                 $export["status"] = $this->getStatus($attendant);
                 $export["inClass"] = $attendant["inClass"];
                 $export["comment"] = $this->getComment($attendant);
-                $exports[] = $export;
+                $exports[$attendant["studentID"]] = $export;
             }
         }
         $this->attendanceExportDao->clear($session_id);
@@ -330,22 +330,25 @@ Manalabs Attendance System.
 
     private function getStatus($attendant) {
         if ($attendant["excused"]) {
-            return "excused";
+            return "Excused";
         } else if ($attendant["absent"]) {
-            return "absent";
+            return "Absent";
         } else if ($attendant["late"]) {
-            return "late";
+            return "Late";
         } else if ($attendant["leaveEarly"]) {
-            return "left early";
+            return "Left Early";
         } else if ($attendant["middleMissing"]) {
-            return "other";
+            return "Other";
         } else {
-            return "present";
+            return "Present";
         }
     }
 
     private function getComment($attendant) {
         $comments = [];
+        if ($attendant['excused']) {
+            $comments[] = "excused";
+        }
         if ($attendant["absent"]) {
             $comments[] = "absent";
         } 

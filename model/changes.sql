@@ -356,3 +356,35 @@ UPDATE `answer` SET `hasMarkDown` = 1;
 ALTER TABLE `question` ADD COLUMN `hasMarkDown` TINYINT UNSIGNED DEFAULT 0;
 ALTER TABLE `question` ADD COLUMN `mdlAnsHasMD` TINYINT UNSIGNED DEFAULT 0;
 UPDATE `question` SET `hasMarkDown` = 1, `mdlAnsHasMD` = 1 WHERE `type` = 'text';
+
+-- 19 of June 2023  -- won't work on manalabs.org due to privilege? 
+SET FOREIGN_KEY_CHECKS = 0;
+ALTER TABLE user MODIFY id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE view MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE comment MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE reply MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE comment_vote MODIFY user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE reply_vote MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE enrollment MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE answer MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+ALTER TABLE quiz_event MODIFY  user_id BIGINT UNSIGNED NOT NULL;
+SET FOREIGN_KEY_CHECKS = 1;
+
+--- 19 June 2023
+CREATE TABLE IF NOT EXISTS `CAMS` (
+  `offering_id` INT NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
+  `course_id` INT UNSIGNED ,
+  `AM_id` INT UNSIGNED ,
+  `PM_id` INT UNSIGNED ,
+  `SAT_id` INT UNSIGNED ,
+  INDEX `fk_CAMS_offering1_idx` (`offering_id` ASC) VISIBLE,
+  PRIMARY KEY (`offering_id`),
+  CONSTRAINT `fk_CAMS_offering1`
+    FOREIGN KEY (`offering_id`)
+    REFERENCES `offering` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+ALTER TABLE `offering` ADD COLUMN `hasCAMS` TINYINT UNSIGNED DEFAULT 0;

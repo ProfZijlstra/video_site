@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <style>
-            #content h2 {
+            #content h2, #content h3 {
                 margin-bottom: 10px;
             }
-            #settings {
+            .settings {
                 display: grid;
                 grid-template-columns: 50px auto;
                 row-gap: 10px;
@@ -20,41 +20,11 @@
             #settings input[type=number] {
                 width: 40px;
             }
+            .hide {
+                display: none;
+            }
         </style>
-        <script>
-window.addEventListener("load", () => {
-    function sendUpdate() {
-        const id = document.getElementById("offering_id").value;
-        const block = document.getElementById("block").value;
-        const start = document.getElementById("start").value;
-        const daysPerLesson = document.getElementById("daysPerLesson").value;
-        const lessonsPerPart = document.getElementById("lessonsPerPart").value;
-        const lessonParts = document.getElementById("lessonParts").value;
-        const hasQuiz = document.getElementById("hasQuiz").checked;
-        const hasLab = document.getElementById("hasLab").checked;
-        const showDates = document.getAnimations("showDates").checked;
-        const usesFlowcharts = document.getElementById("usesFlowcharts").checked;
-
-        const body = `id=${id}&block=${encodeURIComponent(block)}` 
-                    + `&start=${encodeURIComponent(start)}`
-                    + `&daysPerLesson=${daysPerLesson}`
-                    + `&lessonsPerPart=${lessonsPerPart}`
-                    + `&lessonParts=${lessonParts}&hasQuiz=`
-                    + (hasQuiz ? 1 : 0) + `&hasLab=` + (hasLab ? 1 : 0)
-                    + "&showDates=" + (showDates ? 1: 0)
-                    + "&usesFlowcharts=" + (usesFlowcharts ? 1 : 0);
-        fetch("settings", {
-            method : "POST",
-            body : body,
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-        });
-    }
-    const inputs = document.querySelectorAll("input");
-    for (const input of inputs) {
-        input.onchange = sendUpdate;
-    }
-});            
-        </script>
+        <script src="res/js/offeringSettings.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>
@@ -69,7 +39,7 @@ window.addEventListener("load", () => {
 
             <div id="content">
                 <h2><?= strtoupper($course) ?> Offering</h2>
-                <div id="settings">
+                <div id="settings" class="settings">
                     <div>
                         Block
                     </div>
@@ -126,6 +96,53 @@ window.addEventListener("load", () => {
                     <div>
                         <label for="usesFlowcharts">Students in this offering use Manalabs Flowcharts</label>
                     </div>
+
+                    <div>
+                        <input type="checkbox" id="hasCAMS" <?= $offering['hasCAMS'] ? "checked" : "" ?> />
+                    </div>
+                    <div>
+                        <label for="hasCAMS">Enable attendance export to CAMS</label>
+                    </div>
+                </div>
+
+                <h3 id="CAMSheader" class="<?= $offering['hasCAMS'] ? '' : 'hide' ?>"">CAMS Settings</h3>
+                <div id="CAMSsettings" class="settings <?= $offering['hasCAMS'] ? '' : 'hide' ?>">
+                    <div>
+                        <label for="username">User</label>
+                    </div>
+                    <div>
+                        <input type="text" id="username" placeholder="CAMS Username" value="<?= $CAMS['username'] ?>" />
+                    </div>
+
+                    <div>
+                        <label for="course_id">Course</label>
+                    </div>
+                    <div>
+                        <input type="number" min="0" id="course_id" placeholder="CAMS Course ID" value="<?= $CAMS['course_id'] ?>" />
+                    </div>
+
+                    <div>
+                        <label for="AM_id">AM id</label>
+                    </div>
+                    <div>
+                        <input type="number" min="0" id="AM_id" placeholder="Course AM ID" value="<?= $CAMS['AM_id'] ?>" />
+                    </div>
+
+                    <div>
+                        <label for="PM_id">PM id</label>
+                    </div>
+                    <div>
+                        <input type="number" min="0" id="PM_id" placeholder="Course PM ID" value="<?= $CAMS['PM_id'] ?>" />
+                    </div>
+
+                    <div>
+                        <label for="SAT_id">SAT id</label>
+                    </div>
+                    <div>
+                        <input type="number" min="0" id="SAT_id" placeholder="Course Saturday ID"  value="<?= $CAMS['SAT_id'] ?>" />
+                    </div>
+                </div>
+
 
                 </div>
             </div>
