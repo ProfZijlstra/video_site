@@ -74,7 +74,7 @@ class QuizTakingCtrl {
             return "quiz/countdown.php";
         } else if ($this->quizEnded($quiz_id)) { 
             // show quiz taken status page
-            $VIEW_DATA['title'] = "Quiz Results";
+            $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
             $VIEW_DATA["parsedown"] = new Parsedown();
             $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
             $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
@@ -84,7 +84,7 @@ class QuizTakingCtrl {
         } else { // the quiz is open
             $this->quizEventDao->add($quiz_id, $user_id, "start");
             // show the actual quiz page
-            $VIEW_DATA['title'] = "Quiz";
+            $VIEW_DATA['title'] = "Quiz: " . $quiz['name'];
             $VIEW_DATA["parsedown"] = new Parsedown();
             $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
             $VIEW_DATA['stop'] = $stopDiff;
