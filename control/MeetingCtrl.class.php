@@ -295,7 +295,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
                 "arriveLate" => 0,
                 "leaveEarly" => 0,
                 "middleMissing" => 0,
-                "excused" => isset($excused[$attendant["teamsName"]]),
+                "excused" => isset($excused[$attendant["teamsName"]]) ? 1 : 0,
                 "start" => $start,
                 "stop" => $stop
             ];
