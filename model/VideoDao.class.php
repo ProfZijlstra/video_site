@@ -42,8 +42,8 @@ class VideoDao {
 			$file_info["{$parts[0]}_{$parts[1]}"]["parts"] = $parts;
 		}
 		$totalHours = floor($totalDuration / (60 * 60 * 100));
-		$totalMinutes = floor($totalDuration / (60*100) % 60);
-		$totalSeconds = floor($totalDuration / 100 % 60);
+		$totalMinutes = intval($totalDuration / (60*100)) % 60;
+		$totalSeconds = intval($totalDuration / 100) % 60;
 		$totalTime = "";
 		if ($totalHours > 0) {
 			$totalTime .= $totalHours . ":";
