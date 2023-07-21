@@ -44,6 +44,10 @@ class AttendanceCtrl
      * @Inject("MailHlpr")
      */
     public $mailHlpr;
+    /**
+     * @Inject('CamsDao')
+     */
+    public $camsDao;
 
     /**
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
@@ -224,7 +228,7 @@ Manalabs Attendance System.
     }
 
     /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM)$!", sec="assistant")
+     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec="assistant")
      */
     public function exportReport() {
         global $URI_PARAMS;
@@ -234,6 +238,9 @@ Manalabs Attendance System.
         $block = $URI_PARAMS[2];
         $day_abbr = $URI_PARAMS[3];
         $stype = $URI_PARAMS[4]; // AM or  PM
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
+        $date = $this->offeringDao->getDate($offering, $day_abbr);
 
         $session = $this->classSessionDao->getSession(
             $course_number, $block, $day_abbr, $stype);
@@ -247,6 +254,8 @@ Manalabs Attendance System.
         }
         $exports = $this->attendanceExportDao->forSession($session["id"]);
 
+        $VIEW_DATA['day_abbr'] = $day_abbr;
+        $VIEW_DATA['date'] =  $date;
         $VIEW_DATA['course'] = $course_number;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['stype'] = $stype;
@@ -258,7 +267,62 @@ Manalabs Attendance System.
     }
 
     /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM)$!", sec="assistant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/export$!", sec="instructor")
+     */
+    public function export() {
+        global $URI_PARAMS;
+
+        $course_number = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day_abbr = $URI_PARAMS[3];
+
+        $pwd = filter_input(INPUT_POST, "password");
+        $stype = filter_input(INPUT_POST, "stype");
+        $date = filter_input(INPUT_POST, "date");
+        $start = filter_input(INPUT_POST, "start");
+        $stop = filter_input(INPUT_POST, "stop");
+
+        // prepare the data
+        $real_stype = $stype;
+        if ($stype == "SAT") {
+            $real_stype = "AM";
+        }
+
+        $parts = date_parse($date);
+        $date = $parts["month"] . "/" . $parts["day"] . "/" . $parts["year"];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
+        $session = $this->classSessionDao->getSession(
+            $course_number, $block, $day_abbr, $real_stype);
+        $cams = $this->camsDao->get($offering['id']);
+        $exports = $this->attendanceExportDao->forSession($session["id"]);
+
+        $students = [];
+        foreach ($exports as $student) {
+            $students[$student["studentID"]] = $student;
+        }
+
+        // do the actual export
+        try {
+            require_once("control/CamsHlpr.class.php");
+            $hlpr = new CamsHlpr($cams);
+            $hlpr->login($pwd);
+            $hlpr->submitAttendance($students, $stype, $date, $start, $stop);
+            $hlpr->logout();    
+        } catch(Exception $e) {
+            return "error/500.php";
+        }
+
+        // update class_session status to EXPORTED
+        $stats = $this->classSessionDao->calcStatus($session['id']);
+        $stats["status"] = "EXPORTED";
+        $this->classSessionDao->setStatus($stats);
+
+        return "Location: $real_stype";
+    }
+
+    /**
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec="assistant")
      */
     public function regenExportReport() {
         global $URI_PARAMS;
@@ -278,7 +342,7 @@ Manalabs Attendance System.
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM)/(\d+)$!", sec="assistant")
+     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM|SAT)/(\d+)$!", sec="assistant")
      */
     public function updateExportRow() {
         $json = file_get_contents('php://input');
@@ -308,6 +372,13 @@ Manalabs Attendance System.
             $enrolled[$student["studentID"]] = true;
         }
 
+        // get excused for session
+        $excused_list = $this->excusedDao->forClassSession($session_id);
+        $excused = [];
+        foreach ($excused_list as $excuse) {
+            $excused[$excuse["teamsName"]] = $excuse;
+        }
+
         // for each enrolled need: studentId, status, inClass, comment
         // where status one of: present, excused, absent, late, left early, other
         // where status other only used if middle_missing (and nothing else)
@@ -321,6 +392,10 @@ Manalabs Attendance System.
                 $export["status"] = $this->getStatus($attendant);
                 $export["inClass"] = $attendant["inClass"];
                 $export["comment"] = $this->getComment($attendant);
+                if ($excused[$attendant["teamsName"]]) {
+                    $reason = $excused[$attendant["teamsName"]]["reason"];
+                    $export["comment"] .= " " . $reason;
+                }
                 $exports[$attendant["studentID"]] = $export;
             }
         }

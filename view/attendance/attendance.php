@@ -16,6 +16,15 @@
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++): ?>auto <?php endfor; ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
+        i.fa-cloud-upload-alt {
+            color: gray;
+        }
+        i.fa-cloud-upload-alt.GENERATED {
+            color: black;
+        }
+        i.fa-cloud-upload-alt.EXPORTED {
+            color: green;
+        }
     </style>
 </head>
 
@@ -69,7 +78,7 @@
                                 </i>
                                 <?php if ($session["meetings"]) : ?>
                                     <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
-                                        <i title="Export Attendance" class="fas fa-cloud-upload-alt"></i>
+                                        <i title="Export Attendance <?= $session["status"] ?>" class="fas fa-cloud-upload-alt <?= $session["status"] ?>"></i>
                                     </a>
                                 <?php endif; ?>
 

@@ -12,6 +12,7 @@
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown-1.0.js"></script>
         <script src="res/js/quiz/gradeQuestion-1.0.js"></script>
+        <script src="res/js/ensureSaved.js"></script>
         <style>
             div#content {
                 width: 90%;

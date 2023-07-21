@@ -2,6 +2,7 @@
 /* global SOUNDS */
 
 window.addEventListener("load", () => {
+    // TODO redo how badge scans are shown -- needs to become a persistent list
     let codesRead = {};
     let html5QrCode = null
     let currentCamera = 0;
@@ -16,6 +17,70 @@ window.addEventListener("load", () => {
         }
     });
 
+    // enable regen meeting button
+    document.getElementById("regen_meeting").onclick = function() {
+        document.getElementById("regen_form").submit();
+    };
+
+    // enable delete meeting button
+    document.getElementById("delete_meeting").onclick =
+        function() {
+        if (confirm("Delete this meeting and all related data?")) {
+            document.getElementById("delete_form").submit();
+        }
+    }
+
+    // make POST on change meeting details
+    function saveSettings() {
+        const form = document.getElementById("meeting_form");
+        const id = form.id.value;
+        const update = {};
+        update.id = id;
+        update.title = form.title.value;
+        update.date = form.date.value;
+        update.start = form.start.value;
+        update.stop = form.stop.value;
+        fetch(`${id}`, {
+            method : 'POST',
+            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+            body : new URLSearchParams(update)
+        });
+    }
+    const inps = document.querySelectorAll("#meeting_form input");
+    for (const inp of inps) {
+        inp.onchange = saveSettings;
+    }
+
+    // select all checkboxes for column on header click
+    const ths = document.querySelectorAll("#present th");
+    function checkAll(evt) {
+        if (!confirm("Check all boxes in this column?")) {
+            return;
+        }
+        // find which column is clicked
+        let idx = 0;
+        for(const th of ths) {
+            if (th == evt.target) {
+                break;
+            }
+            idx++;
+        }
+
+        const trs = document.querySelectorAll("#present tr");
+        for (const tr of trs) {
+            const tds = tr.querySelectorAll("td");
+            const box = tds[idx]?.querySelector("input[type=checkbox]");
+            if (box && !box.checked) {
+                box.click();
+            }
+        }
+    }
+    for (const th of ths) {
+        th.onclick = checkAll;
+    }
+
+
+    // do updates on checkbox clicks
     const present = document.getElementById("present");
     if (present) {
         present.onclick = (evt) => {
@@ -138,13 +203,6 @@ window.addEventListener("load", () => {
     const excuses = document.querySelectorAll("input.absent_excused");
     for (const excuse of excuses) {
         excuse.onclick = markAbsenceExcused;
-    }
-
-    document.getElementById("delete_meeting").onclick =
-        function() {
-        if (confirm("Delete this meeting and all related data?")) {
-            document.getElementById("delete_form").submit();
-        }
     }
 
     // enable email absent

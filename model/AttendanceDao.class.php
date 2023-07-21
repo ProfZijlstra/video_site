@@ -108,7 +108,7 @@ class AttendanceDao {
 
     public function getExportData($session_id) {
         $stmt = $this->db->prepare(
-            "SELECT u.studentID, 
+            "SELECT u.studentID, u.teamsName,
             SUM(a.absent) AS `absent`, 
             SUM(a.arriveLate) AS late, 
             SUM(a.leaveEarly) AS leaveEarly, 

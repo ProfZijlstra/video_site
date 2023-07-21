@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.1.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <link rel="stylesheet" href="res/css/meeting-1.1.css">
-   <script src="res/js/meeting-1.4.js"></script>
+    <link rel="stylesheet" href="res/css/meeting-1.2.css">
+   <script src="res/js/meeting-1.5.js"></script>
    <script src="res/js/lib/html5-qrcode.min.js"></script>
    <script src="res/js/sounds.js"></script>
+   <script src="res/js/ensureSaved.js"></script>
 </head>
 
 <body>
@@ -64,8 +65,16 @@
             <div class="meeting">
                 <h3>
                     Meeting Details:
+                    <form id="regen_form" method="post" action="regen/<?= $meeting["id"] ?>">
+                        <input type="hidden" name="session_id" value="<?= $meeting['session_id'] ?>" />
+                        <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" id="meeting_id"/>
+                        <input type="hidden" name="start" value="<?= $meeting["start"]?>" />
+                        <input type="hidden" name="stop" value="<?= $meeting["stop"]?>" />
+                        <i id="regen_meeting" class="fa-solid fa-rotate-right" title="Renerate Meeting Report"></i>
+                    </form>
+
                     <form id="delete_form" method="post" action="<?= $meeting["id"]?>/delete"> 
-                        <i id="delete_meeting" class="far fa-trash-alt"></i>
+                        <i id="delete_meeting" class="far fa-trash-alt" title="Delete Meeting"></i>
                     </form>
                 </h3>
                 <form method="post" id="meeting_form">
@@ -86,20 +95,10 @@
                         <label>Stop</label>
                         <input type="text" name="stop" value="<?= $meeting["stop"] ?>" />
                     </div>
-                    <div class="btns">
-                        <button type="submit">Update Meeting Details</button>
-                    </div>
                 </form>
             </div>
 
             <div class="btns">
-                <form method="post" action="regen/<?= $meeting["id"] ?>">
-                    <input type="hidden" name="session_id" value="<?= $meeting['session_id'] ?>" />
-                    <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" id="meeting_id"/>
-                    <input type="hidden" name="start" value="<?= $meeting["start"]?>" />
-                    <input type="hidden" name="stop" value="<?= $meeting["stop"]?>" />
-                    <button id="regen">Regenerate Report</button>
-                </form>
             </div>
             <form id="absentForm" method="post" action="<?= $meeting["id"]?>/absent">
                 <input id="absent_id" type="hidden" name="attendance_id" value="" />

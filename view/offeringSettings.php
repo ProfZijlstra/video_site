@@ -25,6 +25,7 @@
             }
         </style>
         <script src="res/js/offeringSettings.js"></script>
+        <script src="res/js/ensureSaved.js"></script>
     </head>
     <body>
         <?php include("header.php"); ?>

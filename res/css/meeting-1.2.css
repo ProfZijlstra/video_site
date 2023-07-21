@@ -129,12 +129,16 @@ td.student_id {
 #content {
     position: relative;
 }
-#delete_form {
+#content .meeting h3 form {
     display: inline;
 }
 .fa-trash-alt, 
-.fa-paper-plane {
+.fa-paper-plane,
+.fa-rotate-right {
     position: absolute;
     right: 0px;
     cursor: pointer;
+}
+.fa-rotate-right {
+    right: 20px;
 }

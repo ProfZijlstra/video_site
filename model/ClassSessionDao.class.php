@@ -48,7 +48,7 @@ class ClassSessionDao
     public function allForOffering($offering_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT s.id, s.type, s.generated, s.day_id, d.abbr 
+            "SELECT s.id, s.type, s.generated, s.day_id, d.abbr, s.status 
             FROM `class_session` AS s
             JOIN `day` AS d ON s.day_id = d.id 
             WHERE d.offering_id = :offering_id "

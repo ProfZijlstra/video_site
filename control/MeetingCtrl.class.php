@@ -82,6 +82,8 @@ class MeetingCtrl
     }
 
     /**
+     * Expects AJAX
+     * 
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
      */
     public function updMeeting()

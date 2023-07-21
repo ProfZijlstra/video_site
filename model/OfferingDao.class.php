@@ -238,4 +238,16 @@ class OfferingDao
 		$stmt->execute(array("id" => $id));
 	}
 
+	public function getDate($offering, $day_abbr) {
+		$week = $day_abbr[1] - 1;
+		$day = $day_abbr[3] - 1;
+
+		$add_days = $offering['daysPerLesson'] * $offering['lessonsPerPart'] * $week;
+		$add_days += $offering['daysPerLesson'] * $day;
+		$interval = new DateInterval("P" .$add_days . "D");
+		$result = DateTime::createFromFormat("Y-m-d H:i:s", $offering['start']);
+		$result->add($interval);
+
+		return $result->format("Y-m-d");
+	}
 }

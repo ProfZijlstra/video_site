@@ -4,3 +4,4 @@
 node_modules
 settings.php
 context.php
+lib/guzzle
