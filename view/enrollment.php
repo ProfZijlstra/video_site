@@ -69,7 +69,7 @@
             <?php if (!$instructors): ?>
                 <h2>No Instructor(s) Yet</h2>
             <?php else: ?>
-            <h2>Instructor(s)</h2>
+            <h2><?= count($instructors)?> Instructor(s)</h2>
             <table>
                 <tr>
                     <th>ID</th>
@@ -116,7 +116,7 @@
             <?php endif; ?>
 
             <?php if ($assistants): ?>
-            <h2>Assistant(s)</h2>
+            <h2><?= count($assistants) ?> Assistant(s)</h2>
             <table>
                 <tr>
                     <th>ID</th>
@@ -168,7 +168,7 @@
             <?php if (!$students): ?>
                 <h2>No Student(s) Yet</h2>
             <?php else: ?>
-            <h2>Student(s)</h2>
+            <h2><?= count($students) ?> Student(s)</h2>
             <table>
                 <tr>
                     <th>ID</th>
@@ -217,7 +217,7 @@
             <?php endif; ?>
 
             <?php if ($observers): ?>
-            <h2>Observer(s)</h2>
+            <h2><?= count($observers) ?> Observer(s)</h2>
             <table>
                 <tr>
                     <th>ID</th>
