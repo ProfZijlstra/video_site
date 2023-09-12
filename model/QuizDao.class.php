@@ -154,7 +154,7 @@ class QuizDao {
                 "day_id" => $days[$quiz['abbr']],
                 "start" => $start->format("Y-m-d H:i:s"),
                 "stop" => $stop->format("Y-m-d H:i:s"),
-                "visible" => $quiz['visible'],
+                "visible" => $quiz['visible'] ? 1 : 0,
             ));
             $new_quiz_id = $this->db->lastInsertId();
 
