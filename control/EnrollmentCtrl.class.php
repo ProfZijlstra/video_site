@@ -241,8 +241,8 @@ EOD;
      */
     public function unenroll() {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-		$stu_user_id = filter_input(INPUT_POST, "uid", FILTER_SANITIZE_NUMBER_INT);
-        $this->enrollmentDao->unenroll($stu_user_id, $offering_id);
+		$enrollment_id = filter_input(INPUT_POST, "eid", FILTER_SANITIZE_NUMBER_INT);
+        $this->enrollmentDao->unenroll($enrollment_id, $offering_id);
         return "Location: enrolled";
     }
 

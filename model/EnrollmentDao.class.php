@@ -20,7 +20,7 @@ class EnrollmentDao {
 	 */
 	public function getEnrollmentForOffering($offering_id) {
 		$stmt = $this->db->prepare("SELECT u.id, u.knownAs, u.studentID, 
-			u.firstname, u.lastname, u.email, u.teamsName, e.auth
+			u.firstname, u.lastname, u.email, u.teamsName, e.auth, e.id AS eid
             FROM enrollment e JOIN user u ON e.user_id = u.id 
             WHERE offering_id = :offering_id
 			ORDER BY u.firstname");
@@ -87,11 +87,14 @@ class EnrollmentDao {
 		]);
 	}
 
-	public function unenroll($user_id, $offering_id) {
+	public function unenroll($enrollment_id, $offering_id) {
 		$stmt = $this->db->prepare("DELETE FROM enrollment 
-				WHERE user_id = :user_id 
+				WHERE id = :enrollment_id
 				AND offering_id = :offering_id");
-		$stmt->execute(["user_id" => $user_id, "offering_id" => $offering_id]);		
+		$stmt->execute([
+			"enrollment_id" => $enrollment_id, 
+			"offering_id" => $offering_id]
+		);		
 	}
 
 	public function update($user_id, $offering_id, $auth) {

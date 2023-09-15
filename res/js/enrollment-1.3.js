@@ -2,8 +2,9 @@ window.addEventListener("load", () => {
     // update enrollment auth and show delete button
     function configure() {
         const uid = this.dataset.uid;
+        const eid = this.dataset.eid;
         document.getElementById("config_id").value = uid;
-        document.getElementById("remove_uid").value = uid;
+        document.getElementById("remove_eid").value = eid;
         const tds = this.parentNode.parentNode.querySelectorAll("td");
         const known = tds[1].innerText;
         const last = tds[3].innerText;

@@ -35,7 +35,7 @@
             }
 
         </style>
-        <script src="res/js/enrollment-1.2.js"></script>
+        <script src="res/js/enrollment-1.3.js"></script>
         <script src="res/js/user.js"></script>
     </head>
     <body>
@@ -97,13 +97,14 @@
                         </a>
                     </td>
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $instructor['id'] ?>" data-auth="instructor"></i>
+                        data-uid="<?= $instructor['id'] ?>" data-auth="instructor"
+                        data-eid="<?= $instructor['eid'] ?>"></i>
                     </td>
-                    <td class="center">
+                    <td class="center"  title="Video Views">
                         <a href="W1D1/views/<?= $instructor['id'] ?>"><i class="fa-solid fa-eye"></i></a>
                     </td>
                     <?php if($offering['usesFlowcharts']): ?>
-                        <td class="center">
+                        <td class="center" title="Flowcharts">
                             <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $instructor["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
@@ -144,16 +145,17 @@
                         </a>
                     </td>
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $assistant['id'] ?>" data-auth="assistant"></i>
+                        data-uid="<?= $assistant['id'] ?>" data-auth="assistant"
+                        data-eid="<?= $assistant['eid'] ?>"></i>
                     </td>
-                    <td class="center">
+                    <td class="center" title="Video Views">
                         <a href="W1D1/views/<?= $assistant['id'] ?>"><i class="fa-solid fa-eye"></i></a>
                     </td>
 
                     <?php if($offering['usesFlowcharts']): ?>
-                        <td class="center">
+                        <td class="center" title="Flowcharts">
                             <a title="Flowcharts" target="_blank"  href="/flowcharts/projects/<?= $assistant["id"] ?>">
-                                <i class="fa-regular fa-chart-bar"></i>
+                                <i class="fa-regular fa-chart-bar">stu_user_id</i>
                             </a>
                         </td>
                     <?php endif; ?>
@@ -198,13 +200,14 @@
                         </a>
                     </td>
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $student['id'] ?>" data-auth="student"></i>
+                        data-uid="<?= $student['id'] ?>" data-auth="student"
+                        data-eid="<?= $student['eid'] ?>"></i>
                     </td>
-                    <td class="center">
+                    <td class="center" title="Video Views">
                         <a href="W1D1/views/<?= $student['id'] ?>"><i class="fa-solid fa-eye"></i></a>
                     </td>
                     <?php if($offering['usesFlowcharts']): ?>
-                        <td class="center">
+                        <td class="center" title="Flowcharts">
                             <a title="Flowcharts" target="_blank"  href="/flowcharts/projects/<?= $student["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
@@ -248,13 +251,14 @@
                         </a>
                     </td>                    
                     <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" 
-                        data-uid="<?= $student['id'] ?>" data-auth="observer"></i>
+                        data-uid="<?= $student['id'] ?>" data-auth="observer"
+                        data-eid="<?= $student['eid'] ?>"></i>
                     </td>
-                    <td class="center">
+                    <td class="center" title="Video Views">
                         <a href="W1D1/views/<?= $student['id'] ?>"><i class="fa-solid fa-eye"></i></a>
                     </td>
                     <?php if($offering['usesFlowcharts']): ?>
-                        <td class="center">
+                        <td class="center" title="Flowcharts">
                             <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $student["id"] ?>">
                                 <i class="fa-regular fa-chart-bar"></i>
                             </a>
@@ -351,7 +355,7 @@
         </div> <!-- overlay -->
         <form id="removeStudent" action="unenroll" method="post">
             <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
-            <input type="hidden" name="uid" value="" id="remove_uid" />
+            <input type="hidden" name="eid" value="" id="remove_eid" />
         </form>
     </body>
 </html>
