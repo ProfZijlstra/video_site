@@ -155,7 +155,7 @@
                     <?php if($offering['usesFlowcharts']): ?>
                         <td class="center" title="Flowcharts">
                             <a title="Flowcharts" target="_blank"  href="/flowcharts/projects/<?= $assistant["id"] ?>">
-                                <i class="fa-regular fa-chart-bar">stu_user_id</i>
+                                <i class="fa-regular fa-chart-bar"></i>
                             </a>
                         </td>
                     <?php endif; ?>
