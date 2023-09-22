@@ -6,10 +6,10 @@
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
         <link rel="stylesheet" href="res/css/common-1.1.css">
-        <link rel="stylesheet" type="text/css" href="res/css/video-1.3.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/video-1.4.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
         <script src="res/js/markdown-1.0.js"></script>
-        <script src="res/js/video-1.7.js"></script>
+        <script src="res/js/video-1.8.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
@@ -28,9 +28,13 @@
                 <?php if (hasMinAuth('instructor')) : ?>
                     <?php if (!$isRemembered): ?>
                         <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                        <i title="Configure Videos" id="config-btn" class="fa-solid fa-gear"></i>
                     <?php else: ?>
                         <a href="reAuth">
                             <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="reAuth">
+                            <i title="Configure Videos" id="config-btn" class="fa-solid fa-gear"></i>
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -48,13 +52,46 @@
                 </table>
             </nav>
             <div id="tabs">
+<?php 
+$video_count = 0; 
+?>
 <?php foreach($files as $file => $info) : ?>
                 <div class='video_link <?= $info["parts"][0] == $video ? "selected" : ""?>'
                     data-show="<?= $info["parts"][0]?>_<?= $info["parts"][1] ?>"
                     id="<?= $info["parts"][0] ?>">
-                    <div><a href="<?= $info["parts"][0]?>"><?= $info["parts"][1] ?></a></div>
+                    <div>
+                        <a href="<?= $info["parts"][0]?>"><?= $info["parts"][1] ?></a>
+                        <?php if (hasMinAuth('instructor')) : ?>
+                            <span class="config">
+<?php
+$decrease = true;
+$increase = true; 
+if ($video_count == 0) { 
+    $decrease = false;
+}
+if ($video_count == (count($files) - 1)) {
+    $increase = false;
+}
+?>
+                                <i title="Move video up" class="fa-solid fa-arrow-up <?= !$decrease ? "disabled" : "" ?>" 
+                                    <?php if($increase): ?>
+                                        data-file="<?= $info["file"] ?>" 
+                                        data-prev_file="<?= $files[$video_count - 1]["file"]?>" 
+                                    <?php endif; ?>>
+                                </i>
+                                <i title="Move video down" class="fa-solid fa-arrow-down <?= !$increase ? "disabled" : ""?>" 
+                                    <?php if($decrease): ?>
+                                        data-file="<?= $info["file"] ?>" 
+                                        data-next_file="<?= $files[$video_count + 1]["file"]?>" 
+                                    <?php endif; ?>>
+                                </i>
+                                <i title="Edit title" class="fa-regular fa-pen-to-square" data-title="<?= $info["parts"][1] ?>" data-file="<?= $info["file"] ?>"></i>
+                            </span>
+                        <?php endif; ?>
+                    </div>
                     <div class="info"></div>
                 </div>
+    <?php $video_count++ ?>
 <?php endforeach; ?>
             </div>
             <div id="total" 
@@ -66,6 +103,11 @@
                     <i class="fa-solid fa-arrow-left"></i>
                     Back to Overview
                 </a>
+                <?php if (hasMinAuth('instructor')) : ?>
+                    <span class="config">
+                        <i title="Add Video" class="fa-solid fa-plus" id="add_video"></i>
+                    </span>
+                <?php endif; ?>
             </div>
         </nav>
         <main id="day" data-id="<?= $days[$day]["id"] ?>">
@@ -273,7 +315,52 @@ endforeach;
         <?php if (hasMinAuth('instructor')) : ?>
             <div id="overlay">
                 <i id="close-overlay" class="fas fa-times-circle"></i>
+
+                <div id="edit_modal" class="modal hide">
+                    <h2>Edit Video Title</h2>
+                    <form method="POST" action="title">
+                        <input type="hidden" name="file" id="video_file" value="" />
+                        <div class="line">
+                            <label>Title:</label>
+                            <input name="title" id="video_title" value="" />
+                        </div>
+                        <div class="submit">
+                            <button>Submit</button>
+                        </div>
+                    </form>
+                </div>
+
                 <div id="content"></div>
+
+                <!-- TODO instead of full page refresh for these this might be 
+                a good place to start using HTMX for partial page refreshes -->
+                <form method="post" action="decrease" id="decreaseSequence">
+                    <input type="hidden" name="file" id="up_file" />
+                    <input type="hidden" name="prev_file" id="prev_file" />
+                </form>
+                
+                <form method="post" action="increase" id="increaseSequence">
+                    <input type="hidden" name="file" id="down_file" />
+                    <input type="hidden" name="next_file" id="next_file" />
+                </form>
+
+                <div id="add_modal" class="modal hide">
+                    <h2>Add Video</h2>
+                    <form method="POST" action="add" enctype="multipart/form-data">
+                        <div class="line">
+                            <label>File:</label>
+                            <input name="file" type="file" id="add_file" value="" />
+                        </div>
+                        <div class="line">
+                            <label>Title:</label>
+                            <input name="title" id="video_title" value="" />
+                        </div>
+                        <div class="submit">
+                            <button>Submit</button>
+                        </div>
+                    </form>
+                </div>
+
             </div>
         <?php endif; ?>
 

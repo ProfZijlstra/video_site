@@ -227,13 +227,137 @@ class VideoCtrl {
 		setcookie("autoplay", $toggle, time() + 7*24*60*60, "/videos");
 	}
 
-		/**
+	/**
 	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/theater$!", sec="observer")
 	 */
 	public function theater() {
 		$toggle = filter_input(INPUT_POST, "toggle");
 		$_SESSION['user']["theater"] = $toggle;
 	}
+
+	/**
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/title$!", sec="instructor")
+	 */
+	public function title() {
+		global $URI_PARAMS;
+		$course_num = $URI_PARAMS[1];
+		$block = $URI_PARAMS[2];
+		$day = $URI_PARAMS[3];
+
+		$file = filter_input(INPUT_POST, "file");
+		$title = filter_input(INPUT_POST, "title");
+		
+		$this->videoDao->updateTitle($course_num, $block, $day, $file, $title);
+
+		$idx = substr($file, 0, 2);
+		return "Location: $idx";
+	}
+
+	/**
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$!", sec="instructor")
+	 */
+	public function increaseSequence() {
+		global $URI_PARAMS;
+		$course_num = $URI_PARAMS[1];
+		$block = $URI_PARAMS[2];
+		$day = $URI_PARAMS[3];
+
+		$file = filter_input(INPUT_POST, "file");
+		$next_file = filter_input(INPUT_POST, "next_file");
+		
+		$parts = explode("_", $file);
+		$seq = intval($parts[0]);
+		$seq += 1;
+
+		$parts = explode("_", $next_file);
+		$next_seq = intval($parts[0]);
+		$next_seq -=1 ;
+
+		$this->videoDao->updateSequence($course_num, $block, $day, $file, $seq);
+		$this->videoDao->updateSequence($course_num, $block, $day, $next_file, $next_seq);
+	
+		if ($seq < 10) {
+			$seq = "0" . $seq;
+		}
+		return "Location: $seq";
+	}
+
+	/**
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/decrease$!", sec="instructor")
+	 */
+	public function decreaseSequence() {
+		global $URI_PARAMS;
+		$course_num = $URI_PARAMS[1];
+		$block = $URI_PARAMS[2];
+		$day = $URI_PARAMS[3];
+
+		$file = filter_input(INPUT_POST, "file");
+		$prev_file = filter_input(INPUT_POST, "prev_file");
+		
+		$parts = explode("_", $file);
+		$seq = intval($parts[0]);
+		$seq -= 1;
+
+		$parts = explode("_", $prev_file);
+		$prev_seq = intval($parts[0]);
+		$prev_seq +=1 ;
+
+		$this->videoDao->updateSequence($course_num, $block, $day, $file, $seq);
+		$this->videoDao->updateSequence($course_num, $block, $day, $prev_file, $prev_seq);
+	
+		if ($seq < 10) {
+			$seq = "0" . $seq;
+		}
+		return "Location: $seq";
+	}
+
+	/**
+	 * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$!", sec="instructor")
+	 */
+	public function addVideo() {
+		global $URI_PARAMS;
+		$course_num = $URI_PARAMS[1];
+		$block = $URI_PARAMS[2];
+		$day = $URI_PARAMS[3];
+
+		// check upload error
+		if ($_FILES['file']['error']) {
+			print("Error uploading file (server settings)");
+			return;
+		}
+		
+		$video =  $_FILES["file"]['tmp_name'];
+		$title = filter_input(INPUT_POST, "title");
+
+		// get duration
+		$text = shell_exec("ffmpeg -i \"$video\" 2>&1");
+		$matches = array();
+		preg_match("/Duration: (\d\d:\d\d:\d\d\.\d\d)/", $text, $matches);
+		if ($matches) {
+			$duration = $matches[1];
+		} else {
+			// show error and exit
+			print("Uploaded file does not appear to be a video");
+			return;
+		}
+
+		// get next index number
+		$idx = $this->videoDao->nextIndex($course_num, $block, $day);
+		if ($idx < 10) {
+			$idx = "0" . $idx;
+		}
+
+		// get current timestamp
+		$now = new DateTimeImmutable();
+		$timeStamp = $now->format("Y-m-d G-i-s");
+
+		// finally move the uploaded file to the right location
+		$name = "{$idx}_{$title}_{$timeStamp}_{$duration}.mp4";
+		$this->videoDao->addVideo($course_num, $block, $day, $video, $name);
+
+		return "Location: $idx"; 
+	}
+
 }
 
 ?>

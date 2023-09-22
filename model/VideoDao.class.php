@@ -15,12 +15,12 @@ class VideoDao {
 		chdir("../../../");
 		$result = array();
 		foreach ($dirs as $dir) {
-			$result[$dir] = $this->forDay($course_num, $block, $dir);
+			$result[$dir] = $this->forDay($course_num, $block, $dir, true);
 		}
 		return $result;
 	}
 
-    public function forDay($course_num, $block, $day) {
+    public function forDay($course_num, $block, $day, $named = false) {
 		chdir("res/{$course_num}/{$block}/{$day}/vid/");
 		$files = glob("*.mp4");
 		$file_info = array();
@@ -36,10 +36,16 @@ class VideoDao {
 			$duration = $hundreth + ($seconds * 100) + ($minutes * 60 * 100) + ($hours * 60 * 60 * 100);
 			$totalDuration += $duration;
 			$parts = explode("_", $file);
-			$file_info["{$parts[0]}_{$parts[1]}"] = array();
-			$file_info["{$parts[0]}_{$parts[1]}"]["file"] = $file;
-			$file_info["{$parts[0]}_{$parts[1]}"]["duration"] = $duration;
-			$file_info["{$parts[0]}_{$parts[1]}"]["parts"] = $parts;
+			$data = array();
+			$data["file"] = $file;
+			$data["duration"] = $duration;
+			$data["parts"] = $parts;
+			if ($named) {
+				$file_info["{$parts[0]}_{$parts[1]}"] = $data;
+			} else {
+				$data["name"] = "{$parts[0]}_{$parts[1]}";
+				$file_info[] = $data;
+			}
 		}
 		$totalHours = floor($totalDuration / (60 * 60 * 100));
 		$totalMinutes = intval($totalDuration / (60*100)) % 60;
@@ -135,5 +141,50 @@ class VideoDao {
 				chdir("..");
 			}
 		}
+	}
+
+	public function addVideo($course, $block, $day, $tmp, $name) {
+		$cwd = getcwd();
+		if (!str_ends_with($cwd, "res/$course/$block/$day/vid")) {
+			mkdir("res/$course/$block/$day/vid/", 0775, true);
+			chdir("res/$course/$block/$day/vid/");
+		}
+		move_uploaded_file($tmp, "$name");
+	}
+
+	public function nextIndex($course, $block, $day) {
+		// get the index of the last file and add one
+		// probably better than counting the files and adding one
+		chdir("res/$course/$block/$day/vid/");
+		$videos = glob("*.mp4");
+		if (count($videos) > 0) {
+			$last = $videos[count($videos) - 1];
+			$parts = explode("_", $last);
+			$idx = $parts[0];
+			return $idx + 1;	
+		}
+		return 1;
+	}
+
+	public function updateTitle($course, $block, $day, $file, $title) {
+		$this->updatePart($course, $block, $day, $file, 1, $title);
+	}
+
+	public function updateSequence($course, $block, $day, $file, $value) {
+		if (!is_numeric($value)) {
+			return;
+		}
+		if ($value < 10) {
+			$value = "0" . $value;
+		}
+		$this->updatePart($course, $block, $day, $file, 0, $value);
+	}
+
+	private function updatePart($course, $block, $day, $file, $part, $upd) {
+		chdir("res/$course/$block/$day/vid/");
+		$parts = explode("_", $file);
+		$parts[$part] = $upd;
+		$upd = implode("_", $parts);
+		rename($file, $upd);
 	}
 }

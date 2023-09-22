@@ -114,7 +114,7 @@ window.addEventListener('load', () => {
     // keyboard controls
     video?.focus();
     document.addEventListener('keydown', (e) => {
-        if (e.target.tagName == "TEXTAREA") {
+        if (e.target.tagName == "TEXTAREA" || e.target.tagName == "INPUT") {
             return;
         }
         switch (e.code) {
@@ -129,8 +129,14 @@ window.addEventListener('load', () => {
                 video.pause();
             }
             break;
+        case "ArrowLeft":
+            video.currentTime -= 10;
+            break;
         case "KeyJ":
             video.currentTime -= 5;
+            break;
+        case "ArrowRight":
+            video.currentTime += 10;
             break;
         case "KeyL":
             video.currentTime += 5;

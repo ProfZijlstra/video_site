@@ -1,6 +1,6 @@
 window.addEventListener("load", () => {
   // display on page summary when clicking info button
-  document.getElementById("info-btn")?.addEventListener("click", function () {
+  document.getElementById("info-btn").onclick = function () {
     const e = React.createElement;
     const offering_id = document.getElementById('offering').dataset.id;
     fetch('info').then(response => response.json()).then(function (json) {
@@ -16,25 +16,25 @@ window.addEventListener("load", () => {
       }
     });
     fetch(`enrollment?offering_id=${offering_id}`).then(response => response.json()).then(json => INFO.setEnrollment(json));
-  });
+  };
   document.getElementById("close-overlay").onclick = INFO.hideTables;
   document.getElementById("overlay").onclick = function (evt) {
     if (evt.target == this) {
       INFO.hideTables();
     }
   };
-  document.getElementById("clone")?.addEventListener("click", function () {
+  document.getElementById("clone").onclick = function () {
     document.getElementById("overlay").classList.add("visible");
     document.getElementById('clone_modal').classList.remove('hide');
     document.getElementById('delete_modal').classList.add('hide');
     document.getElementById('edit_modal').classList.add('hide');
-  });
-  document.getElementById("delete")?.addEventListener("click", function () {
+  };
+  document.getElementById("delete").onclick = function () {
     document.getElementById("overlay").classList.add("visible");
     document.getElementById('clone_modal').classList.add('hide');
     document.getElementById('edit_modal').classList.add('hide');
     document.getElementById('delete_modal').classList.remove('hide');
-  });
+  };
   function editDay(day_id, desc, evt) {
     evt.preventDefault();
     evt.stopPropagation();
@@ -45,7 +45,7 @@ window.addEventListener("load", () => {
     document.getElementById('day_id').value = day_id;
     document.getElementById('day_desc').setAttribute("placeholder", desc);
   }
-  document.getElementById("edit")?.addEventListener("click", function () {
+  document.getElementById("edit").onclick = function () {
     const divs = document.querySelectorAll("div.data");
     for (const div of divs) {
       const nextSib = div.querySelector("time");
@@ -55,5 +55,5 @@ window.addEventListener("load", () => {
       edit.onclick = editDay.bind(null, div.dataset.day_id, text);
       div.insertBefore(edit, nextSib);
     }
-  });
+  };
 });
