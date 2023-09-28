@@ -75,7 +75,7 @@ class AnswerDao {
         $stmt = $this->db->prepare(
 			"INSERT INTO answer 
 			VALUES(NULL, '', :question_id, :user_id, NOW(), NULL, 
-                :points, :comment)"
+                :points, :comment, 0)"
 		);
 		$stmt->execute(array(
             "question_id" => $question_id,
