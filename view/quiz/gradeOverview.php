@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common-1.1.css">
+        <link rel="stylesheet" href="res/css/common-1.2.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <style>
             #content h2 {

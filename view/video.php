@@ -5,8 +5,8 @@
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
-        <link rel="stylesheet" href="res/css/common-1.1.css">
-        <link rel="stylesheet" type="text/css" href="res/css/video-1.4.css" />
+        <link rel="stylesheet" href="res/css/common-1.2.css">
+        <link rel="stylesheet" type="text/css" href="res/css/video-1.5.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
         <script src="res/js/markdown-1.1.js"></script>
         <script src="res/js/video-1.8.js"></script>

@@ -6,7 +6,7 @@ a {
     color: black;
 }
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 header {
     height: auto;
@@ -99,9 +99,6 @@ nav#videos div.video_link {
     position: relative;
     min-height: 15px;
 }
-nav#videos div.video_link:hover {
-    font-weight: bold;
-}
 nav#videos div.video_link.selected { 
     cursor: default;
     background-color: white;
@@ -109,11 +106,6 @@ nav#videos div.video_link.selected {
     position: relative;
     left: 1px;
     margin-left: 1px;
-    border-left: 1px solid black;
-    border-bottom-left-radius: 10px;
-}
-nav#videos div.video_link.selected:hover {
-    font-weight: normal;
 }
 nav#videos div#back {
     text-align: center;
