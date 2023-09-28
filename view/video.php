@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common-1.1.css">
         <link rel="stylesheet" type="text/css" href="res/css/video-1.4.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
-        <script src="res/js/markdown-1.0.js"></script>
+        <script src="res/js/markdown-1.1.js"></script>
         <script src="res/js/video-1.8.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>

@@ -16,7 +16,7 @@ const MARKDOWN = (function() {
     function getHtmlForMarkdown(evt) {
         evt.preventDefault();
         let parent = this.parentNode;
-        while (!parent.classList.contains('textContainer')) {
+        while (parent.classList && !parent.classList.contains('textContainer')) {
             parent = parent.parentNode;
         }
 

@@ -15,7 +15,7 @@
             }
         </style>
         <script src="res/js/lib/prism.js"></script>
-        <script src="res/js/markdown-1.0.js"></script>
+        <script src="res/js/markdown-1.1.js"></script>
         <script src="res/js/quiz/gradeUser.js"></script>
     </head>
     <body>
