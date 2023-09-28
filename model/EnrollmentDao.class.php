@@ -122,7 +122,18 @@ class EnrollmentDao {
 			"block" => $block
 		));
 		return $stmt->fetch();
+	}
 
+	public function isEnrolled($user_id, $offering_id) {
+		$stmt = $this->db->prepare(
+			"SELECT * FROM enrollment AS e 
+			WHERE e.user_id = :user_id
+			AND e.offering_id = :offering_id");
+		$stmt->execute(array(
+			"user_id" =>  $user_id,
+			"offering_id" => $offering_id
+		));
+		return $stmt->fetch() != false;
 	}
 }
 
