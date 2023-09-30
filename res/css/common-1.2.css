@@ -8,6 +8,9 @@ a {
 a:hover {
     text-decoration: none;
 }
+.error {
+    color: red;
+}
 header {
     height: 80px;
 }

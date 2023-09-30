@@ -45,6 +45,10 @@
             </nav>
         <?php endif; ?>
         <div id="content">
+            <?php if ($msg) : ?>
+                <p class="error"><?= $msg ?></p>
+            <?php endif; ?>
+
             <?php foreach ($offerings as $offering) : ?>
                 <div class="offering">
                     <a href="<?= $offering["number"] . "/" . $offering["block"] . "/" ?>">
