@@ -35,7 +35,7 @@
             }
 
         </style>
-        <script src="res/js/enrollment-1.3.js"></script>
+        <script src="res/js/enrollment-1.4.js"></script>
         <script src="res/js/user.js"></script>
     </head>
     <body>

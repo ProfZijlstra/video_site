@@ -28,12 +28,14 @@ window.addEventListener("load", () => {
     // show upload class list modal
     const overlay = document.getElementById("overlay");
     document.getElementById("upload").addEventListener("click", () => {
+        ensureLoggedIn();
         overlay.classList.add("visible");
         document.getElementById("upload_modal").classList.remove("hide");
     });
 
     // show enroll user modal
     document.getElementById("addUser").addEventListener("click", () => {
+        ensureLoggedIn();
         overlay.classList.add("visible");
         document.getElementById("enroll_modal").classList.remove("hide");
         document.getElementById("emailField").focus();
@@ -61,4 +63,16 @@ window.addEventListener("load", () => {
             return false;
         }
     };
+
+    // TODO this should probably go in its own file and get used on other
+    // higher authorization pages
+    function ensureLoggedIn() {
+        fetch('hasSession')
+            .then(response => response.json())
+            .then(function (json) { 
+                if (!json.session) {
+                    window.location = "reAuth";
+                }
+            });        
+    }
 });

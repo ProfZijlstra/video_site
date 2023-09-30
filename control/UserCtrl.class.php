@@ -34,6 +34,17 @@ class UserCtrl {
     }
 
     /**
+     * @GET(uri="!^/.*hasSession$!", sec="none")
+     */
+    public function hasSession() {
+        $result = ["session" => true];
+        if (!array_key_exists("user", $_SESSION)) {
+            $result["session"] = false;
+        }
+        return $result;
+    }
+
+    /**
      * @GET(uri="!^/.*reAuth$!", sec="none")
      */
     public function reAuth() {
@@ -323,6 +334,17 @@ class UserCtrl {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         $this->userDao->setBadge($data["studentID"], $data["badge"]);
+    }
+
+    /**
+     * @GET(uri=uri="!^/remap$!", sec="admin")
+     */
+    public function remap() {
+        require 'AnnotationReader.class.php';
+        $ac = new AnnotationReader();
+        $ac->scan()->create_context();
+        $ac->write("context.php");  
+        return "Location: ../videos/";
     }
 
 }
