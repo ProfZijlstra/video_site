@@ -196,8 +196,13 @@ EOD;
         // check if user exists by email (receive user_id)
         $user_id = $this->userDao->getUserId($email);
         if ($user_id) {
-            $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
-            $VIEW_DATA['msg'] = "Existing user {$email} enrolled";
+            // check if this user is already enrolled
+            if (!$this->enrollmentDao->isEnrolled($user_id, $offering_id)) {
+                $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
+                $VIEW_DATA['msg'] = "Existing user {$email} enrolled";    
+            } else {
+                $VIEW_DATA['msg'] = "User {$email} was already enrolled";    
+            }
             return "Location: enrolled";
         } 
 
