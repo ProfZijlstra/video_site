@@ -13,12 +13,12 @@ class MarkdownHlpr {
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/markdown$!", sec="observer")
      */
     public function markdownPreview() {
+        require_once("lib/Parsedown.php");
         global $VIEW_DATA;
 
         $shifted = filter_input(INPUT_GET, "markdown");
         $markdown = $this->ceasarShift($shifted);
 
-        require_once("lib/Parsedown.php");
         $VIEW_DATA["parsedown"] = new Parsedown();
         $VIEW_DATA['markdown'] = $markdown;
         return "markdown.php";

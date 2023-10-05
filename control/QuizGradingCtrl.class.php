@@ -97,6 +97,7 @@ class QuizGradingCtrl {
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)$!", sec="assistant")
      */
     public function gradeQuestion() {
+        require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -133,6 +134,7 @@ class QuizGradingCtrl {
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/(\d+)$!", sec="assistant")
      */
     public function gradeUser() {
+        require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
 

@@ -1,5 +1,4 @@
 <?php
-require "lib/Parsedown.php";
 
 /**
  * Video Controller Class
@@ -115,6 +114,7 @@ class VideoCtrl {
 	 * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$!", sec="observer")
 	 */
 	public function video() {
+		require_once("lib/Parsedown.php");
         global $URI_PARAMS;
 		global $VIEW_DATA;
 		$course_num = $URI_PARAMS[1];
