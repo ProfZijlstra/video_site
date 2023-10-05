@@ -18,6 +18,7 @@ class MarkdownHlpr {
         $shifted = filter_input(INPUT_GET, "markdown");
         $markdown = $this->ceasarShift($shifted);
 
+        require_once("lib/Parsedown.php");
         $VIEW_DATA["parsedown"] = new Parsedown();
         $VIEW_DATA['markdown'] = $markdown;
         return "markdown.php";
