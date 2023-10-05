@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="res/css/video-1.5.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
         <script src="res/js/markdown-1.1.js"></script>
-        <script src="res/js/video-1.8.js"></script>
+        <script src="res/js/video-1.9.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) : ?>
             <link rel="stylesheet" href="res/css/adm.css">
@@ -132,7 +132,7 @@ foreach($files as $info) :
             <i class="far fa-file-pdf"></i>
         </a>
         <?php endif; ?>
-        <video controls>
+        <video controls controlslist="nodownload">
             <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4"/>
         </video>
         <div class="progress">

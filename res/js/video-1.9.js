@@ -3,6 +3,12 @@ window.addEventListener('load', () => {
     const day_id = document.getElementById('day').dataset.id;
     const video = document.querySelector("video");
 
+    // disable right clicking
+    video.oncontextmenu = function() {
+        return false;
+    }
+
+
     // highlight url selected comment
     const hash = window.location.hash;
     if (hash && hash != 'commentForm' && (hash[1] == 'q' || hash[1] == 'r')) {
