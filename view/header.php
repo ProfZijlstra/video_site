@@ -10,14 +10,14 @@
         <a href="<?= $MY_BASE ?>/">
             <i class="fa-solid fa-flask-vial" title="Manalabs Videos"></i>&nbsp;
         </a>
-        <a href="<?= $MY_BASE ?>/<?= strtolower($course) ?>/<?= $block ?>/">
-            <span id="course_num"><?= strtoupper($course) ?></span>
+        <a href="<?= $MY_BASE ?>/<?= strtolower($course ?: "") ?>/<?= $block ?>/">
+            <span id="course_num"><?= strtoupper($course ?: "") ?></span>
             <span data-id="<?= $offering_id ?>" id="offering"> <?= $block ?> </span>
         </a>
     </div>
     <h1>
-        <span class="title" >
-            <?= $title ?> 
+        <span class="title">
+            <?= $title ?>
         </span>
     </h1>
 </header>
