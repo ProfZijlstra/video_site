@@ -114,7 +114,8 @@ class QuestionDao {
 
         $stmt = $this->db->prepare(
 			"INSERT INTO question 
-			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type)"
+			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
+                    :hasMarkDown, :mdlAnsHasMD)"
 		);
         foreach ($questions as $question) {
             $stmt->execute(array(
@@ -130,4 +131,4 @@ class QuestionDao {
         }
     }
 }
-?>
+
