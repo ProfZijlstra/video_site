@@ -388,6 +388,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`assignment` (
   `hasMarkDown` TINYINT NOT NULL,
   `start` DATETIME NOT NULL,
   `stop` DATETIME NOT NULL,
+  `visible` TINYINT NOT NULL,
   `allowLate` TINYINT NOT NULL,
   `type` VARCHAR(45) NOT NULL,
   `points` INT UNSIGNED NOT NULL,
