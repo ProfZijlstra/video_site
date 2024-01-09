@@ -7,81 +7,15 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.2.css">
-    <link rel="stylesheet" href="res/css/offering-1.1.css">
+    <link rel="stylesheet" href="res/css/offering-1.2.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) : ?>auto <?php endfor; ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
-
-        div#days div.data {
-            cursor: default;
-        }
-
-        div.data a.invisible {
-            color: gray;
-        }
-
-        div.data i.fa-plus-square {
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        div#days div.data a.edit {
-            width: auto;
-        }
-
-        div.modal {
-            width: 425px;
-        }
-
-        div.modal input[type="time"],
-        div.modal input[type="date"] {
-            width: 150px;
-        }
-
-        div.modal input#name {
-            width: 310px;
-        }
     </style>
-    <script>
-        window.addEventListener("load", () => {
-            // hide overlay and any/all modal(s)
-            function hide() {
-                overlay.classList.remove("visible");
-                const modals = document.querySelectorAll(".modal");
-                for (const modal of modals) {
-                    modal.classList.add("hide");
-                }
-            }
-            document.getElementById("close-overlay").onclick = hide;
-            document.getElementById("overlay").onclick = function(evt) {
-                if (evt.target == this) {
-                    hide();
-                }
-            };
-
-            // show add quiz modal
-            function showModal(evt) {
-                const day_id = this.parentNode.dataset.day_id;
-                const date = this.parentNode.dataset.date;
-                document.getElementById('day_id').value = day_id;
-                document.getElementById('startdate').value = date;
-                document.getElementById('stopdate').value = date;
-                overlay.classList.add("visible");
-                document.getElementById("add_quiz_modal").classList.remove("hide");
-                evt.stopPropagation();
-                document.getElementById('name').focus();
-            };
-            const adds = document.querySelectorAll("div.data i.fa-plus-square");
-            for (const add of adds) {
-                add.onclick = showModal;
-            }
-        });
-    </script>
+    <script src="res/js/assignment.js"></script>
 </head>
 
 <body>
@@ -106,7 +40,7 @@
             </div>
         </nav>
 
-        <div id="days">
+        <div id="days" class="lab">
             <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
                 <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
                     <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering["daysPerLesson"]; ?>
@@ -152,8 +86,8 @@
 
     <div id="overlay">
         <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div id="add_quiz_modal" class="modal hide">
-            <h3>Add Quiz</h3>
+        <div id="add_modal" class="modal hide">
+            <h3>Add Lab</h3>
             <form action="quiz" method="post" id="add_form">
                 <input type="hidden" name="day_id" value="<?= $day_id ?>" id="day_id" />
                 <div>
