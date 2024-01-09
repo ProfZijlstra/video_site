@@ -13,15 +13,18 @@
     <script src="res/js/attendance-1.3.js"></script>
     <style>
         div#days {
-            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++): ?>auto <?php endfor; ?>;
+            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) : ?>auto <?php endfor; ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
+
         i.fa-cloud-upload-alt {
             color: gray;
         }
+
         i.fa-cloud-upload-alt.GENERATED {
             color: black;
         }
+
         i.fa-cloud-upload-alt.EXPORTED {
             color: green;
         }
@@ -39,11 +42,11 @@
         </nav>
         <nav class="areas">
             <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
-            <?php if ($offering['hasQuiz']): ?>
-            <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
+            <?php if ($offering['hasQuiz']) : ?>
+                <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
             <?php endif; ?>
-            <?php if ($offering['hasLab']): ?>
-            <div title="Labs"><i class="fas fa-flask"></i></div>
+            <?php if ($offering['hasLab']) : ?>
+                <div title="Labs"><a href="lab"><i class="fas fa-flask"></i></a></div>
             <?php endif; ?>
             <div title="Attendance" class="active"><i class="fas fa-user-check"></i></div>
             <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
@@ -56,25 +59,18 @@
 
 
         <div id="days">
-            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
-                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++): ?>
-                    <?php $date = $start + ($w - 1)*60*60*24*$offering['daysPerLesson']*$offering['lessonsPerPart'] + ($d - 1)*60*60*24*$offering["daysPerLesson"]; ?>
+            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
+                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
+                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering["daysPerLesson"]; ?>
 
-                    <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now)? "curr" : ""?>"
-                        id="<?= "W{$w}D{$d}" ?>"
-                        data-day="<?= "W{$w}D{$d}" ?>" 
-                        data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>"
-                        data-date="<?= date("Y-m-d", $date) ?>">
+                    <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" data-date="<?= date("Y-m-d", $date) ?>">
 
-                        <?php foreach (["AM", "PM"] as $stype): ?>
+                        <?php foreach (["AM", "PM"] as $stype) : ?>
                             <?php $session = $days["W{$w}D{$d}"][$stype]; ?>
-                            <div class="session <?= $stype ?>" data-session_id="<?= $session["id"] ?>"
-                                data-stype="<?= $stype ?>">
+                            <div class="session <?= $stype ?>" data-session_id="<?= $session["id"] ?>" data-stype="<?= $stype ?>">
                                 <?= $stype ?>
                                 <i title="Add Meeting" class="far fa-plus-square"></i>
-                                <i title="Excused Absences" 
-                                    class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>"
-                                    data-excused='<?= json_encode($excused[$session['id']]) ?>'>
+                                <i title="Excused Absences" class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>" data-excused='<?= json_encode($excused[$session['id']]) ?>'>
                                 </i>
                                 <?php if ($session["meetings"]) : ?>
                                     <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
@@ -82,13 +78,13 @@
                                     </a>
                                 <?php endif; ?>
 
-                            <?php foreach ($session["meetings"] as $meeting) : ?>
-                                <div class="meeting">
-                                    <a href="meeting/<?= $meeting["id"] ?>">
-                                        <?= $meeting["title"] ?>
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
+                                <?php foreach ($session["meetings"] as $meeting) : ?>
+                                    <div class="meeting">
+                                        <a href="meeting/<?= $meeting["id"] ?>">
+                                            <?= $meeting["title"] ?>
+                                        </a>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                         <?php endforeach; ?>
 
@@ -111,7 +107,7 @@
                 <input type="hidden" id="session_id" name="session_id" />
                 <div>
                     <label>Start</label>
-                    <input type="text" name="start" id="start" required pattern="([0-1]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
+                    <input type="text" name="start" id="start" required pattern="([0-1]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37" />
                 </div>
                 <div>
                     <label>File*</label>
@@ -122,7 +118,7 @@
             </form>
 
             <h4>Or Manually Create a Meeting</h4>
-            <form name="create" action="meeting" method="post"> 
+            <form name="create" action="meeting" method="post">
                 <input type="hidden" id="manual_session_id" name="session_id" />
                 <div>
                     <label>Title</label>
@@ -134,11 +130,11 @@
                 </div>
                 <div>
                     <label>Start</label>
-                    <input type="text" name="start" id="manual_start" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
+                    <input type="text" name="start" id="manual_start" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37" />
                 </div>
                 <div>
                     <label>Stop</label>
-                    <input type="text" name="stop" id="manual_stop" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37"/>
+                    <input type="text" name="stop" id="manual_stop" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37" />
                 </div>
                 <div class="btn">
                     <button type="submit">Create Meeting</button>
@@ -157,8 +153,8 @@
                 <div>
                     <label>Add Student</label>
                     <select name="teamsName">
-                        <?php foreach($enrollment as $student): ?>
-                            <option><?= $student["teamsName"]?></option>
+                        <?php foreach ($enrollment as $student) : ?>
+                            <option><?= $student["teamsName"] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -177,14 +173,14 @@
             <div>
                 <label>Week</label>
                 <select id="week">
-                    <?php for ($w = 1; $w <= $offering['lessonParts']; $w++): ?>
+                    <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
                         <option value="<?= $w ?>">Week <?= $w ?></option>
                     <?php endfor; ?>
                 </select>
             </div>
             <div class="btn">
                 <button type="button" id="physical_btn">Get Report</button>
-            </div>            
+            </div>
         </div>
     </div>
 

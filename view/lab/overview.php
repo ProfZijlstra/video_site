@@ -89,10 +89,10 @@
     <main>
         <nav class="areas">
             <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
-            <div title="Quizzes" class="active"><i class="fas fa-vial"></i></div>
-            <?php if ($offering['hasLab']) : ?>
-                <div title="Labs"><a href="lab"><i class="fas fa-flask"></i></a></div>
+            <?php if ($offering['hasQuiz']) : ?>
+                <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
             <?php endif; ?>
+            <div title="Labs" class="active"><i class="fas fa-flask"></i></div>
             <?php if (hasMinAuth('assistant')) : ?>
                 <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
             <?php endif; ?>
@@ -104,12 +104,6 @@
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </div>
-        </nav>
-
-        <nav class="tools">
-            <a href="quiz/report">
-                <i title="Download Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
-            </a>
         </nav>
 
         <div id="days">

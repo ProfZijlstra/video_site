@@ -318,9 +318,9 @@ UPDATE `user` SET isFaculty = 1 WHERE type = 'admin';
 ALTER TABLE `user` DROP `type`;
 ALTER TABLE `user` DROP hasPicture; -- cleanup, still not using this 
 
-ALTER TABLE `enrollment` ADD COLUMN `auth` VARCHAR(45) NOT NULL DEFAULT 'observer';
-UPDATE `enrollment` SET `auth` = 'student';
-INSERT INTO `enrollment` (id, user_id, offering_id, auth) SELECT NULL, `fac_user_id`, `id`, 'instructor' FROM `offering`;
+ALTER TABLE `enrollment` ADD COLUMN `auth` VARCHAR(45) NOT NULL DEFAULT "observer";
+UPDATE `enrollment` SET `auth` = "student";
+INSERT INTO `enrollment` (id, user_id, offering_id, auth) SELECT NULL, `fac_user_id`, `id`, "instructor" FROM `offering`;
 ALTER TABLE `offering` DROP `fac_user_id`;
 
 -- add indexes to: user.isAdmin user.isFaculty and enrollment.auth
@@ -350,7 +350,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`excused` (
 ALTER TABLE `excused` ADD COLUMN `reason` VARCHAR(45) NOT NULL;
 
 -- 14th of June 2023
-UPDATE `question` SET `type` = 'text' WHERE `type` = 'markdown' OR `type` = 'plain_text';
+UPDATE `question` SET `type` = 'text' WHERE `type` = "markdown" OR `type` = "plain_text";
 ALTER TABLE `answer` ADD COLUMN `hasMarkDown` TINYINT UNSIGNED DEFAULT 0;
 UPDATE `answer` SET `hasMarkDown` = 1;
 ALTER TABLE `question` ADD COLUMN `hasMarkDown` TINYINT UNSIGNED DEFAULT 0;
@@ -376,3 +376,108 @@ ENGINE = InnoDB;
 
 ALTER TABLE `offering` ADD COLUMN `hasCAMS` TINYINT UNSIGNED DEFAULT 0;
 ALTER TABLE `class_session` CHANGE `type` `type` CHAR(3);
+
+-- 30 Sept 2023 Lab subsystem
+-- -----------------------------------------------------
+-- Table `manalabs`.`assignment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`assignment` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `day_id` INT NOT NULL,
+  `desc` TEXT NOT NULL,
+  `hasMarkDown` TINYINT NOT NULL,
+  `start` DATETIME NOT NULL,
+  `stop` DATETIME NOT NULL,
+  `allowLate` TINYINT NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `points` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_assignment_day1_idx` (`day_id` ASC) VISIBLE,
+  CONSTRAINT `fk_assignment_day1`
+    FOREIGN KEY (`day_id`)
+    REFERENCES `manalabs`.`day` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `manalabs`.`submission`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`submission` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `assignment_id` BIGINT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
+  `group` VARCHAR(45) NULL,
+  `submitted` DATETIME NOT NULL,
+  `duration` TIME NOT NULL,
+  `stuComment` TEXT NOT NULL,
+  `stuCmntHasMD` TINYINT UNSIGNED NOT NULL,
+  `points` FLOAT NULL,
+  `gradeComment` TEXT NULL,
+  `gradeCmntHasMD` TINYINT UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hw_submit_assignment1_idx` (`assignment_id` ASC) VISIBLE,
+  INDEX `fk_hw_submit_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_hw_submit_assignment1`
+    FOREIGN KEY (`assignment_id`)
+    REFERENCES `manalabs`.`assignment` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hw_submit_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `manalabs`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `manalabs`.`requirement`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`requirement` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `assignment_id` BIGINT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `seq` INT UNSIGNED NOT NULL,
+  `desc` TEXT NULL,
+  `hasMarkDown` TINYINT UNSIGNED NULL,
+  `isOptional` TINYINT UNSIGNED NOT NULL,
+  `weight` TINYINT UNSIGNED NOT NULL,
+  `maxCompletion` TINYINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_requirement_assignment1_idx` (`assignment_id` ASC) VISIBLE,
+  CONSTRAINT `fk_requirement_assignment1`
+    FOREIGN KEY (`assignment_id`)
+    REFERENCES `manalabs`.`assignment` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `manalabs`.`fulfillment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`fulfillment` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `text` TEXT NOT NULL,
+  `hasMarkDown` TINYINT NULL,
+  `completion` TINYINT UNSIGNED NOT NULL,
+  `requirement_id` INT UNSIGNED NOT NULL,
+  `submission_id` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_fulfillment_hw_submit1_idx` (`submission_id` ASC) VISIBLE,
+  INDEX `fk_fulfillment_requirement1_idx` (`requirement_id` ASC) VISIBLE,
+  CONSTRAINT `fk_fulfillment_hw_submit1`
+    FOREIGN KEY (`submission_id`)
+    REFERENCES `manalabs`.`submission` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fulfillment_requirement1`
+    FOREIGN KEY (`requirement_id`)
+    REFERENCES `manalabs`.`requirement` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
