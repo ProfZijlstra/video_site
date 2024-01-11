@@ -248,7 +248,7 @@ class UserCtrl
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
         try {
-            $uid = $this->userDao->insert(
+            $this->userDao->insert(
                 $first,
                 $last,
                 $knownAs,
@@ -260,7 +260,7 @@ class UserCtrl
                 $isAdmin,
                 $isFaculty
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             $error = true;
         }
 

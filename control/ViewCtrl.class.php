@@ -37,8 +37,6 @@ class ViewCtrl
     #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/stop$!", sec: "none")]
     public function stop()
     {
-        global $URI_PARAMS;
-
         $view_id = filter_input(INPUT_POST, "view_id");
         $this->viewDao->stop($view_id, $_SESSION['user']['speed']);
     }

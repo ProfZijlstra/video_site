@@ -298,7 +298,7 @@ Manalabs Attendance System.
             $hlpr->login($pwd);
             $hlpr->submitAttendance($students, $stype, $date, $start, $stop);
             $hlpr->logout();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return "error/500.php";
         }
 
