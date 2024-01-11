@@ -3,55 +3,40 @@
 /**
  * Comment Controller Class
  * @author mzijlstra 09/24/2021
- *
- * @Controller
  */
-class CommentCtrl {
 
-    /**
-     * @Inject("CommentDao")
-     */
+#[Controller]
+class CommentCtrl
+{
+
+    #[Inject('CommentDao')]
     public $commentDao;
 
-    /**
-     * @Inject("CommentVoteDao")
-     */
+    #[Inject('CommentVoteDao')]
     public $commentVoteDao;
 
-    /**
-     * @Inject("ReplyDao")
-     */
+    #[Inject('ReplyDao')]
     public $replyDao;
 
-    /**
-     * @Inject("ReplyVoteDao")
-     */
+    #[Inject('ReplyVoteDao')]
     public $replyVoteDao;
 
-    /**
-     * @Inject("UserDao")
-     */
+    #[Inject('UserDao')]
     public $userDao;
 
-    /**
-     * @Inject('MarkdownHlpr')
-     */
+    #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
-    /**
-     * @Inject('MailHlpr')
-     */
+    #[Inject('MailHlpr')]
     public $mailHlpr;
 
-    /**
-     * @Inject('EnrollmentDao')
-     */
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/comment$!", sec="observer")
-     */
-    public function add() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/comment$!", sec: "observer")]
+    public function add()
+    {
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -63,7 +48,7 @@ class CommentCtrl {
         $tab = filter_input(INPUT_POST, "tab");
 
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
-        $to = [ $ins['email'], $ins['teamsName'] ];
+        $to = [$ins['email'], $ins['teamsName']];
         $comment = "";
         if ($shifted) {
             $comment = $this->markdownCtrl->ceasarShift($shifted);
@@ -81,10 +66,10 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         return "Location: {$tab}#q{$id}";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delComment$!", sec="observer")
-     */
-    public function del() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delComment$!", sec: "observer")]
+    public function del()
+    {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         $comment = $this->commentDao->get($id);
@@ -94,18 +79,17 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         return "Location: {$tab}#commentForm";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getComment$!", sec="observer")
-     */
-    public function get() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getComment$!", sec: "observer")]
+    public function get()
+    {
         $id = filter_input(INPUT_GET, "id");
         return $this->commentDao->get($id);
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updComment$!", sec="observer")
-     */
-    public function update() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updComment$!", sec: "observer")]
+    public function update()
+    {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         $shifted = filter_input(INPUT_POST, "text");
@@ -126,40 +110,45 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upvote$!", sec="observer")
      */
-    public function upvote() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upvote$!", sec: "observer")]
+    public function upvote()
+    {
         return array("vid" => $this->vote("q", 1), "type" => "up");
     }
 
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downvote$!", sec="observer")
      */
-    public function downvote() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downvote$!", sec: "observer")]
+    public function downvote()
+    {
         return array("vid" => $this->vote("q", -1), "type" => "down");
     }
 
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upreply$!", sec="observer")
      */
-    public function upreply() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upreply$!", sec: "observer")]
+    public function upreply()
+    {
         return array("vid" => $this->vote("r", 1), "type" => "up");
     }
 
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downreply$!", sec="observer")
      */
-    public function downreply() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downreply$!", sec: "observer")]
+    public function downreply()
+    {
         return array("vid" => $this->vote("r", -1), "type" => "down");
     }
 
-    private function vote($q_r, $up_down) {
+    private function vote($q_r, $up_down)
+    {
         $user_id = $_SESSION['user']['id'];
         $id = filter_input(INPUT_POST, "id");
         $vid = filter_input(INPUT_POST, "vid");
@@ -201,10 +190,10 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         }
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/addReply$!", sec="observer")
-     */
-    public function addReply() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/addReply$!", sec: "observer")]
+    public function addReply()
+    {
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -222,7 +211,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         $op_email = $this->commentDao->getUserEmail($qid);
         $id = $this->replyDao->add($text, $user_id, $qid);
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
-        $ins_to = [ $ins['email'], $ins['teamsName'] ];
+        $ins_to = [$ins['email'], $ins['teamsName']];
 
         $message = $user["knownAs"] . " " . $user["lastname"] .
             " says:\n\n$text\n
@@ -234,18 +223,17 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
         return "Location: {$tab}#r{$id}";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getReply$!", sec="observer")
-     */
-    public function getReply() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getReply$!", sec: "observer")]
+    public function getReply()
+    {
         $id = filter_input(INPUT_GET, "id");
         return $this->replyDao->get($id);
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updReply$!", sec="observer")
-     */
-    public function updateReply() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updReply$!", sec: "observer")]
+    public function updateReply()
+    {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
         $shifted = filter_input(INPUT_POST, "text");
@@ -262,10 +250,10 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
         return "Location: {$tab}#r{$id}";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delReply$!", sec="observer")
-     */
-    public function delReply() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delReply$!", sec: "observer")]
+    public function delReply()
+    {
         $id = filter_input(INPUT_POST, "id");
         $tab = filter_input(INPUT_POST, "tab");
 

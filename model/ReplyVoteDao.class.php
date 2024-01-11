@@ -1,17 +1,15 @@
 <?php
+
 /**
  * ReplyVote DAO Class
  *
  * @author mzijlstra 09/26/2021
- * @Repository
- *
  */
+
+#[Repository]
 class ReplyVoteDao
 {
-    /**
-     * @var PDO PDO database connection object
-     * @Inject("DB")
-     */
+    #[Inject('DB')]
     public $db;
 
     public function add($reply_id, $user_id, $vote)

@@ -1,33 +1,26 @@
 <?php
+
 /**
  * Enrollment Controller Class
  * @author mzijlstra 2023-01-04
- * 
- * @Controller
  */
-class EnrollmentCtrl {
-   	/**
-	 * @Inject("OfferingDao")
-	 */
-	public $offeringDao;
-    /**
-     * @Inject('EnrollmentDao')
-     */
+
+#[Controller]
+class EnrollmentCtrl
+{
+    #[Inject('OfferingDao')]
+    public $offeringDao;
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
-    /**
-     * @Inject('UserDao')
-     */
+    #[Inject('UserDao')]
     public $userDao;
-    /**
-     * @Inject('MailHlpr')
-     */
+    #[Inject('MailHlpr')]
     public $mailHlpr;
 
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec="instructor")
-     */
-    public function viewEnrollment() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec: "instructor")]
+    public function viewEnrollment()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -66,10 +59,10 @@ class EnrollmentCtrl {
         return "enrollment.php";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec="instructor")
-     */
-    public function replaceEnrollment() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec: "instructor")]
+    public function replaceEnrollment()
+    {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         if ($offering_id && $_FILES["list"]) {
             // delete current enrollment
@@ -82,10 +75,10 @@ class EnrollmentCtrl {
         return "Location: enrolled";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/observe$!", sec="login")
-     */
-    public function requestObserve() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/observe$!", sec: "login")]
+    public function requestObserve()
+    {
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -104,7 +97,7 @@ https://manalabs.org/videos/observe?uid=$user_id&oid=$oid
 
 EOD;
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
-        $to = [ $ins['email'], $ins['teamsName'] ];
+        $to = [$ins['email'], $ins['teamsName']];
         $this->mailHlpr->mail($to, "Observer Request", $msg);
 
         $msg = <<<EOD
@@ -114,27 +107,26 @@ granted or denied.
 
 Note: this is an automated email
 EOD;
-        
+
         $email = $_SESSION['user']['email'];
         $name = "{$first} {$last}";
-        $to = [$email, $name]; 
+        $to = [$email, $name];
         $this->mailHlpr->mail($to, "Observer Request", $msg);
-        
+
         return "Location: ../$block/";
     }
 
-    /**
-     * @GET(uri="!^/observe$!", sec="instructor")
-     */
-    public function showRequest() {
+    #[Get(uri: "!^/observe$!", sec: "instructor")]
+    public function showRequest()
+    {
         global $VIEW_DATA;
-        
+
         $offering_id = filter_input(INPUT_GET, "oid", FILTER_SANITIZE_NUMBER_INT);
         $user_id = filter_input(INPUT_GET, "uid", FILTER_SANITIZE_NUMBER_INT);
 
         $user = $this->userDao->retrieve($user_id);
         $offering = $this->offeringDao->getOfferingById($offering_id);
-        
+
         $VIEW_DATA['first'] = $user['firstname'];
         $VIEW_DATA['last'] = $user['lastname'];
         $VIEW_DATA['course'] = $offering['course_number'];
@@ -145,17 +137,17 @@ EOD;
         return "reviewRequest.php";
     }
 
-    /**
-     * @POST(uri="!^/observe$!", sec="instructor")
-     */
-    public function observerAllowDeny() {
+
+    #[Post(uri: "!^/observe$!", sec: "instructor")]
+    public function observerAllowDeny()
+    {
         $offering_id = filter_input(INPUT_POST, "oid", FILTER_SANITIZE_NUMBER_INT);
         $user_id = filter_input(INPUT_POST, "uid", FILTER_SANITIZE_NUMBER_INT);
         $allow = filter_input(INPUT_POST, "allow", FILTER_SANITIZE_NUMBER_INT);
-        
+
         $user = $this->userDao->retrieve($user_id);
         $offering = $this->offeringDao->getOfferingById($offering_id);
-        
+
         $email = $user['email'];
         $course = $offering['course_number'];
         $block = $offering['block'];
@@ -177,10 +169,10 @@ EOD;
     }
 
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enroll$!", sec="instructor")
-     */
-    public function enroll() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enroll$!", sec: "instructor")]
+    public function enroll()
+    {
         global $VIEW_DATA;
         // receive offering_id, email and auth
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
@@ -199,12 +191,12 @@ EOD;
             // check if this user is already enrolled
             if (!$this->enrollmentDao->isEnrolled($user_id, $offering_id)) {
                 $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
-                $VIEW_DATA['msg'] = "Existing user {$email} enrolled";    
+                $VIEW_DATA['msg'] = "Existing user {$email} enrolled";
             } else {
-                $VIEW_DATA['msg'] = "User {$email} was already enrolled";    
+                $VIEW_DATA['msg'] = "User {$email} was already enrolled";
             }
             return "Location: enrolled";
-        } 
+        }
 
         // receive first, last, knownAs, studentId, teamsName, pass 
         $first = filter_input(INPUT_POST, "first");
@@ -221,61 +213,69 @@ EOD;
             $studentID = 0;
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
-        $user_id = $this->userDao->insert($first, $last, $knownAs, $email, 
-                                    $studentID, $teamsName, $hash, 1, 0, 0);
+        $user_id = $this->userDao->insert(
+            $first,
+            $last,
+            $knownAs,
+            $email,
+            $studentID,
+            $teamsName,
+            $hash,
+            1,
+            0,
+            0
+        );
         $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
 
         $VIEW_DATA['msg'] = "Enrolled new user {$email}";
         return "Location: enrolled";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/config_enroll$!", sec="instructor")
-     */
-    public function update() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/config_enroll$!", sec: "instructor")]
+    public function update()
+    {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-		$user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
+        $user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
         $auth = filter_input(INPUT_POST, "auth");
 
         $this->enrollmentDao->update($user_id, $offering_id, $auth);
         return "Location: enrolled";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/unenroll$!", sec="instructor")
-     */
-    public function unenroll() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/unenroll$!", sec: "instructor")]
+    public function unenroll()
+    {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-		$enrollment_id = filter_input(INPUT_POST, "eid", FILTER_SANITIZE_NUMBER_INT);
+        $enrollment_id = filter_input(INPUT_POST, "eid", FILTER_SANITIZE_NUMBER_INT);
         $this->enrollmentDao->unenroll($enrollment_id, $offering_id);
         return "Location: enrolled";
     }
 
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signup$!", sec="none")
-     */
-    public function msdSignupPage() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signup$!", sec: "none")]
+    public function msdSignupPage()
+    {
         global $VIEW_DATA;
         global $URI_PARAMS;
         $course_number = $URI_PARAMS[1];
         $VIEW_DATA["block"] = $URI_PARAMS[2];
         $VIEW_DATA["course"] = $course_number;
-        
+
 
         // only allow this functionality for MSD Pre-Enrollment
         if ($course_number != "sd300") {
-            return "error/404.php"; 
+            return "error/404.php";
         }
 
         $VIEW_DATA["title"] = "Course Signup";
         return "signup.php";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signedup$!", sec="none")
-     */
-    public function signedup() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signedup$!", sec: "none")]
+    public function signedup()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
         $VIEW_DATA["course"] = $URI_PARAMS[1];
@@ -284,10 +284,10 @@ EOD;
         return "signedup.php";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signup$!", sec="none")
-     */
-    public function msdSignup() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signup$!", sec: "none")]
+    public function msdSignup()
+    {
         global $VIEW_DATA;
         global $URI_PARAMS;
 
@@ -296,7 +296,7 @@ EOD;
 
         // only allow this functionality for MSD Pre-Enrollment
         if ($course_number != "sd300") {
-            return "error/404.php"; 
+            return "error/404.php";
         }
 
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
@@ -337,14 +337,24 @@ EOD;
         } else {
             // create user and enroll them in our course
             $hash = password_hash($pass, PASSWORD_DEFAULT);
-            $user_id = $this->userDao->insert($first, $last, $knownAs, $email, 
-                                        "", "", $hash, 1, 0, 0);
+            $user_id = $this->userDao->insert(
+                $first,
+                $last,
+                $knownAs,
+                $email,
+                "",
+                "",
+                $hash,
+                1,
+                0,
+                0
+            );
             $this->enrollmentDao->enroll($user_id, $offering["id"], "student");
         }
 
         // Email student
-        $message = 
-"Dear $first $last,
+        $message =
+            "Dear $first $last,
 
 Thank you for signing up for the MSD Pre-Enrollment course.
 
@@ -364,10 +374,10 @@ Manalabs Account Creator
         #email the user about his newly created account
         $to = [$email, "$first $last"];
         $this->mailHlpr->mail($to, "MSD Pre-Enrollment Signup", $message);
-        
+
         // email msd@miu.edu
-        $message = 
-"
+        $message =
+            "
 email:       \t\t$email
 Given name(s): \t$first
 Family name(s):\t$last
@@ -378,34 +388,36 @@ Manalabs Account Creator
 ";
         $this->mailHlpr->mail("msd@miu.edu", "MSD Pre-Enrollment Signup", $message);
 
-        return "Location: signedup";        
+        return "Location: signedup";
     }
 
 
 
-    private function enrollStudentsInFile($file, $offering_id) {
+    private function enrollStudentsInFile($file, $offering_id)
+    {
         $lines = file($file);
 
         # The CSV file should be formatted like a copy pasted infosys classlist
-        foreach($lines as $line) {
-        
+        foreach ($lines as $line) {
+
             # lines that do not start with an index and a studentId are ignored
             if (preg_match("/^\d+\s*,\s*0{3}-[169]\d-\d{4}/", $line)) {
                 list($idx, $sid, $first, $middle, $last, $email) = str_getcsv($line);
-        
+
                 # create user if not already in DB
                 $user_id = $this->userDao->getUserId($email);
                 if (!$user_id) {
                     $user_id = $this->createAccount($sid, $first, $middle, $last, $email);
                 }
-        
+
                 # enroll in the offering
                 $this->enrollmentDao->enroll($user_id, $offering_id, "student");
             }
         }
     }
 
-    private function createAccount($sid, $first, $middle, $last, $email) {
+    private function createAccount($sid, $first, $middle, $last, $email)
+    {
         $given = trim($first) . " " . trim($middle);
         $teamsName = trim($given) . " " . trim($last);
         # transform social security formatted student ID into 6 digit 
@@ -415,12 +427,20 @@ Manalabs Account Creator
         // make initial password be the 6 digit student ID
         $hash = password_hash($id6, PASSWORD_DEFAULT);
 
-        $user_id = $this->userDao->insert($given, $last, $first, 
-            $email, $id6, $teamsName, $hash, 1);
-    
+        $user_id = $this->userDao->insert(
+            $given,
+            $last,
+            $first,
+            $email,
+            $id6,
+            $teamsName,
+            $hash,
+            1
+        );
+
         # create custom welcome message
-        $message = 
-"Dear $first $middle $last,
+        $message =
+            "Dear $first $middle $last,
 
 Professor Michael Zijlstra's course has its lecture videos at: https://manalabs.org/videos/
 
@@ -442,3 +462,4 @@ Manalabs.org Automated Account Creator
         return $user_id;
     }
 }
+

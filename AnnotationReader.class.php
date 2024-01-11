@@ -1,150 +1,213 @@
 <?php
 
-/*
+/**
  * Michael Zijlstra 03 May 2017
- * 
- * It would be good to create proper documentation for this class
+ *
+ * Refactoring to use PHP Attributes instead of doc comment annotations
+ * mzijlstra 2024 Jan 09
  */
 
-class AnnotationReader {
-    public $mappings = array();
-    public $repositories = array();
-    public $controllers = array();
-    public $context = "";
+use Attribute;
+
+#[Attribute(Attribute::TARGET_CLASS)]
+class Controller
+{
+}
+
+#[Attribute(Attribute::TARGET_CLASS)]
+class Repository
+{
+}
+
+/**
+ * TODO implement class level path annotation processing
+ */
+#[Attribute(Attribute::TARGET_CLASS)]
+class Path
+{
+    public string $path;
+    public function __construct(string $path)
+    {
+        $this->path = $path;
+    }
+}
+
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class Inject
+{
+    public string $name;
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+}
+
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+class Request
+{
+    public string $method;
+    public string $uri;
+    public string $sec;
+    public function __construct(string $method, string $uri = "", string $sec = "none")
+    {
+        $this->method = $method;
+        $this->uri = $uri;
+        $this->sec = $sec;
+    }
+    public function __toString(): string
+    {
+        return $this->method . " " . $this->uri . " " . $this->sec;
+    }
+}
+
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+class Get extends Request
+{
+    public function __construct(string $uri, string $sec = "none")
+    {
+        parent::__construct('GET', $uri, $sec);
+    }
+}
+
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+class Post extends Request
+{
+    public function __construct(string $uri, string $sec = "none")
+    {
+        parent::__construct('POST', $uri, $sec);
+    }
+}
+
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+class Put extends Request
+{
+    public function __construct(string $uri, string $sec = "none")
+    {
+        parent::__construct('PUT', $uri, $sec);
+    }
+}
+
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+class Delete extends Request
+{
+    public function __construct(string $uri, string $sec = "none")
+    {
+        parent::__construct('DELETE', $uri, $sec);
+    }
+}
+
+class AnnotationReader
+{
+    private array $REQ_TYPES = ["GET", "POST", "PUT", "DELETE"];
+    public array $mappings = array();
+    public array $repositories = array();
+    public array $controllers = array();
+    public string $context = "";
 
     /**
      * Constructor, initiallizes internal mappings arrays
      */
-    public function __construct() {
-        $this->mappings["GET"] = array();
-        $this->mappings["POST"] = array();
+    public function __construct()
+    {
+        foreach ($this->REQ_TYPES as $req) {
+            $this->mappings[$req] = array();
+        }
     }
 
     /**
-     * Helper function to extract annotation attributes (key / value pairs)
-     * 
-     * @param string $annotation
-     * @param string $text
-     * @return array
-     * @throws Exception
-     */
-    private function annotation_attributes($annotation, $text) {
-        $matches = array();
-        preg_match("#" . $annotation . "\((.*)\)#", $text, $matches);
-        $content = $matches[1];
-        if (preg_match("#^['\"].*['\"]$#", $content)) {
-            $content = "value=" . $content;
-        }
-        $result = array();
-        if (!$attrs = preg_split("#,\s+#", $content)) {
-            $attrs = array($content);
-        }
-        foreach ($attrs as $attr) {
-            if (!preg_match("#(\w+)\s*=\s*['\"](.*?)['\"]#", $attr, $matches)) {
-                throw new Exception("Malformed annotation attribute {$attr} in "
-                . $annotation . " found in " . $text);
-            }
-            $key = $matches[1];
-            $value = $matches[2];
-            $result[$key] = $value;
-        }
-        return $result;
-    }
-
-    /**
-     * Checks the properties of a class for @Inject annotations
+     * Checks the properties of a class for Inject attributes
      * 
      * @param type $reflect_class
      * @return type
      */
-    private function to_inject($reflect_class) {
+    private function to_inject(ReflectionClass $reflect_class): array
+    {
         $result = array();
         foreach ($reflect_class->getProperties() as $prop) {
-            $com = $prop->getDocComment();
-            if (preg_match("#@Inject#", $com)) {
-                $attrs = $this->annotation_attributes("@Inject", $com);
-                $result[$prop->getName()] = $attrs["value"];
+            $attrs = $prop->getAttributes();
+            foreach ($attrs as $attr) {
+                if ($attr->getName() == "Inject") {
+                    $result[$prop->getName()] = $attr->getArguments()[0];
+                }
             }
         }
         return $result;
     }
 
     /**
-     * Validate the content of @GET and @POST annotations
+     * Validate the content of a Request annotation
      * 
-     * @param type $attrs
-     * @param type $com
+     * @param Request $request
      * @global type $SEC_LVLS
      * @throws Exception
      */
-    private function validate_request_annotation(&$attrs, $com) {
+    private function validate_request_annotation(Request $request): void
+    {
         global $SEC_LVLS;
-        if (isset($attrs['uri']) == false && isset($attrs['value']) == false ) {
-            throw new Exception("@GET or @POST missing uri attribute in: $com");
+        if (!in_array($request->method, $this->REQ_TYPES)) {
+            throw new Exception("Bad request attribute method value in: $request");
         }
-        if (!isset($attrs['uri']) && isset($attrs['value'])) {
-            $attrs['uri'] = $attrs['value'];
+        if ($request->uri == "") {
+            throw new Exception("Request attribute missing uri in: $request");
         }
-        if (!isset($attrs['sec'])) {
-            $attrs['sec'] = "none";
-        }
-        if (!in_array($attrs["sec"], $SEC_LVLS)) {
-            throw new Exception("Bad sec value in @GET or @POST found in: $com");
+        if (!in_array($request->sec, $SEC_LVLS)) {
+            throw new Exception("Bad sec value in @GET or @POST found in: $request");
         }
     }
 
     /**
-     * 
+     * Maps Request annotations to the internal mappings array
+     
      * @param Reflection_Class $reflect_class
-     * @param string $req GET or POST
-     * @param string $type ctrl or ws
      */
-    private function map_requests($reflect_class, $req) {
+    private function map_requests(ReflectionClass $reflect_class): void
+    {
         foreach ($reflect_class->getMethods() as $m) {
-            $com = $m->getDocComment();
-            $match = array();
-
-            preg_match_all("#@{$req}\(.*\)#", $com, $match);
-            foreach ($match[0] as $a) {
-                $attrs = $this->annotation_attributes("@{$req}", $a);
-                $this->validate_request_annotation($attrs, $a);
+            $attrs = $m->getAttributes();
+            foreach ($attrs as $a) {
+                $req = $a->newInstance();
+                $this->validate_request_annotation($req);
                 $method_loc = $reflect_class->getName() . "@" . $m->getName();
-                $mapping = ["sec"=> $attrs["sec"], "route" => $method_loc];
-                $this->mappings[$req][$attrs["uri"]] = $mapping;
+                $mapping = ["sec" => $req->seq, "route" => $method_loc];
+                $this->mappings[$req->method][$req->uri] = $mapping;
             }
         }
     }
 
     /**
-     * Checks if a class has an @Repository annotation, if it does adds it to
+     * Checks if a class has an Repository annotation, if it does adds it to
      * the array of repositories
      * 
-     * @param type $class
+     * @param string $class
      */
-    private function check_repository($class) {
+    private function check_repository($class)
+    {
         $r = new ReflectionClass($class);
-        $doc = $r->getDocComment();
-        if (preg_match("#@Repository#", $doc)) {
-            $to_inject = $this->to_inject($r);
-            $this->repositories[$class] = $to_inject;
+        $attrs = $r->getAttributes();
+        foreach ($attrs as $a) {
+            if ($a->getName() == "Repository") {
+                $to_inject = $this->to_inject($r);
+                $this->repositories[$class] = $to_inject;
+            }
         }
     }
 
     /**
-     * Checks if classes have a @Controller or a @WebService annotation, and
-     * the processes them as needed
+     * Checks if classes have a Controller annotation, and
+     * processes them as needed
      * 
-     * @param type $class
+     * @param string $class
      */
-    private function check_controller($class) {
+    private function check_controller($class)
+    {
         $r = new ReflectionClass($class);
-        $doc = $r->getDocComment();
-        if (preg_match("#@Controller#", $doc) ||
-                preg_match("#@WebService#", $doc)) {
-            $to_inject = $this->to_inject($r);
-            $this->controllers[$class] = $to_inject;
-            $this->map_requests($r, "GET");
-            $this->map_requests($r, "POST");
+        $attrs = $r->getAttributes();
+        foreach ($attrs as $a) {
+            if ($a->getName() == "Controller") {
+                $to_inject = $this->to_inject($r);
+                $this->controllers[$class] = $to_inject;
+                $this->map_requests($r);
+            }
         }
     }
 
@@ -154,37 +217,19 @@ class AnnotationReader {
      * @param string $directory
      * @param function $function
      */
-    private function scan_classes($directory, $function) {
+    private function scan_classes($directory, $function)
+    {
         $files = scandir($directory);
         foreach ($files as $file) {
             $mats = array();
             // skip hidden files, directories, files that are not .class.php
-            if ($file[0] === "." || is_dir($file) ||
-                    !preg_match("#(.*)\.class\.php#i", $file, $mats)) {
+            if (
+                $file[0] === "." || is_dir($file) ||
+                !preg_match("#(.*)\.class\.php#i", $file, $mats)
+            ) {
                 continue;
             }
             $this->{$function}($mats[1]);
-        }
-    }
-
-    /**
-     * Generate code for the retrievable classes to the context class
-     * 
-     * @param type $classes
-     */
-    private function add_classes_to_context($classes) {
-        foreach ($classes as $class => $injects) {
-            $this->context .= <<< IF_START
-        if (\$id === "$class" && !isset(\$this->objects["$class"])) {
-            \$this->objects["$class"] = new $class();
-
-IF_START;
-            foreach ($injects as $prop => $id) {
-                $this->context .=
-                        "            \$this->objects[\"$class\"]->$prop = "
-                        . "\$this->get(\"$id\");\n";
-            }
-            $this->context .= "        }\n"; // close if statement
         }
     }
 
@@ -193,10 +238,33 @@ IF_START;
      * 
      * @return AnnotationContext self for call chaining
      */
-    public function scan() {
+    public function scan()
+    {
         $this->scan_classes("model", "check_repository");
         $this->scan_classes("control", "check_controller");
         return $this;
+    }
+
+    /**
+     * Generate code for the retrievable classes to the context class
+     * 
+     * @param type $classes
+     */
+    private function add_classes_to_context($classes)
+    {
+        foreach ($classes as $class => $injects) {
+            $this->context .= <<< IF_START
+        if (\$id === "$class" && !isset(\$this->objects["$class"])) {
+            \$this->objects["$class"] = new $class();
+
+IF_START;
+            foreach ($injects as $prop => $id) {
+                $this->context .=
+                    "            \$this->objects[\"$class\"]->$prop = "
+                    . "\$this->get(\"$id\");\n";
+            }
+            $this->context .= "        }\n"; // close if statement
+        }
     }
 
     /**
@@ -204,7 +272,8 @@ IF_START;
      * 
      * @return AnnotationContext self for call chaining
      */
-    public function create_context() {
+    public function create_context()
+    {
         $this->context .= <<< WARNING
 /******************************************************************************* 
  * DO NOT MODIFY THIS FILE, IT IS GENERATED 
@@ -266,10 +335,10 @@ FOOTER;
      * @param string $filename
      * @return AnnotationContext self for call chaining
      */
-    public function write($filename) {
+    public function write($filename)
+    {
         $data = "<?php\n" . $this->context;
         file_put_contents($filename, $data);
         return $this;
     }
-
 }

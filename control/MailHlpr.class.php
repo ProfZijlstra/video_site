@@ -10,9 +10,9 @@ require 'lib/PHPMailer/src/SMTP.php';
 /**
  * Email Helper Class
  * @author mzijlstra 01/08/2023
- * 
- * @Controller
- */
+  */
+
+#[Controller]
 class MailHlpr {
 
     /**
@@ -62,4 +62,4 @@ class MailHlpr {
     }
 
 }
-?>
+

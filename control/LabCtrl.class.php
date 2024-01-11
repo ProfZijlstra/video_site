@@ -3,19 +3,15 @@
 /**
  * Lab Controller Class
  * @author mzijlstra 01/08/2024
- * 
- * @Controller
  */
+
+#[Controller]
 class LabCtrl
 {
-    /**
-     * @Inject("OverviewHlpr")
-     */
+    #[Inject('OverviewHlpr')]
     public $overviewHlpr;
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/lab$!", sec="observer")
-     */
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/lab$!", sec: "observer")]
     public function courseOverview()
     {
         // We're building on top of  overview -- run it first
@@ -30,4 +26,3 @@ class LabCtrl
         return "lab/overview.php";
     }
 }
-

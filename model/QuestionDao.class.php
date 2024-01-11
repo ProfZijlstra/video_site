@@ -2,63 +2,73 @@
 
 /**
  * @author mzijlstra 08/17/2022
- * @Repository
  */
 
-class QuestionDao {
-    /**
-     * @Inject("DB")
-     */
+#[Repository]
+class QuestionDao
+{
+    #[Inject('DB')]
     public $db;
 
-    public function add($quiz_id, $type, $text, $model_answer, $points, $seq) {
+    public function add($quiz_id, $type, $text, $model_answer, $points, $seq)
+    {
         $stmt = $this->db->prepare(
-			"INSERT INTO question 
+            "INSERT INTO question 
 			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
                     0, 0)"
-		);
-		$stmt->execute(array(
+        );
+        $stmt->execute(array(
             "quiz_id" => $quiz_id,
             "type" => $type,
             "text" => $text,
             "model_answer" => $model_answer,
             "points" => $points,
             "seq" => $seq,
-		));
-		return $this->db->lastInsertId();
+        ));
+        return $this->db->lastInsertId();
     }
 
-    public function forQuiz($quiz_id) {
+    public function forQuiz($quiz_id)
+    {
         $stmt = $this->db->prepare(
             "SELECT * FROM question
             WHERE quiz_id = :quiz_id
-            ORDER BY seq");
+            ORDER BY seq"
+        );
         $stmt->execute(array("quiz_id" => $quiz_id));
         return $stmt->fetchAll();
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $stmt = $this->db->prepare(
             "SELECT * FROM question
-            WHERE id = :id ");
+            WHERE id = :id "
+        );
         $stmt->execute(array("id" => $id));
         return $stmt->fetch();
     }
 
-    public function update($id, $text, $model_answer, $points,
-                        $hasMarkDown, $mdlAnsHasMD) {
+    public function update(
+        $id,
+        $text,
+        $model_answer,
+        $points,
+        $hasMarkDown,
+        $mdlAnsHasMD
+    ) {
         $stmt = $this->db->prepare(
-			"UPDATE question 
+            "UPDATE question 
             SET `text` = :text, 
                 modelAnswer = :model_answer, 
                 points = :points,
                 hasMarkDown = :hasMarkDown,
                 mdlAnsHasMD = :mdlAnsHasMD
             WHERE id = :id "
-		);
-		$stmt->execute(array(
-            "id" =>  $id, 
-            "text" => $text, 
+        );
+        $stmt->execute(array(
+            "id" =>  $id,
+            "text" => $text,
             "model_answer" => $model_answer,
             "points" => $points,
             "hasMarkDown" => $hasMarkDown,
@@ -66,57 +76,64 @@ class QuestionDao {
         ));
     }
 
-    public function updateModelAnswer($id, $model_answer, $mdlAnsHasMD) {
+    public function updateModelAnswer($id, $model_answer, $mdlAnsHasMD)
+    {
         $stmt = $this->db->prepare(
-			"UPDATE question 
+            "UPDATE question 
             SET `modelAnswer` = :model_answer,
                 mdlAnsHasMd = :mdlAnsHasMd
             WHERE id = :id "
-		);
-		$stmt->execute(array(
-            "id" =>  $id, 
+        );
+        $stmt->execute(array(
+            "id" =>  $id,
             "model_answer" => $model_answer,
             "mdlAnsHasMd" => $mdlAnsHasMD,
         ));
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $stmt = $this->db->prepare(
             "SELECT * FROM question 
-            WHERE id = :id");
-		$stmt->execute(array( "id" =>  $id ));
+            WHERE id = :id"
+        );
+        $stmt->execute(array("id" =>  $id));
         $question = $stmt->fetch();
 
         $stmt = $this->db->prepare(
-			"DELETE FROM question
+            "DELETE FROM question
             WHERE id = :id "
-		);
-		$stmt->execute(array( "id" =>  $id ));
+        );
+        $stmt->execute(array("id" =>  $id));
 
         $stmt = $this->db->prepare(
             "UPDATE question SET seq = seq - 1
             WHERE quiz_id = :quiz_id 
-            AND seq > :seq");
+            AND seq > :seq"
+        );
         $stmt->execute([
-            "seq" => $question['seq'], 
-            "quiz_id" => $question['id']]);
+            "seq" => $question['seq'],
+            "quiz_id" => $question['id']
+        ]);
     }
 
     /**
      * Clones all questions for a quiz, adding them to the new quiz
      */
-    public function clone($quiz_id, $new_quiz_id) {
+    public function clone($quiz_id, $new_quiz_id)
+    {
         $stmt = $this->db->prepare(
             "SELECT * FROM question 
-            WHERE quiz_id = :quiz_id");
-		$stmt->execute(array( "quiz_id" =>  $quiz_id ));
+            WHERE quiz_id = :quiz_id"
+        );
+        $stmt->execute(array("quiz_id" =>  $quiz_id));
         $questions = $stmt->fetchAll();
 
         $stmt = $this->db->prepare(
-			"INSERT INTO question 
+            "INSERT INTO question 
 			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
                     :hasMarkDown, :mdlAnsHasMD)"
-		);
+        );
         foreach ($questions as $question) {
             $stmt->execute(array(
                 "quiz_id" => $new_quiz_id,
@@ -127,8 +144,7 @@ class QuestionDao {
                 "type" => $question['type'],
                 "hasMarkDown" => $question['hasMarkDown'],
                 "mdlAnsHasMD" => $question['mdlAnsHasMD'],
-            ));    
+            ));
         }
     }
 }
-

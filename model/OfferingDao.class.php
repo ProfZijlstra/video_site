@@ -4,14 +4,12 @@
  * Offering Dao Class
  *
  * @author mzijlstra 06/06/2021
- * @Repository
  */
+
+#[Repository]
 class OfferingDao
 {
-	/**
-	 * @var PDO PDO database connection object
-	 * @Inject("DB")
-	 */
+	#[Inject('DB')]
 	public $db;
 
 	/**
@@ -26,7 +24,8 @@ class OfferingDao
 			"SELECT * FROM offering
 			WHERE course_number = :course_number 
 			AND active = 1
-			AND block = :block");
+			AND block = :block"
+		);
 		$stmt->execute(array("course_number" => $course_number, "block" => $block));
 		return $stmt->fetch();
 	}
@@ -42,7 +41,8 @@ class OfferingDao
 			"SELECT * 
 			FROM offering
 			WHERE id = :id
-			AND active = 1");
+			AND active = 1"
+		);
 		$stmt->execute(array("id" => $id));
 		return $stmt->fetch();
 	}
@@ -104,7 +104,8 @@ class OfferingDao
 		return $stmt->fetchAll();
 	}
 
-	public function enrolled($user_id) {
+	public function enrolled($user_id)
+	{
 		$stmt = $this->db->prepare(
 			"SELECT c.number, c.name, o.block, o.id
 			FROM offering AS o 
@@ -124,7 +125,8 @@ class OfferingDao
 			"SELECT * FROM offering 
 			WHERE course_number = :course_num 
 			AND active = 1
-			ORDER BY `block`");
+			ORDER BY `block`"
+		);
 		$stmt->execute(["course_num" => $course_num]);
 		return $stmt->fetchAll();
 	}
@@ -171,10 +173,10 @@ class OfferingDao
 					:hasCAMS)"
 		);
 		$stmt->execute(array(
-			"course_number" => $course_number, 
+			"course_number" => $course_number,
 			"block" => $block,
 			"start" => $start,
-			"daysPerLesson" => $daysPerLesson, 
+			"daysPerLesson" => $daysPerLesson,
 			"lessonsPerPart" => $lessonsPerPart,
 			"lessonParts" => $lessonParts,
 			"hasQuiz" => $hasQuiz,
@@ -212,10 +214,10 @@ class OfferingDao
 			WHERE id = :id"
 		);
 		$stmt->execute(array(
-			"id" => $id, 
+			"id" => $id,
 			"block" => $block,
-			"start" => $start, 
-			"daysPerLesson" => $daysPerLesson, 
+			"start" => $start,
+			"daysPerLesson" => $daysPerLesson,
 			"lessonsPerPart" => $lessonsPerPart,
 			"lessonParts" => $lessonParts,
 			"hasQuiz" => $hasQuiz,
@@ -229,7 +231,8 @@ class OfferingDao
 	/**
 	 * Delete an offering by setting active = 0
 	 */
-	public function delete($id) {
+	public function delete($id)
+	{
 		$stmt = $this->db->prepare(
 			"UPDATE offering 
 			SET `active` = 0
@@ -238,13 +241,14 @@ class OfferingDao
 		$stmt->execute(array("id" => $id));
 	}
 
-	public function getDate($offering, $day_abbr) {
+	public function getDate($offering, $day_abbr)
+	{
 		$week = $day_abbr[1] - 1;
 		$day = $day_abbr[3] - 1;
 
 		$add_days = $offering['daysPerLesson'] * $offering['lessonsPerPart'] * $week;
 		$add_days += $offering['daysPerLesson'] * $day;
-		$interval = new DateInterval("P" .$add_days . "D");
+		$interval = new DateInterval("P" . $add_days . "D");
 		$result = DateTime::createFromFormat("Y-m-d H:i:s", $offering['start']);
 		$result->add($interval);
 

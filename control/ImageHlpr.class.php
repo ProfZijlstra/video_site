@@ -3,9 +3,9 @@
 /**
  * Image Quiz Upload Helper Class
  * @author mzijlstra 01/08/2023
- * 
- * @Controller
- */
+  */
+
+#[Controller]
 class ImageHlpr {
 
     public function process($img_name, $question_id, $user_id) {
@@ -62,4 +62,3 @@ class ImageHlpr {
 
 }
 
-?>

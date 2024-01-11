@@ -3,47 +3,29 @@
 /**
  * Meeting Controller Class
  * @author mzijlstra 2022-03-13
- *
- * @Controller
  */
+
+#[Controller]
 class MeetingCtrl
 {
-    /**
-     * @Inject("MeetingDao")
-     */
+    #[Inject('MeetingDao')]
     public $meetingDao;
-    /**
-     * @Inject("AttendanceDao")
-     */
+    #[Inject('AttendanceDao')]
     public $attendanceDao;
-    /**
-     * @Inject("OfferingDao")
-     */
+    #[Inject('OfferingDao')]
     public $offeringDao;
-    /**
-     * @Inject("EnrollmentDao")
-     */
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
-     /**
-     * @Inject("ClassSessionDao")
-     */
+    #[Inject('ClassSessionDao')]
     public $classSessionDao;
-    /**
-     * @Inject("AttendanceImportDao")
-     */
+    #[Inject('AttendanceImportDao')]
     public $attendanceImportDao;
-    /**
-     * @Inject("ExcusedDao")
-     */
+    #[Inject('ExcusedDao')]
     public $excusedDao;
-    /**
-     * @Inject("MailHlpr")
-     */
+    #[Inject('MailHlpr')]
     public $mailHlpr;
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
-     */
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec: "assistant")]
     public function getMeeting()
     {
         global $URI_PARAMS;
@@ -84,8 +66,8 @@ class MeetingCtrl
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec="assistant")
      */
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec: "assistant")]
     public function updMeeting()
     {
         $meeting_id = filter_input(INPUT_POST, "id", FILTER_SANITIZE_NUMBER_INT);
@@ -100,9 +82,8 @@ class MeetingCtrl
         return "Location: $meeting_id";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/regen/(\d+)$!", sec="assistant")
-     */
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/regen/(\d+)$!", sec: "assistant")]
     public function regenReport()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -114,9 +95,8 @@ class MeetingCtrl
         return "Location: ../$meeting_id";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/attend/(\d+)$!", sec="assistant")
-     */
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/attend/(\d+)$!", sec: "assistant")]
     public function updateAttendance()
     {
         $json = file_get_contents('php://input');
@@ -124,9 +104,8 @@ class MeetingCtrl
         $this->attendanceDao->update($data);
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/absent$!", sec="assistant")
-     */
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/absent$!", sec: "assistant")]
     public function markAbsent()
     {
         global $URI_PARAMS;
@@ -138,9 +117,8 @@ class MeetingCtrl
         return "Location: ../$meeting_id#$attendance_id";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/present$!", sec="assistant")
-     */
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/present$!", sec: "assistant")]
     public function markPresent()
     {
         global $URI_PARAMS;
@@ -152,14 +130,14 @@ class MeetingCtrl
         return "Location: ../$meeting_id#$attendance_id";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailAbsent$!", sec="assistant")
-     */
-    public function emailAbsent() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailAbsent$!", sec: "assistant")]
+    public function emailAbsent()
+    {
         global $URI_PARAMS;
         $meeting_id = $URI_PARAMS[3];
-        $template = 
-"
+        $template =
+            "
 
 If you let your assistant know ahead of time when you are unable to attend it 
 is possible to have an excused absence.
@@ -180,24 +158,24 @@ Manalabs Attendance System.
         // for each absent student
         foreach ($absentees as $absent) {
             $to = [$absent["email"], $absent['teamsName']];
-            $message = 
-"Hi " . trim($absent['knownAs']) . ",
+            $message =
+                "Hi " . trim($absent['knownAs']) . ",
 
-We noticed you were absent from the ". $absent["title"]." meeting from its start
- at: ". $absent["start"]. " trough its end at: " . $absent["stop"]. "." .$template;
+We noticed you were absent from the " . $absent["title"] . " meeting from its start
+ at: " . $absent["start"] . " trough its end at: " . $absent["stop"] . "." . $template;
 
             $this->mailHlpr->mail($to, "Unexcused Absence", $message);
         }
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailTardy$!", sec="assistant")
-     */
-    public function emailTardy() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailTardy$!", sec: "assistant")]
+    public function emailTardy()
+    {
         global $URI_PARAMS;
         $meeting_id = $URI_PARAMS[3];
-        $template = 
-"
+        $template =
+            "
 If you let your assistant know ahead of time when you are unable to attend it 
 is possible to have an excused absence.
 
@@ -217,16 +195,16 @@ Manalabs Attendance System.
         // for each absent student
         foreach ($tardies as $tardy) {
             $to = [$tardy["email"], $tardy['teamsName']];
-            $message = 
-"Hi " . trim($tardy['knownAs']) . ",
+            $message =
+                "Hi " . trim($tardy['knownAs']) . ",
 
-We noticed you were tardy for the ". $tardy["title"]." meeting that started at: 
-". $tardy["start"]. " and stopped at: " . $tardy["stop"]. " 
+We noticed you were tardy for the " . $tardy["title"] . " meeting that started at: 
+" . $tardy["start"] . " and stopped at: " . $tardy["stop"] . " 
 
 ";
 
             if ($tardy["arriveLate"]) {
-                $message .= "\t-You arrived at: " . $tardy['arrive'] ."\n";
+                $message .= "\t-You arrived at: " . $tardy['arrive'] . "\n";
             }
             if ($tardy["middleMissing"]) {
                 $message .= "\t-You missed a significant part in the middle of the meeting\n";
@@ -241,9 +219,8 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
     }
 
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
-     */
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec: "assistant")]
     public function addMeeting()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -252,7 +229,7 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
             $meeting_id = $this->parseMeetingFile(
                 $_FILES["list"]["tmp_name"],
                 $_FILES["list"]["name"],
-                $session_id, 
+                $session_id,
                 $start
             );
             return "Location: meeting/{$meeting_id}";
@@ -261,10 +238,10 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         return "Location: attendance";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting$!", sec="assistant")
-     */
-    public function createMeeting() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting$!", sec: "assistant")]
+    public function createMeeting()
+    {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
         $title = filter_input(INPUT_POST, "title");
         $date  = filter_input(INPUT_POST, "date");
@@ -307,10 +284,10 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         return "Location: attendance";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/delete$!", sec="assistant")
-     */
-    public function deleteMeeting() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/delete$!", sec: "assistant")]
+    public function deleteMeeting()
+    {
         global $URI_PARAMS;
 
         $meeting_id = $URI_PARAMS[3];
@@ -464,5 +441,5 @@ We noticed you were tardy for the ". $tardy["title"]." meeting that started at:
         $parts = date_parse($str);
         return $parts["year"] . "-" . $parts["month"] . "-" . $parts["day"];
     }
-
 }
+

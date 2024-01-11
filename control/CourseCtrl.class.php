@@ -3,51 +3,33 @@
 /**
  * Course Controller Class
  * @author mzijlstra 2021-10-07
- *
- * @Controller
  */
-class CourseCtrl {
-    /**
-     * @Inject("CourseDao")
-     */
+
+#[Controller]
+class CourseCtrl
+{
+    #[Inject('CourseDao')]
     public $courseDao;
-    /**
-     * @Inject("OfferingDao")
-     */
+    #[Inject('OfferingDao')]
     public $offeringDao;
-    /**
-     * @Inject("VideoDao")
-     */
+    #[Inject('VideoDao')]
     public $videoDao;
-    /**
-     * @Inject("DayDao")
-     */
+    #[Inject('DayDao')]
     public $dayDao;
-    /**
-     * @Inject('UserDao')
-     */
+    #[Inject('UserDao')]
     public $userDao;
-    /**
-     * @Inject('ClassSessionDao')
-     */
+    #[Inject('ClassSessionDao')]
     public $classSessionDao;
-    /**
-     * @Inject('QuizDao')
-     */
+    #[Inject('QuizDao')]
     public $quizDao;
-    /**
-     * @Inject('EnrollmentDao')
-     */
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
-    /**
-     * @Inject('CamsDao')
-     */
+    #[Inject('CamsDao')]
     public $camsDao;
 
-    /**
-     * @GET(uri="!^/?$!", sec="login")
-     */
-    public function showMyCourses() {
+    #[Get(uri: "!^/?$!", sec: "login")]
+    public function showMyCourses()
+    {
         global $VIEW_DATA;
 
         $user_id = $_SESSION['user']['id'];
@@ -69,10 +51,9 @@ class CourseCtrl {
         return "courses.php";
     }
 
-    /**
-     * @GET(uri="!^/all$!", sec="login")
-     */
-    public function showAllCourses() {
+    #[Get(uri: "!^/all$!", sec: "login")]
+    public function showAllCourses()
+    {
         global $VIEW_DATA;
 
         $offerings = $this->offeringDao->all();
@@ -90,10 +71,10 @@ class CourseCtrl {
         return "courses.php";
     }
 
-    /**
-     * @POST(uri="!^/createCourse$!", sec="admin")
-     */
-    public function createCourse() {
+
+    #[Post(uri: "!^/createCourse$!", sec: "admin")]
+    public function createCourse()
+    {
         global $MY_BASE;
         global $VIEW_DATA;
 
@@ -141,10 +122,10 @@ class CourseCtrl {
         return "Location: $MY_BASE";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/clone$!", sec="admin")
-     */
-    public function cloneOffering() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/clone$!", sec: "admin")]
+    public function cloneOffering()
+    {
         global $MY_BASE;
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -206,10 +187,10 @@ class CourseCtrl {
         return "Location: ../$block/";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/edit$!", sec="instructor")
-     */
-    public function editDay() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/edit$!", sec: "instructor")]
+    public function editDay()
+    {
         global $URI_PARAMS;
         $block = $URI_PARAMS[2];
 
@@ -220,10 +201,9 @@ class CourseCtrl {
         return "Location: ../{$block}/";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec="instructor")
-     */
-    public function viewSettings() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec: "instructor")]
+    public function viewSettings()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -254,9 +234,10 @@ class CourseCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec="instructor")
      */
-    public function updateSettings() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec: "instructor")]
+    public function updateSettings()
+    {
         $id = filter_input(INPUT_POST, "id", FILTER_SANITIZE_NUMBER_INT);
         $block = filter_input(INPUT_POST, "block", FILTER_UNSAFE_RAW);
         $start = filter_input(INPUT_POST, "start", FILTER_UNSAFE_RAW);
@@ -293,16 +274,17 @@ class CourseCtrl {
         $this->camsDao->saveOrUpdate($id, $username, $course_id, $AM_id, $PM_id, $SAT_id);
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delete$!", sec="admin")
-     */
-    public function delete() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delete$!", sec: "admin")]
+    public function delete()
+    {
         $id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         $this->offeringDao->delete($id);
         return "Location: ../../";
     }
 
-    private function instructorNames($offerings) {
+    private function instructorNames($offerings)
+    {
         $ids = [];
         foreach ($offerings as $offering) {
             $ids[] = $offering['id'];

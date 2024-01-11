@@ -3,63 +3,47 @@
 /**
  * Quiz Grading Controller Class
  * @author mzijlstra 12/21/2022
- * 
- * @Controller
  */
-class QuizGradingCtrl {
-    /**
-     * @Inject('QuizDao')
-     */
+
+#[Controller]
+class QuizGradingCtrl
+{
+    #[Inject('QuizDao')]
     public $quizDao;
 
-    /**
-     * @Inject('QuestionDao')
-     */
+    #[Inject('QuestionDao')]
     public $questionDao;
 
-    /**
-     * @Inject('AnswerDao')
-     */
+    #[Inject('AnswerDao')]
     public $answerDao;
 
-    /**
-     * @Inject('QuizEventDao')
-     */
+    #[Inject('QuizEventDao')]
     public $quizEventDao;
 
-    /**
-     * @Inject('OfferingDao')
-     */
+    #[Inject('OfferingDao')]
     public $offeringDao;
 
-    /**
-     * @Inject('EnrollmentDao')
-     */
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
-    /**
-     * @Inject('UserDao')
-     */
+    #[Inject('UserDao')]
     public $userDao;
 
-    /**
-     * @Inject('MarkdownHlpr')
-     */
+    #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/grade$!", sec="assistant")
-     */
-    public function gradeQuiz() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/grade$!", sec: "assistant")]
+    public function gradeQuiz()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
-		$course = $URI_PARAMS[1];
-		$block = $URI_PARAMS[2];
-        $quiz_id = $URI_PARAMS[3];        
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $quiz_id = $URI_PARAMS[3];
 
         $offering_detail = $this->offeringDao->getOfferingByCourse($course, $block);
-		$offering_id = $offering_detail['id'];
+        $offering_id = $offering_detail['id'];
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
 
         // create categories based on enrollment
@@ -72,9 +56,9 @@ class QuizGradingCtrl {
 
         $answers = $this->answerDao->overview($quiz_id);
         foreach ($answers as $answer) {
-            if ($absent[$answer['id']])  {// is student enrolled?
+            if ($absent[$answer['id']]) { // is student enrolled?
                 unset($absent[$answer['id']]); // no longer absent
-                $taken[$answer['id']] = $answer; 
+                $taken[$answer['id']] = $answer;
             } else {
                 $extra[$answer['id']] = $answer;
             }
@@ -93,10 +77,9 @@ class QuizGradingCtrl {
         return "quiz/gradeOverview.php";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)$!", sec="assistant")
-     */
-    public function gradeQuestion() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)$!", sec: "assistant")]
+    public function gradeQuestion()
+    {
         require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -130,10 +113,9 @@ class QuizGradingCtrl {
         return "quiz/gradeQuestion.php";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/(\d+)$!", sec="assistant")
-     */
-    public function gradeUser() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/(\d+)$!", sec: "assistant")]
+    public function gradeUser()
+    {
         require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -158,9 +140,10 @@ class QuizGradingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/grade$!", sec="assistant")
      */
-    public function grade() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/grade$!", sec: "assistant")]
+    public function grade()
+    {
         $answer_ids = filter_input(INPUT_POST, "answer_ids");
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
         $shifted = filter_input(INPUT_POST, "comment");
@@ -176,9 +159,10 @@ class QuizGradingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/grade$!", sec="assistant")
      */
-    public function gradeByUser() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/grade$!", sec: "assistant")]
+    public function gradeByUser()
+    {
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
         $user_id = filter_input(INPUT_POST, "user_id", FILTER_VALIDATE_INT);
         $question_id = filter_input(INPUT_POST, "question_id", FILTER_VALIDATE_INT);
@@ -196,8 +180,7 @@ class QuizGradingCtrl {
             $answer_id = $this->answerDao->gradeUnanswered($user_id, $question_id, $comment, $points);
         }
 
-        return [ "answer_id" => $answer_id ];
+        return ["answer_id" => $answer_id];
     }
-
 }
-?>
+

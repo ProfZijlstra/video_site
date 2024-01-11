@@ -4,28 +4,24 @@
  * User Controller Class
  *
  * @author mzijlstra 11/14/2014
- * 
- * @Controller
  */
-class UserCtrl {
 
-    /**
-     *
-     * @var type 
-     * @Inject("UserDao")
-     */
+#[Controller]
+class UserCtrl
+{
+
+    #[Inject('UserDao')]
     public $userDao;
 
-    /**
-     * @Inject("OfferingDao")
-     */
+    #[Inject('OfferingDao')]
     public $offeringDao;
 
     /**
      * Simple mapping to the login page
-     * @GET(uri="!^/.*login$!", sec="none")
      */
-    public function getLogin() {
+    #[Get(uri: "!^/.*login$!", sec: "none")]
+    public function getLogin()
+    {
         global $VIEW_DATA;
         if ($_COOKIE['logout']) {
             $VIEW_DATA['error'] = $_COOKIE['logout'];
@@ -33,10 +29,9 @@ class UserCtrl {
         return "login.php";
     }
 
-    /**
-     * @GET(uri="!^/.*hasSession$!", sec="none")
-     */
-    public function hasSession() {
+    #[Get(uri: "!^/.*hasSession$!", sec: "none")]
+    public function hasSession()
+    {
         $result = ["session" => true];
         if (!array_key_exists("user", $_SESSION)) {
             $result["session"] = false;
@@ -44,10 +39,9 @@ class UserCtrl {
         return $result;
     }
 
-    /**
-     * @GET(uri="!^/.*reAuth$!", sec="none")
-     */
-    public function reAuth() {
+    #[Get(uri: "!^/.*reAuth$!", sec: "none")]
+    public function reAuth()
+    {
         global $MY_BASE;
         global $VIEW_DATA;
         $matches = [];
@@ -62,9 +56,10 @@ class UserCtrl {
      * @global type $MY_BASE base URI of our application
      * @return string appropriate redirect for success or failure
      * 
-	 * @POST(uri="!^/.*login$!", sec="none")
      */
-    public function login() {
+    #[Post(uri: "!^/.*login$!", sec: "none")]
+    public function login()
+    {
         global $MY_BASE;
         global $VIEW_DATA;
 
@@ -91,23 +86,23 @@ class UserCtrl {
             $_SESSION['user']['speed'] = 1;
             if ($_COOKIE['viewspeed']) {
                 $_SESSION['user']['speed'] = $_COOKIE['viewspeed'];
-                setcookie("viewspeed", $_SESSION['user']['speed'], 7*24*60*60, "/videos");
+                setcookie("viewspeed", $_SESSION['user']['speed'], 7 * 24 * 60 * 60, "/videos");
             };
             $_SESSION['user']['autoplay'] = "off";
             if ($_COOKIE['autoplay']) {
                 $_SESSION['user']['autoplay'] = $_COOKIE['autoplay'];
-                setcookie("autoplay", $_SESSION['user']['autoplay'], 7*24*60*60, "/videos");
+                setcookie("autoplay", $_SESSION['user']['autoplay'], 7 * 24 * 60 * 60, "/videos");
             }
 
             // create a remember me cookie
             $reme = $row["id"] . ":" .
-                    $row['firstname'] . ":" .
-                    $row['lastname'] . ":" .
-                    $row['email'] . ":" .
-                    $row['isAdmin'] . ":" .
-                    $row['isFaculty'];
+                $row['firstname'] . ":" .
+                $row['lastname'] . ":" .
+                $row['email'] . ":" .
+                $row['isAdmin'] . ":" .
+                $row['isFaculty'];
             $reme = password_hash($reme . SALT, PASSWORD_DEFAULT) . ":" . $reme;
-            setcookie("ReMe", $reme, time() + 7*24*60*60, "/videos");
+            setcookie("ReMe", $reme, time() + 7 * 24 * 60 * 60, "/videos");
 
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);
@@ -117,8 +112,8 @@ class UserCtrl {
                 // redirect to original requested URL
                 $redirect .= $_SESSION['login_to'];
                 unset($_SESSION['login_to']);
-			} 
-			return $redirect;
+            }
+            return $redirect;
         } else {
             $VIEW_DATA['error'] = "Error: try again";
             return "Location: login";
@@ -128,10 +123,10 @@ class UserCtrl {
     /**
      * Logs someone out of the application
      * @return string redirect back to login page
-     * 
-     * @GET(uri="!^/.*logout$!", sec="none")
      */
-    public function logout() {
+    #[Get(uri: "!^/.*logout$!", sec: "none")]
+    public function logout()
+    {
         session_destroy();
         setcookie("ReMe", "", time() - 10, "/videos");
         setcookie("logout", "Logged Out", time() + 3, "/videos");
@@ -142,10 +137,10 @@ class UserCtrl {
      * Shows all the users
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
-     * 
-     * @GET(uri="!^/user$!", sec="admin")
      */
-    public function all() {
+    #[Get(uri: "!^/user$!", sec: "admin")]
+    public function all()
+    {
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
         $VIEW_DATA['title'] = "Users";
@@ -154,10 +149,10 @@ class UserCtrl {
 
     /**
      * Show the create user page
-     * 
-     * @GET(uri="!^/user/add$!", sec="admin")
      */
-    public function addUser() {
+    #[Get(uri: "!^/user/add$!", sec: "admin")]
+    public function addUser()
+    {
         global $VIEW_DATA;
         $VIEW_DATA["title"] = "Add User";
         return "userAdd.php";
@@ -165,11 +160,11 @@ class UserCtrl {
 
     /**
      * Get faculty memebers
-     * 
-     * @GET(uri="!^/user/faculty$!", sec="admin")
      */
-    public function getFaculty() {
-        return $this->userDao->faculty();        
+    #[Get(uri: "!^/user/faculty$!", sec: "admin")]
+    public function getFaculty()
+    {
+        return $this->userDao->faculty();
     }
 
     /**
@@ -177,10 +172,10 @@ class UserCtrl {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
-     * 
-     * @GET(uri="!^/user/(\d+)$!", sec="admin")
      */
-    public function details() {
+    #[Get(uri: "!^/user/(\d+)$!", sec: "admin")]
+    public function details()
+    {
         global $VIEW_DATA;
         global $URI_PARAMS;
 
@@ -191,20 +186,19 @@ class UserCtrl {
         $VIEW_DATA['msg'] = $error;
         $VIEW_DATA['user'] = $user;
         $VIEW_DATA["title"] = "User Details";
-        
+
         return "userDetails.php";
     }
 
-    /**
-     * @GET(uri="!^/user/(\D.*)$!", sec="admin")
-     */
-    public function teamsName() {
+    #[Get(uri: "!^/user/(\D.*)$!", sec: "admin")]
+    public function teamsName()
+    {
         global $URI_PARAMS;
 
         $teamsName = urldecode($URI_PARAMS[1]);
         $uid = $this->userDao->byTeamsName($teamsName);
         if (!$uid) {
-            $uid = [ $teamsName, "not found" ];
+            $uid = [$teamsName, "not found"];
         }
         return "Location: $uid";
     }
@@ -214,9 +208,10 @@ class UserCtrl {
      * @return strng redirect URI
      * @throws PDOException
      * 
-     * @POST(uri="!^/user$!", sec="admin")
      */
-    public function create() {
+    #[Post(uri: "!^/user$!", sec: "admin")]
+    public function create()
+    {
         global $VIEW_DATA;
 
         $first = filter_input(INPUT_POST, "first", FILTER_UNSAFE_RAW);
@@ -253,9 +248,18 @@ class UserCtrl {
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
         try {
-            $uid = $this->userDao->insert($first, $last, $knownAs, $email, 
-                                $studentID, $teamsName, $hash, $active, 
-                                $isAdmin, $isFaculty);
+            $uid = $this->userDao->insert(
+                $first,
+                $last,
+                $knownAs,
+                $email,
+                $studentID,
+                $teamsName,
+                $hash,
+                $active,
+                $isAdmin,
+                $isFaculty
+            );
         } catch (Exception $e) {
             $error = true;
         }
@@ -264,7 +268,7 @@ class UserCtrl {
             $VIEW_DATA["msg"] = "DB Error: email address already in db?";
             return "Location: user/add";
         } else {
-            return "Location: user";            
+            return "Location: user";
         }
     }
 
@@ -275,11 +279,12 @@ class UserCtrl {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
      * 
-     * @POST(uri="!^/user/(\d+)$!", sec="admin")
      */
-    public function update() {
+    #[Post(uri: "!^/user/(\d+)$!", sec: "admin")]
+    public function update()
+    {
         global $URI_PARAMS;
-        
+
         $uid = $URI_PARAMS[1];
         $first = filter_input(INPUT_POST, "first", FILTER_UNSAFE_RAW);
         $last = filter_input(INPUT_POST, "last", FILTER_UNSAFE_RAW);
@@ -306,8 +311,18 @@ class UserCtrl {
         }
 
         // if given an empty password it does not update password
-        $this->userDao->update($uid, $first, $last, $knownAs, $email, 
-                $studentID, $teamsName, $active, $isAdmin, $isFaculty);
+        $this->userDao->update(
+            $uid,
+            $first,
+            $last,
+            $knownAs,
+            $email,
+            $studentID,
+            $teamsName,
+            $active,
+            $isAdmin,
+            $isFaculty
+        );
     }
 
     /**
@@ -315,20 +330,20 @@ class UserCtrl {
      * 
      * Updates Password
      * 
-     * @POST(uri="!^/user/(\d+)/pass$!", sec="admin")
      */
-    public function updatePass() {
+    #[Post(uri: "!^/user/(\d+)/pass$!", sec: "admin")]
+    public function updatePass()
+    {
         global $URI_PARAMS;
-        
+
         $uid = $URI_PARAMS[1];
         $pass = filter_input(INPUT_POST, "pass");
         $hash = password_hash($pass, PASSWORD_DEFAULT);
         $this->userDao->updatePass($uid, $hash);
     }
 
-    /**
-     * @POST(uri="!^/user/registerBadge$!", sec="admin")
-     */
+
+    #[Post(uri: "!^/user/registerBadge$!", sec: "admin")]
     public function updateAttendance()
     {
         $json = file_get_contents('php://input');
@@ -336,15 +351,13 @@ class UserCtrl {
         $this->userDao->setBadge($data["studentID"], $data["badge"]);
     }
 
-    /**
-     * @GET(uri=uri="!^/remap$!", sec="admin")
-     */
-    public function remap() {
+    #[Get(uri: "!^/remap$!", sec: "admin")]
+    public function remap()
+    {
         require 'AnnotationReader.class.php';
         $ac = new AnnotationReader();
         $ac->scan()->create_context();
-        $ac->write("context.php");  
+        $ac->write("context.php");
         return "Location: ../videos/";
     }
-
 }

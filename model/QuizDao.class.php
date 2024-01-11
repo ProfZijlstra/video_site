@@ -2,34 +2,33 @@
 
 /**
  * @author mzijlstra 08/17/2022
- * @Repository
  */
 
-class QuizDao {
-    /**
-     * @Inject("DB")
-     */
+#[Repository]
+class QuizDao
+{
+    #[Inject('DB')]
     public $db;
 
-    /**
-     * @Inject("QuestionDao")
-     */
+    #[Inject('QuestionDao')]
     public $questionDao;
 
-    public function allForOffering($offering_id) {
+    public function allForOffering($offering_id)
+    {
         $stmt = $this->db->prepare(
-			"SELECT q.id, q.name, q.visible, d.abbr
+            "SELECT q.id, q.name, q.visible, d.abbr
             FROM quiz AS q
             JOIN day AS d ON q.day_id = d.id
             JOIN offering AS o ON d.offering_id = o.id
             WHERE o.id = :offering_id
-            AND o.active = 1" 
-		);
-		$stmt->execute(array("offering_id" => $offering_id));
-		return $stmt->fetchAll();
+            AND o.active = 1"
+        );
+        $stmt->execute(array("offering_id" => $offering_id));
+        return $stmt->fetchAll();
     }
 
-    public function visibleForOffering($offering_id) {
+    public function visibleForOffering($offering_id)
+    {
         $stmt = $this->db->prepare(
             "SELECT q.id, q.name, q.visible, d.abbr
             FROM quiz AS q
@@ -38,53 +37,58 @@ class QuizDao {
             WHERE o.id = :offering_id 
             AND q.visible = 1
             AND o.active = 1"
-		);
-		$stmt->execute(array("offering_id" => $offering_id));
-		return $stmt->fetchAll();
+        );
+        $stmt->execute(array("offering_id" => $offering_id));
+        return $stmt->fetchAll();
     }
 
-    public function add($name, $day_id, $start, $stop) {
-		$stmt = $this->db->prepare(
-			"INSERT INTO quiz 
+    public function add($name, $day_id, $start, $stop)
+    {
+        $stmt = $this->db->prepare(
+            "INSERT INTO quiz 
 			VALUES(NULL, :name, :day_id, :start, :stop, 0)"
-		);
-		$stmt->execute(array(
+        );
+        $stmt->execute(array(
             "name" => $name,
             "day_id" => $day_id,
             "start" => $start,
             "stop" => $stop
-		));
-		return $this->db->lastInsertId();
+        ));
+        return $this->db->lastInsertId();
     }
 
-    public function byId($id) {
+    public function byId($id)
+    {
         $stmt = $this->db->prepare(
             "SELECT * FROM quiz
-            WHERE id = :id");
+            WHERE id = :id"
+        );
         $stmt->execute(array("id" => $id));
         return $stmt->fetch();
     }
 
-    public function setStatus($id, $visible) {
+    public function setStatus($id, $visible)
+    {
         $stmt = $this->db->prepare(
-			"UPDATE quiz 
+            "UPDATE quiz 
             SET `visible` = :visible
             WHERE id = :id"
-		);
-		$stmt->execute(array(
-            "id" =>  $id, 
+        );
+        $stmt->execute(array(
+            "id" =>  $id,
             "visible" => $visible,
         ));
     }
 
-    public function update($id, $day_id, $name, $start, $stop) {
+    public function update($id, $day_id, $name, $start, $stop)
+    {
         $stmt = $this->db->prepare(
-			"UPDATE quiz 
+            "UPDATE quiz 
             SET day_id = :day_id, `name` = :name, `start` = :start, `stop` = :stop
             WHERE id = :id"
-		);
-		$stmt->execute(array(
-            "id" =>  $id, 
+        );
+        $stmt->execute(array(
+            "id" =>  $id,
             "day_id" => $day_id,
             "name" => $name,
             "start" => $start,
@@ -92,24 +96,27 @@ class QuizDao {
         ));
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $stmt = $this->db->prepare(
-			"DELETE FROM quiz 
+            "DELETE FROM quiz 
             WHERE id = :id"
-		);
-		$stmt->execute(array("id" =>  $id));
+        );
+        $stmt->execute(array("id" =>  $id));
     }
 
     /**
      * Clones all quizzes for an offering (which is being cloned)
      */
-    public function clone($offering_id, $new_offering_id) {
+    public function clone($offering_id, $new_offering_id)
+    {
         // find difference in days between the two offerings
         $inject = "{$offering_id}, {$new_offering_id}";
         $stmt = $this->db->prepare(
             "SELECT id, `start` FROM offering
             WHERE id IN ({$inject})
-            ORDER BY `start`");
+            ORDER BY `start`"
+        );
         $stmt->execute();
         $dates = $stmt->fetchAll();
         $earlier = new DateTime(substr($dates[0]['start'], 0, 10));
@@ -120,7 +127,8 @@ class QuizDao {
         // create a lookup table for abbr to new day id
         $stmt = $this->db->prepare(
             "SELECT id, abbr FROM day
-            WHERE offering_id = :offering_id");
+            WHERE offering_id = :offering_id"
+        );
         $stmt->execute(array("offering_id" => $new_offering_id));
         $rows = $stmt->fetchAll();
 
@@ -133,15 +141,16 @@ class QuizDao {
         $stmt = $this->db->prepare(
             "SELECT q.id, q.name, q.start, q.stop, d.abbr FROM quiz AS q
             JOIN `day` AS d on q.day_id = d.id
-            WHERE d.offering_id = :offering_id");
+            WHERE d.offering_id = :offering_id"
+        );
         $stmt->execute(array("offering_id" => $offering_id));
         $quizzes = $stmt->fetchAll();
 
         // create a clone for each on the same day in the new offering
         $stmt = $this->db->prepare(
-			"INSERT INTO quiz 
+            "INSERT INTO quiz 
 			VALUES(NULL, :name, :day_id, :start, :stop, :visible)"
-		);
+        );
         foreach ($quizzes as $quiz) {
             // move start date by date difference between offerings
             $start = new DateTime($quiz['start']);
@@ -163,21 +172,22 @@ class QuizDao {
         }
     }
 
-    public function getQuizTotalsForEnrolled($quiz_id, $offering_id) {
+    public function getQuizTotalsForEnrolled($quiz_id, $offering_id)
+    {
         $stmt = $this->db->prepare(
-			"SELECT e.user_id, sum(a.points) AS points
+            "SELECT e.user_id, sum(a.points) AS points
             FROM enrollment AS e 
             LEFT JOIN answer AS a ON a.user_id = e.user_id 
             LEFT JOIN question AS q ON a.question_id = q.id
             WHERE e.offering_id = :offering_id
             AND q.quiz_id = :quiz_id 
             GROUP BY a.user_id "
-		);
-		$stmt->execute(array(
+        );
+        $stmt->execute(array(
             "quiz_id" => $quiz_id,
             "offering_id" => $offering_id
         ));
-		return $stmt->fetchAll();
+        return $stmt->fetchAll();
     }
 }
-?>
+

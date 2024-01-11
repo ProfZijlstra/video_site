@@ -1,17 +1,15 @@
 <?php
+
 /**
  * Reply DAO Class
  *
  * @author mzijlstra 09/26/2021
- * @Repository
- *
  */
+
+#[Repository]
 class ReplyDao
 {
-    /**
-     * @var PDO PDO database connection object
-     * @Inject("DB")
-     */
+    #[Inject('DB')]
     public $db;
 
     public function getAllFor($qids, $user_id)
@@ -34,14 +32,15 @@ class ReplyDao
         return $stmt->fetchAll();
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $stmt = $this->db->prepare(
-			"SELECT *
+            "SELECT *
             FROM reply 
             WHERE id = :id"
-		);
-		$stmt->execute(array("id" =>  $id));
-		return $stmt->fetch();
+        );
+        $stmt->execute(array("id" =>  $id));
+        return $stmt->fetch();
     }
 
     public function add($text, $uid, $cid)
@@ -68,12 +67,13 @@ class ReplyDao
         $stmt->execute(array("id" => $id));
     }
 
-    public function update($id, $text) {
+    public function update($id, $text)
+    {
         $stmt = $this->db->prepare(
-			"UPDATE reply 
+            "UPDATE reply 
             SET `text` = :reply, edited = NOW()
             WHERE id = :id"
-		);
-		$stmt->execute(array("id" =>  $id, "reply" => $text));
+        );
+        $stmt->execute(array("id" =>  $id, "reply" => $text));
     }
 }

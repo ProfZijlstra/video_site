@@ -3,54 +3,38 @@
 /**
  * Quiz Admin Controller Class
  * @author mzijlstra 07/31/2022
- * 
- * @Controller
  */
-class QuizAdminCtrl {
-    /**
-     * @Inject('QuizDao')
-     */
+
+#[Controller]
+class QuizAdminCtrl
+{
+    #[Inject('QuizDao')]
     public $quizDao;
 
-    /**
-     * @Inject('QuestionDao')
-     */
+    #[Inject('QuestionDao')]
     public $questionDao;
 
-    /**
-     * @Inject("OverviewHlpr")
-     */
+    #[Inject('OverviewHlpr')]
     public $overviewHlpr;
 
-    /**
-     * @Inject('MarkdownHlpr')
-     */
+    #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
-    /**
-     * @Inject('ImageHlpr')
-     */
+    #[Inject('ImageHlpr')]
     public $imageCtrl;
 
-    /**
-     * @Inject('OfferingDao')
-     */
+    #[Inject('OfferingDao')]
     public $offeringDao;
 
-    /**
-     * @Inject('DayDao')
-     */
+    #[Inject('DayDao')]
     public $dayDao;
 
-    /**
-     * @Inject('EnrollmentDao')
-     */
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec="observer")
-     */
-    public function courseOverview() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec: "observer")]
+    public function courseOverview()
+    {
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
         $this->overviewHlpr->overview();
@@ -59,8 +43,10 @@ class QuizAdminCtrl {
 
         // get all quizzes for this offering
         $oid = $VIEW_DATA["offering_id"];
-        if ($_SESSION['user']['isAdmin'] ||
-            $_SESSION['user']['isFaculty']) {
+        if (
+            $_SESSION['user']['isAdmin'] ||
+            $_SESSION['user']['isFaculty']
+        ) {
             $quizzes = $this->quizDao->allForOffering($oid);
         } else {
             $quizzes = $this->quizDao->visibleForOffering($oid);
@@ -79,10 +65,10 @@ class QuizAdminCtrl {
         return "quiz/overview.php";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec="instructor")
-     */
-    public function addQuiz() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec: "instructor")]
+    public function addQuiz()
+    {
         $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
         $name = filter_input(INPUT_POST, "name");
         $startdate = filter_input(INPUT_POST, "startdate");
@@ -93,14 +79,13 @@ class QuizAdminCtrl {
         $start = "{$startdate} {$starttime}";
         $stop = "{$stopdate} {$stoptime}";
         $id = $this->quizDao->add($name, $day_id, $start, $stop);
-    
+
         return "Location: quiz/{$id}/edit"; // edit quiz view
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/edit$!", sec="instructor")
-     */
-    public function editQuiz() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/edit$!", sec: "instructor")]
+    public function editQuiz()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -124,9 +109,10 @@ class QuizAdminCtrl {
     /**
      * Expects AJAX
      *  
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec="instructor")
      */
-    public function updateQuiz() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec: "instructor")]
+    public function updateQuiz()
+    {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[3];
@@ -146,29 +132,30 @@ class QuizAdminCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/status$!", sec="instructor")
      */
-    public function setQuizStatus() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/status$!", sec: "instructor")]
+    public function setQuizStatus()
+    {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
         $visible = filter_input(INPUT_POST, "visible", FILTER_VALIDATE_INT);
         $this->quizDao->setStatus($id, $visible);
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/del$!", sec="instructor")
-     */
-    public function deleteQuiz() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/del$!", sec: "instructor")]
+    public function deleteQuiz()
+    {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
         $this->quizDao->delete($id);
         return "Location: ../../quiz";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question$!", sec="instructor")
-     */
-    public function addQuestion() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question$!", sec: "instructor")]
+    public function addQuestion()
+    {
         $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
         $type = filter_input(INPUT_POST, "type");
         $qshifted = filter_input(INPUT_POST, "text");
@@ -180,30 +167,28 @@ class QuizAdminCtrl {
         if ($type == "text") {
             $ashifted = filter_input(INPUT_POST, "model_answer");
             if ($ashifted) {
-                $model_answer = $this->markdownCtrl->ceasarShift($ashifted);    
-            }            
+                $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
+            }
         }
 
-        $question_id = $this->questionDao->
-            add($quiz_id, $type, $text, $model_answer, $points, $seq);
+        $question_id = $this->questionDao->add($quiz_id, $type, $text, $model_answer, $points, $seq);
 
         if ($type == "image" && $_FILES['image']['tmp_name']) {
             $user_id = $_SESSION['user']['id'];
             $res = $this->imageCtrl->process("image", $question_id, $user_id);
             if (isset($res['error'])) {
                 return $res;
-            } 
-            $this->questionDao->
-                update($question_id, $text, $res['dst'], $points, $seq);
+            }
+            $this->questionDao->update($question_id, $text, $res['dst'], $points, $seq);
         }
 
         return "Location: ../{$quiz_id}/edit";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/\d+/question/(\d+)$!", sec="instructor")
-     */
-    public function updateQuestion() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/\d+/question/(\d+)$!", sec: "instructor")]
+    public function updateQuestion()
+    {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[3];
@@ -229,14 +214,14 @@ class QuizAdminCtrl {
         } else if ($type == "image") {
             $model_answer = filter_input(INPUT_POST, "model_answer");
         }
-        
+
         $this->questionDao->update($id, $text, $model_answer, $points, $hasMarkdown, $mdlAnsHasMd);
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/modelAnswerImage$!", sec="instructor")
-     */
-    public function uploadReplacementModelImage() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/modelAnswerImage$!", sec: "instructor")]
+    public function uploadReplacementModelImage()
+    {
         global $URI_PARAMS;
 
         $question_id = $URI_PARAMS[4];
@@ -248,10 +233,10 @@ class QuizAdminCtrl {
         return $res;
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/del$!", sec="instructor")
-     */
-    public function delQuestion() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/del$!", sec: "instructor")]
+    public function delQuestion()
+    {
         global $URI_PARAMS;
         $question_id = $URI_PARAMS[4];
         $this->questionDao->delete($question_id);
@@ -261,7 +246,8 @@ class QuizAdminCtrl {
     /**
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/report$!", sec="instructor");
      */
-    public function resultsReport() {
+    public function resultsReport()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -283,7 +269,7 @@ class QuizAdminCtrl {
         $quizzes = $this->quizDao->allForOffering($offering['id']);
 
         // build CSV header and query for data fetching 
-        $count= 1;
+        $count = 1;
         $header = '"studentId","firstName","lastName",';
         foreach ($quizzes as $quiz) {
             // build CSV header line
@@ -305,4 +291,3 @@ class QuizAdminCtrl {
     }
 }
 
-?>

@@ -3,38 +3,27 @@
 /**
  * Quiz Taking Controller Class
  * @author mzijlstra 12/21/2022
- * 
- * @Controller
  */
-class QuizTakingCtrl {
-    /**
-     * @Inject('QuizDao')
-     */
+
+#[Controller]
+class QuizTakingCtrl
+{
+    #[Inject('QuizDao')]
     public $quizDao;
 
-    /**
-     * @Inject('QuestionDao')
-     */
+    #[Inject('QuestionDao')]
     public $questionDao;
 
-    /**
-     * @Inject('AnswerDao')
-     */
+    #[Inject('AnswerDao')]
     public $answerDao;
 
-    /**
-     * @Inject('QuizEventDao')
-     */
+    #[Inject('QuizEventDao')]
     public $quizEventDao;
 
-    /**
-     * @Inject('MarkdownHlpr')
-     */
+    #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
-    /**
-     * @Inject('ImageHlpr')
-     */
+    #[Inject('ImageHlpr')]
     public $imageCtrl;
 
 
@@ -46,7 +35,8 @@ class QuizTakingCtrl {
      * 
      * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec="observer")
      */
-    public function viewQuiz() {
+    public function viewQuiz()
+    {
         require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -71,9 +61,9 @@ class QuizTakingCtrl {
         if ($startDiff->invert === 0) { // start is in the future
             // show countdown page
             $VIEW_DATA['title'] = "Quiz Countdown";
-            $VIEW_DATA['start'] = $startDiff;    
+            $VIEW_DATA['start'] = $startDiff;
             return "quiz/countdown.php";
-        } else if ($this->quizEnded($quiz_id)) { 
+        } else if ($this->quizEnded($quiz_id)) {
             // show quiz taken status page
             $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
             $VIEW_DATA["parsedown"] = new Parsedown();
@@ -97,14 +87,15 @@ class QuizTakingCtrl {
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/text$!", sec="observer")
      */
-    public function answerTextQuestion() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/text$!", sec: "observer")]
+    public function answerTextQuestion()
+    {
         global $URI_PARAMS;
 
         // reject answers after quiz stop time
         $quiz_id = $URI_PARAMS[3];
-        if ($this->quizEnded($quiz_id, 30)) { 
+        if ($this->quizEnded($quiz_id, 30)) {
             return "error/403.php";
         }
 
@@ -121,7 +112,7 @@ class QuizTakingCtrl {
         } else {
             $answer_id = $this->answerDao->add($answer, $question_id, $user_id, $hasMarkdown);
         }
-        return [ 'answer_id' => $answer_id ];
+        return ['answer_id' => $answer_id];
     }
 
     /**
@@ -129,14 +120,15 @@ class QuizTakingCtrl {
      * 
      * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/image$!", sec="observer")
      **/
-    public function answerImageQuestion() {
+    public function answerImageQuestion()
+    {
         global $URI_PARAMS;
 
         $quiz_id = $URI_PARAMS[3];
         $question_id = $URI_PARAMS[4];
 
         // reject answers after quiz stop time
-        if ($this->quizEnded($quiz_id, 30)) { 
+        if ($this->quizEnded($quiz_id, 30)) {
             return "error/403.php";
         }
 
@@ -157,13 +149,13 @@ class QuizTakingCtrl {
             $answer_id = $this->answerDao->add($dst, $question_id, $user_id, 0);
         }
 
-        return [ "dst" => $dst, "answer_id" => $answer_id ];
-    } 
+        return ["dst" => $dst, "answer_id" => $answer_id];
+    }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/finish$!", sec="observer")
-     */
-    public function finishQuiz() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/finish$!", sec: "observer")]
+    public function finishQuiz()
+    {
         global $URI_PARAMS;
 
         $quiz_id = $URI_PARAMS[3];
@@ -173,7 +165,8 @@ class QuizTakingCtrl {
         return "Location: ../../quiz";
     }
 
-    private function quizEnded($quiz_id, $leewaySecs = 0) {
+    private function quizEnded($quiz_id, $leewaySecs = 0)
+    {
         $quiz = $this->quizDao->byId($quiz_id);
         $quiz = $this->quizDao->byId($quiz_id);
         $tz = new DateTimeZone(TIMEZONE);
@@ -185,13 +178,13 @@ class QuizTakingCtrl {
         return $stopDiff->invert == 1; // is it in the past?
     }
 
-    private function sumPoints($array) {
+    private function sumPoints($array)
+    {
         $result = 0;
         foreach ($array as $item) {
             $result += $item['points'];
         }
         return $result;
     }
-
 }
-?>
+

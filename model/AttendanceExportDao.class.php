@@ -1,26 +1,29 @@
-<?php 
+<?php
+
 /**
  * Attendance_Export Dao Class
  * @author mzijlstra 2022-03-13
- * @Repository
  */
-class AttendanceExportDao {
-   	/**
-	 * @var PDO PDO database connection object
-	 * @Inject("DB")
-	 */
-	public $db;
 
-    public function clear($session_id) {
+#[Repository]
+class AttendanceExportDao
+{
+    #[Inject('DB')]
+    public $db;
+
+    public function clear($session_id)
+    {
         $stmt = $this->db->prepare("DELETE FROM attendance_export 
             WHERE session_id = :session_id");
         $stmt->execute(["session_id" => $session_id]);
     }
 
-    public function create($session_id, $exports) {
+    public function create($session_id, $exports)
+    {
         $stmt = $this->db->prepare(
             "INSERT INTO attendance_export 
-            VALUES(NULL, :studentID, :status, :inClass, :comment, :session_id)"); 
+            VALUES(NULL, :studentID, :status, :inClass, :comment, :session_id)"
+        );
         foreach ($exports as $export) {
             $stmt->execute([
                 "studentID" => $export["studentID"],
@@ -32,7 +35,8 @@ class AttendanceExportDao {
         }
     }
 
-    public function forSession($session_id) {
+    public function forSession($session_id)
+    {
         $stmt = $this->db->prepare(
             "SELECT e.id, e.studentID, e.status, e.inClass, e.comment,
             u.firstname, u.lastname, u.knownAs
@@ -45,7 +49,8 @@ class AttendanceExportDao {
         return $stmt->fetchAll();
     }
 
-    public function update($data) {      
+    public function update($data)
+    {
         $stmt = $this->db->prepare("UPDATE attendance_export SET 
             inClass = :inClass,
             comment = :comment
@@ -53,9 +58,10 @@ class AttendanceExportDao {
         $stmt->execute($data);
     }
 
-    public function getPhysicalAttendance($offering_id, $week) {
-		$stmt = $this->db->prepare(
-			"SELECT u.id, u.knownAs, u.studentID, 
+    public function getPhysicalAttendance($offering_id, $week)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT u.id, u.knownAs, u.studentID, 
 			u.firstname, u.lastname, u.email,
 			SUM(ex.inClass) AS inClass
             FROM `day` d 
@@ -65,14 +71,16 @@ class AttendanceExportDao {
             WHERE d.offering_id = :offering_id
 			AND d.abbr LIKE :week
 			GROUP BY ex.studentID
-			ORDER BY inClass");
-		$stmt->execute(["offering_id" => $offering_id, "week" => "$week%"]);
-		return $stmt->fetchAll();		
-	}
+			ORDER BY inClass"
+        );
+        $stmt->execute(["offering_id" => $offering_id, "week" => "$week%"]);
+        return $stmt->fetchAll();
+    }
 
-    public function internationalPhysicalBelow($offering_id, $week, $min) {
-		$stmt = $this->db->prepare(
-			"SELECT u.id, u.knownAs, u.studentID, 
+    public function internationalPhysicalBelow($offering_id, $week, $min)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT u.id, u.knownAs, u.studentID, 
 			u.firstname, u.lastname, u.email, u.teamsName,
 			SUM(ex.inClass) AS inClass
             FROM `day` d 
@@ -84,11 +92,14 @@ class AttendanceExportDao {
             AND u.studentID > 600000
 			GROUP BY ex.studentID
             HAVING inClass < :min
-			ORDER BY inClass");
-		$stmt->execute(["offering_id" => $offering_id, 
-                        "week" => "$week%", 
-                        "min" => $min]);
-		return $stmt->fetchAll();		
-
+			ORDER BY inClass"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id,
+            "week" => "$week%",
+            "min" => $min
+        ]);
+        return $stmt->fetchAll();
     }
 }
+

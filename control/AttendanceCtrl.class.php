@@ -3,56 +3,35 @@
 /**
  * Attendance Controller Class
  * @author mzijlstra 2021-11-29
- *
- * @Controller
  */
+
+#[Controller]
 class AttendanceCtrl
 {
-    /**
-     * @Inject("OverviewHlpr")
-     */
+    #[Inject('OverviewHlpr')]
     public $overviewCtr;
-    /**
-     * @Inject("ClassSessionDao")
-     */
+    #[Inject('ClassSessionDao')]
     public $classSessionDao;
-    /**
-     * @Inject("MeetingDao")
-     */
+    #[Inject('MeetingDao')]
     public $meetingDao;
-    /**
-     * @Inject("OfferingDao")
-     */
+    #[Inject('OfferingDao')]
     public $offeringDao;
-    /**
-     * @Inject("EnrollmentDao")
-     */
+    #[Inject('EnrollmentDao')]
     public $enrollmentDao;
-    /**
-     * @Inject("AttendanceDao")
-     */
+    #[Inject('AttendanceDao')]
     public $attendanceDao;
-    /**
-     * @Inject("AttendanceExportDao")
-     */
+    #[Inject('AttendanceExportDao')]
     public $attendanceExportDao;
-    /**
-     * @Inject("ExcusedDao")
-     */
+    #[Inject('ExcusedDao')]
     public $excusedDao;
-    /**
-     * @Inject("MailHlpr")
-     */
+    #[Inject('MailHlpr')]
     public $mailHlpr;
-    /**
-     * @Inject('CamsDao')
-     */
+    #[Inject('CamsDao')]
     public $camsDao;
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec="assistant")
-     */
-    public function overview() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec: "assistant")]
+    public function overview()
+    {
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
         $this->overviewCtr->overview();
@@ -94,10 +73,10 @@ class AttendanceCtrl
         return "attendance/attendance.php";
     }
 
-    /**
-     *  @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$!", sec="assistant")
-     */
-    public function excuseAbsence() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$!", sec: "assistant")]
+    public function excuseAbsence()
+    {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, "teamsName");
         $reason = filter_input(INPUT_POST, "reason");
@@ -108,18 +87,18 @@ class AttendanceCtrl
     /**
      * Expects AJAX 
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delExcuse$!", sec="assistant")
      */
-    public function deleteExcuse() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delExcuse$!", sec: "assistant")]
+    public function deleteExcuse()
+    {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, "teamsName");
         $this->excusedDao->delete($session_id, $teamsName);
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$!", sec="assistant")
-     */
-    public function professionalismReport() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$!", sec: "assistant")]
+    public function professionalismReport()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -130,7 +109,7 @@ class AttendanceCtrl
         $prof_data = $this->attendanceDao->professionalism($offering['id']);
 
         $professionals = [];
-        foreach($prof_data as $student) {
+        foreach ($prof_data as $student) {
             $professional = [];
             $professional["id"] = $student["studentID"];
             $professional["name"] = $student['knownAs'] . " " . $student['lastname'];
@@ -161,14 +140,14 @@ class AttendanceCtrl
         return "attendance/professionalism.php";
     }
 
-    private static function byTotal($a, $b) {
+    private static function byTotal($a, $b)
+    {
         return $b["totalSecs"] - $a["totalSecs"];
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$!", sec="assistant")
-     */
-    public function physicalAttendanceReport() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$!", sec: "assistant")]
+    public function physicalAttendanceReport()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -190,15 +169,16 @@ class AttendanceCtrl
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)/email$!", sec="assistant")
      */
-    public function emailLowPhysical() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)/email$!", sec: "assistant")]
+    public function emailLowPhysical()
+    {
         global $URI_PARAMS;
 
         $course_number = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $week = $URI_PARAMS[3];
-		$minPhys = filter_input(INPUT_POST, "minPhys", FILTER_SANITIZE_NUMBER_INT);
+        $minPhys = filter_input(INPUT_POST, "minPhys", FILTER_SANITIZE_NUMBER_INT);
 
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $below = $this->attendanceExportDao->internationalPhysicalBelow($offering['id'], $week, $minPhys);
@@ -206,12 +186,12 @@ class AttendanceCtrl
         $replyTo = [$ins['email'], $ins['teamsName']];
 
         foreach ($below as $student) {
-            $to = [ $student['email'], $student['teamsName'] ];
-            $knownAs =trim($student['knownAs']);
-            $inClass = $student['inClass']; 
+            $to = [$student['email'], $student['teamsName']];
+            $knownAs = trim($student['knownAs']);
+            $inClass = $student['inClass'];
             $remaining = $minPhys - $inClass;
-            $message = 
-"Hi $knownAs,
+            $message =
+                "Hi $knownAs,
 
 Our records indicate that you physically attended $inClass session(s). This is 
 below the required minimum of $minPhys in-class sessions per week.
@@ -227,10 +207,9 @@ Manalabs Attendance System.
         }
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec="assistant")
-     */
-    public function exportReport() {
+    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec: "assistant")]
+    public function exportReport()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -243,12 +222,18 @@ Manalabs Attendance System.
         $date = $this->offeringDao->getDate($offering, $day_abbr);
 
         $session = $this->classSessionDao->getSession(
-            $course_number, $block, $day_abbr, $stype);
+            $course_number,
+            $block,
+            $day_abbr,
+            $stype
+        );
         $status = $this->classSessionDao->calcStatus($session['id']);
 
-        if ($session['generated'] != $status['meetings'] || 
-                ($session["status"] != "GENERATED" && 
-                 $session["status"] != "EXPORTED")) {
+        if (
+            $session['generated'] != $status['meetings'] ||
+            ($session["status"] != "GENERATED" &&
+                $session["status"] != "EXPORTED")
+        ) {
             $this->generateExportReport($session["id"]);
             $session = $this->classSessionDao->getSessionById($session["id"]);
         }
@@ -261,15 +246,15 @@ Manalabs Attendance System.
         $VIEW_DATA['stype'] = $stype;
         $VIEW_DATA['session'] = $session;
         $VIEW_DATA['exports'] = $exports;
-        $VIEW_DATA['title'] = $day_abbr . " " .$stype . " Attendance Export";
+        $VIEW_DATA['title'] = $day_abbr . " " . $stype . " Attendance Export";
 
         return "attendance/attendanceExport.php";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/export$!", sec="instructor")
-     */
-    public function export() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/export$!", sec: "instructor")]
+    public function export()
+    {
         global $URI_PARAMS;
 
         $course_number = $URI_PARAMS[1];
@@ -293,7 +278,11 @@ Manalabs Attendance System.
 
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $session = $this->classSessionDao->getSession(
-            $course_number, $block, $day_abbr, $real_stype);
+            $course_number,
+            $block,
+            $day_abbr,
+            $real_stype
+        );
         $cams = $this->camsDao->get($offering['id']);
         $exports = $this->attendanceExportDao->forSession($session["id"]);
 
@@ -308,8 +297,8 @@ Manalabs Attendance System.
             $hlpr = new CamsHlpr($cams);
             $hlpr->login($pwd);
             $hlpr->submitAttendance($students, $stype, $date, $start, $stop);
-            $hlpr->logout();    
-        } catch(Exception $e) {
+            $hlpr->logout();
+        } catch (Exception $e) {
             return "error/500.php";
         }
 
@@ -321,10 +310,10 @@ Manalabs Attendance System.
         return "Location: $real_stype";
     }
 
-    /**
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec="assistant")
-     */
-    public function regenExportReport() {
+
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec: "assistant")]
+    public function regenExportReport()
+    {
         global $URI_PARAMS;
 
         $course_number = $URI_PARAMS[1];
@@ -333,7 +322,11 @@ Manalabs Attendance System.
         $stype = $URI_PARAMS[4]; // AM or  PM
 
         $session = $this->classSessionDao->getSession(
-            $course_number, $block, $day_abbr, $stype);
+            $course_number,
+            $block,
+            $day_abbr,
+            $stype
+        );
 
         $this->generateExportReport($session['id']);
         return "Location: $stype";
@@ -342,15 +335,17 @@ Manalabs Attendance System.
     /**
      * Expects AJAX
      * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM|SAT)/(\d+)$!", sec="assistant")
      */
-    public function updateExportRow() {
+    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM|SAT)/(\d+)$!", sec: "assistant")]
+    public function updateExportRow()
+    {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         $this->attendanceExportDao->update($data);
     }
 
-    private function generateExportReport($session_id) {
+    private function generateExportReport($session_id)
+    {
         // update session with status, start, stop, meetings
         $stats = $this->classSessionDao->calcStatus($session_id);
         $stats["status"] = "GENERATED";
@@ -403,7 +398,8 @@ Manalabs Attendance System.
         $this->attendanceExportDao->create($session_id, $exports);
     }
 
-    private function getStatus($attendant) {
+    private function getStatus($attendant)
+    {
         if ($attendant["excused"]) {
             return "Excused";
         } else if ($attendant["absent"]) {
@@ -419,31 +415,33 @@ Manalabs Attendance System.
         }
     }
 
-    private function getComment($attendant) {
+    private function getComment($attendant)
+    {
         $comments = [];
         if ($attendant['excused']) {
             $comments[] = "excused";
         }
         if ($attendant["absent"]) {
             $comments[] = "absent";
-        } 
+        }
         if ($attendant["late"]) {
             $mins = $attendant["minsLate"];
             $mins = substr($mins, $this->timePos($mins));
-            $comments[] = "late: $mins mins" ; 
-        } 
+            $comments[] = "late: $mins mins";
+        }
         if ($attendant["leaveEarly"]) {
             $mins = $attendant["minsLeave"];
             $mins = substr($mins, $this->timePos($mins));
             $comments[] = "left early: $mins mins";
-        } 
+        }
         if ($attendant["middleMissing"]) {
             $comments[] =  "missed middle";
-        }        
+        }
         return implode(", ", $comments);
     }
 
-    private function timePos($time) {
+    private function timePos($time)
+    {
         $i = 0;
         while ($time[$i] == "0" || $time[$i] == ":") {
             $i++;
