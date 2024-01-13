@@ -5,7 +5,7 @@
  * @author mzijlstra 07/31/2022
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz")]
 class QuizAdminCtrl
 {
     #[Inject('QuizDao')]
@@ -32,7 +32,7 @@ class QuizAdminCtrl
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec: "observer")]
+    #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
         // We're building on top of  overview -- run it first
@@ -66,7 +66,7 @@ class QuizAdminCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz$!", sec: "instructor")]
+    #[Post(uri: "$", sec: "instructor")]
     public function addQuiz()
     {
         $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
@@ -83,7 +83,7 @@ class QuizAdminCtrl
         return "Location: quiz/{$id}/edit"; // edit quiz view
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/edit$!", sec: "instructor")]
+    #[Get(uri: "/(\d+)/edit$", sec: "instructor")]
     public function editQuiz()
     {
         global $URI_PARAMS;
@@ -108,9 +108,8 @@ class QuizAdminCtrl
 
     /**
      * Expects AJAX
-     *  
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec: "instructor")]
+    #[Post(uri: "/(\d+)$", sec: "instructor")]
     public function updateQuiz()
     {
         global $URI_PARAMS;
@@ -131,9 +130,8 @@ class QuizAdminCtrl
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/status$!", sec: "instructor")]
+    #[Post(uri: "/(\d+)/status$", sec: "instructor")]
     public function setQuizStatus()
     {
         global $URI_PARAMS;
@@ -143,7 +141,7 @@ class QuizAdminCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/del$!", sec: "instructor")]
+    #[Post(uri: "/(\d+)/del$", sec: "instructor")]
     public function deleteQuiz()
     {
         global $URI_PARAMS;
@@ -153,7 +151,7 @@ class QuizAdminCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question$!", sec: "instructor")]
+    #[Post(uri: "/(\d+)/question$", sec: "instructor")]
     public function addQuestion()
     {
         $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
@@ -186,7 +184,7 @@ class QuizAdminCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/\d+/question/(\d+)$!", sec: "instructor")]
+    #[Post(uri: "/\d+/question/(\d+)$", sec: "instructor")]
     public function updateQuestion()
     {
         global $URI_PARAMS;
@@ -219,7 +217,7 @@ class QuizAdminCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/modelAnswerImage$!", sec: "instructor")]
+    #[Post(uri: "/(\d+)/question/(\d+)/modelAnswerImage$", sec: "instructor")]
     public function uploadReplacementModelImage()
     {
         global $URI_PARAMS;
@@ -234,7 +232,7 @@ class QuizAdminCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/del$!", sec: "instructor")]
+    #[Post(uri: "/(\d+)/question/(\d+)/del$", sec: "instructor")]
     public function delQuestion()
     {
         global $URI_PARAMS;
@@ -243,9 +241,7 @@ class QuizAdminCtrl
         return "Location: ../../edit";
     }
 
-    /**
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/report$!", sec="instructor");
-     */
+    #[Get(uri: "/report$", sec: "instructor")]
     public function resultsReport()
     {
         global $URI_PARAMS;

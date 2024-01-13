@@ -5,7 +5,7 @@
  * @author mzijlstra 2023-01-04
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)")]
 class EnrollmentCtrl
 {
     #[Inject('OfferingDao')]
@@ -18,7 +18,7 @@ class EnrollmentCtrl
     public $mailHlpr;
 
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec: "instructor")]
+    #[Get(uri: "/enrolled$", sec: "instructor")]
     public function viewEnrollment()
     {
         global $URI_PARAMS;
@@ -60,7 +60,7 @@ class EnrollmentCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enrolled$!", sec: "instructor")]
+    #[Post(uri: "/enrolled$", sec: "instructor")]
     public function replaceEnrollment()
     {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
@@ -76,7 +76,7 @@ class EnrollmentCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/observe$!", sec: "login")]
+    #[Post(uri: "/observe$", sec: "login")]
     public function requestObserve()
     {
         global $URI_PARAMS;
@@ -116,7 +116,7 @@ EOD;
         return "Location: ../$block/";
     }
 
-    #[Get(uri: "!^/observe$!", sec: "instructor")]
+    #[Get(uri: "^/observe$", sec: "instructor")]
     public function showRequest()
     {
         global $VIEW_DATA;
@@ -138,7 +138,7 @@ EOD;
     }
 
 
-    #[Post(uri: "!^/observe$!", sec: "instructor")]
+    #[Post(uri: "^/observe$", sec: "instructor")]
     public function observerAllowDeny()
     {
         $offering_id = filter_input(INPUT_POST, "oid", FILTER_SANITIZE_NUMBER_INT);
@@ -170,7 +170,7 @@ EOD;
 
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/enroll$!", sec: "instructor")]
+    #[Post(uri: "/enroll$", sec: "instructor")]
     public function enroll()
     {
         global $VIEW_DATA;
@@ -232,7 +232,7 @@ EOD;
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/config_enroll$!", sec: "instructor")]
+    #[Post(uri: "/config_enroll$", sec: "instructor")]
     public function update()
     {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
@@ -244,7 +244,7 @@ EOD;
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/unenroll$!", sec: "instructor")]
+    #[Post(uri: "/unenroll$", sec: "instructor")]
     public function unenroll()
     {
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
@@ -254,7 +254,7 @@ EOD;
     }
 
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signup$!", sec: "none")]
+    #[Get(uri: "/signup$", sec: "none")]
     public function msdSignupPage()
     {
         global $VIEW_DATA;
@@ -273,7 +273,7 @@ EOD;
         return "signup.php";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signedup$!", sec: "none")]
+    #[Get(uri: "/signedup$", sec: "none")]
     public function signedup()
     {
         global $URI_PARAMS;
@@ -285,7 +285,7 @@ EOD;
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/signup$!", sec: "none")]
+    #[Post(uri: "/signup$", sec: "none")]
     public function msdSignup()
     {
         global $VIEW_DATA;

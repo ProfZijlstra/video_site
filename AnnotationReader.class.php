@@ -12,24 +12,16 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class Controller
 {
+    public string $path;
+    public function __construct(string $path = "")
+    {
+        $this->path = $path;
+    }
 }
 
 #[Attribute(Attribute::TARGET_CLASS)]
 class Repository
 {
-}
-
-/**
- * TODO implement class level path annotation processing
- */
-#[Attribute(Attribute::TARGET_CLASS)]
-class Path
-{
-    public string $path;
-    public function __construct(string $path)
-    {
-        $this->path = $path;
-    }
 }
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -160,16 +152,20 @@ class AnnotationReader
      
      * @param Reflection_Class $reflect_class
      */
-    private function map_requests(ReflectionClass $reflect_class): void
+    private function map_requests(ReflectionClass $reflect_class, string $path): void
     {
         foreach ($reflect_class->getMethods() as $m) {
             $attrs = $m->getAttributes();
             foreach ($attrs as $a) {
                 $req = $a->newInstance();
+                if (!($req instanceof Request)) {
+                    continue;
+                }
                 $this->validate_request_annotation($req);
                 $method_loc = $reflect_class->getName() . "@" . $m->getName();
-                $mapping = ["sec" => $req->seq, "route" => $method_loc];
-                $this->mappings[$req->method][$req->uri] = $mapping;
+                $mapping = ["sec" => $req->sec, "route" => $method_loc];
+                $uri = "!" . $path . $req->uri . "!";
+                $this->mappings[$req->method][$uri] = $mapping;
             }
         }
     }
@@ -206,7 +202,8 @@ class AnnotationReader
             if ($a->getName() == "Controller") {
                 $to_inject = $this->to_inject($r);
                 $this->controllers[$class] = $to_inject;
-                $this->map_requests($r);
+                $path = $a->newInstance()->path;
+                $this->map_requests($r, $path);
             }
         }
     }

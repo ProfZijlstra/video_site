@@ -5,7 +5,7 @@
  * @author mzijlstra 12/21/2022
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz")]
 class QuizTakingCtrl
 {
     #[Inject('QuizDao')]
@@ -33,8 +33,8 @@ class QuizTakingCtrl
      * 2. If it is used after the stop time it shows a status for each question
      * 3. If between start and stop the user can give answers
      * 
-     * @GET(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)$!", sec="observer")
      */
+    #[Get(uri: "/(\d+)$", sec: "observer")]
     public function viewQuiz()
     {
         require_once("lib/Parsedown.php");
@@ -86,9 +86,8 @@ class QuizTakingCtrl
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/text$!", sec: "observer")]
+    #[Post(uri: "/(\d+)/question/(\d+)/text$", sec: "observer")]
     public function answerTextQuestion()
     {
         global $URI_PARAMS;
@@ -117,9 +116,8 @@ class QuizTakingCtrl
 
     /**
      * Expects AJAX
-     * 
-     * @POST(uri="!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)/image$!", sec="observer")
      **/
+    #[Post(uri: "/(\d+)/question/(\d+)/image$", sec: "observer")]
     public function answerImageQuestion()
     {
         global $URI_PARAMS;
@@ -153,7 +151,7 @@ class QuizTakingCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/finish$!", sec: "observer")]
+    #[Post(uri: "/(\d+)/finish$", sec: "observer")]
     public function finishQuiz()
     {
         global $URI_PARAMS;

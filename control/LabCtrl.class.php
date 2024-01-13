@@ -5,13 +5,13 @@
  * @author mzijlstra 01/08/2024
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/lab")]
 class LabCtrl
 {
     #[Inject('OverviewHlpr')]
     public $overviewHlpr;
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/lab$!", sec: "observer")]
+    #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
         // We're building on top of  overview -- run it first

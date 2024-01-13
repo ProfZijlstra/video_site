@@ -29,7 +29,7 @@ class AttendanceCtrl
     #[Inject('CamsDao')]
     public $camsDao;
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec: "assistant")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$", sec: "assistant")]
     public function overview()
     {
         // We're building on top of  overview -- run it first
@@ -74,7 +74,7 @@ class AttendanceCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$!", sec: "assistant")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$", sec: "assistant")]
     public function excuseAbsence()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -86,9 +86,8 @@ class AttendanceCtrl
 
     /**
      * Expects AJAX 
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delExcuse$!", sec: "assistant")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delExcuse$", sec: "assistant")]
     public function deleteExcuse()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -96,7 +95,7 @@ class AttendanceCtrl
         $this->excusedDao->delete($session_id, $teamsName);
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$!", sec: "assistant")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$", sec: "assistant")]
     public function professionalismReport()
     {
         global $URI_PARAMS;
@@ -145,7 +144,7 @@ class AttendanceCtrl
         return $b["totalSecs"] - $a["totalSecs"];
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$!", sec: "assistant")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$", sec: "assistant")]
     public function physicalAttendanceReport()
     {
         global $URI_PARAMS;
@@ -168,9 +167,8 @@ class AttendanceCtrl
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)/email$!", sec: "assistant")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)/email$", sec: "assistant")]
     public function emailLowPhysical()
     {
         global $URI_PARAMS;
@@ -207,7 +205,7 @@ Manalabs Attendance System.
         }
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec: "assistant")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$", sec: "assistant")]
     public function exportReport()
     {
         global $URI_PARAMS;
@@ -252,7 +250,7 @@ Manalabs Attendance System.
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/export$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/export$", sec: "instructor")]
     public function export()
     {
         global $URI_PARAMS;
@@ -311,7 +309,7 @@ Manalabs Attendance System.
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$!", sec: "assistant")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$", sec: "assistant")]
     public function regenExportReport()
     {
         global $URI_PARAMS;
@@ -336,7 +334,7 @@ Manalabs Attendance System.
      * Expects AJAX
      * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM|SAT)/(\d+)$!", sec: "assistant")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM|SAT)/(\d+)$", sec: "assistant")]
     public function updateExportRow()
     {
         $json = file_get_contents('php://input');

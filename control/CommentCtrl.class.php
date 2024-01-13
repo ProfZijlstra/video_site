@@ -5,7 +5,7 @@
  * @author mzijlstra 09/24/2021
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)")]
 class CommentCtrl
 {
 
@@ -34,7 +34,7 @@ class CommentCtrl
     public $enrollmentDao;
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/comment$!", sec: "observer")]
+    #[Post(uri: "/comment$", sec: "observer")]
     public function add()
     {
         global $URI_PARAMS;
@@ -67,7 +67,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delComment$!", sec: "observer")]
+    #[Post(uri: "/delComment$", sec: "observer")]
     public function del()
     {
         $id = filter_input(INPUT_POST, "id");
@@ -79,7 +79,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         return "Location: {$tab}#commentForm";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getComment$!", sec: "observer")]
+    #[Get(uri: "/getComment$", sec: "observer")]
     public function get()
     {
         $id = filter_input(INPUT_GET, "id");
@@ -87,7 +87,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updComment$!", sec: "observer")]
+    #[Post(uri: "/updComment$", sec: "observer")]
     public function update()
     {
         $id = filter_input(INPUT_POST, "id");
@@ -109,9 +109,8 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upvote$!", sec: "observer")]
+    #[Post(uri: "/upvote$", sec: "observer")]
     public function upvote()
     {
         return array("vid" => $this->vote("q", 1), "type" => "up");
@@ -119,9 +118,8 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downvote$!", sec: "observer")]
+    #[Post(uri: "/downvote$", sec: "observer")]
     public function downvote()
     {
         return array("vid" => $this->vote("q", -1), "type" => "down");
@@ -129,9 +127,8 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/upreply$!", sec: "observer")]
+    #[Post(uri: "/upreply$", sec: "observer")]
     public function upreply()
     {
         return array("vid" => $this->vote("r", 1), "type" => "up");
@@ -139,9 +136,8 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/downreply$!", sec: "observer")]
+    #[Post(uri: "/downreply$", sec: "observer")]
     public function downreply()
     {
         return array("vid" => $this->vote("r", -1), "type" => "down");
@@ -191,7 +187,7 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/addReply$!", sec: "observer")]
+    #[Post(uri: "/addReply$", sec: "observer")]
     public function addReply()
     {
         global $URI_PARAMS;
@@ -223,7 +219,7 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
         return "Location: {$tab}#r{$id}";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\d+D\d+)/getReply$!", sec: "observer")]
+    #[Get(uri: "/getReply$", sec: "observer")]
     public function getReply()
     {
         $id = filter_input(INPUT_GET, "id");
@@ -231,7 +227,7 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/updReply$!", sec: "observer")]
+    #[Post(uri: "/updReply$", sec: "observer")]
     public function updateReply()
     {
         $id = filter_input(INPUT_POST, "id");
@@ -251,7 +247,7 @@ See reply at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$id}
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\d+D\d+/delReply$!", sec: "observer")]
+    #[Post(uri: "/delReply$", sec: "observer")]
     public function delReply()
     {
         $id = filter_input(INPUT_POST, "id");

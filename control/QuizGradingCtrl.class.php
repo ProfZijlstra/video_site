@@ -5,7 +5,7 @@
  * @author mzijlstra 12/21/2022
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz")]
 class QuizGradingCtrl
 {
     #[Inject('QuizDao')]
@@ -32,7 +32,7 @@ class QuizGradingCtrl
     #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/grade$!", sec: "assistant")]
+    #[Get(uri: "/(\d+)/grade$", sec: "assistant")]
     public function gradeQuiz()
     {
         global $URI_PARAMS;
@@ -77,7 +77,7 @@ class QuizGradingCtrl
         return "quiz/gradeOverview.php";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/(\d+)$!", sec: "assistant")]
+    #[Get(uri: "^/(\d+)/question/(\d+)$", sec: "assistant")]
     public function gradeQuestion()
     {
         require_once("lib/Parsedown.php");
@@ -113,7 +113,7 @@ class QuizGradingCtrl
         return "quiz/gradeQuestion.php";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/(\d+)$!", sec: "assistant")]
+    #[Get(uri: "^/(\d+)/user/(\d+)$", sec: "assistant")]
     public function gradeUser()
     {
         require_once("lib/Parsedown.php");
@@ -139,9 +139,8 @@ class QuizGradingCtrl
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/question/grade$!", sec: "assistant")]
+    #[Post(uri: "/(\d+)/question/grade$", sec: "assistant")]
     public function grade()
     {
         $answer_ids = filter_input(INPUT_POST, "answer_ids");
@@ -158,9 +157,8 @@ class QuizGradingCtrl
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz/(\d+)/user/grade$!", sec: "assistant")]
+    #[Post(uri: "/(\d+)/user/grade$", sec: "assistant")]
     public function gradeByUser()
     {
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);

@@ -19,7 +19,7 @@ class UserCtrl
     /**
      * Simple mapping to the login page
      */
-    #[Get(uri: "!^/.*login$!", sec: "none")]
+    #[Get(uri: "^/.*login$", sec: "none")]
     public function getLogin()
     {
         global $VIEW_DATA;
@@ -29,7 +29,7 @@ class UserCtrl
         return "login.php";
     }
 
-    #[Get(uri: "!^/.*hasSession$!", sec: "none")]
+    #[Get(uri: "^/.*hasSession$", sec: "none")]
     public function hasSession()
     {
         $result = ["session" => true];
@@ -39,7 +39,7 @@ class UserCtrl
         return $result;
     }
 
-    #[Get(uri: "!^/.*reAuth$!", sec: "none")]
+    #[Get(uri: "^/.*reAuth$", sec: "none")]
     public function reAuth()
     {
         global $MY_BASE;
@@ -57,7 +57,7 @@ class UserCtrl
      * @return string appropriate redirect for success or failure
      * 
      */
-    #[Post(uri: "!^/.*login$!", sec: "none")]
+    #[Post(uri: "^/.*login$", sec: "none")]
     public function login()
     {
         global $MY_BASE;
@@ -124,7 +124,7 @@ class UserCtrl
      * Logs someone out of the application
      * @return string redirect back to login page
      */
-    #[Get(uri: "!^/.*logout$!", sec: "none")]
+    #[Get(uri: "^/.*logout$", sec: "none")]
     public function logout()
     {
         session_destroy();
@@ -138,7 +138,7 @@ class UserCtrl
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
      */
-    #[Get(uri: "!^/user$!", sec: "admin")]
+    #[Get(uri: "^/user$", sec: "admin")]
     public function all()
     {
         global $VIEW_DATA;
@@ -150,7 +150,7 @@ class UserCtrl
     /**
      * Show the create user page
      */
-    #[Get(uri: "!^/user/add$!", sec: "admin")]
+    #[Get(uri: "^/user/add$", sec: "admin")]
     public function addUser()
     {
         global $VIEW_DATA;
@@ -161,7 +161,7 @@ class UserCtrl
     /**
      * Get faculty memebers
      */
-    #[Get(uri: "!^/user/faculty$!", sec: "admin")]
+    #[Get(uri: "^/user/faculty$", sec: "admin")]
     public function getFaculty()
     {
         return $this->userDao->faculty();
@@ -173,7 +173,7 @@ class UserCtrl
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
      */
-    #[Get(uri: "!^/user/(\d+)$!", sec: "admin")]
+    #[Get(uri: "^/user/(\d+)$", sec: "admin")]
     public function details()
     {
         global $VIEW_DATA;
@@ -190,7 +190,7 @@ class UserCtrl
         return "userDetails.php";
     }
 
-    #[Get(uri: "!^/user/(\D.*)$!", sec: "admin")]
+    #[Get(uri: "^/user/(\D.*)$", sec: "admin")]
     public function teamsName()
     {
         global $URI_PARAMS;
@@ -209,7 +209,7 @@ class UserCtrl
      * @throws PDOException
      * 
      */
-    #[Post(uri: "!^/user$!", sec: "admin")]
+    #[Post(uri: "^/user$", sec: "admin")]
     public function create()
     {
         global $VIEW_DATA;
@@ -280,7 +280,7 @@ class UserCtrl
      * @return string redirect URI
      * 
      */
-    #[Post(uri: "!^/user/(\d+)$!", sec: "admin")]
+    #[Post(uri: "^/user/(\d+)$", sec: "admin")]
     public function update()
     {
         global $URI_PARAMS;
@@ -331,7 +331,7 @@ class UserCtrl
      * Updates Password
      * 
      */
-    #[Post(uri: "!^/user/(\d+)/pass$!", sec: "admin")]
+    #[Post(uri: "^/user/(\d+)/pass$", sec: "admin")]
     public function updatePass()
     {
         global $URI_PARAMS;
@@ -343,7 +343,7 @@ class UserCtrl
     }
 
 
-    #[Post(uri: "!^/user/registerBadge$!", sec: "admin")]
+    #[Post(uri: "^/user/registerBadge$", sec: "admin")]
     public function updateAttendance()
     {
         $json = file_get_contents('php://input');
@@ -351,7 +351,7 @@ class UserCtrl
         $this->userDao->setBadge($data["studentID"], $data["badge"]);
     }
 
-    #[Get(uri: "!^/remap$!", sec: "admin")]
+    #[Get(uri: "^/remap$", sec: "admin")]
     public function remap()
     {
         require 'AnnotationReader.class.php';

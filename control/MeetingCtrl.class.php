@@ -5,27 +5,34 @@
  * @author mzijlstra 2022-03-13
  */
 
-#[Controller]
+#[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)")]
 class MeetingCtrl
 {
     #[Inject('MeetingDao')]
     public $meetingDao;
+
     #[Inject('AttendanceDao')]
     public $attendanceDao;
+
     #[Inject('OfferingDao')]
     public $offeringDao;
+
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
+
     #[Inject('ClassSessionDao')]
     public $classSessionDao;
+
     #[Inject('AttendanceImportDao')]
     public $attendanceImportDao;
+
     #[Inject('ExcusedDao')]
     public $excusedDao;
+
     #[Inject('MailHlpr')]
     public $mailHlpr;
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec: "assistant")]
+    #[Get(uri: "/meeting/(\d+)$", sec: "assistant")]
     public function getMeeting()
     {
         global $URI_PARAMS;
@@ -65,9 +72,8 @@ class MeetingCtrl
 
     /**
      * Expects AJAX
-     * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)$!", sec: "assistant")]
+    #[Post(uri: "/meeting/(\d+)$", sec: "assistant")]
     public function updMeeting()
     {
         $meeting_id = filter_input(INPUT_POST, "id", FILTER_SANITIZE_NUMBER_INT);
@@ -83,7 +89,7 @@ class MeetingCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/regen/(\d+)$!", sec: "assistant")]
+    #[Post(uri: "/meeting/regen/(\d+)$", sec: "assistant")]
     public function regenReport()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -96,7 +102,7 @@ class MeetingCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/attend/(\d+)$!", sec: "assistant")]
+    #[Post(uri: "/meeting/attend/(\d+)$", sec: "assistant")]
     public function updateAttendance()
     {
         $json = file_get_contents('php://input');
@@ -105,7 +111,7 @@ class MeetingCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/absent$!", sec: "assistant")]
+    #[Post(uri: "/meeting/(\d+)/absent$", sec: "assistant")]
     public function markAbsent()
     {
         global $URI_PARAMS;
@@ -118,7 +124,7 @@ class MeetingCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/present$!", sec: "assistant")]
+    #[Post(uri: "/meeting/(\d+)/present$", sec: "assistant")]
     public function markPresent()
     {
         global $URI_PARAMS;
@@ -131,7 +137,7 @@ class MeetingCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailAbsent$!", sec: "assistant")]
+    #[Post(uri: "/meeting/(\d+)/emailAbsent$", sec: "assistant")]
     public function emailAbsent()
     {
         global $URI_PARAMS;
@@ -169,7 +175,7 @@ We noticed you were absent from the " . $absent["title"] . " meeting from its st
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/emailTardy$!", sec: "assistant")]
+    #[Post(uri: "/meeting/(\d+)/emailTardy$", sec: "assistant")]
     public function emailTardy()
     {
         global $URI_PARAMS;
@@ -220,7 +226,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
 
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$!", sec: "assistant")]
+    #[Post(uri: "/attendance$", sec: "assistant")]
     public function addMeeting()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -239,7 +245,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting$!", sec: "assistant")]
+    #[Post(uri: "/meeting$", sec: "assistant")]
     public function createMeeting()
     {
         $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
@@ -285,7 +291,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/meeting/(\d+)/delete$!", sec: "assistant")]
+    #[Post(uri: "/meeting/(\d+)/delete$", sec: "assistant")]
     public function deleteMeeting()
     {
         global $URI_PARAMS;

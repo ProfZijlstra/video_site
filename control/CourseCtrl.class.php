@@ -27,7 +27,7 @@ class CourseCtrl
     #[Inject('CamsDao')]
     public $camsDao;
 
-    #[Get(uri: "!^/?$!", sec: "login")]
+    #[Get(uri: "^/?$", sec: "login")]
     public function showMyCourses()
     {
         global $VIEW_DATA;
@@ -51,7 +51,7 @@ class CourseCtrl
         return "courses.php";
     }
 
-    #[Get(uri: "!^/all$!", sec: "login")]
+    #[Get(uri: "^/all$", sec: "login")]
     public function showAllCourses()
     {
         global $VIEW_DATA;
@@ -72,7 +72,7 @@ class CourseCtrl
     }
 
 
-    #[Post(uri: "!^/createCourse$!", sec: "admin")]
+    #[Post(uri: "^/createCourse$", sec: "admin")]
     public function createCourse()
     {
         global $MY_BASE;
@@ -123,7 +123,7 @@ class CourseCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/clone$!", sec: "admin")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/clone$", sec: "admin")]
     public function cloneOffering()
     {
         global $MY_BASE;
@@ -188,7 +188,7 @@ class CourseCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/edit$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/edit$", sec: "instructor")]
     public function editDay()
     {
         global $URI_PARAMS;
@@ -201,7 +201,7 @@ class CourseCtrl
         return "Location: ../{$block}/";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$", sec: "instructor")]
     public function viewSettings()
     {
         global $URI_PARAMS;
@@ -235,7 +235,7 @@ class CourseCtrl
      * Expects AJAX
      * 
      */
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/settings$", sec: "instructor")]
     public function updateSettings()
     {
         $id = filter_input(INPUT_POST, "id", FILTER_SANITIZE_NUMBER_INT);
@@ -275,7 +275,7 @@ class CourseCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delete$!", sec: "admin")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delete$", sec: "admin")]
     public function delete()
     {
         $id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);

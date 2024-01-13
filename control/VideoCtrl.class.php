@@ -8,30 +8,37 @@
 #[Controller]
 class VideoCtrl
 {
-
     #[Inject('CourseDao')]
     public $courseDao;
+    #
     #[Inject('OfferingDao')]
     public $offeringDao;
+
     #[Inject('DayDao')]
     public $dayDao;
+
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
+
     #[Inject('CommentDao')]
     public $commentDao;
+
     #[Inject('ReplyDao')]
     public $replyDao;
+
     #[Inject('VideoDao')]
     public $videoDao;
+
     #[Inject('OverviewHlpr')]
     public $overviewHlpr;
+
     #[Inject('UserDao')]
     public $userDao;
 
     /**
      * Redirects to latest offering for a course
      */
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/?$!", sec: "observer")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/?$", sec: "observer")]
     public function loggedIn()
     {
         global $URI_PARAMS;
@@ -57,13 +64,13 @@ class VideoCtrl
     /**
      * If the URL doesn't contain a video selection, just a day
      */
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/([A-Z][1-4][A-Z][1-7])/$!", sec: "observer")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/([A-Z][1-4][A-Z][1-7])/$", sec: "observer")]
     public function only_day()
     {
         return "Location: 01";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/$!", sec: "observer")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/$", sec: "observer")]
     public function offering()
     {
         // We're building on top of  overview -- run it first
@@ -92,7 +99,7 @@ class VideoCtrl
         return "offering.php";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$!", sec: "observer")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$", sec: "observer")]
     public function video()
     {
         require_once("lib/Parsedown.php");
@@ -200,7 +207,7 @@ class VideoCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/autoplay$!", sec: "observer")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/autoplay$", sec: "observer")]
     public function autoplay()
     {
         $toggle = filter_input(INPUT_POST, "toggle");
@@ -209,7 +216,7 @@ class VideoCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/theater$!", sec: "observer")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/theater$", sec: "observer")]
     public function theater()
     {
         $toggle = filter_input(INPUT_POST, "toggle");
@@ -217,7 +224,7 @@ class VideoCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/title$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/title$", sec: "instructor")]
     public function title()
     {
         global $URI_PARAMS;
@@ -235,7 +242,7 @@ class VideoCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$", sec: "instructor")]
     public function increaseSequence()
     {
         global $URI_PARAMS;
@@ -264,7 +271,7 @@ class VideoCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/decrease$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/decrease$", sec: "instructor")]
     public function decreaseSequence()
     {
         global $URI_PARAMS;
@@ -293,7 +300,7 @@ class VideoCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$!", sec: "instructor")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$", sec: "instructor")]
     public function addVideo()
     {
         global $URI_PARAMS;

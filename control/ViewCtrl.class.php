@@ -24,7 +24,7 @@ class ViewCtrl
     public $videoDao;
 
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/start.*$!", sec: "observer")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/start.*$", sec: "observer")]
     public function start()
     {
         $user_id = $_SESSION['user']['id'];
@@ -34,7 +34,7 @@ class ViewCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/stop$!", sec: "none")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/stop$", sec: "none")]
     public function stop()
     {
         $view_id = filter_input(INPUT_POST, "view_id");
@@ -42,7 +42,7 @@ class ViewCtrl
     }
 
 
-    #[Post(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/speed$!", sec: "observer")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/speed$", sec: "observer")]
     public function speed()
     {
         $speed = filter_input(INPUT_POST, "speed");
@@ -50,7 +50,7 @@ class ViewCtrl
         setcookie("viewspeed", $speed, time() + 7 * 24 * 60 * 60, "/videos");
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/pdf.*$!", sec: "observer")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/pdf.*$", sec: "observer")]
     public function pdf()
     {
         $user_id = $_SESSION['user']['id'];
@@ -59,7 +59,7 @@ class ViewCtrl
         return intval($this->viewDao->pdf($user_id, $day_id, $file));
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/views/(\d+)?$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/views/(\d+)?$", sec: "instructor")]
     public function views()
     {
         global $URI_PARAMS;
@@ -105,7 +105,7 @@ class ViewCtrl
         return "views.php";
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/info/?$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/info/?$", sec: "instructor")]
     public function offering_info()
     {
         global $URI_PARAMS;
@@ -125,7 +125,7 @@ class ViewCtrl
         return $days; // array automatically json encodes 
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/info/?$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/info/?$", sec: "instructor")]
     public function videos_info()
     {
         $day_id = filter_input(INPUT_GET, "day_id");
@@ -138,21 +138,21 @@ class ViewCtrl
         return $videos; // array automatically json encodes 
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/viewers$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/viewers$", sec: "instructor")]
     public function offering_viewers()
     {
         $offering_id = filter_input(INPUT_GET, "offering_id");
         return $this->viewDao->offering_viewers($offering_id);
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/viewers$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/viewers$", sec: "instructor")]
     public function day_viewers()
     {
         $day_id = filter_input(INPUT_GET, "day_id");
         return $this->viewDao->day_viewers($day_id);
     }
 
-    #[Get(uri: "!^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/\d{2}/viewers$!", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/\d{2}/viewers$", sec: "instructor")]
     public function video_viewers()
     {
         $day_id = filter_input(INPUT_GET, "day_id");
@@ -161,7 +161,7 @@ class ViewCtrl
     }
 
 
-    #[Get(uri: "!/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)(/.+)?/enrollment$!", sec: "instructor")]
+    #[Get(uri: "/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)(/.+)?/enrollment$", sec: "instructor")]
     public function enrollemnt()
     {
         $offering_id = filter_input(INPUT_GET, "offering_id");
