@@ -5,11 +5,11 @@ div#days div.data {
 }
 div.session {
     margin-top: 5px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border);
 }
 div.session.AM {
     padding-top: 5px;
-    border-top: 1px solid black;
+    border-top: 1px solid var(--border);
 }
 div.session .fa-plus-square {
     cursor: pointer;
@@ -29,7 +29,7 @@ div.meeting a {
     font-size: 10px;
 }
 .modal h4 {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border);
     margin-bottom: 0px;
 }
 .modal input {

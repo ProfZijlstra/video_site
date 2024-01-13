@@ -1,9 +1,16 @@
+:root {
+    --bg-color: #F4F6F8;
+    --black: #001050;
+    --white: #FFFFFF;
+    --border: gray;
+}
 body {
     margin: 0px;
+    color: var(--black);
 }
 a {
     text-decoration: none;
-    color: black;
+    color: var(--black);
 }
 a:hover {
     text-decoration: none;
@@ -19,12 +26,12 @@ header #controls {
     z-index: 1;
     top: 27px;
     right: 70px;
-	font-size: 24px;
+    font-size: 24px;
     cursor: pointer;
 }
 header #controls a {
-	text-decoration: none;
-	color: black;
+    text-decoration: none;
+    color: var(--black);
 }
 header #course {
     text-align: center;
@@ -32,7 +39,7 @@ header #course {
     z-index: 1;
     top: 20px;
     left: 50px;
-	font-size: 20pt;
+    font-size: 20pt;
     font-weight: bold;
 }
 header #course a:hover {
@@ -49,11 +56,12 @@ header h1 {
 main {
     position: relative;
     z-index: 10;
-	border-top: 1px solid black;
-    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 
-                0 -6px 20px 0 rgba(0, 0, 0, 0.19);
-	min-height: 100vh;
-	background-color: #EEE;
+    border-top: 1px solid var(--black);
+    box-shadow: 0px -4px 8px 0px #00105040, 
+                0 -6px 20px 0 #00105030;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    background: linear-gradient(135deg, var(--bg-color) 50%, var(--white) 100%);
     padding-bottom: 5px;
 }
 nav.tools {
@@ -93,7 +101,7 @@ nav.back {
 }
 /* For enrollment and attendance */
 .modal {
-    border: 1px solid black;
+    border: 1px solid var(--black);
     margin-left: auto;
     margin-right: auto;
     width: 700px;
@@ -103,7 +111,7 @@ nav.back {
     background-color: white;
 }
 .modal h3 {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--black);
 }
 .modal input {
     width: 100%;

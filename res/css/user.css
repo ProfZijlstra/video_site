@@ -17,7 +17,7 @@ input, select {
 }
 select {
     background-color: white;
-    border: 1px solid black;
+    border: 1px solid var(--border);
 }
 #btn {
     text-align: right;
@@ -33,7 +33,7 @@ select {
 grid-column
 select {
     background-color: white;
-    border: 1px solid black;
+    border: 1px solid var(--border);
     padding-right: 10px;
 }
 @media screen and (max-width: 900px) {

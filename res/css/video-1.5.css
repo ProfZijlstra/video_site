@@ -3,7 +3,7 @@ body {
 }
 a {
     text-decoration: none;
-    color: black;
+    color: var(--black);
 }
 a:hover {
     text-decoration: none;
@@ -37,7 +37,7 @@ div#playSpeed {
 }
 #faster, #slower {
     cursor: default;
-    border: 1px solid black;
+    border: 1px solid var(--border);
     display: inline-block;
     width: 25px;
     height: 25px;
@@ -67,8 +67,8 @@ div#container {
 }
 nav#videos {
     cursor: pointer;
-    border-top: 1px solid black;
-    border-right: 1px solid black;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
     width: 20%;
     background-color: #eee;
     opacity: 100%;
@@ -94,7 +94,7 @@ nav#videos nav #info-btn, #config-btn {
 }
 nav#videos div.video_link {
     text-align: center;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border);
     padding: 5px;
     position: relative;
     min-height: 15px;
@@ -102,7 +102,7 @@ nav#videos div.video_link {
 nav#videos div.video_link.selected { 
     cursor: default;
     background-color: white;
-    color: black;
+    color: var(--black);
     position: relative;
     left: 1px;
     margin-left: 1px;
@@ -158,7 +158,7 @@ nav nav {
     position: relative;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border);
     background-color: #EEEEEE;
     min-height: 90px;
 }
@@ -170,7 +170,7 @@ nav nav {
     margin-right: auto;
 }
 #videos td,th {
-    border: 1px solid black;
+    border: 1px solid var(--border);
     width: 20px;
 }
 #videos td {
@@ -185,9 +185,9 @@ nav nav {
     background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
 }
 main {
-    background-color: white;
-	position: relative;
-    border-top: 1px solid black;
+    background: none;
+    position: relative;
+    border-top: 1px solid var(--border);
     box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.2), 0 -6px 20px 0 rgba(0, 0, 0, 0.19);
     min-height: 100vh;
     width: 100%;
@@ -212,7 +212,7 @@ main article .progress {
     margin-right: auto;
     font-family: "Courier New", Courier, monospace;
     font-size: 8pt;
-    border: 1px solid black;
+    border: 1px solid var(--border);
 }
 main article .progress .passed, main article .progress .current {
     position: absolute;
@@ -269,7 +269,7 @@ main article .progress .time {
 }
 #keyboard section span.key {
     display: inline-block;
-    border: 1px solid gray;
+    border: 1px solid var(--border);
     border-radius: 3px;
     background-color: lightgray;
     width: 60px;
@@ -299,7 +299,7 @@ main article .progress .time {
 }
 div.pcontainer {
     padding: 5px;
-    border: 1px solid gray;
+    border: 1px solid var(--border);
     text-align: left;
 }
 .author {
@@ -312,7 +312,7 @@ div.pcontainer {
     position: absolute;
     right: 10px;
     top: 22px;
-    color: black;
+    color: var(--black);
     cursor: pointer;
     z-index: 10;
 }
@@ -353,7 +353,7 @@ div.pcontainer {
 }
 .comment, .reply {
     position: relative;
-    border: 1px solid gray;
+    border: 1px solid var(--border);
     padding: 5px;
 }
 .comment {

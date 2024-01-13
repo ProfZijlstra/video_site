@@ -38,13 +38,13 @@ div.quiz input[type="time"], div.quiz input[type="date"] {
 
 div.qcontainer {
     display: flex;
-    border-top: 1px solid black;
+    border-top: 1px solid var(--border);
     margin-top: 30px;
 }
 div.qcontainer div.about {
     flex-basis: 150px;
     flex-shrink: 0;
-    border-right: 1px solid black;
+    border-right: 1px solid var(--border);
     text-align: center;
     position: relative;
 }
@@ -81,7 +81,7 @@ div.textContainer i.fa-markdown {
     color: gray;
 }
 div.textContainer i.fa-markdown.active {
-    color: black;
+    color: var(--black);
 }
 div.qcontainer div.question textarea {
     width: 100%;
@@ -99,7 +99,7 @@ div.qcontainer div.preview {
 }
 div.qcontainer div.pcontainer {
     padding: 5px;
-    border: 1px solid gray;
+    border: 1px solid var(--border);
 }
 div.question textarea {
     max-width: 600px;

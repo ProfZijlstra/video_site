@@ -38,7 +38,7 @@ div.modal.hide {
 }
 #content table {
     width: 100%;
-    border: 1px solid black;
+    border: 1px solid var(--border);
     border-collapse: collapse;
 }
 #content caption {
@@ -51,7 +51,7 @@ div.modal.hide {
     cursor: pointer;
 }
 #content td, #content th {
-    border: 1px solid black;
+    border: 1px solid var(--border);
     padding: 3px;
 }
 #content td.hours {
@@ -70,7 +70,7 @@ div.modal.hide {
 }
 div.modal {
     background-color: #DDD;
-    border: 1px solid black;
+    border: 1px solid var(--border);
     padding: 2em;
 }
 div.modal h2 {

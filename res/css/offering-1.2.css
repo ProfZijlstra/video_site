@@ -8,14 +8,14 @@ div#days {
 }
 div#days div.data {
     cursor: pointer;
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     min-height: 8vw;
     width: 8vw;
     padding: 15px;
     text-align: center;
     position: relative;
-    background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%);
+    background: linear-gradient(to bottom, #eee 0%,#ddd 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,13 +24,13 @@ div#days div.data a {
     width: 100%;
 }
 div#days div.data.w1 {
-    border-top: 1px solid black;
+    border-top: 1px solid var(--border);
 }
 div#days div.data.d1 {
-    border-left: 1px solid black;
+    border-left: 1px solid var(--border);
 }
 div#days div.data.done {
-    background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
+    background: linear-gradient(to bottom, #ccc 70%,#ddd 100%); 
 }
 div#days div.data.curr {
     background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
@@ -76,7 +76,7 @@ div#days.lab div.data {
 }
 
 div#days.lab div.data a.invisible {
-    color: gray;
+    color: var(--border);
 }
 
 div#days.lab div.data i.fa-plus-square {
@@ -139,18 +139,18 @@ div#add_modal input#name {
     div#days div.data {
         width: 100%;
         padding: 15px 0px;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-        border-bottom: 1px solid black;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
         min-height: 75px;
     }
     div#days div.data.mon {
-        border-top: 1px solid black;
+        border-top: 1px solid var(--border);
         margin-top: 40px;
     }
     div#days div.data.d1 {
         margin-top: 30px;
-        border-top: 1px solid black;
+        border-top: 1px solid var(--border);
     }
     div#days div.data.w1.d1 {
         margin-top: 5px;
