@@ -58,7 +58,7 @@ div.modal.hide {
     text-align: right;
 }
 #content tr:nth-child(2n+1) {
-    background-color: #DDD;
+    background-color: #EEEEEE;
 }
 #content tr pre {
     max-width: 1000px;
