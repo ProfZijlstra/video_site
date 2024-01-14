@@ -77,7 +77,7 @@ class QuizGradingCtrl
         return "quiz/gradeOverview.php";
     }
 
-    #[Get(uri: "^/(\d+)/question/(\d+)$", sec: "assistant")]
+    #[Get(uri: "/(\d+)/question/(\d+)$", sec: "assistant")]
     public function gradeQuestion()
     {
         require_once("lib/Parsedown.php");
@@ -113,7 +113,7 @@ class QuizGradingCtrl
         return "quiz/gradeQuestion.php";
     }
 
-    #[Get(uri: "^/(\d+)/user/(\d+)$", sec: "assistant")]
+    #[Get(uri: "/(\d+)/user/(\d+)$", sec: "assistant")]
     public function gradeUser()
     {
         require_once("lib/Parsedown.php");
@@ -181,4 +181,3 @@ class QuizGradingCtrl
         return ["answer_id" => $answer_id];
     }
 }
-

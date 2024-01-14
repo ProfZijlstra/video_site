@@ -116,7 +116,7 @@ EOD;
         return "Location: ../$block/";
     }
 
-    #[Get(uri: "^/observe$", sec: "instructor")]
+    #[Get(uri: "/observe$", sec: "instructor")]
     public function showRequest()
     {
         global $VIEW_DATA;
@@ -138,7 +138,7 @@ EOD;
     }
 
 
-    #[Post(uri: "^/observe$", sec: "instructor")]
+    #[Post(uri: "/observe$", sec: "instructor")]
     public function observerAllowDeny()
     {
         $offering_id = filter_input(INPUT_POST, "oid", FILTER_SANITIZE_NUMBER_INT);
@@ -462,4 +462,3 @@ Manalabs.org Automated Account Creator
         return $user_id;
     }
 }
-
