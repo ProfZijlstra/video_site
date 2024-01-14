@@ -54,13 +54,14 @@ p.solution {
 div#container {
     margin-top: 80px;
     display: flex;
-    background-color: #eee;
+    background-color: var(--bg-color);
     position: relative;
     background-color: #fff;
     z-index: 10;
 }
 #bars {
     transition: all 1s;
+    animation: none;
 }
 #bars.theater {
     transform: rotate(180deg);
@@ -70,7 +71,7 @@ nav#videos {
     border-top: 1px solid var(--border);
     border-right: 1px solid var(--border);
     width: 20%;
-    background-color: #eee;
+    background-color: var(--bg-color);
     opacity: 100%;
     transition: width 1s, opacity 500ms ease 300ms;
 }
@@ -159,7 +160,7 @@ nav nav {
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
-    background-color: #EEEEEE;
+    background-color: var(--bg-color);
     min-height: 90px;
 }
 #videos table {
@@ -174,11 +175,11 @@ nav nav {
     width: 20px;
 }
 #videos td {
-    background: linear-gradient(to bottom, #eee 0%,#ccc 100%); 
+    background: linear-gradient(to bottom, #eee 0%,#ddd 100%); 
 }
 #videos td.done {
     /* background-color: #BBB; */
-    background: linear-gradient(to bottom, #ccc 0%,#aaa 100%); 
+    background: linear-gradient(to bottom, #ccc 0%,#ddd 100%); 
 }
 #videos td.curr {
     /* background-color: #FF0; */
@@ -207,7 +208,7 @@ main article .progress {
     position: relative;
     width: 80%;
     height: 13px;
-    background-color: lightgrey;
+    background-color: var(--bg-color);
     margin-left: auto;
     margin-right: auto;
     font-family: "Courier New", Courier, monospace;
@@ -271,7 +272,7 @@ main article .progress .time {
     display: inline-block;
     border: 1px solid var(--border);
     border-radius: 3px;
-    background-color: lightgray;
+    background-color: var(--bg-color);
     width: 60px;
     text-align: center;
     margin: 3px;

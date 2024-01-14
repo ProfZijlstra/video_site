@@ -15,6 +15,44 @@ a {
 a:hover {
     text-decoration: none;
 }
+i {
+    transition: all 1s ease-in-out;
+}
+i:hover {
+    transform: scale(1.25);
+    animation: wiggle;
+    animation-duration: 3s;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+i.fa-gear:hover {
+    transform: scale(1.25);
+    animation: rotate;
+    animation-duration: 3s;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes wiggle {
+    0% {
+        transform: scale(1.25) rotate(0deg);
+    }
+    25% {
+        transform: scale(1.25) rotate(-5deg);
+    }
+    75% {
+        transform: scale(1.25) rotate(5deg);
+    }
+}
+@keyframes rotate {
+    0% {
+        transform: scale(1.25) rotate(0deg);
+    }
+    100% {
+        transform: scale(1.25) rotate(360deg);
+    }
+}
 .error {
     color: red;
 }
@@ -89,8 +127,6 @@ nav.areas > div > a {
 }
 nav.areas > div.active {
     color: #CCC;
-    position: relative;
-    left: 2px;
 }
 nav.back {
     font-size: 24px;
