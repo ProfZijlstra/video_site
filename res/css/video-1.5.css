@@ -8,9 +8,6 @@ a {
 a:hover {
     text-decoration: none;
 }
-header {
-    height: auto;
-}
 i#bars.fa-bars {
     position: absolute;
     top: 92px;
@@ -52,7 +49,6 @@ p.solution {
     font-weight: bold;
 }
 div#container {
-    margin-top: 80px;
     display: flex;
     background-color: var(--bg-color);
     position: relative;
