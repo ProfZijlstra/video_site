@@ -47,12 +47,16 @@ class CommentCtrl
         $shifted = filter_input(INPUT_POST, "text");
         $tab = filter_input(INPUT_POST, "tab");
 
-        $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
-        $to = [$ins['email'], $ins['teamsName']];
         $comment = "";
         if ($shifted) {
-            $comment = $this->markdownCtrl->ceasarShift($shifted);
+            $comment = trim($this->markdownCtrl->ceasarShift($shifted));
         }
+        if (!$comment) {
+            return "Location: {$tab}#commentForm";
+        }
+
+        $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
+        $to = [$ins['email'], $ins['teamsName']];
         $id = $this->commentDao->add($comment, $user_id, $video);
         $user = $this->userDao->retrieve($user_id);
 
@@ -197,13 +201,17 @@ See comment at: http://manalabs.org/videos/{$course}/{$block}/{$day}/{$tab}#r{$i
         $tab = filter_input(INPUT_POST, "tab");
         $shifted = filter_input(INPUT_POST, "text");
         $user_id = $_SESSION['user']['id'];
+        $qid = filter_input(INPUT_POST, "id");
 
         $text = "";
         if ($shifted) {
-            $text = $this->markdownCtrl->ceasarShift($shifted);
+            $text = trim($this->markdownCtrl->ceasarShift($shifted));
         }
+        if (!$text) {
+            return "Location: {$tab}#q{$qid}";
+        }
+
         $user = $this->userDao->retrieve($user_id);
-        $qid = filter_input(INPUT_POST, "id");
         $op_email = $this->commentDao->getUserEmail($qid);
         $id = $this->replyDao->add($text, $user_id, $qid);
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
