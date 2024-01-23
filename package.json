@@ -7,7 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "babel res/jsx -d res/js"
+    "build": "babel res/jsx -d res/js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,9 @@
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.8",
     "@babel/plugin-transform-react-jsx": "^7.14.9"
+  },
+  "dependencies": {
+    "mocha": "^10.2.0",
+    "selenium-webdriver": "^4.16.0"
   }
 }
