@@ -379,22 +379,22 @@ ALTER TABLE `class_session` CHANGE `type` `type` CHAR(3);
 
 -- 30 Sept 2023 Lab subsystem
 -- -----------------------------------------------------
--- Table `manalabs`.`assignment`
+-- Table `manalabs`.`lab`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `manalabs`.`assignment` (
+CREATE TABLE IF NOT EXISTS `manalabs`.`lab` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `day_id` INT NOT NULL,
-  `desc` TEXT NOT NULL,
-  `hasMarkDown` TINYINT NOT NULL,
-  `start` DATETIME NOT NULL,
-  `stop` DATETIME NOT NULL,
-  `visible` TINYINT NOT NULL,
-  `allowLate` TINYINT NOT NULL,
-  `type` VARCHAR(45) NOT NULL,
-  `points` INT UNSIGNED NOT NULL,
+  `name` VARCHAR(45) NOT NULL DEFAULT "",
+  `desc` TEXT NOT NULL DEFAULT "",
+  `hasMarkDown` TINYINT NOT NULL DEFAULT 0,
+  `start` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `stop` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `visible` TINYINT NOT NULL DEFAULT 0,
+  `type` VARCHAR(45) NOT NULL DEFAULT 'Individual',
+  `points` INT UNSIGNED NOT NULL DEFAULT 10,
   PRIMARY KEY (`id`),
-  INDEX `fk_assignment_day1_idx` (`day_id` ASC) VISIBLE,
-  CONSTRAINT `fk_assignment_day1`
+  INDEX `fk_lab_day1_idx` (`day_id` ASC) VISIBLE,
+  CONSTRAINT `fk_lab_day1`
     FOREIGN KEY (`day_id`)
     REFERENCES `manalabs`.`day` (`id`)
     ON DELETE NO ACTION
@@ -407,22 +407,22 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `manalabs`.`submission` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `assignment_id` BIGINT UNSIGNED NOT NULL,
+  `lab_id` BIGINT UNSIGNED NOT NULL,
   `user_id` INT UNSIGNED NOT NULL,
   `group` VARCHAR(45) NULL,
-  `submitted` DATETIME NOT NULL,
-  `duration` TIME NOT NULL,
-  `stuComment` TEXT NOT NULL,
-  `stuCmntHasMD` TINYINT UNSIGNED NOT NULL,
+  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lab_duration` TIME NOT NULL DEFAULT "00:00:00",
+  `stuComment` TEXT NOT NULL DEFAULT "",
+  `stuCmntHasMD` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `points` FLOAT NULL,
   `gradeComment` TEXT NULL,
   `gradeCmntHasMD` TINYINT UNSIGNED NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_hw_submit_assignment1_idx` (`assignment_id` ASC) VISIBLE,
+  INDEX `fk_hw_submit_lab1_idx` (`lab_id` ASC) VISIBLE,
   INDEX `fk_hw_submit_user1_idx` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `fk_hw_submit_assignment1`
-    FOREIGN KEY (`assignment_id`)
-    REFERENCES `manalabs`.`assignment` (`id`)
+  CONSTRAINT `fk_hw_submit_lab1`
+    FOREIGN KEY (`lab_id`)
+    REFERENCES `manalabs`.`lab` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_hw_submit_user1`
@@ -434,51 +434,65 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `manalabs`.`requirement`
+-- Table `manalabs`.`deliverable`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `manalabs`.`requirement` (
+CREATE TABLE IF NOT EXISTS `manalabs`.`deliverable` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `assignment_id` BIGINT UNSIGNED NOT NULL,
-  `type` VARCHAR(45) NOT NULL,
-  `seq` INT UNSIGNED NOT NULL,
-  `desc` TEXT NULL,
-  `hasMarkDown` TINYINT UNSIGNED NULL,
-  `isOptional` TINYINT UNSIGNED NOT NULL,
-  `weight` TINYINT UNSIGNED NOT NULL,
-  `maxCompletion` TINYINT UNSIGNED NOT NULL,
+  `lab_id` BIGINT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL DEFAULT "text",
+  `seq` INT UNSIGNED NOT NULL DEFAULT 1,
+  `desc` TEXT NOT NULL DEFAULT "",
+  `hasMarkDown` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `isOptional` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `weight` TINYINT UNSIGNED NOT NULL, -- points for this deliverable
   PRIMARY KEY (`id`),
-  INDEX `fk_requirement_assignment1_idx` (`assignment_id` ASC) VISIBLE,
-  CONSTRAINT `fk_requirement_assignment1`
-    FOREIGN KEY (`assignment_id`)
-    REFERENCES `manalabs`.`assignment` (`id`)
+  INDEX `fk_deliverable_lab1_idx` (`lab_id` ASC) VISIBLE,
+  CONSTRAINT `fk_deliverable_lab1`
+    FOREIGN KEY (`lab_id`)
+    REFERENCES `manalabs`.`lab` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `manalabs`.`fulfillment`
+-- Table `manalabs`.`delivers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `manalabs`.`fulfillment` (
+CREATE TABLE IF NOT EXISTS `manalabs`.`delivers` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `text` TEXT NOT NULL,
-  `hasMarkDown` TINYINT NULL,
-  `completion` TINYINT UNSIGNED NOT NULL,
-  `requirement_id` INT UNSIGNED NOT NULL,
+  `deliverable_id` INT UNSIGNED NOT NULL,
   `submission_id` BIGINT UNSIGNED NOT NULL,
+  `completion` TINYINT UNSIGNED NOT NULL,
+  `text` TEXT NOT NULL DEFAULT "",
+  `hasMarkDown` TINYINT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_fulfillment_hw_submit1_idx` (`submission_id` ASC) VISIBLE,
-  INDEX `fk_fulfillment_requirement1_idx` (`requirement_id` ASC) VISIBLE,
-  CONSTRAINT `fk_fulfillment_hw_submit1`
+  INDEX `fk_delivers_hw_submit1_idx` (`submission_id` ASC) VISIBLE,
+  INDEX `fk_delivers_deliverable1_idx` (`deliverable_id` ASC) VISIBLE,
+  CONSTRAINT `fk_delivers_hw_submit1`
     FOREIGN KEY (`submission_id`)
     REFERENCES `manalabs`.`submission` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_fulfillment_requirement1`
-    FOREIGN KEY (`requirement_id`)
-    REFERENCES `manalabs`.`requirement` (`id`)
+  CONSTRAINT `fk_delivers_deliverable1`
+    FOREIGN KEY (`deliverable_id`)
+    REFERENCES `manalabs`.`deliverable` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `manalabs`.`attachment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`attachment` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lab_id` BIGINT UNSIGNED NOT NULL,
+  `file` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_attachment_lab1_idx` (`lab_id` ASC) VISIBLE,
+  CONSTRAINT `fk_attachment_lab1`
+    FOREIGN KEY (`lab_id`)
+    REFERENCES `manalabs`.`lab` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

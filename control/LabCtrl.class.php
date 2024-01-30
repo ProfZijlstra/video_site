@@ -11,6 +11,18 @@ class LabCtrl
     #[Inject('OverviewHlpr')]
     public $overviewHlpr;
 
+    #[Inject('LabDao')]
+    public $labDao;
+
+    #[Inject('DeliverableDao')]
+    public $deliverableDao;
+
+    #[Inject('OfferingDao')]
+    public $offeringDao;
+
+    #[Inject('DayDao')]
+    public $dayDao;
+
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
@@ -20,9 +32,68 @@ class LabCtrl
 
         global $VIEW_DATA;
 
-        // get all quizzes for this offering
+        // get all labs for this offering
+        $oid = $VIEW_DATA["offering_id"];
+        if (
+            $_SESSION['user']['isAdmin'] ||
+            $_SESSION['user']['isFaculty']
+        ) {
+            $labs = $this->labDao->allForOffering($oid);
+        } else {
+            $labs = $this->labDao->visibleForOffering($oid);
+        }
+
+        // integrate the labs data into the days data
+        foreach ($VIEW_DATA['days'] as $day) {
+            $day['labs'] = array();
+        }
+        foreach ($labs as $lab) {
+            $VIEW_DATA['days'][$lab['abbr']]['labs'][] = $lab;
+        }
+
         $VIEW_DATA['title'] = 'Labs';
         $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
         return "lab/overview.php";
+    }
+
+    #[Post(uri: "$", sec: "instructor")]
+    public function addLab()
+    {
+        $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
+        $name = filter_input(INPUT_POST, "name");
+        $startdate = filter_input(INPUT_POST, "startdate");
+        $stopdate = filter_input(INPUT_POST, "stopdate");
+        $starttime = filter_input(INPUT_POST, "starttime");
+        $stoptime = filter_input(INPUT_POST, "stoptime");
+
+        $start = "{$startdate} {$starttime}";
+        $stop = "{$stopdate} {$stoptime}";
+        $id = $this->labDao->add($name, $day_id, $start, $stop);
+
+        //return "Location: lab/{$id}/edit"; // edit lab view
+        return "Location: lab";
+    }
+
+    #[Get(uri: "/(\d+)/edit$", sec: "instructor")]
+    public function editQuiz()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $lab_id = $URI_PARAMS[3];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $days = $this->dayDao->getDays($offering['id']);
+
+        $VIEW_DATA['days'] = $days;
+        $VIEW_DATA['course'] = $course_num;
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['lab'] = $this->labDao->byId($lab_id);
+        $VIEW_DATA['deliverables'] = $this->deliverableDao->forLab($lab_id);
+        $VIEW_DATA['title'] = "Edit Lab";
+
+        return "lab/edit.php";
     }
 }

@@ -19,9 +19,13 @@
       function showModal(evt) {
           const day_id = this.parentNode.dataset.day_id;
           const date = this.parentNode.dataset.date;
+          let next = this.parentNode.dataset.next;
+          if (next == undefined) {
+              next = date;
+          }
           document.getElementById('day_id').value = day_id;
           document.getElementById('startdate').value = date;
-          document.getElementById('stopdate').value = date;
+          document.getElementById('stopdate').value = next;
           overlay.classList.add("visible");
           document.getElementById("add_modal").classList.remove("hide");
           evt.stopPropagation();
