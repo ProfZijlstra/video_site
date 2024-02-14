@@ -12,18 +12,7 @@
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
-    <script src="res/js/quiz/edit-1.5.js"></script>
     <style>
-        .textContainer {
-            position: relative;
-        }
-
-        .textContainer textarea {
-            width: 100%;
-            height: 100px;
-            resize: vertical;
-        }
-
         #updateLab div.lab {
             margin-top: 20px;
             text-align: left;
@@ -33,7 +22,35 @@
             font-weight: bold;
             text-align: center;
         }
+
+        div.qcontainer {
+            text-align: left;
+            border-top: none;
+            margin-top: 0px;
+            position: relative;
+        }
+
+        .textContainer {
+            width: 100%;
+        }
+
+        .textContainer textarea {
+            width: 100%;
+            height: 100px;
+            resize: vertical;
+        }
     </style>
+    <script>
+        window.addEventListener("load", () => {
+            function mdToggle() {
+                const descMarkDown = document.getElementById("descMarkDown");
+                descMarkDown.value = descMarkDown.value == "1" ? "0" : "1";
+            }
+            // enable markdown previews
+            MARKDOWN.enablePreview("../../markdown");
+            MARKDOWN.activateButtons(mdToggle);
+        });
+    </script>
 </head>
 
 <body>
@@ -50,10 +67,14 @@
         </nav>
         <div id="content">
             <div class="quiz">
-                <div class="status" data-id="<?= $lab['id'] ?>">
-                    <label><input id="visible" type="checkbox" class="visible" value="<?= $lab['visible'] ?>" <?= $lab['visible'] ? 'checked' : '' ?> /> Visible</label>
-                </div>
                 <form id="updateLab" action="<?= "../" . $lab['id'] ?>" method="POST" data-id="<?= $lab['id'] ?>">
+                    <div class="status" data-id="<?= $lab['id'] ?>">
+                        <input id="visible" name="visible" type="checkbox" class="visible" value="1" <?= $lab['visible'] ? 'checked' : '' ?> /><label for="visible"> Visible</label>
+                    </div>
+                    <div>
+                        <label>Name:</label>
+                        <input type="text" name="name" class="name" value="<?= $lab['name'] ?>" />
+                    </div>
                     <div>
                         <label>Day:</label>
                         <select name="day_id" id="day_id">
@@ -63,10 +84,6 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                    <div>
-                        <label>Name:</label>
-                        <input type="text" name="name" class="name" value="<?= $lab['name'] ?>" />
                     </div>
                     <div>
                         <label>Start:</label>
@@ -90,15 +107,19 @@
                         </select>
                     </div>
                     <div class="lab">Lab Description:</div>
-                    <div class="textContainer">
-                        <textarea class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
+                    <div class="qcontainer">
+                        <div class="textContainer">
+                            <textarea name="desc" class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
 
-                        <i title="Markdown" class="txt fa-brands fa-markdown <?= $question['hasMarkDown'] ? "active" : "" ?>"></i>
-                        <div class="mdContainer <?= $question['hasMarkDown'] ? "active" : "" ?>">
-                            <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                            <div class="previewArea"></div>
+                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $question['hasMarkDown'] ? "active" : "" ?>"></i>
+                            <input type="hidden" id="descMarkDown" name="hasMarkDown" value="<?= $lab['hasMarkDown'] ?>" />
+                            <div class="mdContainer <?= $lab['hasMarkDown'] ? "active" : "" ?>">
+                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                <div class="previewArea"></div>
+                            </div>
                         </div>
                     </div>
+                    <input type="submit" value="Update Lab" />
                 </form>
             </div>
 

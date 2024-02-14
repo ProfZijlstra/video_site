@@ -63,4 +63,32 @@ class LabDao
         $stmt->execute(array("id" => $id));
         return $stmt->fetch();
     }
+
+    public function update($id, $visible, $name, $day_id, $start, $stop, $points, $type, $hasMarkDown, $desc)
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE lab 
+            SET visible = :visible, `name` = :name, 
+            day_id = :day_id, 
+            `start` = :start, 
+            `stop` = :stop, 
+            points = :points, 
+            type = :type, 
+            hasMarkDown = :hasMarkDown, 
+            `desc` = :desc
+            WHERE id = :id"
+        );
+        $stmt->execute(array(
+            "id" =>  $id,
+            "visible" => $visible,
+            "name" => $name,
+            "day_id" => $day_id,
+            "start" => $start,
+            "stop" => $stop,
+            "points" => $points,
+            "type" => $type,
+            "hasMarkDown" => $hasMarkDown,
+            "desc" => $desc
+        ));
+    }
 }
