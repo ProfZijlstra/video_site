@@ -91,4 +91,13 @@ class LabDao
             "desc" => $desc
         ));
     }
+
+    public function delete($id)
+    {
+        $stmt = $this->db->prepare(
+            "DELETE FROM lab
+            WHERE id = :id"
+        );
+        $stmt->execute(array("id" => $id));
+    }
 }

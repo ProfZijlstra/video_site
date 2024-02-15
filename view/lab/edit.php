@@ -49,6 +49,15 @@
             // enable markdown previews
             MARKDOWN.enablePreview("../../markdown");
             MARKDOWN.activateButtons(mdToggle);
+
+            document.getElementById("delBtn").addEventListener("click", (e) => {
+                // TODO check if there are any submissions
+                // TODO check if there are any deliverables
+                // TODO check if there are any attachments
+                if (confirm("Are you sure you want to delete this lab?")) {
+                    document.forms.delQuiz.submit();
+                }
+            });
         });
     </script>
 </head>
