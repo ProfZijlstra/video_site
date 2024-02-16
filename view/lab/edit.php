@@ -13,35 +13,68 @@
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
     <style>
-        #updateLab div.lab {
-            margin-top: 20px;
-            text-align: left;
-        }
+        main#editLab {
+            #updateLab div.lab {
+                margin-top: 20px;
+                text-align: left;
+            }
 
-        #content p.warning {
-            font-weight: bold;
-            text-align: center;
-        }
+            #content p.warning {
+                font-weight: bold;
+                text-align: center;
+            }
 
-        div.qcontainer {
-            text-align: left;
-            border-top: none;
-            margin-top: 0px;
-            position: relative;
-        }
+            div.qcontainer {
+                text-align: left;
+                border-top: none;
+                margin-top: 0px;
+                position: relative;
+            }
 
-        .textContainer {
-            width: 100%;
-        }
+            .textContainer {
+                width: 100%;
+            }
 
-        .textContainer textarea {
-            width: 100%;
-            height: 100px;
-            resize: vertical;
+            .textContainer textarea {
+                width: 100%;
+                height: 100px;
+                resize: vertical;
+            }
         }
     </style>
     <script>
         window.addEventListener("load", () => {
+            // auto update on detail change
+            function updateDetails() {
+                const form = document.getElementById("updateLab");
+                const id = form.dataset.id;
+                const visible = form.visible.checked ? 1 : 0;
+                const name = encodeURIComponent(form.name.value);
+                const day_id = form.day_id.value;
+                const startdate = form.startdate.value;
+                const starttime = form.starttime.value;
+                const stopdate = form.stopdate.value;
+                const stoptime = form.stoptime.value;
+                const points = form.points.value;
+                const type = form.type.value;
+                const hasMarkDown = form.hasMarkDown.value;
+                const desc = form.desc.value;
+
+                fetch(`../${id}`, {
+                    method: "POST",
+                    body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&points=${points}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${desc}`,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                });
+            }
+            const form = document.getElementById("updateLab");
+            const inputs = form.querySelectorAll("input, select, textarea");
+            inputs.forEach(input => {
+                input.addEventListener("change", updateDetails);
+            });
+
+            // markdown related functions
             function mdToggle() {
                 const descMarkDown = document.getElementById("descMarkDown");
                 descMarkDown.value = descMarkDown.value == "1" ? "0" : "1";
@@ -50,12 +83,13 @@
             MARKDOWN.enablePreview("../../markdown");
             MARKDOWN.activateButtons(mdToggle);
 
+            // enable delete button
             document.getElementById("delBtn").addEventListener("click", (e) => {
                 // TODO check if there are any submissions
                 // TODO check if there are any deliverables
                 // TODO check if there are any attachments
                 if (confirm("Are you sure you want to delete this lab?")) {
-                    document.forms.delQuiz.submit();
+                    document.forms.delLab.submit();
                 }
             });
         });
@@ -64,7 +98,7 @@
 
 <body>
     <?php include("header.php"); ?>
-    <main>
+    <main id="editLab">
         <nav class="back" title="Back">
             <a href="../../lab">
                 <i class="fa-solid fa-arrow-left"></i>
@@ -72,7 +106,7 @@
         </nav>
         <nav class="tools">
             <i id="addDeliverable" title="Add Deliverable" class="far fa-plus-square"></i>
-            <form id="delQuiz" data-qcount="<?= $deliverables ? count($deliverables) : 0 ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
+            <form id="delLab" data-qcount="<?= $deliverables ? count($deliverables) : 0 ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
         </nav>
         <div id="content">
             <div class="quiz">
@@ -128,7 +162,6 @@
                             </div>
                         </div>
                     </div>
-                    <input type="submit" value="Update Lab" />
                 </form>
             </div>
 

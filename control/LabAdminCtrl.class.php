@@ -124,7 +124,6 @@ class LabAdminCtrl
         $stop = "{$stopdate} {$stoptime}";
 
         $this->labDao->update($id, $visible, $name, $day_id, $start, $stop, $points, $type, $hasMarkDown, $desc);
-        return "Location: {$id}/edit"; // back to lab overview
     }
 
     #[Post(uri: "/(\d+)/del$", sec: "instructor")]
@@ -132,6 +131,9 @@ class LabAdminCtrl
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
+        // TODO fail if lab has submissions 
+        // TODO delete deliverables
+        // TODO delete attachments
         $this->labDao->delete($id);
         return "Location: ../../lab";
     }

@@ -12,7 +12,7 @@ div.done {
     margin-bottom: 300px;
     text-align: center;
 }
-form#delQuiz {
+form#delQuiz, form#delLab {
     display: inline;
 }
 div.quiz {
