@@ -11,7 +11,8 @@
  * @param string $view the name of the view file to include before exiting, 
  * or alternately for redirects a location header string
  */
-function htmlView($view) {
+function htmlView($view)
+{
     global $VIEW_DATA;
     if (preg_match("/^Location: /", $view)) {
         if ($VIEW_DATA) {
@@ -39,7 +40,8 @@ function htmlView($view) {
  * 
  * @param type $data either string for HTML view or data for JSON
  */
-function view($data) {
+function view($data)
+{
     if (is_string($data)) {
         htmlView($data);
     } else if ($data || is_array($data)) {
@@ -59,6 +61,14 @@ if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
     unset($_SESSION['flash_data']);
 }
 
+// populate $_PUT for PUT requests
+// ideas from https://stackoverflow.com/questions/6805570/
+// implementation from Copilot
+if ($MY_METHOD === "PUT") {
+    $_PUT = array();
+    parse_str(file_get_contents("php://input"), $_PUT);
+}
+
 
 // find our mapping (first step for routing and security)
 $uris = $mappings[$MY_METHOD];
@@ -71,9 +81,9 @@ foreach ($uris as $pattern => $mapping) {
 
 // If there was no mapping send out a 404
 if ($MY_MAPPING === []) {
-	if (DEVELOPMENT) {
-		print("Mapping not found");
-	}
+    if (DEVELOPMENT) {
+        print("Mapping not found");
+    }
     require "view/error/404.php";
     exit();
 }
