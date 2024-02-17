@@ -46,7 +46,7 @@
         window.addEventListener("load", () => {
             // auto update on detail change
             function updateDetails() {
-                const form = document.getElementById("updateLab");
+                const form = document.forms.updateLab;
                 const id = form.dataset.id;
                 const visible = form.visible.checked ? 1 : 0;
                 const name = encodeURIComponent(form.name.value);
@@ -68,7 +68,7 @@
                     },
                 });
             }
-            const form = document.getElementById("updateLab");
+            const form = document.forms.updateLab;
             const inputs = form.querySelectorAll("input, select, textarea");
             inputs.forEach(input => {
                 input.addEventListener("change", updateDetails);
@@ -89,7 +89,11 @@
                 // TODO check if there are any deliverables
                 // TODO check if there are any attachments
                 if (confirm("Are you sure you want to delete this lab?")) {
-                    document.forms.delLab.submit();
+                    fetch(`../${document.forms.delLab.dataset.id}`, {
+                        method: "DELETE"
+                    }).then(() => {
+                        window.location = "../../lab";
+                    });
                 }
             });
         });
@@ -106,7 +110,7 @@
         </nav>
         <nav class="tools">
             <i id="addDeliverable" title="Add Deliverable" class="far fa-plus-square"></i>
-            <form id="delLab" data-qcount="<?= $deliverables ? count($deliverables) : 0 ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
+            <form id="delLab" data-id="<?= $lab['id'] ?>" data-scount="<?= 0 /* TODO submit count */ ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
         </nav>
         <div id="content">
             <div class="quiz">

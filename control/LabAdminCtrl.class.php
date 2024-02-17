@@ -126,7 +126,10 @@ class LabAdminCtrl
         $this->labDao->update($id, $visible, $name, $day_id, $start, $stop, $points, $type, $hasMarkDown, $desc);
     }
 
-    #[Post(uri: "/(\d+)/del$", sec: "instructor")]
+    /**
+     * Expects AJAX
+     */
+    #[Delete(uri: "/(\d+)$", sec: "instructor")]
     public function deleteLab()
     {
         global $URI_PARAMS;
@@ -135,6 +138,5 @@ class LabAdminCtrl
         // TODO delete deliverables
         // TODO delete attachments
         $this->labDao->delete($id);
-        return "Location: ../../lab";
     }
 }
