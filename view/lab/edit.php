@@ -61,7 +61,7 @@
                 const desc = form.desc.value;
 
                 fetch(`../${id}`, {
-                    method: "POST",
+                    method: "PUT",
                     body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&points=${points}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${desc}`,
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -154,7 +154,7 @@
                         <div class="textContainer">
                             <textarea name="desc" class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
 
-                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $question['hasMarkDown'] ? "active" : "" ?>"></i>
+                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $lab['hasMarkDown'] ? "active" : "" ?>"></i>
                             <input type="hidden" id="descMarkDown" name="hasMarkDown" value="<?= $lab['hasMarkDown'] ?>" />
                             <div class="mdContainer <?= $lab['hasMarkDown'] ? "active" : "" ?>">
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>

@@ -99,24 +99,24 @@ class LabAdminCtrl
     /**
      * Expects AJAX
      */
-    #[Post(uri: "/(\d+)$", sec: "instructor")]
+    #[Put(uri: "/(\d+)$", sec: "instructor")]
     public function updateLab()
     {
         global $URI_PARAMS;
+        global $_PUT;
 
         $id = $URI_PARAMS[3];
-        $visible = filter_input(INPUT_POST, "visible", FILTER_SANITIZE_NUMBER_INT);
-        $name = filter_input(INPUT_POST, "name");
-        $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
-        $startdate = filter_input(INPUT_POST, "startdate");
-        $stopdate = filter_input(INPUT_POST, "stopdate");
-        $starttime = filter_input(INPUT_POST, "starttime");
-        $stoptime = filter_input(INPUT_POST, "stoptime");
-        $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
-        $type = filter_input(INPUT_POST, "type");
-        $hasMarkDown = filter_input(INPUT_POST, "hasMarkDown", FILTER_SANITIZE_NUMBER_INT);
-        $desc = filter_input(INPUT_POST, "desc");
-
+        $visible = $_PUT["visible"];
+        $name = $_PUT["name"];
+        $day_id = $_PUT["day_id"];
+        $startdate = $_PUT["startdate"];
+        $stopdate = $_PUT["stopdate"];
+        $starttime = $_PUT["starttime"];
+        $stoptime = $_PUT["stoptime"];
+        $points = $_PUT["points"];
+        $type = $_PUT["type"];
+        $hasMarkDown = $_PUT["hasMarkDown"];
+        $desc = $_PUT["desc"];
 
         $visible = $visible ? 1 : 0;
         $hasMarkDown = $hasMarkDown ? 1 : 0;
