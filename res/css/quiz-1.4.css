@@ -114,7 +114,7 @@ i.fa-circle-notch {
     display: none;
 }
 i.fa-circle-notch.rotate {
-    display: inline;
+    display: inline-block;
     width: 16px;
     animation: rotation 2s infinite linear;
 }

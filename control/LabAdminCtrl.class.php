@@ -23,6 +23,12 @@ class LabAdminCtrl
     #[Inject('DayDao')]
     public $dayDao;
 
+    #[Inject('AttachmentHlpr')]
+    public $attachmentHlpr;
+
+    #[Inject('AttachmentDao')]
+    public $attachmentDao;
+
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
@@ -138,5 +144,24 @@ class LabAdminCtrl
         // TODO delete deliverables
         // TODO delete attachments
         $this->labDao->delete($id);
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: "/(\d+)/attach$", sec: "instructor")]
+    public function addAttachment()
+    {
+        global $URI_PARAMS;
+
+        $id = $URI_PARAMS[3];
+        $res = $this->attachmentHlpr->process('attachment', $id);
+
+        if (isset($res['error'])) {
+            return $res;
+        }
+        $this->attachmentDao->add($id, $res['dst']);
+
+        return $res;
     }
 }

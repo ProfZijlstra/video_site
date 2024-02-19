@@ -40,6 +40,20 @@
                 height: 100px;
                 resize: vertical;
             }
+
+            #attachment {
+                display: none;
+            }
+        }
+
+        dialog {
+            overflow: visible;
+
+            #close-overlay {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+            }
         }
     </style>
     <script>
@@ -86,8 +100,6 @@
             // enable delete button
             document.getElementById("delBtn").addEventListener("click", (e) => {
                 // TODO check if there are any submissions
-                // TODO check if there are any deliverables
-                // TODO check if there are any attachments
                 if (confirm("Are you sure you want to delete this lab?")) {
                     fetch(`../${document.forms.delLab.dataset.id}`, {
                         method: "DELETE"
@@ -95,6 +107,32 @@
                         window.location = "../../lab";
                     });
                 }
+            });
+
+            // enable add attachment button
+            document.getElementById("attachBtn").addEventListener("click", () => {
+                document.getElementById("attachment").click();
+            });
+            document.getElementById("attachment").addEventListener("change", function() {
+                // upload attachment
+                const spinner = document.getElementById("attachSpin");
+                spinner.classList.add("rotate");
+                const data = new FormData();
+                data.append("attachment", this.files[0]);
+                fetch("attach", {
+                        method: "POST",
+                        body: data
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            // TODO add attachment to list in DOM
+                            alert("Attachment added");
+                        }
+                        spinner.classList.remove('rotate');
+                    });
             });
         });
     </script>
@@ -168,6 +206,12 @@
                     </div>
                 </form>
             </div>
+            <div>
+                <i id="attachBtn" title="Add attachment" class="fa-solid fa-paperclip"></i>
+                <input type="file" name="attachment" id="attachment" />
+                <i id="attachSpin" class="fa-solid fa-circle-notch"></i>
+                <!-- TODO list of attachments -->
+            </div>
 
             <?php if (!$deliverables) : ?>
                 <h2>No Deliverables Yet!</h2>
@@ -225,31 +269,13 @@
             <?php endforeach; ?>
         </div>
     </main>
-    <div id="overlay">
+    <dialog id="addDeliverable" class="modal">
         <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div id="add_question_modal" class="modal hide">
-            <h3>Add Question</h3>
-            <div id="typeSelect">
-                Type:
-                <select>
-                    <option value="text">Text</option>
-                    <option value="image">Image</option>
-                </select>
-            </div>
-            <form action="question" method="post" id="add_form" enctype="multipart/form-data">
-                <input type="hidden" name="lab_id" value="<?= $lab['id'] ?>" id="lab_id" />
-                <input type="hidden" name="type" value="text" />
-                <input type="hidden" name="seq" value="<?= $deliverables ? count($deliverables) + 1 : 1 ?>" />
-                Points: <input type="number" name="points" value="1" />
-                <div>Question Text:</div>
-                <textarea id="addQuestionText" name="text" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
-                <div>Model Answer:</div>
-                <textarea id="md_answer" name="model_answer" data-ph="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
-                <input id="img_answer" type="file" name="image" />
-                <div class="btn"><button>Add Question</button></div>
-            </form>
+        <h3>Add Deliverable</h3>
+        <div class="btn">
+            <button>Add</button>
         </div>
-    </div>
+    </dialog>
 </body>
 
 </html>
