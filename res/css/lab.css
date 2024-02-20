@@ -1,0 +1,61 @@
+main#editLab {
+    #updateLab .lab {
+        margin-top: 20px;
+        margin-bottom: 0px;
+        text-align: left;
+    }
+
+    #content p.warning {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    div.qcontainer {
+        text-align: left;
+        border-top: none;
+        margin-top: 0px;
+        position: relative;
+    }
+
+    .textContainer {
+        width: 100%;
+    }
+
+    .textContainer textarea {
+        width: 100%;
+        height: 100px;
+        resize: vertical;
+    }
+
+    #attachment {
+        display: none;
+    }
+
+    .attachHeader {
+        position: relative;
+        margin-bottom: 0px;
+
+        i.fa-paperclip {
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+        }
+    }
+
+    .attachment {
+        margin-bottom: 3px;
+        padding: 3px 5px;
+        border: 1px solid var(--border);
+        background-color: var(--white);
+        position: relative;
+
+        i.fa-xmark {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            cursor: pointer;
+        }
+    }
+}
+
