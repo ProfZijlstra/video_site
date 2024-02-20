@@ -97,6 +97,7 @@ class LabAdminCtrl
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['lab'] = $this->labDao->byId($lab_id);
         $VIEW_DATA['deliverables'] = $this->deliverableDao->forLab($lab_id);
+        $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
         $VIEW_DATA['title'] = "Edit Lab";
 
         return "lab/edit.php";
@@ -160,7 +161,7 @@ class LabAdminCtrl
         if (isset($res['error'])) {
             return $res;
         }
-        $this->attachmentDao->add($id, $res['dst']);
+        $this->attachmentDao->add($id, $res['dst'], $res['name']);
 
         return $res;
     }

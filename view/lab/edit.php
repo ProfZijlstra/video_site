@@ -14,8 +14,9 @@
     <script src="res/js/markdown-1.1.js"></script>
     <style>
         main#editLab {
-            #updateLab div.lab {
+            #updateLab .lab {
                 margin-top: 20px;
+                margin-bottom: 0px;
                 text-align: left;
             }
 
@@ -43,6 +44,33 @@
 
             #attachment {
                 display: none;
+            }
+
+            .attachHeader {
+                position: relative;
+                margin-bottom: 0px;
+
+                i.fa-paperclip {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    cursor: pointer;
+                }
+            }
+
+            .attachment {
+                margin-bottom: 3px;
+                padding: 3px 5px;
+                border: 1px solid var(--border);
+                background-color: var(--white);
+                position: relative;
+
+                i.fa-xmark {
+                    position: absolute;
+                    top: 5px;
+                    right: 8px;
+                    cursor: pointer;
+                }
             }
         }
 
@@ -191,7 +219,7 @@
                             <option value="Group" <?= $lab['type'] == "Group" ? "selected" : "" ?>>Group</option>
                         </select>
                     </div>
-                    <div class="lab">Lab Description:</div>
+                    <h3 class="lab">Lab Description:</h3>
                     <div class="qcontainer">
                         <div class="textContainer">
                             <textarea name="desc" class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
@@ -207,10 +235,17 @@
                 </form>
             </div>
             <div>
-                <i id="attachBtn" title="Add attachment" class="fa-solid fa-paperclip"></i>
-                <input type="file" name="attachment" id="attachment" />
-                <i id="attachSpin" class="fa-solid fa-circle-notch"></i>
-                <!-- TODO list of attachments -->
+                <h3 class="attachHeader">Attachments
+                    <i id="attachBtn" title="Add attachment" class="fa-solid fa-paperclip"></i>
+                    <input type="file" name="attachment" id="attachment" />
+                    <i id="attachSpin" class="fa-solid fa-circle-notch"></i>
+                </h3>
+                <?php foreach ($attachments as $attachment) : ?>
+                    <div class="attachment">
+                        <a href="<?= $attachment['file'] ?>"><?= $attachment['name'] ?></a>
+                        <i title="Remove Attachment" class="fa-solid fa-xmark"></i>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <?php if (!$deliverables) : ?>
