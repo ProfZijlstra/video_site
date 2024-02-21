@@ -89,12 +89,14 @@
                     <input type="file" name="attachment" id="attachment" />
                     <i id="attachSpin" class="fa-solid fa-circle-notch"></i>
                 </h3>
-                <?php foreach ($attachments as $attachment) : ?>
-                    <div class="attachment">
-                        <a href="<?= $attachment['file'] ?>"><?= $attachment['name'] ?></a>
-                        <i title="Remove Attachment" class="fa-solid fa-xmark"></i>
-                    </div>
-                <?php endforeach; ?>
+                <div id="attachments">
+                    <?php foreach ($attachments as $attachment) : ?>
+                        <div class="attachment">
+                            <a href="<?= $attachment['file'] ?>"><?= $attachment['name'] ?></a>
+                            <i data-id="<?= $attachment['id'] ?>" title="Remove Attachment" class="fa-solid fa-xmark"></i>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
             <?php if (!$deliverables) : ?>

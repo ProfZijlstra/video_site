@@ -40,4 +40,12 @@ class AttachmentHlpr
             mkdir($dir);
         }
     }
+
+    public function delete($attachment)
+    {
+        if ($attachment) {
+            $file = $attachment['file'];
+            unlink($file);
+        }
+    }
 }

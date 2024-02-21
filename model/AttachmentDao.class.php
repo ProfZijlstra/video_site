@@ -33,4 +33,27 @@ class AttachmentDao
         $stmt->execute(array("lab_id" => $lab_id));
         return $stmt->fetchAll();
     }
+
+    public function delete($id, $lab_id)
+    {
+        $stmt = $this->db->prepare(
+            "DELETE FROM attachment
+            WHERE id = :id
+            AND lab_id = :lab_id"
+        );
+        $stmt->execute(array(
+            "id" => $id,
+            "lab_id" => $lab_id
+        ));
+    }
+
+    public function getById($id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM attachment
+            WHERE id = :id"
+        );
+        $stmt->execute(array("id" => $id));
+        return $stmt->fetch();
+    }
 }

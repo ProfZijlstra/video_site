@@ -51,7 +51,34 @@ window.addEventListener("load", () => {
         }
     });
 
-    // enable add attachment button
+    // enable remove attachment icons
+    function delAttachment(e) {
+        if (e.target.classList.contains("fa-xmark")) {
+            const attachment = e.target.parentElement;
+            const link = attachment.querySelector("a");
+            const name = link.textContent;
+            const id = e.target.dataset.id;
+            if (confirm(`Are you sure you want to remove ${name}?`)) {
+                const spinner = document.getElementById("attachSpin");
+                spinner.classList.add("rotate");
+                fetch(`attach/${id}`, {
+                        method: "DELETE",
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            attachment.remove();
+                        }
+                        spinner.classList.remove('rotate');
+                    });
+            }
+        }
+    }
+    document.getElementById("attachments").addEventListener("click", delAttachment);
+
+    // enable add attachment icon
     document.getElementById("attachBtn").addEventListener("click", () => {
         document.getElementById("attachment").click();
     });
@@ -70,8 +97,20 @@ window.addEventListener("load", () => {
                 if (data.error) {
                     alert(data.error);
                 } else {
-                    // TODO add attachment to list in DOM
-                    alert("Attachment added");
+                    // add attachment to list in DOM
+                    const attachment = document.createElement("div");
+                    attachment.classList.add("attachment");
+                    const link = document.createElement("a");
+                    link.href = `${data.dst}`;
+                    link.textContent = data.name;
+                    attachment.appendChild(link);
+                    const remove = document.createElement("i");
+                    remove.classList.add("fa-solid", "fa-xmark");
+                    remove.setAttribute("title", "Remove attachment");
+                    remove.dataset.id = data.id;
+                    remove.onclick = delAttachment;
+                    attachment.appendChild(remove);
+                    document.getElementById("attachments").appendChild(attachment);
                 }
                 spinner.classList.remove('rotate');
             });

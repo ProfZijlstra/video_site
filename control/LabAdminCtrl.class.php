@@ -167,8 +167,30 @@ class LabAdminCtrl
         if (isset($res['error'])) {
             return $res;
         }
-        $this->attachmentDao->add($id, $res['dst'], $res['name']);
+        $aid = $this->attachmentDao->add($id, $res['dst'], $res['name']);
+        $res['id'] = $aid;
 
         return $res;
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Delete(uri: "/(\d+)/attach/(\d+)$", sec: "instructor")]
+    public function delAttachment()
+    {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $id = $URI_PARAMS[4];
+
+        try {
+            $attachment = $this->attachmentDao->getById($id);
+            $this->attachmentHlpr->delete($attachment);
+            $this->attachmentDao->delete($id, $lab_id);
+        } catch (Exception) {
+            return ["error" => "Failed to remove attachment"];
+        }
+        return ["id" => $id];
     }
 }
