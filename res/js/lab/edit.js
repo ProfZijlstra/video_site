@@ -34,6 +34,7 @@ window.addEventListener("load", () => {
     function mdToggle() {
         const descMarkDown = document.getElementById("descMarkDown");
         descMarkDown.value = descMarkDown.value == "1" ? "0" : "1";
+        updateDetails();
     }
     // enable markdown previews
     MARKDOWN.enablePreview("../../markdown");

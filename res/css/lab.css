@@ -34,7 +34,7 @@ main#editLab {
         text-align: center;
     }
 
-    /* qcontainer and textContainer is duplicated from quiz 
+    /* qcontainer, textContainer and mdContainer is duplicated from quiz 
      * should we factor this out? */
     div.qcontainer {
         text-align: left;
@@ -68,6 +68,26 @@ main#editLab {
         right: 0px;
         cursor: pointer;
         color: gray;
+    }
+
+    div.qcontainer div.mdContainer {
+        display: none;
+    }
+    div.qcontainer div.mdContainer.active {
+        display: block;
+    }
+
+    div.textContainer i.fa-markdown.active {
+        color: var(--black);
+    }
+
+    i.fa-circle-notch {
+        display: none;
+    }
+    i.fa-circle-notch.rotate {
+        display: inline-block;
+        width: 16px;
+        animation: rotation 2s infinite linear;
     }
 
     #attachment {
