@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="res/css/common-1.2.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <link rel="stylesheet" href="res/css/lab.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
@@ -29,7 +28,7 @@
             <form id="delLab" data-id="<?= $lab['id'] ?>" data-scount="<?= 0 /* TODO submit count */ ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
         </nav>
         <div id="content">
-            <div class="quiz">
+            <div class="lab">
                 <form id="updateLab" action="<?= "../" . $lab['id'] ?>" method="POST" data-id="<?= $lab['id'] ?>">
                     <div class="status" data-id="<?= $lab['id'] ?>">
                         <input id="visible" name="visible" type="checkbox" class="visible" value="1" <?= $lab['visible'] ? 'checked' : '' ?> /><label for="visible"> Visible</label>

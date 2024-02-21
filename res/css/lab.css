@@ -1,4 +1,28 @@
 main#editLab {
+    form#delLab {
+        display: inline;
+    }
+    div.lab {
+        text-align: center;
+    }
+    div.lab div.status {
+        margin-bottom: 5px;
+    }
+    div.lab form label {
+        display: inline-block;
+        width: 60px;
+        margin-bottom: 5px;
+    }
+    div.lab input.name {
+        width: 310px;
+    }
+    div.lab select {
+        width: 320px;
+    }
+    div.lab input[type="time"], div.lab input[type="date"] {
+        width: 150px;
+    }
+
     #updateLab .lab {
         margin-top: 20px;
         margin-bottom: 0px;
@@ -10,11 +34,22 @@ main#editLab {
         text-align: center;
     }
 
+    /* qcontainer and textContainer is duplicated from quiz 
+     * should we factor this out? */
     div.qcontainer {
         text-align: left;
         border-top: none;
         margin-top: 0px;
         position: relative;
+    }
+    div.qcontainer div.preview {
+        margin: 5px 0px;
+        text-align: right;
+    }
+
+    div.qcontainer div.pcontainer {
+        padding: 5px;
+        border: 1px solid var(--border);
     }
 
     .textContainer {
@@ -25,6 +60,14 @@ main#editLab {
         width: 100%;
         height: 100px;
         resize: vertical;
+    }
+
+    div.textContainer i.fa-markdown {
+        position: absolute;
+        top: -18px;
+        right: 0px;
+        cursor: pointer;
+        color: gray;
     }
 
     #attachment {

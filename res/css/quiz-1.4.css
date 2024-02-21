@@ -12,13 +12,13 @@ div.done {
     margin-bottom: 300px;
     text-align: center;
 }
-form#delQuiz, form#delLab {
+form#delQuiz {
     display: inline;
 }
 div.quiz {
     text-align: center;
 }
-div.status {
+div.quiz div.status {
     margin-bottom: 5px;
 }
 div.quiz form label {
