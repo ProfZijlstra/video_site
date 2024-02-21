@@ -28,6 +28,10 @@ class LabAdminCtrl
 
     #[Inject('AttachmentDao')]
     public $attachmentDao;
+    #
+    #[Inject('MarkdownHlpr')]
+    public $markdownCtrl;
+
 
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
@@ -123,7 +127,9 @@ class LabAdminCtrl
         $points = $_PUT["points"];
         $type = $_PUT["type"];
         $hasMarkDown = $_PUT["hasMarkDown"];
-        $desc = $_PUT["desc"];
+        $shifted = $_PUT["desc"];
+        $desc = $this->markdownCtrl->ceasarShift($shifted);
+
 
         $visible = $visible ? 1 : 0;
         $hasMarkDown = $hasMarkDown ? 1 : 0;

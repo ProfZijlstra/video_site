@@ -14,10 +14,11 @@ window.addEventListener("load", () => {
         const type = form.type.value;
         const hasMarkDown = form.hasMarkDown.value;
         const desc = form.desc.value;
+        const shifted = encodeURIComponent(MARKDOWN.ceasarShift(desc));
 
         fetch(`../${id}`, {
             method: "PUT",
-            body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&points=${points}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${desc}`,
+            body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&points=${points}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${shifted}`,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
