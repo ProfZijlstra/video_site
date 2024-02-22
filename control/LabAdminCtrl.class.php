@@ -188,9 +188,33 @@ class LabAdminCtrl
             $attachment = $this->attachmentDao->getById($id);
             $this->attachmentHlpr->delete($attachment);
             $this->attachmentDao->delete($id, $lab_id);
-        } catch (Exception) {
+        } catch (Exception $e) {
+            error_log($e);
             return ["error" => "Failed to remove attachment"];
         }
         return ["id" => $id];
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: "/(\d+)/deliverable$", sec: "instructor")]
+    public function addDliverable()
+    {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $type = filter_input(INPUT_POST, "type");
+        $seq = filter_input(INPUT_POST, "seq", FILTER_SANITIZE_NUMBER_INT);
+
+        try {
+            $id = $this->deliverableDao->add($lab_id, $type, $seq);
+            $deliverable = $this->deliverableDao->byId($id);
+        } catch (Exception $e) {
+            error_log($e);
+            return ["error" => "Failed to add deliverable"];
+        }
+
+        return $deliverable;
     }
 }

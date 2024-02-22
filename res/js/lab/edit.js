@@ -41,7 +41,7 @@ window.addEventListener("load", () => {
     MARKDOWN.activateButtons(mdToggle);
 
     // enable delete button
-    document.getElementById("delBtn").addEventListener("click", (e) => {
+    document.getElementById("delBtn").addEventListener("click", () => {
         // TODO check if there are any submissions
         if (confirm("Are you sure you want to delete this lab?")) {
             fetch(`../${document.forms.delLab.dataset.id}`, {
@@ -73,11 +73,17 @@ window.addEventListener("load", () => {
                             attachment.remove();
                         }
                         spinner.classList.remove('rotate');
+                        const attachments = document.getElementById("attachments");
+                        if (attachments.childElementCount == 0) {
+                            attachments.previousElementSibling.classList.add("empty");
+                        }
                     });
             }
         }
     }
-    document.getElementById("attachments").addEventListener("click", delAttachment);
+    document.querySelectorAll(".attachment i").forEach((e) => {
+        e.addEventListener("click", delAttachment);
+    });
 
     // enable add attachment icon
     document.getElementById("attachBtn").addEventListener("click", () => {
@@ -111,9 +117,40 @@ window.addEventListener("load", () => {
                     remove.dataset.id = data.id;
                     remove.onclick = delAttachment;
                     attachment.appendChild(remove);
-                    document.getElementById("attachments").appendChild(attachment);
+                    const attachments = document.getElementById("attachments");
+                    attachments.appendChild(attachment);
+                    attachments.previousElementSibling.classList.remove("empty");
                 }
                 spinner.classList.remove('rotate');
             });
     });
+
+    // enable add deliverable 
+    const addDeliv = document.getElementById("addDelivIcon");
+    addDeliv.onclick = function() {
+        const dialog = document.getElementById("addDelivDialog");
+        dialog.showModal();
+    };
+    document.getElementById("closeAddDialog").onclick = function() {
+        document.getElementById("addDelivDialog").close();
+    };
+    document.getElementById("addDelivBtn").onclick = function(e) { 
+        const data = new FormData();
+        data.append("type", document.getElementById("delivType").value);
+        data.append("seq", e.target.dataset.seq);
+        data.append("lab_id", e.target.dataset.lab_id);
+        fetch("deliverable", {
+                method: "POST",
+                body: data,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // TODO add deliverable to list in DOM
+                }
+            });
+    };
 });

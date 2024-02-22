@@ -94,16 +94,21 @@ main#editLab {
         display: none;
     }
 
-    .attachHeader {
-        position: relative;
+    h3 {
         margin-bottom: 0px;
+        position: relative;
 
-        i.fa-paperclip {
+        i {
             position: absolute;
             top: 0;
             right: 0;
             cursor: pointer;
         }
+    }
+
+    h3.empty {
+        margin-bottom: 3px;
+        border-bottom: 1px solid var(--border);
     }
 
     .attachment {
@@ -119,6 +124,17 @@ main#editLab {
             right: 8px;
             cursor: pointer;
         }
+    }
+}
+
+#addDelivDialog {
+    label {
+        margin-top: 10px;
+        display: inline-block;
+        width: 75px;
+    }
+    select {
+        width: 620px;
     }
 }
 

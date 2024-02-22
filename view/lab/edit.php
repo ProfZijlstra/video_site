@@ -24,7 +24,6 @@
             </a>
         </nav>
         <nav class="tools">
-            <i id="addDeliverable" title="Add Deliverable" class="far fa-plus-square"></i>
             <form id="delLab" data-id="<?= $lab['id'] ?>" data-scount="<?= 0 /* TODO submit count */ ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
         </nav>
         <div id="content">
@@ -84,7 +83,7 @@
                 </form>
             </div>
             <div>
-                <h3 class="attachHeader">Attachments
+                <h3 class="<?= count($attachments) == 0 ? 'empty' : '' ?>">Attachments
                     <i id="attachBtn" title="Add attachment" class="fa-solid fa-paperclip"></i>
                     <input type="file" name="attachment" id="attachment" />
                     <i id="attachSpin" class="fa-solid fa-circle-notch"></i>
@@ -99,6 +98,10 @@
                 </div>
             </div>
 
+            <h3 class="<?= count($deliverables) == 0 ? 'empty' : '' ?>">
+                Deliverables
+                <i id="addDelivIcon" title="Add Deliverable" class="far fa-plus-square"></i>
+            </h3>
             <?php if (!$deliverables) : ?>
                 <h2>No Deliverables Yet!</h2>
                 <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one deliverable.</p>
@@ -153,15 +156,22 @@
                     </div>
                 </div>
             <?php endforeach; ?>
-        </div>
-    </main>
-    <dialog id="addDeliverable" class="modal">
-        <i id="close-overlay" class="fas fa-times-circle"></i>
-        <h3>Add Deliverable</h3>
-        <div class="btn">
-            <button>Add</button>
-        </div>
-    </dialog>
+        </div </main>
+        <dialog id="addDelivDialog" class="modal">
+            <i id="closeAddDialog" class="fas fa-times-circle close"></i>
+            <h3>Add Deliverable</h3>
+            <label>Type:</label>
+            <select id="delivType" autofocus>
+                <option value="txt">Text</option>
+                <option value="img">Image</option>
+                <option value="pdf">PDF</option>
+                <option value="url">URL</option>
+                <option value="zip">Code as .zip</option>
+            </select>
+            <div class="btn">
+                <button id="addDelivBtn" data-seq="<?= count($deliverables) ?>" data-lab_id="<?= $lab['id'] ?>">Add</button>
+            </div>
+        </dialog>
 </body>
 
 </html>
