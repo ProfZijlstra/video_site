@@ -31,7 +31,7 @@ class AttachmentHlpr
         $this->ensureDirCreated("res/{$course}/{$block}/lab/{$lab_id}");
         move_uploaded_file($curr, $dst);
 
-        return ["dst" => $dst, "name" => $name];
+        return ["file" => $dst, "name" => $name, "lab_id" => $lab_id];
     }
 
     private function ensureDirCreated($dir)

@@ -154,23 +154,29 @@ class LabAdminCtrl
     }
 
     /**
-     * Expects AJAX
+     * Expects AJAX / HTMX
      */
     #[Post(uri: "/(\d+)/attach$", sec: "instructor")]
     public function addAttachment()
     {
         global $URI_PARAMS;
+        global $VIEW_DATA;
 
         $id = $URI_PARAMS[3];
-        $res = $this->attachmentHlpr->process('attachment', $id);
 
-        if (isset($res['error'])) {
-            return $res;
+        try {
+            $res = $this->attachmentHlpr->process('attachment', $id);
+            $aid = $this->attachmentDao->add($id, $res['file'], $res['name']);
+            $res['id'] = $aid;
+        } catch (Exception $e) {
+            error_log($e);
+            http_response_code(500);
+            return ["error" => "Failed to add attachment"];
         }
-        $aid = $this->attachmentDao->add($id, $res['dst'], $res['name']);
-        $res['id'] = $aid;
 
-        return $res;
+        $VIEW_DATA['attachment'] = $res;
+
+        return "lab/attachment.php";  // attachment view
     }
 
     /**

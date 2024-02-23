@@ -98,29 +98,24 @@ window.addEventListener("load", () => {
         fetch("attach", {
                 method: "POST",
                 body: data
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    // add attachment to list in DOM
-                    const attachment = document.createElement("div");
-                    attachment.classList.add("attachment");
-                    const link = document.createElement("a");
-                    link.href = `${data.dst}`;
-                    link.textContent = data.name;
-                    attachment.appendChild(link);
-                    const remove = document.createElement("i");
-                    remove.classList.add("fa-solid", "fa-xmark");
-                    remove.setAttribute("title", "Remove attachment");
-                    remove.dataset.id = data.id;
-                    remove.onclick = delAttachment;
-                    attachment.appendChild(remove);
-                    const attachments = document.getElementById("attachments");
-                    attachments.appendChild(attachment);
-                    attachments.previousElementSibling.classList.remove("empty");
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
                 }
+                throw new Error("Upload attachment failed.");
+            })
+            .then((html) => {
+                // TODO TEST
+                const div = document.createElement("div");
+                div.innerHTML = html;
+                div.querySelector("i").addEventListener("click", delAttachment);
+                const attachments = document.getElementById("attachments");
+                attachments.appendChild(div);
+                spinner.classList.remove('rotate');
+            })
+            .catch((error) => {
+                alert(error);
                 spinner.classList.remove('rotate');
             });
     });
