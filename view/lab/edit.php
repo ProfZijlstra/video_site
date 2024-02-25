@@ -68,7 +68,7 @@
                         </select>
                     </div>
                     <h3 class="lab">Lab Description:</h3>
-                    <div class="qcontainer">
+                    <div class="dcontainer">
                         <div class="textContainer">
                             <textarea name="desc" class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
 
@@ -106,53 +106,31 @@
                 <h2>No Deliverables Yet!</h2>
                 <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one deliverable.</p>
             <?php endif; ?>
-            <?php foreach ($deliverables as $question) : ?>
-                <div class="qcontainer">
+            <?php foreach ($deliverables as $deliv) : ?>
+                <div class="dcontainer deliverables">
                     <div class="about">
-                        <div class="seq"><?= $question['seq'] ?></div>
-                        <div class="points">Points: <input type="number" value="<?= $question['points'] ?>" /></div>
-                        <form action="<?= "question/" . $question['id'] . "/del" ?>" method="POST">
-                            <i class="far fa-trash-alt"></i>
-                        </form>
-                    </div>
-                    <div class="question" data-id="<?= $question['id'] ?>">
-                        <div class="qType" data-type="<?= $question['type'] ?>">
-                            Type:
-                            <?php if ($question['type'] == "text") : ?>
-                                Text
-                            <?php elseif ($question['type'] == "image") : ?>
-                                Image Upload
-                            <?php endif; ?>
+                        <div class="meta">
+                            <span class="type" data-type="<?= $deliv['type'] ?>">
+                                <?= $deliv['type'] ?>
+                            </span>
                         </div>
-                        <div>Question Text:</div>
+                        <div class="points">
+                            Points: <input type="number" value="<?= $deliv['points'] ?>" /><br />
+                            of <?= $lab['points'] ?>
+                        </div>
+                        <i class="far fa-trash-alt" data-id="<?= $deliv['id'] ?>"></i>
+                    </div>
+                    <div class="deliv" data-id="<?= $deliv['id'] ?>">
+                        <div>Deliverable description:</div>
                         <div class="textContainer">
-                            <textarea class="text" placeholder="Write your question text here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your question text here"><?= $question['text'] ?></textarea>
+                            <textarea class="text" placeholder="Write your deliverable description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your question text here"><?= $deliv['text'] ?></textarea>
 
-                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $question['hasMarkDown'] ? "active" : "" ?>"></i>
-                            <div class="mdContainer <?= $question['hasMarkDown'] ? "active" : "" ?>">
+                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $deliv['hasMarkDown'] ? "active" : "" ?>"></i>
+                            <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
                         </div>
-                        <div>Model Answer:</div>
-                        <?php if ($question['type'] == 'text') : ?>
-                            <div class="textContainer">
-                                <textarea class="model_answer" placeholder="Write your model answer here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your model answer here"><?= $question['modelAnswer'] ?></textarea>
-
-                                <i title="Markdown" class="mdl fa-brands fa-markdown <?= $question['mdlAnsHasMD'] ? "active" : "" ?>"></i>
-                                <div class="mdContainer <?= $question['mdlAnsHasMD'] ? "active" : "" ?>">
-                                    <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                                    <div class="previewArea"></div>
-                                </div>
-                            </div>
-                        <?php elseif ($question['type'] == "image") : ?>
-                            <img src="<?= $question['modelAnswer'] ?>" />
-                            <div>
-                                Upload Replacement:
-                                <input type="file" class="img_replace" />
-                                <i class="fa-solid fa-circle-notch"></i>
-                            </div>
-                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -169,7 +147,7 @@
                 <option value="zip">Code as .zip</option>
             </select>
             <div class="btn">
-                <button id="addDelivBtn" data-seq="<?= count($deliverables) ?>" data-lab_id="<?= $lab['id'] ?>">Add</button>
+                <button id="addDelivBtn" data-seq="<?= count($deliverables) + 1 ?>" data-lab_id="<?= $lab['id'] ?>">Add</button>
             </div>
         </dialog>
 </body>
