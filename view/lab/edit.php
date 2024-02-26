@@ -58,7 +58,7 @@
                     </div>
                     <div>
                         <label>Points:</label>
-                        <input class="name" type="number" name="points" value="<?= $lab['points'] ?>" />
+                        <input id="labPoints" class="name" type="number" name="points" value="<?= $lab['points'] ?>" />
                     </div>
                     <div>
                         <label>Type:</label>
@@ -116,7 +116,7 @@
                         </div>
                         <div class="points">
                             Points: <input type="number" value="<?= $deliv['points'] ?>" /><br />
-                            of <?= $lab['points'] ?>
+                            of <span class="labPoints"><?= $lab['points'] ?></span>
                         </div>
                         <i class="far fa-trash-alt" data-id="<?= $deliv['id'] ?>"></i>
                     </div>

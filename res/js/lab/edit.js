@@ -30,6 +30,13 @@ window.addEventListener("load", () => {
         input.addEventListener("change", updateDetails);
     });
 
+    // when updating the lab points, update the points shown for deliverables
+    document.getElementById("labPoints").addEventListener("change", function() {
+        document.querySelectorAll(".labPoints").forEach((e) => {
+            e.textContent = this.value;
+        });
+    });
+
     // markdown related functions
     function mdToggle() {
         const descMarkDown = document.getElementById("descMarkDown");
