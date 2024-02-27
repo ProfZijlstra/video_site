@@ -23,10 +23,6 @@ class DeliverableDao
 
     public function add($lab_id, $type, $seq)
     {
-        print_r($lab_id);
-        print_r($type);
-        print_r($seq);
-
         $stmt = $this->db->prepare(
             "INSERT INTO deliverable
             VALUES(NULL, :lab_id, :type, :seq, '', 0, 0, 0)"
@@ -47,5 +43,17 @@ class DeliverableDao
         );
         $stmt->execute(array("id" => $id));
         return $stmt->fetch();
+    }
+
+    public function delete($id, $lab_id)
+    {
+        $stmt = $this->db->prepare(
+            "DELETE FROM deliverable
+            WHERE id = :id AND lab_id = :lab_id"
+        );
+        $stmt->execute(array(
+            "id" => $id,
+            "lab_id" => $lab_id
+        ));
     }
 }

@@ -202,12 +202,13 @@ class LabAdminCtrl
     }
 
     /**
-     * Expects AJAX
+     * Expects AJAX / HTMX
      */
     #[Post(uri: "/(\d+)/deliverable$", sec: "instructor")]
     public function addDliverable()
     {
         global $URI_PARAMS;
+        global $VIEW_DATA;
 
         $lab_id = $URI_PARAMS[3];
         $type = filter_input(INPUT_POST, "type");
@@ -215,12 +216,33 @@ class LabAdminCtrl
 
         try {
             $id = $this->deliverableDao->add($lab_id, $type, $seq);
-            $deliverable = $this->deliverableDao->byId($id);
         } catch (Exception $e) {
             error_log($e);
             return ["error" => "Failed to add deliverable"];
         }
 
-        return $deliverable;
+        $VIEW_DATA['deliv'] = $this->deliverableDao->byId($id);
+
+        return "lab/deliverable.php";  // deliverable view
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Delete(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
+    public function delDeliverable()
+    {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $id = $URI_PARAMS[4];
+
+        try {
+            $this->deliverableDao->delete($id, $lab_id);
+        } catch (Exception $e) {
+            error_log($e);
+            return ["error" => "Failed to remove deliverable"];
+        }
+        return ["id" => $id];
     }
 }

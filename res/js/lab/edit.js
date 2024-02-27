@@ -41,7 +41,9 @@ window.addEventListener("load", () => {
     function mdToggle() {
         const descMarkDown = document.getElementById("descMarkDown");
         descMarkDown.value = descMarkDown.value == "1" ? "0" : "1";
-        updateDetails();
+        if (this.classList.contains("details")) {
+            updateDetails();
+        }
     }
     // enable markdown previews
     MARKDOWN.enablePreview("../../markdown");
@@ -122,8 +124,8 @@ window.addEventListener("load", () => {
                 spinner.classList.remove('rotate');
             })
             .catch((error) => {
-                alert(error);
                 spinner.classList.remove('rotate');
+                alert(error);
             });
     });
 
@@ -145,14 +147,44 @@ window.addEventListener("load", () => {
                 method: "POST",
                 body: data,
             })
-            .then((response) => response.json())
-            .then((data) => {
-                
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    // TODO add deliverable to list in DOM
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
                 }
+                throw new Error("Adding deliverable failed.");
+            })
+            .then((html) => {
+                const div = document.createElement("div");
+                div.innerHTML = html;
+                div.querySelector("i.fa-trash-alt").addEventListener("click", delDeliv);
+                div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
+                const delivs = document.getElementById("deliverables");
+                delivs.appendChild(div);
+                document.getElementById("addDelivDialog").close();
+            })
+            .catch((error) => {
+                document.getElementById("addDelivDialog").close();
+                alert(error);
             });
     };
+
+    function delDeliv() {
+        const deliv = this.parentElement.parentElement;
+        if (confirm("Are you sure you want to remove this deliverable?")) {
+            fetch(`deliverable/${this.dataset.id}`, {
+                    method: "DELETE",
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        deliv.remove();
+                    }
+                });
+        }
+    }
+    document.querySelectorAll(".delDeliv").forEach((e) => {
+        e.addEventListener("click", delDeliv);
+    });
 });

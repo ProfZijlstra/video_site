@@ -72,7 +72,7 @@
                         <div class="textContainer">
                             <textarea name="desc" class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
 
-                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $lab['hasMarkDown'] ? "active" : "" ?>"></i>
+                            <i title="Markdown" class="details txt fa-brands fa-markdown <?= $lab['hasMarkDown'] ? "active" : "" ?>"></i>
                             <input type="hidden" id="descMarkDown" name="hasMarkDown" value="<?= $lab['hasMarkDown'] ?>" />
                             <div class="mdContainer <?= $lab['hasMarkDown'] ? "active" : "" ?>">
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
@@ -90,10 +90,7 @@
                 </h3>
                 <div id="attachments">
                     <?php foreach ($attachments as $attachment) : ?>
-                        <div class="attachment">
-                            <a href="<?= $attachment['file'] ?>"><?= $attachment['name'] ?></a>
-                            <i data-id="<?= $attachment['id'] ?>" title="Remove Attachment" class="fa-solid fa-xmark"></i>
-                        </div>
+                        <?php include('view/lab/attachment.php') ?>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -106,34 +103,11 @@
                 <h2>No Deliverables Yet!</h2>
                 <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one deliverable.</p>
             <?php endif; ?>
-            <?php foreach ($deliverables as $deliv) : ?>
-                <div class="dcontainer deliverables">
-                    <div class="about">
-                        <div class="meta">
-                            <span class="type" data-type="<?= $deliv['type'] ?>">
-                                <?= $deliv['type'] ?>
-                            </span>
-                        </div>
-                        <div class="points">
-                            Points: <input type="number" value="<?= $deliv['points'] ?>" /><br />
-                            of <span class="labPoints"><?= $lab['points'] ?></span>
-                        </div>
-                        <i class="far fa-trash-alt" data-id="<?= $deliv['id'] ?>"></i>
-                    </div>
-                    <div class="deliv" data-id="<?= $deliv['id'] ?>">
-                        <div>Deliverable description:</div>
-                        <div class="textContainer">
-                            <textarea class="text" placeholder="Write your deliverable description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your question text here"><?= $deliv['text'] ?></textarea>
-
-                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $deliv['hasMarkDown'] ? "active" : "" ?>"></i>
-                            <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
-                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                                <div class="previewArea"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+            <div id="deliverables">
+                <?php foreach ($deliverables as $deliv) : ?>
+                    <?php include('view/lab/deliverable.php') ?>
+                <?php endforeach; ?>
+            </div>
         </div </main>
         <dialog id="addDelivDialog" class="modal">
             <i id="closeAddDialog" class="fas fa-times-circle close"></i>
