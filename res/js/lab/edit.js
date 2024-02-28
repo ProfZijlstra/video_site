@@ -143,6 +143,7 @@ window.addEventListener("load", () => {
         data.append("type", document.getElementById("delivType").value);
         data.append("seq", e.target.dataset.seq);
         data.append("lab_id", e.target.dataset.lab_id);
+        e.target.dataset.seq++;
         fetch("deliverable", {
                 method: "POST",
                 body: data,

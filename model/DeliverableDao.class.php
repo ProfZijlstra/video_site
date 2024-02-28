@@ -25,7 +25,7 @@ class DeliverableDao
     {
         $stmt = $this->db->prepare(
             "INSERT INTO deliverable
-            VALUES(NULL, :lab_id, :type, :seq, '', 0, 0, 0)"
+            VALUES(NULL, :lab_id, :type, :seq, '', 0, 0)"
         );
         $stmt->execute(array(
             "lab_id" => $lab_id,
