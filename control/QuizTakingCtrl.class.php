@@ -166,7 +166,6 @@ class QuizTakingCtrl
     private function quizEnded($quiz_id, $leewaySecs = 0)
     {
         $quiz = $this->quizDao->byId($quiz_id);
-        $quiz = $this->quizDao->byId($quiz_id);
         $tz = new DateTimeZone(TIMEZONE);
         $now = new DateTimeImmutable("now", $tz);
         $stop = new DateTimeImmutable($quiz['stop'], $tz);
@@ -185,4 +184,3 @@ class QuizTakingCtrl
         return $result;
     }
 }
-
