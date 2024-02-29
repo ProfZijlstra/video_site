@@ -245,4 +245,21 @@ class LabAdminCtrl
         }
         return ["id" => $id];
     }
+
+    #[Put(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
+    public function updateDeliverable()
+    {
+        global $URI_PARAMS;
+        global $_PUT;
+
+        $lab_id = $URI_PARAMS[3];
+        $id = $URI_PARAMS[4];
+        $points = $_PUT["points"];
+        $shifted = $_PUT["desc"];
+        $desc = $this->markdownCtrl->ceasarShift($shifted);
+        $hasMarkDown = $_PUT["hasMarkDown"];
+
+
+        $this->deliverableDao->update($id, $lab_id, $points, $desc, $hasMarkDown);
+    }
 }

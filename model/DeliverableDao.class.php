@@ -56,4 +56,20 @@ class DeliverableDao
             "lab_id" => $lab_id
         ));
     }
+
+    public function update($id, $lab_id, $points, $desc, $hasMarkDown)
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE deliverable
+            SET points = :points, `desc` = :desc, hasMarkDown = :hasMarkDown
+            WHERE id = :id AND lab_id = :lab_id"
+        );
+        $stmt->execute(array(
+            "id" => $id,
+            "lab_id" => $lab_id,
+            "points" => $points,
+            "desc" => $desc,
+            "hasMarkDown" => $hasMarkDown
+        ));
+    }
 }

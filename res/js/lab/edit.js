@@ -43,6 +43,8 @@ window.addEventListener("load", () => {
         descMarkDown.value = descMarkDown.value == "1" ? "0" : "1";
         if (this.classList.contains("details")) {
             updateDetails();
+        } else if (this.classList.contains("deliverable")) {
+            updateDeliv.call(this);
         }
     }
     // enable markdown previews
@@ -169,6 +171,7 @@ window.addEventListener("load", () => {
             });
     };
 
+    // enable delete deliverable
     function delDeliv() {
         const deliv = this.parentElement.parentElement;
         if (confirm("Are you sure you want to remove this deliverable?")) {
@@ -187,5 +190,33 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll(".delDeliv").forEach((e) => {
         e.addEventListener("click", delDeliv);
+    });
+
+    // enable update deliverable
+    function updateDeliv() {
+        const dcontainer = this.closest(".dcontainer");
+        const id = dcontainer.dataset.id;
+        const points = dcontainer.querySelector(".points").value;
+        const desc = encodeURIComponent(MARKDOWN.ceasarShift(dcontainer.querySelector(".desc").value));
+        const hasMarkDown = dcontainer.querySelector(".fa-markdown").classList.contains("active") ? 1 : 0;
+        fetch(`deliverable/${id}`, {
+            method: "PUT",
+            body: `desc=${desc}&points=${points}&hasMarkDown=${hasMarkDown}`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("Updating deliverable failed.");
+        })
+        .catch((error) => {
+            alert(error);
+        });
+    }
+    document.querySelectorAll(".dcontainer input, .dcontainer textarea").forEach((e) => {
+        e.addEventListener("change", updateDeliv);
     });
 });
