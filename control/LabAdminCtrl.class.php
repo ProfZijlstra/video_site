@@ -28,7 +28,7 @@ class LabAdminCtrl
 
     #[Inject('AttachmentDao')]
     public $attachmentDao;
-    #
+
     #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
@@ -246,6 +246,9 @@ class LabAdminCtrl
         return ["id" => $id];
     }
 
+    /**
+     * Expects AJAX
+     */
     #[Put(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
     public function updateDeliverable()
     {
