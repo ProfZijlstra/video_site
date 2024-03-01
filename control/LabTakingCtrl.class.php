@@ -50,6 +50,7 @@ class LabTakingCtrl
             $VIEW_DATA['start'] = $startDiff;
             return "lab/countdown.php";
         } else if ($stopDiff->invert === 1) { // stop is in the past
+
         } else { // the lab is open
         }
     }
