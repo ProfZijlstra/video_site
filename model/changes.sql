@@ -391,7 +391,6 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`lab` (
   `stop` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `visible` TINYINT NOT NULL DEFAULT 0,
   `type` VARCHAR(45) NOT NULL DEFAULT 'Individual',
-  `points` INT UNSIGNED NOT NULL DEFAULT 10,
   PRIMARY KEY (`id`),
   INDEX `fk_lab_day1_idx` (`day_id` ASC) VISIBLE,
   CONSTRAINT `fk_lab_day1`
@@ -411,10 +410,10 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`submission` (
   `user_id` INT UNSIGNED NOT NULL,
   `group` VARCHAR(45) NULL,
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lab_duration` TIME NOT NULL DEFAULT "00:00:00",
   `stuComment` TEXT NOT NULL DEFAULT "",
   `stuCmntHasMD` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `points` FLOAT NULL,
   `gradeComment` TEXT NULL,
   `gradeCmntHasMD` TINYINT UNSIGNED NULL,
   PRIMARY KEY (`id`),
@@ -443,8 +442,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`deliverable` (
   `seq` INT UNSIGNED NOT NULL DEFAULT 1,
   `desc` TEXT NOT NULL DEFAULT "",
   `hasMarkDown` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `isOptional` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `weight` TINYINT UNSIGNED NOT NULL, -- points for this deliverable
+  `points` TINYINT UNSIGNED NOT NULL DEFAULT 10, 
   PRIMARY KEY (`id`),
   INDEX `fk_deliverable_lab1_idx` (`lab_id` ASC) VISIBLE,
   CONSTRAINT `fk_deliverable_lab1`
@@ -465,6 +463,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`delivers` (
   `completion` TINYINT UNSIGNED NOT NULL,
   `text` TEXT NOT NULL DEFAULT "",
   `hasMarkDown` TINYINT NULL,
+  `points` INT UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_delivers_hw_submit1_idx` (`submission_id` ASC) VISIBLE,
   INDEX `fk_delivers_deliverable1_idx` (`deliverable_id` ASC) VISIBLE,

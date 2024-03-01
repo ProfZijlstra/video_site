@@ -57,15 +57,15 @@
                         <input type="time" name="stoptime" class="stoptime" value="<?= substr($lab['stop'], 11) ?>" />
                     </div>
                     <div>
-                        <label>Points:</label>
-                        <input id="labPoints" class="name" type="number" name="points" value="<?= $lab['points'] ?>" />
-                    </div>
-                    <div>
                         <label>Type:</label>
                         <select name="type">
                             <option value="Individual" <?= $lab['type'] == "Individual" ? "selected" : "" ?>>Individual</option>
                             <option value="Group" <?= $lab['type'] == "Group" ? "selected" : "" ?>>Group</option>
                         </select>
+                    </div>
+                    <div title="Calculated from deliverables">
+                        <label>Points:</label>
+                        <input disabled id="labPoints" class="name" type="number" name="points" value="<?= $labPoints ?>" />
                     </div>
                     <h3 class="lab">Lab Description:</h3>
                     <div class="dcontainer">

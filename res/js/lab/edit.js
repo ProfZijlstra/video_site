@@ -10,7 +10,6 @@ window.addEventListener("load", () => {
         const starttime = form.starttime.value;
         const stopdate = form.stopdate.value;
         const stoptime = form.stoptime.value;
-        const points = form.points.value;
         const type = form.type.value;
         const hasMarkDown = form.hasMarkDown.value;
         const desc = form.desc.value;
@@ -18,7 +17,7 @@ window.addEventListener("load", () => {
 
         fetch(`../${id}`, {
             method: "PUT",
-            body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&points=${points}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${shifted}`,
+            body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${shifted}`,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
@@ -28,13 +27,6 @@ window.addEventListener("load", () => {
     const inputs = form.querySelectorAll("input, select, textarea");
     inputs.forEach(input => {
         input.addEventListener("change", updateDetails);
-    });
-
-    // when updating the lab points, update the points shown for deliverables
-    document.getElementById("labPoints").addEventListener("change", function() {
-        document.querySelectorAll(".labPoints").forEach((e) => {
-            e.textContent = this.value;
-        });
     });
 
     // markdown related functions
@@ -218,5 +210,19 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll(".dcontainer input, .dcontainer textarea").forEach((e) => {
         e.addEventListener("change", updateDeliv);
+    });
+
+    // have points update when any deliverable points change
+    document.querySelectorAll(".points").forEach((e) => {
+        e.addEventListener("change", function() {
+            let points = 0;
+            document.querySelectorAll(".points").forEach((e) => {
+                points += parseInt(e.value);
+            });
+            document.getElementById("labPoints").value = points;
+            document.querySelectorAll(".labPoints").forEach((e) => {
+                e.textContent = points;
+            });
+        });
     });
 });

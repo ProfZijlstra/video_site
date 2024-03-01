@@ -7,7 +7,7 @@
         </div>
         <div>
             Points: <input class="points" type="number" value="<?= $deliv['points'] ?>" /><br />
-            of <span class="labPoints"><?= $lab['points'] ?></span>
+            of <span class="labPoints"><?= $labPoints ?></span>
         </div>
         <i class="far fa-trash-alt delDeliv" data-id="<?= $deliv['id'] ?>"></i>
     </div>

@@ -43,7 +43,7 @@ class LabDao
     {
         $stmt = $this->db->prepare(
             "INSERT INTO lab
-            VALUES(NULL, :day_id, :name, '', 0, :start, :stop, 0, 'Individual', 10)"
+            VALUES(NULL, :day_id, :name, '', 0, :start, :stop, 0, 'Individual')"
         );
         $stmt->execute(array(
             "name" => $name,
@@ -64,7 +64,7 @@ class LabDao
         return $stmt->fetch();
     }
 
-    public function update($id, $visible, $name, $day_id, $start, $stop, $points, $type, $hasMarkDown, $desc)
+    public function update($id, $visible, $name, $day_id, $start, $stop, $type, $hasMarkDown, $desc)
     {
         $stmt = $this->db->prepare(
             "UPDATE lab 
@@ -72,7 +72,6 @@ class LabDao
             day_id = :day_id, 
             `start` = :start, 
             `stop` = :stop, 
-            points = :points, 
             type = :type, 
             hasMarkDown = :hasMarkDown, 
             `desc` = :desc
@@ -85,7 +84,6 @@ class LabDao
             "day_id" => $day_id,
             "start" => $start,
             "stop" => $stop,
-            "points" => $points,
             "type" => $type,
             "hasMarkDown" => $hasMarkDown,
             "desc" => $desc

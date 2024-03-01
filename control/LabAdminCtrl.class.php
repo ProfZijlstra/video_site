@@ -95,12 +95,18 @@ class LabAdminCtrl
 
         $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
         $days = $this->dayDao->getDays($offering['id']);
+        $deliverables = $this->deliverableDao->forLab($lab_id);
+        $labPoints = 0;
+        foreach ($deliverables as $deliv) {
+            $labPoints += $deliv['points'];
+        }
 
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['lab'] = $this->labDao->byId($lab_id);
-        $VIEW_DATA['deliverables'] = $this->deliverableDao->forLab($lab_id);
+        $VIEW_DATA['labPoints'] = $labPoints;
+        $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
         $VIEW_DATA['title'] = "Edit Lab";
 
@@ -124,7 +130,6 @@ class LabAdminCtrl
         $stopdate = $_PUT["stopdate"];
         $starttime = $_PUT["starttime"];
         $stoptime = $_PUT["stoptime"];
-        $points = $_PUT["points"];
         $type = $_PUT["type"];
         $hasMarkDown = $_PUT["hasMarkDown"];
         $shifted = $_PUT["desc"];
@@ -136,7 +141,7 @@ class LabAdminCtrl
         $start = "{$startdate} {$starttime}";
         $stop = "{$stopdate} {$stoptime}";
 
-        $this->labDao->update($id, $visible, $name, $day_id, $start, $stop, $points, $type, $hasMarkDown, $desc);
+        $this->labDao->update($id, $visible, $name, $day_id, $start, $stop, $type, $hasMarkDown, $desc);
     }
 
     /**
