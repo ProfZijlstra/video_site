@@ -153,6 +153,7 @@ window.addEventListener("load", () => {
                 div.innerHTML = html;
                 div.querySelector("i.fa-trash-alt").addEventListener("click", delDeliv);
                 div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
+                div.querySelector(".points").addEventListener("change", updatePoints);
                 const delivs = document.getElementById("deliverables");
                 delivs.appendChild(div);
                 document.getElementById("addDelivDialog").close();
@@ -213,16 +214,17 @@ window.addEventListener("load", () => {
     });
 
     // have points update when any deliverable points change
-    document.querySelectorAll(".points").forEach((e) => {
-        e.addEventListener("change", function() {
-            let points = 0;
-            document.querySelectorAll(".points").forEach((e) => {
-                points += parseInt(e.value);
-            });
-            document.getElementById("labPoints").value = points;
-            document.querySelectorAll(".labPoints").forEach((e) => {
-                e.textContent = points;
-            });
+    function updatePoints() {
+        let points = 0;
+        document.querySelectorAll(".points").forEach((e) => {
+            points += parseInt(e.value);
         });
+        document.getElementById("labPoints").value = points;
+        document.querySelectorAll(".labPoints").forEach((e) => {
+            e.textContent = points;
+        });
+    }
+    document.querySelectorAll(".points").forEach((e) => {
+        e.addEventListener("change", updatePoints);
     });
 });
