@@ -18,7 +18,7 @@
             font-size: 50px;
         }
     </style>
-    <script src="res/js/quiz/countdown-1.1.js"></script>
+    <script src="res/js/countdown-1.1.js"></script>
     <script>
         window.addEventListener("load", () => {
             COUNTDOWN.start(() => window.location.reload());
