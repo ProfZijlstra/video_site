@@ -17,6 +17,9 @@ class LabAdminCtrl
     #[Inject('DeliverableDao')]
     public $deliverableDao;
 
+    #[Inject('SubmissionDao')]
+    public $submissionDao;
+
     #[Inject('OfferingDao')]
     public $offeringDao;
 
@@ -152,9 +155,24 @@ class LabAdminCtrl
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
-        // TODO fail if lab has submissions 
-        // TODO delete deliverables
-        // TODO delete attachments
+
+        // fail if lab has submissions 
+        $subs = $this->submissionDao->forLab($id);
+        if ($subs) {
+            http_response_code(400);
+            return ["error" => "Lab has submissions"];
+        }
+
+        // delete attachments
+        $attachments = $this->attachmentDao->forLab($id);
+        foreach ($attachments as $attachment) {
+            $this->attachmentHlpr->delete($attachment);
+            $this->attachmentDao->delete($attachment['id']);
+        }
+        // delete deliverables
+        $this->deliverableDao->deleteAllForLab($id);
+
+        // delete lab
         $this->labDao->delete($id);
     }
 

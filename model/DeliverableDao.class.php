@@ -57,6 +57,17 @@ class DeliverableDao
         ));
     }
 
+    public function deleteAllForLab($lab_id)
+    {
+        $stmt = $this->db->prepare(
+            "DELETE FROM deliverable
+            WHERE lab_id = :lab_id"
+        );
+        $stmt->execute(array(
+            "lab_id" => $lab_id
+        ));
+    }
+
     public function update($id, $lab_id, $points, $desc, $hasMarkDown)
     {
         $stmt = $this->db->prepare(

@@ -45,12 +45,22 @@ window.addEventListener("load", () => {
 
     // enable delete button
     document.getElementById("delBtn").addEventListener("click", () => {
-        // TODO check if there are any submissions
+        // server will check if there are any submissions
         if (confirm("Are you sure you want to delete this lab?")) {
             fetch(`../${document.forms.delLab.dataset.id}`, {
                 method: "DELETE"
-            }).then(() => {
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error("Deleting lab failed (probably has submissions).");
+            })
+            .then(() => {
                 window.location = "../../lab";
+            })
+            .catch((error) => {
+                alert(error);
             });
         }
     });
@@ -109,7 +119,6 @@ window.addEventListener("load", () => {
                 throw new Error("Upload attachment failed.");
             })
             .then((html) => {
-                // TODO TEST
                 const div = document.createElement("div");
                 div.innerHTML = html;
                 div.querySelector("i").addEventListener("click", delAttachment);
