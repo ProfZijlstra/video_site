@@ -1,6 +1,7 @@
 const COUNTDOWN = (function() {
     let prevStamp = Math.floor((new Date()).getTime() / 1000);
 
+    let days = null;
     let hours = null;
     let minutes = null;
     let seconds = null;
@@ -21,6 +22,10 @@ const COUNTDOWN = (function() {
             if (minutes < 0) {
                 minutes += 60;
                 hours -= 1;
+                if (hours < 0) {
+                    hours += 24;
+                    days -= 1;
+                }
                 let hoursText = hours;
                 if (hours < 10) {
                     hoursText = "0" + hours;
@@ -39,9 +44,9 @@ const COUNTDOWN = (function() {
         }
         document.getElementById("seconds").innerText = secondsText;
         
-        if (seconds <= 0 && minutes <= 0 && hours <= 0) {
+        if (seconds <= 0 && minutes <= 0 && hours <= 0 && days <= 0) {
             clearInterval(intid);
-            const inputs = document.querySelectorAll("input");
+            const inputs = document.querySelectorAll("input, textarea, select");
             for (const input of inputs) {
                 input.blur();
             }
@@ -51,6 +56,11 @@ const COUNTDOWN = (function() {
 
     function start(cb) {
         callback = cb;
+        if (document.getElementById("days") === null) {
+            days = 0;
+        } else {
+            days = parseInt(document.getElementById("days").innerText);
+        }
         hours = parseInt(document.getElementById("hours").innerText);
         minutes = parseInt(document.getElementById("minutes").innerText);
         seconds = parseInt(document.getElementById("seconds").innerText);
