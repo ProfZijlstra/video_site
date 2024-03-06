@@ -11,6 +11,24 @@ class LabTakingCtrl
     #[Inject('LabDao')]
     public $labDao;
 
+    #[Inject('OfferingDao')]
+    public $offeringDao;
+
+    #[Inject('EnrollmentDao')]
+    public $enrollmentDao;
+
+    #[Inject('SubmissionDao')]
+    public $submissionDao;
+
+    #[Inject('DeliverableDao')]
+    public $deliverableDao;
+
+    #[Inject('DeliversDao')]
+    public $deliversDao;
+
+    #[Inject('AttachmentDao')]
+    public $attachmentDao;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -50,8 +68,43 @@ class LabTakingCtrl
             $VIEW_DATA['start'] = $startDiff;
             return "lab/countdown.php";
         } else if ($stopDiff->invert === 1) { // stop is in the past
-
+            // TODO: implement the lab closed / grade status page
         } else { // the lab is open
+            if ($lab['type'] == "Group") {
+                // get the group
+                $enroll = $this->enrollmentDao->getEnrollment($user_id, $course, $block);
+                $group = $enroll['group'] ?? null;
+                if (!$group && $enroll['auth'] == 'instructor') {
+                    $group = 'instructor';
+                }
+
+                if ($group == null) {
+                    // TODO: implement this error page
+                    $VIEW_DATA['title'] = "Lab: " . $lab['name'];
+                    $VIEW_DATA['error'] = "You need to be in a group for this lab";
+                    return "lab/error.php";
+                }
+
+                // get the submission (or null)
+                $submission = $this->submissionDao->forGroup($group, $lab_id);
+            } else { // type == "Individual"
+                $submission = $this->submissionDao->forUser($user_id, $lab_id);
+            }
+
+            $delivers = [];
+            if ($submission) {
+                $delivers = $this->deliversDao->forSubmission($submission['id']);
+            }
+
+            require_once("lib/Parsedown.php");
+            $VIEW_DATA['title'] = "Lab: " . $lab['name'];
+            $VIEW_DATA['stop'] = $stopDiff;
+            $VIEW_DATA["parsedown"] = new Parsedown();
+            $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
+            $VIEW_DATA['deliverables'] = $this->deliverableDao->forLab($lab_id);
+            $VIEW_DATA['submission'] = $submission;
+            $VIEW_DATA['delivers'] = $delivers;
+            return "lab/doLab.php";
         }
     }
 }

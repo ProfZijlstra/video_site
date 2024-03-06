@@ -176,4 +176,32 @@ body#editLab {
     }
 }
 
+body#doLab {
+    div#content h1 {
+        margin-top: 100px;
+        margin-bottom: 0px;
+    }
+
+    div.description {
+        border: 1px solid var(--border);
+        padding: 5px 10px;
+        background-color: var(--white);
+    }
+
+    div.attachment {
+        display: inline-block;
+        margin: 5px;
+    }
+
+    div.done {
+        text-align: center;
+        position: relative;
+
+        nav.back {
+            top: 0px;
+            right: 0px;
+            left: auto;
+        }
+    }
+}
 

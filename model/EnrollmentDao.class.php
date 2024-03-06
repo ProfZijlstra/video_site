@@ -151,4 +151,22 @@ class EnrollmentDao
         ));
         return $stmt->fetch() != false;
     }
+
+    public function getEnrollment($user_id, $course, $block)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT e.group, e.auth 
+            FROM enrollment AS e 
+                        JOIN offering AS o ON e.offering_id = o.id
+                        WHERE e.user_id = :user_id
+                        AND o.course_number = :course
+                        AND o.block = :block"
+        );
+        $stmt->execute(array(
+            "user_id" =>  $user_id,
+            "course" => $course,
+            "block" => $block
+        ));
+        return $stmt->fetch();
+    }
 }

@@ -408,7 +408,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`submission` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `lab_id` BIGINT UNSIGNED NOT NULL,
   `user_id` INT UNSIGNED NOT NULL,
-  `group` VARCHAR(45) NULL,
+  `group` VARCHAR(45) NULL, -- should I index this?
   PRIMARY KEY (`id`),
   INDEX `fk_hw_submit_lab1_idx` (`lab_id` ASC) VISIBLE,
   INDEX `fk_hw_submit_user1_idx` (`user_id` ASC) VISIBLE,

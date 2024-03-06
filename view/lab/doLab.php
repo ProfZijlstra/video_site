@@ -2,34 +2,55 @@
 <html>
 
 <head>
-    <title>Quiz: <?= $quiz['name'] ?></title>
+    <title>Lab: <?= $lab['name'] ?></title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.2.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.4.css">
+    <link rel="stylesheet" href="res/css/lab.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.4.js"></script>
+    <script src="res/js/back.js"></script>
+    <script>
+        window.addEventListener("load", () => {
+            COUNTDOWN.start(() => window.location.reload());
+        });
+    </script>
 </head>
 
-<body>
+<body id="doLab" class="lab">
     <?php include("header.php"); ?>
     <main>
         <nav id="back" class="back" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
         <nav class="tools">
-            <h3><span id="hours"><?= $stop->format("%H") ?></span>:<span id="minutes"><?= $stop->format("%I") ?></span>:<span id="seconds"><?= $stop->format("%S") ?></span></h3>
+            <h3 title="Time Remaining">
+                <span id="days"><?= $stop->format("%a") ?></span> Day(s)
+                <span id="hours"><?= $stop->format("%H") ?></span>:<span id="minutes"><?= $stop->format("%I") ?></span>:<span id="seconds"><?= $stop->format("%S") ?></span>
+            </h3>
         </nav>
         <div id="content">
-            <div class="quiz">
-                <div id="quiz_id" class="status" data-id="<?= $quiz['id'] ?>">
-                    <h1><?= $quiz['name'] ?></h1>
-                </div>
+            <h1 id="lab_id" data-id="<?= $lab['id'] ?>">
+                Lab: <?= $lab['name'] ?>
+            </h1>
+
+            <div class="description">
+                <?= $parsedown->text($lab['desc']) ?>
+            </div>
+
+            <div class="attachments">
+                <?php foreach ($attachments as $attachment) : ?>
+                    <div class="attachment">
+                        <a target="_blank" href="<?= $attachment['file'] ?>">
+                            <i class="fa-solid fa-paperclip"></i>
+                            <?= $attachment['name'] ?>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <?php foreach ($questions as $question) : ?>
@@ -79,10 +100,10 @@
                 </div>
             <?php endforeach; ?>
             <div class="done">
-                <div class="note">Answers are saved automatically</div>
-                <form method="POST" action="<?= $quiz['id'] ?>/finish">
-                    <button id="finish">Finish Quiz</button>
-                </form>
+                <div class="note">Deliverables are saved automatically</div>
+                <nav class="back" title="Back">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </nav>
             </div>
         </div>
     </main>
