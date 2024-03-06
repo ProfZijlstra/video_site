@@ -15,9 +15,9 @@
     <script src="res/js/lab/edit.js"></script>
 </head>
 
-<body>
+<body id="editLab" class="lab">
     <?php include("header.php"); ?>
-    <main id="editLab">
+    <main>
         <nav class="back" title="Back">
             <a href="../../lab">
                 <i class="fa-solid fa-arrow-left"></i>
@@ -108,22 +108,22 @@
                     <?php include('view/lab/deliverable.php') ?>
                 <?php endforeach; ?>
             </div>
-        </div </main>
-        <dialog id="addDelivDialog" class="modal">
-            <i id="closeAddDialog" class="fas fa-times-circle close"></i>
-            <h3>Add Deliverable</h3>
-            <label>Type:</label>
-            <select id="delivType" autofocus>
-                <option value="txt">Text</option>
-                <option value="img">Image</option>
-                <option value="pdf">PDF</option>
-                <option value="url">URL</option>
-                <option value="zip">Code as .zip</option>
-            </select>
-            <div class="btn">
-                <button id="addDelivBtn" data-seq="<?= count($deliverables) + 1 ?>" data-lab_id="<?= $lab['id'] ?>">Add</button>
-            </div>
-        </dialog>
+    </main>
+    <dialog id="addDelivDialog" class="modal">
+        <i id="closeAddDialog" class="fas fa-times-circle close"></i>
+        <h3>Add Deliverable</h3>
+        <label>Type:</label>
+        <select id="delivType" autofocus>
+            <option value="txt">Text</option>
+            <option value="img">Image</option>
+            <option value="pdf">PDF</option>
+            <option value="url">URL</option>
+            <option value="zip">Code as .zip</option>
+        </select>
+        <div class="btn">
+            <button id="addDelivBtn" data-seq="<?= count($deliverables) + 1 ?>" data-lab_id="<?= $lab['id'] ?>">Add</button>
+        </div>
+    </dialog>
 </body>
 
 </html>

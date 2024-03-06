@@ -9,7 +9,7 @@
             Points: <input class="points" type="number" value="<?= $deliv['points'] ?>" /><br />
             of <span class="labPoints"><?= $labPoints ?></span>
         </div>
-        <i class="far fa-trash-alt delDeliv" data-id="<?= $deliv['id'] ?>"></i>
+        <i title="Remove deliverable" class="far fa-trash-alt delDeliv" data-id="<?= $deliv['id'] ?>"></i>
     </div>
     <div class="deliv">
         <div>Deliverable description:</div>

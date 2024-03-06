@@ -1,4 +1,4 @@
-main#editLab {
+body#editLab {
     form#delLab {
         display: inline;
     }
@@ -162,20 +162,18 @@ main#editLab {
                 cursor: pointer;
             }
         }
-        .deliv {
+    }
 
+    #addDelivDialog {
+        label {
+            margin-top: 10px;
+            display: inline-block;
+            width: 75px;
+        }
+        select {
+            width: 620px;
         }
     }
 }
 
-#addDelivDialog {
-    label {
-        margin-top: 10px;
-        display: inline-block;
-        width: 75px;
-    }
-    select {
-        width: 620px;
-    }
-}
 
