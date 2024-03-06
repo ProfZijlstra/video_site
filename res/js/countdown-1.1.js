@@ -25,6 +25,7 @@ const COUNTDOWN = (function() {
                 if (hours < 0) {
                     hours += 24;
                     days -= 1;
+                    document.getElementById("days").innerText = days;
                 }
                 let hoursText = hours;
                 if (hours < 10) {
