@@ -1,44 +1,31 @@
-body#editLab {
-    form#delLab {
-        display: inline;
-    }
-    div.lab {
-        text-align: center;
-    }
-    div.lab div.status {
-        margin-bottom: 5px;
-    }
-    div.lab form label {
-        display: inline-block;
-        width: 60px;
-        margin-bottom: 5px;
-    }
-    div.lab input.name {
-        width: 310px;
-    }
-    div.lab select {
-        width: 320px;
-    }
-    div.lab input[type="time"], div.lab input[type="date"] {
-        width: 150px;
-    }
-
-    #updateLab .lab {
-        margin-top: 20px;
-        margin-bottom: 0px;
-        text-align: left;
-    }
-
-    #content p.warning {
-        font-weight: bold;
-        text-align: center;
-    }
-
+body.lab {
     div.dcontainer {
         text-align: left;
         border-top: none;
         margin-top: 0px;
         position: relative;
+        display: flex;
+
+        .about {
+            flex-basis: 150px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+
+            .meta {
+                font-size: 50px;
+            }
+            input[type="number"] {
+                width: 50px;
+            }
+            i.fa-trash-alt {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+            }
+        }
 
         .deliv {
             flex-grow: 1;
@@ -84,12 +71,50 @@ body#editLab {
             }
         }
     }
+
     div.dcontainer.deliverables {
         border-top: 1px solid var(--border);
         .textContainer .fa-markdown {
             top: 10px;
         }
+    }
+}
 
+
+body#editLab {
+    form#delLab {
+        display: inline;
+    }
+    div.lab {
+        text-align: center;
+    }
+    div.lab div.status {
+        margin-bottom: 5px;
+    }
+    div.lab form label {
+        display: inline-block;
+        width: 60px;
+        margin-bottom: 5px;
+    }
+    div.lab input.name {
+        width: 310px;
+    }
+    div.lab select {
+        width: 320px;
+    }
+    div.lab input[type="time"], div.lab input[type="date"] {
+        width: 150px;
+    }
+
+    #updateLab .lab {
+        margin-top: 20px;
+        margin-bottom: 0px;
+        text-align: left;
+    }
+
+    #content p.warning {
+        font-weight: bold;
+        text-align: center;
     }
 
     i.fa-circle-notch {
@@ -137,33 +162,6 @@ body#editLab {
         }
     }
 
-    .dcontainer {
-        display: flex;
-        border-top: 1px solid var(--border);
-        margin-top: 30px;
-
-        .about {
-            flex-basis: 150px;
-            flex-shrink: 0;
-            border-right: 1px solid var(--border);
-            text-align: center;
-            position: relative;
-
-            .meta {
-                font-size: 50px;
-            }
-            input[type="number"] {
-                width: 50px;
-            }
-            i.fa-trash-alt {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                cursor: pointer;
-            }
-        }
-    }
-
     #addDelivDialog {
         label {
             margin-top: 10px;
@@ -177,8 +175,15 @@ body#editLab {
 }
 
 body#doLab {
+    div#content div.about {
+        label {
+            display: inline-block;
+            width: 55px;
+            margin-bottom: 5px;
+        }
+    }
     div#content h1 {
-        margin-top: 100px;
+        margin-top: 25px;
         margin-bottom: 0px;
     }
 
@@ -188,12 +193,56 @@ body#doLab {
         background-color: var(--white);
     }
 
+    p.delivInstr {
+        margin-top: 0px;
+        margin-bottom: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+    p.warn {
+        margin-top: 0px;
+        text-align: center;
+        font-weight: bold;
+        color: red;
+    }
+
     div.attachment {
         display: inline-block;
         margin: 5px;
     }
 
+    div.stats {
+        margin: 10px 2px;
+
+        label.completion {
+            display: inline-block;
+            margin-left: 25px;
+        }
+
+        select {
+            width: 100px;
+        }
+    }
+
+    div.dcontainer div.deliv div.textContainer {
+        position: relative;
+
+        textarea {
+            margin-top: 30px;
+            width: 580px;
+        }
+        i.fa-markdown {
+            right: 5px;
+        }
+    }
+    div.urlContainer, div.fileContainer {
+        margin: 10px 0px;
+        input {
+            width: 580px;
+        }
+    }
     div.done {
+        margin-top: 30px;
         text-align: center;
         position: relative;
 
@@ -204,4 +253,3 @@ body#doLab {
         }
     }
 }
-

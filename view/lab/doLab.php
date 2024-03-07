@@ -17,6 +17,13 @@
     <script>
         window.addEventListener("load", () => {
             COUNTDOWN.start(() => window.location.reload());
+
+            // markdown related functions
+            function mdToggle() {
+                // TODO: send the hasMarkDown value to the server
+            }
+            MARKDOWN.enablePreview("../markdown");
+            MARKDOWN.activateButtons(mdToggle);
         });
     </script>
 </head>
@@ -34,8 +41,16 @@
             </h3>
         </nav>
         <div id="content">
+            <div class="about">
+                <div><label>Start:</label> <?= $lab['start'] ?></div>
+                <div><label>Stop:</label> <?= $lab['stop'] ?></div>
+                <?php if ($lab['type'] == "group") : ?>
+                    <div><label>Group:</label> <?= $group ?></div>
+                <?php endif; ?>
+            </div>
+
             <h1 id="lab_id" data-id="<?= $lab['id'] ?>">
-                Lab: <?= $lab['name'] ?>
+                <?= $lab['name'] ?>
             </h1>
 
             <div class="description">
@@ -53,52 +68,74 @@
                 <?php endforeach; ?>
             </div>
 
-            <?php foreach ($questions as $question) : ?>
-                <div class="qcontainer">
-                    <div class="about">
-                        <div class="seq"><?= $question['seq'] ?></div>
-                        <div class="points">Points: <?= $question['points'] ?></div>
-                    </div>
-                    <div class="question" data-id="<?= $question['id'] ?>">
-                        <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == "text" ? "Text" : "Image Upload" ?></div>
-                        <div>Question Text:</div>
-                        <div class="questionText">
-                            <?php if ($question['hasMarkDown']) : ?>
-                                <?= $parsedown->text($question['text']) ?>
-                            <?php else : ?>
-                                <pre><?= $question['text'] ?></pre>
-                            <?php endif; ?>
-                        </div>
-                        <div>Your Answer:</div>
-                        <?php if ($question['type'] == "text") : ?>
-                            <div class="textContainer">
-                                <i title="Markdown" class="fa-brands fa-markdown <?= $answers[$question['id']]['hasMarkDown'] ? 'active' : "" ?>"></i>
-                                <textarea class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your answer here" placeholder="Write your answer here"><?= $answers[$question['id']]['text'] ?></textarea>
-                                <div class="mdContainer <?= $answers[$question['id']]['hasMarkDown'] ? 'active' : "" ?>">
-                                    <div class="preview"><button tabindex="-1" class="previewBtn">Preview Markdown</button></div>
-                                    <div class="previewArea"></div>
-                                </div>
+            <div class="deliverables">
+                <h2><?= count($deliverables) ?> Deliverable(s) </h2>
+                <p class="delivInstr">Deliverables with 0:00 hours or 0% complete are auto-graded to zero points</p>
+                <?php foreach ($deliverables as $deliv) : ?>
+                    <div class="dcontainer deliverables" data-id="<?= $deliv['id'] ?>">
+                        <div class="about">
+                            <div class="meta" title="<?= $typeDesc[$deliv['type']] ?> to complete this deliverable">
+                                <span class="type" data-type="<?= $deliv['type'] ?>">
+                                    <?= $deliv['type'] ?>
+                                </span>
                             </div>
-                        <?php elseif ($question['type'] == "image") : ?>
-                            <?php if ($answers[$question['id']]) : ?>
-                                <img class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" src="<?= $answers[$question['id']]['text'] ?>" />
-                            <?php else : ?>
-                                <img class="answer hide" />
-                            <?php endif; ?>
-                            <div>
-                                <?php if ($answers[$question['id']]) : ?>
-                                    <label>Upload Replacement: </label>
-                                <?php else : ?>
-                                    <label>Upload Answer: </label>
-                                <?php endif; ?>
-                                <input type="file" class="img_replace" />
-                                <i class="fa-solid fa-circle-notch"></i>
+                            <div title="The lab total is <?= $labPoints ?>, this deliverable is <?= $deliv['points'] ?> of that total">
+                                Worth <br />
+                                <?= $deliv['points'] ?> of <span class="labPoints"><?= $labPoints ?></span><br />
+                                points
+                            </div>
+                        </div>
+                        <div class="deliv">
+                            <div class="stats">
+                                <label>Hours: </label>
+                                <select class="duration" autofocus>
+                                    <?php
+                                    $now = new DateTime();
+                                    $now->setTime(0, 0, 0);
+                                    $interval = new DateInterval('PT15M');
+                                    ?>
+                                    <?php for ($i = 0.25; $i <= 23.75; $i += 0.25) : ?>
+                                        <?= $time = $now->format('G:i'); ?>
+                                        <option value="<?= $time ?>"><?= $time ?></option>
+                                        <?php $now->add($interval); ?>
+                                    <?php endfor; ?>
+                                </select>
+
+                                <label class="completion">Complete: </label>
+                                <select class="completion">
+                                    <?php for ($i = 0; $i <= 100; $i += 10) : ?>
+                                        <option value="<?= $i ?>"><?= $i ?>%</option>
+                                    <?php endfor; ?>
+                                </select>
                             </div>
 
-                        <?php endif; ?>
+                            <div class="description">
+                                <?= $parsedown->text($deliv['desc']) ?>
+                            </div>
+                            <?php if ($deliv['type'] == 'txt') : ?>
+                                <div class="textContainer">
+                                    <textarea class="" placeholder="Please write the text for your deliverable here.&#10;&#10;Feel free to also add any questions or comments about this exercise." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your question text here"></textarea>
+
+                                    <i title="Markdown" class="fa-brands fa-markdown <?= $deliv['hasMarkDown'] ? "active" : "" ?>"></i>
+                                    <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
+                                        <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                        <div class="previewArea"></div>
+                                    </div>
+                                </div>
+                            <?php elseif ($deliv['type'] == 'img' || $deliv['type'] == 'pdf' || $deliv['type'] == 'zip') : ?>
+                                <div class="fileContainer">
+                                    <input type="file" class="file" />
+                                </div>
+                            <?php elseif ($deliv['type'] == 'url') : ?>
+                                <div class="urlContainer">
+                                    <input type="url" class="url" placeholder="https://github.com/student/project" />
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+
             <div class="done">
                 <div class="note">Deliverables are saved automatically</div>
                 <nav class="back" title="Back">
