@@ -87,7 +87,7 @@ class EnrollmentDao
     public function enroll($user_id, $offering_id, $auth)
     {
         $stmt = $this->db->prepare("INSERT INTO enrollment 
-                                VALUES(NULL, :user_id, :offering_id, :auth)");
+                                VALUES(NULL, :user_id, :offering_id, :auth, NULL)");
         $stmt->execute([
             "user_id" => $user_id,
             "offering_id" => $offering_id,

@@ -378,6 +378,8 @@ ALTER TABLE `offering` ADD COLUMN `hasCAMS` TINYINT UNSIGNED DEFAULT 0;
 ALTER TABLE `class_session` CHANGE `type` `type` CHAR(3);
 
 -- 30 Sept 2023 Lab subsystem
+ALTER TABLE enrollment ADD COLUMN `group` varchar(45);
+
 -- -----------------------------------------------------
 -- Table `manalabs`.`lab`
 -- -----------------------------------------------------
