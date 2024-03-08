@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
     });
 
     const lab_id = document.getElementById("lab_id").dataset.id;
-    const group = document.getElementById("labGroup").dataset.id;
+    const group = document.getElementById("labGroup")?.dataset.id;
     let submission_id = document.getElementById("submission").dataset.id;
     function sendDeliverable() {
         const deliv = this.closest("div.deliv");
