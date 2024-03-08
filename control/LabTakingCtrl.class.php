@@ -161,6 +161,7 @@ class LabTakingCtrl
         $delivers_id = $this->deliversDao->createTxt(
             $submission_id,
             $deliverable_id,
+            $_SESSION['user']['id'],
             $completion,
             $duration,
             $text,
@@ -197,6 +198,7 @@ class LabTakingCtrl
 
         $this->deliversDao->updateTxt(
             $delivers_id,
+            $_SESSION['user']['id'],
             $completion,
             $duration,
             $text,

@@ -42,6 +42,7 @@ class DeliversDao
     public function createTxt(
         $submission_id,
         $deliverable_id,
+        $user_id,
         $completion,
         $duration,
         $text,
@@ -50,14 +51,18 @@ class DeliversDao
         $stuCmntHasMD
     ) {
         $stmt = $this->db->prepare(
-            "INSERT INTO delivers 
-                VALUES (NULL, :deliverable_id, :submission_id, NOW(), NOW(), 
-                :completion, :duration, :text, :hasMarkDown, NULL, :stuComment, 
-                :stuCmntHasMD, NULL, NULL, NULL)"
+            "INSERT INTO delivers VALUES (
+                NULL, :deliverable_id, :submission_id, :user_id,
+                NOW(), NOW(), 
+                :completion, :duration, 
+                :text, :hasMarkDown, NULL, 
+                :stuComment, :stuCmntHasMD, 
+                NULL, NULL, NULL)"
         );
         $stmt->execute([
             "submission_id" => $submission_id,
             "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id,
             "duration" => $duration,
             "completion" => $completion,
             "text" => $text,
@@ -70,6 +75,7 @@ class DeliversDao
 
     public function updateTxt(
         $id,
+        $user_id,
         $completion,
         $duration,
         $text,
@@ -80,6 +86,7 @@ class DeliversDao
         $stmt = $this->db->prepare(
             "UPDATE delivers 
                 SET updated = NOW(),
+                user_id = :user_id,
                 completion = :completion, 
                 duration = :duration, 
                 text = :text, 
@@ -89,6 +96,7 @@ class DeliversDao
                 WHERE id = :id"
         );
         $stmt->execute([
+            "user_id" => $user_id,
             "completion" => $completion,
             "duration" => $duration,
             "text" => $text,
