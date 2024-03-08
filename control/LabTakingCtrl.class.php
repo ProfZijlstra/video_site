@@ -29,6 +29,9 @@ class LabTakingCtrl
     #[Inject('AttachmentDao')]
     public $attachmentDao;
 
+    #[Inject('MarkdownHlpr')]
+    public $markdownHlpr;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -91,9 +94,9 @@ class LabTakingCtrl
                 $submission = $this->submissionDao->forUser($user_id, $lab_id);
             }
 
-            $delivers = [];
+            $delivered = [];
             if ($submission) {
-                $delivers = $this->deliversDao->forSubmission($submission['id']);
+                $delivered = $this->deliversDao->forSubmission($submission['id']);
             }
 
             $deliverables = $this->deliverableDao->forLab($lab_id);
@@ -119,8 +122,89 @@ class LabTakingCtrl
             $VIEW_DATA['typeDesc'] = $typeDesc;
             $VIEW_DATA['deliverables'] = $deliverables;
             $VIEW_DATA['submission'] = $submission;
-            $VIEW_DATA['delivers'] = $delivers;
+            $VIEW_DATA['delivered'] = $delivered;
             return "lab/doLab.php";
         }
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: "/(\d+)/txt$", sec: "student")]
+    public function addTxt()
+    {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
+        $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
+        $group = filter_input(INPUT_POST, "group");
+        $completion = filter_input(INPUT_POST, "completion", FILTER_VALIDATE_INT);
+        $duration = filter_input(INPUT_POST, "duration");
+        $shifted = filter_input(INPUT_POST, "text");
+        $text = $this->markdownHlpr->ceasarShift($shifted);
+        $hasMarkDown = filter_input(INPUT_POST, "hasMarkDown", FILTER_VALIDATE_BOOLEAN);
+        $stuShifted = filter_input(INPUT_POST, "stuComment");
+        $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
+        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+        $hasMarkDown = $hasMarkDown ? 1 :  0;
+        $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+
+        if (!$submission_id) {
+            $submission_id = $this->submissionDao->create(
+                $lab_id,
+                $_SESSION['user']['id'],
+                $group
+            );
+        }
+
+        $delivers_id = $this->deliversDao->createTxt(
+            $submission_id,
+            $deliverable_id,
+            $completion,
+            $duration,
+            $text,
+            $hasMarkDown,
+            $stuComment,
+            $stuCmntHasMD
+        );
+
+        return $this->deliversDao->byId($delivers_id);
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Put(uri: "/(\d+)/txt/(\d+)$", sec: "student")]
+    public function updateTxt()
+    {
+        global $URI_PARAMS;
+        global $_PUT;
+
+        $delivers_id = $URI_PARAMS[4];
+        $completion = $_PUT["completion"];
+        $duration =   $_PUT["duration"];
+        $shifted =    $_PUT["text"];
+        $text = $this->markdownHlpr->ceasarShift($shifted);
+        $hasMarkDown = $_PUT["hasMarkDown"];
+
+        $stuShifted =  $_PUT["stuComment"];
+        $stuCmntHasMD = $_PUT["stuCmntHasMD"];
+        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+
+        $hasMarkDown = $hasMarkDown ? 1 : 0;
+        $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+
+        $this->deliversDao->updateTxt(
+            $delivers_id,
+            $completion,
+            $duration,
+            $text,
+            $hasMarkDown,
+            $stuComment,
+            $stuCmntHasMD
+        );
+
+        return $this->deliversDao->byId($delivers_id);
     }
 }

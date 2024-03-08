@@ -14,18 +14,7 @@
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/back.js"></script>
-    <script>
-        window.addEventListener("load", () => {
-            COUNTDOWN.start(() => window.location.reload());
-
-            // markdown related functions
-            function mdToggle() {
-                // TODO: send the hasMarkDown value to the server
-            }
-            MARKDOWN.enablePreview("../markdown");
-            MARKDOWN.activateButtons(mdToggle);
-        });
-    </script>
+    <script src="res/js/lab/lab.js"></script>
 </head>
 
 <body id="doLab" class="lab">
@@ -45,7 +34,9 @@
                 <div><label>Start:</label> <?= $lab['start'] ?></div>
                 <div><label>Stop:</label> <?= $lab['stop'] ?></div>
                 <?php if ($lab['type'] == "group") : ?>
-                    <div><label>Group:</label> <?= $group ?></div>
+                    <div id="labGroup" data-id="<?= $group ?>">
+                        <label>Group:</label> <?= $group ?>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -68,14 +59,15 @@
                 <?php endforeach; ?>
             </div>
 
-            <div class="deliverables">
+            <div id="submission" data-id="<?= isset($submission) ? $submission['id'] : ''  ?>">
                 <h2><?= count($deliverables) ?> Deliverable(s) </h2>
                 <p class="delivInstr">Deliverables with 0:00 hours or 0% complete are auto-graded to zero points</p>
                 <?php foreach ($deliverables as $deliv) : ?>
-                    <div class="dcontainer deliverables" data-id="<?= $deliv['id'] ?>">
+                    <?php $item = $delivered[$deliv['id']] ?? [] ?>
+                    <div class="dcontainer deliverables" data-id="<?= $deliv['id'] ?>" data-type="<?= $deliv['type'] ?>">
                         <div class="about">
                             <div class="meta" title="<?= $typeDesc[$deliv['type']] ?> to complete this deliverable">
-                                <span class="type" data-type="<?= $deliv['type'] ?>">
+                                <span class="type">
                                     <?= $deliv['type'] ?>
                                 </span>
                             </div>
@@ -85,28 +77,34 @@
                                 points
                             </div>
                         </div>
-                        <div class="deliv">
+                        <div class="deliv" data-id="<?= $item['id'] ?>">
                             <div class="stats">
-                                <label>Hours: </label>
-                                <select class="duration" autofocus>
-                                    <?php
-                                    $now = new DateTime();
-                                    $now->setTime(0, 0, 0);
-                                    $interval = new DateInterval('PT15M');
-                                    ?>
-                                    <?php for ($i = 0.25; $i <= 23.75; $i += 0.25) : ?>
-                                        <?= $time = $now->format('G:i'); ?>
-                                        <option value="<?= $time ?>"><?= $time ?></option>
-                                        <?php $now->add($interval); ?>
-                                    <?php endfor; ?>
-                                </select>
+                                <label title="Hours spent creating this deliverable">Hours:
+                                    <select class="duration" autofocus>
+                                        <?php
+                                        $now = new DateTime();
+                                        $now->setTime(0, 0, 0);
+                                        $interval = new DateInterval('PT15M');
+                                        ?>
+                                        <?php for ($i = 0.25; $i <= 23.75; $i += 0.25) : ?>
+                                            <?php $time = $now->format('H:i'); ?>
+                                            <option value="<?= $time ?>" <?= $item['duration'] == $time . ":00" ? 'selected' : '' ?>>
+                                                <?= $time ?>
+                                            </option>
+                                            <?php $now->add($interval); ?>
+                                        <?php endfor; ?>
+                                    </select>
+                                </label>
 
-                                <label class="completion">Complete: </label>
-                                <select class="completion">
-                                    <?php for ($i = 0; $i <= 100; $i += 10) : ?>
-                                        <option value="<?= $i ?>"><?= $i ?>%</option>
-                                    <?php endfor; ?>
-                                </select>
+                                <label title="Approximately how far did you complete this deliverable" class="completion">Complete:
+                                    <select class="completion">
+                                        <?php for ($i = 0; $i <= 100; $i += 10) : ?>
+                                            <option value="<?= $i ?>" <?= $item['completion'] == $i ? 'selected' : '' ?>>
+                                                <?= $i ?>%
+                                            </option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </label>
                             </div>
 
                             <div class="description">
@@ -114,23 +112,34 @@
                             </div>
                             <?php if ($deliv['type'] == 'txt') : ?>
                                 <div class="textContainer">
-                                    <textarea class="" placeholder="Please write the text for your deliverable here.&#10;&#10;Feel free to also add any questions or comments about this exercise." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your question text here"></textarea>
+                                    <textarea class="txt" placeholder="Write the text for your deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write the text for your deliverable here."><?= $item['text'] ?></textarea>
 
-                                    <i title="Markdown" class="fa-brands fa-markdown <?= $deliv['hasMarkDown'] ? "active" : "" ?>"></i>
+                                    <i title="Markdown" class="txt fa-brands fa-markdown <?= $item['hasMarkDown'] ? "active" : "" ?>"></i>
                                     <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
                                         <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                         <div class="previewArea"></div>
                                     </div>
                                 </div>
-                            <?php elseif ($deliv['type'] == 'img' || $deliv['type'] == 'pdf' || $deliv['type'] == 'zip') : ?>
-                                <div class="fileContainer">
-                                    <input type="file" class="file" />
-                                </div>
-                            <?php elseif ($deliv['type'] == 'url') : ?>
-                                <div class="urlContainer">
-                                    <input type="url" class="url" placeholder="https://github.com/student/project" />
-                                </div>
+                            <?php else : ?>
+                                <?php if ($deliv['type'] == 'url') : ?>
+                                    <div class="urlContainer">
+                                        <input type="url" class="url" placeholder="https://github.com/student/project" />
+                                    </div>
+                                <?php else : /* type is: img, pdf, zip */ ?>
+                                    <div class="fileContainer">
+                                        <input type="file" class="file" />
+                                    </div>
+                                <?php endif; ?>
                             <?php endif; ?>
+                            <div class="textContainer">
+                                <textarea class="cmt <?= $deliv['type'] == 'txt' ? '' : 'file' ?>" placeholder="Write any questions or comments about this deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write any questions or comments about this deliverable here."><?= $item['stuComment'] ?></textarea>
+
+                                <i title="Markdown" class="cmt <?= $deliv['type'] == 'txt' ? 'stu' : 'file' ?> fa-brands fa-markdown <?= $item['stuCmntHasMD'] ? "active" : "" ?>"></i>
+                                <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
+                                    <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                    <div class="previewArea"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

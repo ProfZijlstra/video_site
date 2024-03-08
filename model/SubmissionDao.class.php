@@ -10,24 +10,11 @@ class SubmissionDao
     #[Inject('DB')]
     public $db;
 
-    public function createForUser($user_id, $lab_id)
+    public function create($lab_id, $user_id, $group)
     {
         $stmt = $this->db->prepare(
             "INSERT INTO submission 
-                VALUES (NULL, :user_id, :lab_id, NULL)"
-        );
-        $stmt->execute([
-            "user_id" => $user_id,
-            "lab_id" => $lab_id
-        ]);
-        return $this->db->lastInsertId();
-    }
-
-    public function createForGroup($lab_id, $user_id, $group)
-    {
-        $stmt = $this->db->prepare(
-            "INSERT INTO submission 
-                VALUES (NULL, :user_id, :lab_id, :group)"
+                VALUES (NULL, :lab_id, :user_id, :group)"
         );
         $stmt->execute([
             "user_id" => $user_id,

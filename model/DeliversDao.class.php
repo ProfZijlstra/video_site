@@ -26,4 +26,76 @@ class DeliversDao
         }
         return $result;
     }
+
+    public function byId($id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM delivers 
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "id" => $id
+        ]);
+        return $stmt->fetch();
+    }
+
+    public function createTxt(
+        $submission_id,
+        $deliverable_id,
+        $completion,
+        $duration,
+        $text,
+        $hasMarkDown,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "INSERT INTO delivers 
+                VALUES (NULL, :deliverable_id, :submission_id, NOW(), NOW(), 
+                :completion, :duration, :text, :hasMarkDown, NULL, :stuComment, 
+                :stuCmntHasMD, NULL, NULL, NULL)"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "duration" => $duration,
+            "completion" => $completion,
+            "text" => $text,
+            "hasMarkDown" => $hasMarkDown,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+        return $this->db->lastInsertId();
+    }
+
+    public function updateTxt(
+        $id,
+        $completion,
+        $duration,
+        $text,
+        $hasMarkDown,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "UPDATE delivers 
+                SET updated = NOW(),
+                completion = :completion, 
+                duration = :duration, 
+                text = :text, 
+                hasMarkDown = :hasMarkDown,
+                stuComment = :stuComment,
+                stuCmntHasMD = :stuCmntHasMD
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "completion" => $completion,
+            "duration" => $duration,
+            "text" => $text,
+            "hasMarkDown" => $hasMarkDown,
+            "id" => $id,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+    }
 }
