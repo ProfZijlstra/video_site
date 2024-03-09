@@ -45,7 +45,7 @@ const COUNTDOWN = (function() {
         }
         document.getElementById("seconds").innerText = secondsText;
         
-        if (seconds <= 0 && minutes <= 0 && hours <= 0 && days <= 0) {
+        if (days < 0) {
             clearInterval(intid);
             const inputs = document.querySelectorAll("input, textarea, select");
             for (const input of inputs) {
