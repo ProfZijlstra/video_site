@@ -449,9 +449,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `manalabs`.`delivers`
+-- Table `manalabs`.`delivery`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `manalabs`.`delivers` (
+CREATE TABLE IF NOT EXISTS `manalabs`.`delivery` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `deliverable_id` INT UNSIGNED NOT NULL,
   `submission_id` BIGINT UNSIGNED NOT NULL,
@@ -469,14 +469,14 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`delivers` (
   `gradeComment` TEXT NULL,
   `gradeCmntHasMD` TINYINT UNSIGNED NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_delivers_hw_submit1_idx` (`submission_id` ASC) VISIBLE,
-  INDEX `fk_delivers_deliverable1_idx` (`deliverable_id` ASC) VISIBLE,
-  CONSTRAINT `fk_delivers_hw_submit1`
+  INDEX `fk_delivery_hw_submit1_idx` (`submission_id` ASC) VISIBLE,
+  INDEX `fk_delivery_deliverable1_idx` (`deliverable_id` ASC) VISIBLE,
+  CONSTRAINT `fk_delivery_hw_submit1`
     FOREIGN KEY (`submission_id`)
     REFERENCES `manalabs`.`submission` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_delivers_deliverable1`
+  CONSTRAINT `fk_delivery_deliverable1`
     FOREIGN KEY (`deliverable_id`)
     REFERENCES `manalabs`.`deliverable` (`id`)
     ON DELETE NO ACTION

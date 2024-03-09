@@ -18,10 +18,10 @@ window.addEventListener("load", () => {
     function sendDeliverable() {
         const deliv = this.closest("div.deliv");
         const type = deliv.parentNode.dataset.type;
-        const completion = deliv.querySelector("select.completion").value;
-        const duration = deliv.querySelector("select.duration").value;
-    
-
+        const durSel = deliv.querySelector("select.duration");
+        const comSel = deliv.querySelector("select.completion");
+        const completion = comSel.value;
+        const duration = durSel.value;
 
         let data = "";
         data += "submission_id=" + submission_id;
@@ -50,7 +50,27 @@ window.addEventListener("load", () => {
                 && !this.classList.contains("duration") 
                 && !this.classList.contains("completion")) {
                 alert("Please set duration and completion before continuing.");
-                deliv.querySelector("select.duration").focus();
+                if (duration == "00:00") {
+                    durSel.focus();
+                } else {
+                    comSel.focus();
+                }
+                return;
+            }
+        } else if (type == "url") {
+            const url = deliv.querySelector("input.url").value;
+            data += "&url=" + encodeURIComponent(url);
+
+            if ((url || stuComment) 
+                && (duration == "00:00" || completion == "0")
+                && !this.classList.contains("duration") 
+                && !this.classList.contains("completion")) {
+                alert("Please set duration and completion before continuing.");
+                if (duration == "00:00") {
+                    durSel.focus();
+                } else {
+                    comSel.focus();
+                }
                 return;
             }
         }

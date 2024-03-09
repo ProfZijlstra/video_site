@@ -5,7 +5,7 @@
  */
 
 #[Repository]
-class DeliversDao
+class DeliveryDao
 {
     #[Inject('DB')]
     public $db;
@@ -13,7 +13,7 @@ class DeliversDao
     public function forSubmission($submission_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivers 
+            "SELECT * FROM delivery 
                 WHERE submission_id = :submission_id"
         );
         $stmt->execute([
@@ -30,7 +30,7 @@ class DeliversDao
     public function byId($id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivers 
+            "SELECT * FROM delivery 
                 WHERE id = :id"
         );
         $stmt->execute([
@@ -51,7 +51,7 @@ class DeliversDao
         $stuCmntHasMD
     ) {
         $stmt = $this->db->prepare(
-            "INSERT INTO delivers VALUES (
+            "INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
@@ -84,7 +84,7 @@ class DeliversDao
         $stuCmntHasMD
     ) {
         $stmt = $this->db->prepare(
-            "UPDATE delivers 
+            "UPDATE delivery 
                 SET updated = NOW(),
                 user_id = :user_id,
                 completion = :completion, 
@@ -101,6 +101,69 @@ class DeliversDao
             "duration" => $duration,
             "text" => $text,
             "hasMarkDown" => $hasMarkDown,
+            "id" => $id,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+    }
+
+    public function createUrl(
+        $submission_id,
+        $deliverable_id,
+        $user_id,
+        $completion,
+        $duration,
+        $url,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "INSERT INTO delivery VALUES (
+                NULL, :deliverable_id, :submission_id, :user_id,
+                NOW(), NOW(), 
+                :completion, :duration, 
+                :url, NULL, NULL, 
+                :stuComment, :stuCmntHasMD, 
+                NULL, NULL, NULL)"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id,
+            "duration" => $duration,
+            "completion" => $completion,
+            "url" => $url,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+        return $this->db->lastInsertId();
+    }
+
+    public function updateUrl(
+        $id,
+        $user_id,
+        $completion,
+        $duration,
+        $url,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "UPDATE delivery 
+                SET updated = NOW(),
+                user_id = :user_id,
+                completion = :completion, 
+                duration = :duration, 
+                text = :url, 
+                stuComment = :stuComment,
+                stuCmntHasMD = :stuCmntHasMD
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "user_id" => $user_id,
+            "completion" => $completion,
+            "duration" => $duration,
+            "url" => $url,
             "id" => $id,
             "stuComment" => $stuComment,
             "stuCmntHasMD" => $stuCmntHasMD

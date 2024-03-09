@@ -23,8 +23,8 @@ class LabTakingCtrl
     #[Inject('DeliverableDao')]
     public $deliverableDao;
 
-    #[Inject('DeliversDao')]
-    public $deliversDao;
+    #[Inject('DeliveryDao')]
+    public $deliveryDao;
 
     #[Inject('AttachmentDao')]
     public $attachmentDao;
@@ -96,7 +96,7 @@ class LabTakingCtrl
 
             $delivered = [];
             if ($submission) {
-                $delivered = $this->deliversDao->forSubmission($submission['id']);
+                $delivered = $this->deliveryDao->forSubmission($submission['id']);
             }
 
             $deliverables = $this->deliverableDao->forLab($lab_id);
@@ -158,7 +158,7 @@ class LabTakingCtrl
             );
         }
 
-        $delivers_id = $this->deliversDao->createTxt(
+        $delivery_id = $this->deliveryDao->createTxt(
             $submission_id,
             $deliverable_id,
             $_SESSION['user']['id'],
@@ -170,7 +170,7 @@ class LabTakingCtrl
             $stuCmntHasMD
         );
 
-        return $this->deliversDao->byId($delivers_id);
+        return $this->deliveryDao->byId($delivery_id);
     }
 
     /**
@@ -182,7 +182,7 @@ class LabTakingCtrl
         global $URI_PARAMS;
         global $_PUT;
 
-        $delivers_id = $URI_PARAMS[4];
+        $delivery_id = $URI_PARAMS[4];
         $completion = $_PUT["completion"];
         $duration =   $_PUT["duration"];
         $shifted =    $_PUT["text"];
@@ -196,8 +196,8 @@ class LabTakingCtrl
         $hasMarkDown = $hasMarkDown ? 1 : 0;
         $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
 
-        $this->deliversDao->updateTxt(
-            $delivers_id,
+        $this->deliveryDao->updateTxt(
+            $delivery_id,
             $_SESSION['user']['id'],
             $completion,
             $duration,
@@ -207,6 +207,78 @@ class LabTakingCtrl
             $stuCmntHasMD
         );
 
-        return $this->deliversDao->byId($delivers_id);
+        return $this->deliveryDao->byId($delivery_id);
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: "/(\d+)/url$", sec: "student")]
+    public function addUrl()
+    {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
+        $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
+        $group = filter_input(INPUT_POST, "group");
+        $completion = filter_input(INPUT_POST, "completion", FILTER_VALIDATE_INT);
+        $duration = filter_input(INPUT_POST, "duration");
+        $url = filter_input(INPUT_POST, "url");
+        $stuShifted = filter_input(INPUT_POST, "stuComment");
+        $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
+        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+        $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+
+        if (!$submission_id) {
+            $submission_id = $this->submissionDao->create(
+                $lab_id,
+                $_SESSION['user']['id'],
+                $group
+            );
+        }
+
+        $delivery_id = $this->deliveryDao->createUrl(
+            $submission_id,
+            $deliverable_id,
+            $_SESSION['user']['id'],
+            $completion,
+            $duration,
+            $url,
+            $stuComment,
+            $stuCmntHasMD
+        );
+
+        return $this->deliveryDao->byId($delivery_id);
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Put(uri: "/(\d+)/url/(\d+)$", sec: "student")]
+    public function updateUrl()
+    {
+        global $URI_PARAMS;
+        global $_PUT;
+
+        $delivery_id = $URI_PARAMS[4];
+        $completion = $_PUT["completion"];
+        $duration =   $_PUT["duration"];
+        $url = $_PUT["url"];
+        $stuShifted =  $_PUT["stuComment"];
+        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+        $stuCmntHasMD = $_PUT["stuCmntHasMD"] ? 1 : 0;
+
+        $this->deliveryDao->updateUrl(
+            $delivery_id,
+            $_SESSION['user']['id'],
+            $completion,
+            $duration,
+            $url,
+            $stuComment,
+            $stuCmntHasMD
+        );
+
+        return $this->deliveryDao->byId($delivery_id);
     }
 }
