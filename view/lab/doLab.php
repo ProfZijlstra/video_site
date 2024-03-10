@@ -127,6 +127,7 @@
                                     </div>
                                 <?php else : /* type is: img, pdf, zip */ ?>
                                     <div class="fileContainer">
+                                        <i title="Upload <?= $deliv['type'] ?>" class="fa-solid fa-upload"></i>
                                         <input type="file" class="file" />
                                     </div>
                                 <?php endif; ?>

@@ -6,7 +6,7 @@
  */
 
 #[Controller]
-class AttachmentHlpr
+class LabAttachmentHlpr
 {
 
     public function process($key, $lab_id)
@@ -27,7 +27,6 @@ class AttachmentHlpr
         $curr = $_FILES[$key]['tmp_name'];
         $name = $_FILES[$key]['name'];
         $dst = "res/{$course}/{$block}/lab/{$lab_id}/{$name}";
-        $this->ensureDirCreated("res/{$course}/{$block}/lab/");
         $this->ensureDirCreated("res/{$course}/{$block}/lab/{$lab_id}");
         move_uploaded_file($curr, $dst);
 
@@ -37,7 +36,7 @@ class AttachmentHlpr
     private function ensureDirCreated($dir)
     {
         if (!file_exists($dir) && !is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
     }
 

@@ -127,6 +127,8 @@ class LabTakingCtrl
         }
     }
 
+    // FIXME: All these need to reject if the lab is closed
+
     /**
      * Expects AJAX
      */
@@ -146,9 +148,13 @@ class LabTakingCtrl
         $hasMarkDown = filter_input(INPUT_POST, "hasMarkDown", FILTER_VALIDATE_BOOLEAN);
         $stuShifted = filter_input(INPUT_POST, "stuComment");
         $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
-        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
-        $hasMarkDown = $hasMarkDown ? 1 :  0;
-        $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+        $hasMarkDown = $hasMarkDown ? 1 : 0;
+
+        $stuComment = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+        }
 
         if (!$submission_id) {
             $submission_id = $this->submissionDao->create(
@@ -187,14 +193,16 @@ class LabTakingCtrl
         $duration =   $_PUT["duration"];
         $shifted =    $_PUT["text"];
         $text = $this->markdownHlpr->ceasarShift($shifted);
-        $hasMarkDown = $_PUT["hasMarkDown"];
-
+        $hasMarkDown = $_PUT["hasMarkDown"] ? 1 : 0;
         $stuShifted =  $_PUT["stuComment"];
-        $stuCmntHasMD = $_PUT["stuCmntHasMD"];
-        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
 
-        $hasMarkDown = $hasMarkDown ? 1 : 0;
-        $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+        $stuComment = NULL;
+        $stuCmntHasMD = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $_PUT["stuCmntHasMD"] ? 1 : 0;
+        }
+
 
         $this->deliveryDao->updateTxt(
             $delivery_id,
@@ -227,8 +235,12 @@ class LabTakingCtrl
         $url = filter_input(INPUT_POST, "url");
         $stuShifted = filter_input(INPUT_POST, "stuComment");
         $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
-        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
-        $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+
+        $stuComment = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+        }
 
         if (!$submission_id) {
             $submission_id = $this->submissionDao->create(
@@ -266,8 +278,13 @@ class LabTakingCtrl
         $duration =   $_PUT["duration"];
         $url = $_PUT["url"];
         $stuShifted =  $_PUT["stuComment"];
-        $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
-        $stuCmntHasMD = $_PUT["stuCmntHasMD"] ? 1 : 0;
+
+        $stuComment = NULL;
+        $stuCmntHasMD = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $_PUT["stuCmntHasMD"] ? 1 : 0;
+        }
 
         $this->deliveryDao->updateUrl(
             $delivery_id,
@@ -278,6 +295,170 @@ class LabTakingCtrl
             $stuComment,
             $stuCmntHasMD
         );
+
+        return $this->deliveryDao->byId($delivery_id);
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: "/(\d+)/(img|pdf|zip)$", sec: "student")]
+    public function addFileStats()
+    {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
+        $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
+        $group = filter_input(INPUT_POST, "group");
+        $completion = filter_input(INPUT_POST, "completion", FILTER_VALIDATE_INT);
+        $duration = filter_input(INPUT_POST, "duration");
+        $stuShifted = filter_input(INPUT_POST, "stuComment");
+        $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
+
+        $stuComment = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+        }
+
+        if (!$submission_id) {
+            $submission_id = $this->submissionDao->create(
+                $lab_id,
+                $_SESSION['user']['id'],
+                $group
+            );
+        }
+
+        $delivery_id = $this->deliveryDao->createFile(
+            $submission_id,
+            $deliverable_id,
+            $_SESSION['user']['id'],
+            $completion,
+            $duration,
+            '',
+            '',
+            $stuComment,
+            $stuCmntHasMD
+        );
+
+        return $this->deliveryDao->byId($delivery_id);
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Put(uri: "/(\d+)/(img|pdf|zip)/(\d+)$", sec: "student")]
+    public function updateFileStats()
+    {
+        global $URI_PARAMS;
+        global $_PUT;
+
+        $delivery_id = $URI_PARAMS[5];
+        $completion = $_PUT["completion"];
+        $duration =   $_PUT["duration"];
+        $stuShifted =  $_PUT["stuComment"];
+
+        $stuComment = NULL;
+        $stuCmntHasMD = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $_PUT["stuCmntHasMD"] ? 1 : 0;
+        }
+
+        $this->deliveryDao->updateFileStats(
+            $delivery_id,
+            $completion,
+            $duration,
+            $stuComment,
+            $stuCmntHasMD
+        );
+
+        return $this->deliveryDao->byId($delivery_id);
+    }
+    #
+    #[Post(uri: "/(\d+)/(img|pdf|zip)/file$", sec: "student")]
+    public function addUpdateFile()
+    {
+        // stop if there was an upload error
+        if ($_FILES["file"]['error'] != UPLOAD_ERR_OK) {
+            return ["error" => "Upload Error"];
+        }
+        if ($_FILES["file"]['size'] > 5252880) {
+            return ["error" => "File too large, 50MB is the maximum"];
+        }
+
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $lab_id = $URI_PARAMS[3];
+        //$type = $URI_PARAMS[4];
+        $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
+        $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
+        $delivery_id = filter_input(INPUT_POST, "delivery_id", FILTER_VALIDATE_INT);
+        $group = filter_input(INPUT_POST, "group");
+        $completion = filter_input(INPUT_POST, "completion", FILTER_VALIDATE_INT);
+        $duration = filter_input(INPUT_POST, "duration");
+        $stuShifted = filter_input(INPUT_POST, "stuComment");
+        $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
+        $user_id = $_SESSION['user']['id'];
+
+        // TODO: check if the file is of the correct type
+
+        $stuComment = NULL;
+        if ($stuShifted) {
+            $stuComment = $this->markdownHlpr->ceasarShift($stuShifted);
+            $stuCmntHasMD = $stuCmntHasMD ? 1 : 0;
+        }
+
+        if (!$submission_id) {
+            $submission_id = $this->submissionDao->create(
+                $lab_id,
+                $_SESSION['user']['id'],
+                $group
+            );
+        }
+
+        $curr = $_FILES["file"]['tmp_name'];
+        $name = $_FILES["file"]['name'];
+        $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
+        $ts = $time->format("Y-m-d_H:i:s");
+        $dst = "res/{$course}/{$block}/lab/{$lab_id}/submit/"
+            . "{$submission_id}/{$ts}_{$user_id}_{$name}";
+        if (!file_exists($dst) && !is_dir($dst)) {
+            mkdir($dst, 0777, true);
+        }
+        move_uploaded_file($curr, $dst);
+
+        if (!$delivery_id) {
+            $delivery_id = $this->deliveryDao->createFile(
+                $submission_id,
+                $deliverable_id,
+                $user_id,
+                $completion,
+                $duration,
+                $dst,
+                $name,
+                $stuComment,
+                $stuCmntHasMD
+            );
+        } else {
+            $delivery = $this->deliveryDao->byId($delivery_id);
+            if ($delivery['text']) {
+                unlink($delivery['text']);
+            }
+
+            $this->deliveryDao->updateFile(
+                $delivery_id,
+                $user_id,
+                $completion,
+                $duration,
+                $dst,
+                $name,
+                $stuComment,
+                $stuCmntHasMD
+            );
+        }
 
         return $this->deliveryDao->byId($delivery_id);
     }

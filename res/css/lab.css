@@ -237,9 +237,23 @@ body#doLab {
             top: 9px;
         }
     }
-    div.urlContainer, div.fileContainer {
+
+    div.fileContainer {
+        margin: 10px;
+
+        i.fa-upload {
+            cursor: pointer;
+        }
+
+        input.file {
+            display: none;
+        }
+    }
+
+    div.urlContainer {
         margin: 10px 0px;
-        input {
+
+        input.url {
             width: 535px;
         }
     }

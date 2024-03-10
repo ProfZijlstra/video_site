@@ -169,4 +169,97 @@ class DeliveryDao
             "stuCmntHasMD" => $stuCmntHasMD
         ]);
     }
+
+    public function createFile(
+        $submission_id,
+        $deliverable_id,
+        $user_id,
+        $completion,
+        $duration,
+        $file,
+        $name,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "INSERT INTO delivery VALUES (
+                NULL, :deliverable_id, :submission_id, :user_id,
+                NOW(), NOW(), 
+                :completion, :duration, 
+                :file, NULL, :name, 
+                :stuComment, :stuCmntHasMD, 
+                NULL, NULL, NULL)"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id,
+            "duration" => $duration,
+            "completion" => $completion,
+            "file" => $file,
+            "name" => $name,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+        return $this->db->lastInsertId();
+    }
+
+    public function updateFileStats(
+        $id,
+        $completion,
+        $duration,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "UPDATE delivery 
+                SET updated = NOW(),
+                completion = :completion, 
+                duration = :duration, 
+                stuComment = :stuComment,
+                stuCmntHasMD = :stuCmntHasMD
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "completion" => $completion,
+            "duration" => $duration,
+            "id" => $id,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+    }
+
+    public function updateFile(
+        $id,
+        $user_id,
+        $completion,
+        $duration,
+        $file,
+        $name,
+        $stuComment,
+        $stuCmntHasMD
+    ) {
+        $stmt = $this->db->prepare(
+            "UPDATE delivery 
+                SET updated = NOW(),
+                user_id = :user_id,
+                completion = :completion, 
+                duration = :duration, 
+                `text` = :file, 
+                `name` = :name,
+                stuComment = :stuComment,
+                stuCmntHasMD = :stuCmntHasMD
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "user_id" => $user_id,
+            "completion" => $completion,
+            "duration" => $duration,
+            "file" => $file,
+            "name" => $name,
+            "id" => $id,
+            "stuComment" => $stuComment,
+            "stuCmntHasMD" => $stuCmntHasMD
+        ]);
+    }
 }

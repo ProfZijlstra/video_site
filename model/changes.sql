@@ -462,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`delivery` (
   `duration` TIME NOT NULL DEFAULT "00:00:00",
   `text` TEXT NOT NULL DEFAULT "",
   `hasMarkDown` TINYINT NULL,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(255) NULL,
   `stuComment` TEXT,
   `stuCmntHasMD` TINYINT UNSIGNED,
   `points` INT UNSIGNED,

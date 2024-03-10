@@ -26,7 +26,7 @@ class LabAdminCtrl
     #[Inject('DayDao')]
     public $dayDao;
 
-    #[Inject('AttachmentHlpr')]
+    #[Inject('LabAttachmentHlpr')]
     public $attachmentHlpr;
 
     #[Inject('AttachmentDao')]
