@@ -392,7 +392,6 @@ class LabTakingCtrl
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
-        //$type = $URI_PARAMS[4];
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $delivery_id = filter_input(INPUT_POST, "delivery_id", FILTER_VALIDATE_INT);
@@ -403,7 +402,8 @@ class LabTakingCtrl
         $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
         $user_id = $_SESSION['user']['id'];
 
-        // TODO: check if the file is of the correct type
+        //$type = $URI_PARAMS[4];
+        // check if the file is of the correct type?
 
         $stuComment = NULL;
         if ($stuShifted) {
@@ -424,10 +424,11 @@ class LabTakingCtrl
         $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
         $ts = $time->format("Y-m-d_H:i:s");
         $dst = "res/{$course}/{$block}/lab/{$lab_id}/submit/"
-            . "{$submission_id}/{$ts}_{$user_id}_{$name}";
+            . "{$submission_id}";
         if (!file_exists($dst) && !is_dir($dst)) {
             mkdir($dst, 0777, true);
         }
+        $dst .= "/{$ts}_{$user_id}_{$name}";
         move_uploaded_file($curr, $dst);
 
         if (!$delivery_id) {
@@ -445,6 +446,7 @@ class LabTakingCtrl
         } else {
             $delivery = $this->deliveryDao->byId($delivery_id);
             if ($delivery['text']) {
+                print("Deleting file: " . $delivery['text'] . "\n");
                 unlink($delivery['text']);
             }
 
