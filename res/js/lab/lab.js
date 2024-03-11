@@ -122,6 +122,10 @@ window.addEventListener("load", () => {
         const duration = durSel.value;
         const stuComment = deliv.querySelector("textarea.cmt").value;
 
+        const spinner = deliv.querySelector("i.spinner");
+        const check = deliv.querySelector("span.check");
+        check.classList.remove("show");
+
         data.append("submission_id", submission_id);
         data.append("deliverable_id", deliv.parentNode.dataset.id);
         data.append("delivery_id", id);
@@ -149,7 +153,6 @@ window.addEventListener("load", () => {
             }
         }
 
-        const spinner = deliv.querySelector("i.spinner");
         spinner.classList.add("rotate");
         fetch(`${lab_id}/${type}/file`, {
             method: "POST",
@@ -169,7 +172,7 @@ window.addEventListener("load", () => {
             const link = deliv.querySelector("a.fileLink");
             link.setAttribute("href", data.file);
             link.textContent = data.name;
-            deliv.querySelector("span.check").classList.add("show");
+            check.classList.add("show");
             // TODO: if type is img show the image
         })
         .catch(error => {

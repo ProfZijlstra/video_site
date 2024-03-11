@@ -289,15 +289,15 @@ body#doLab {
 
 @keyframes glow {
   0% {
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00e600, 0 0 40px #00e600, 0 0; 
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00aa00, 0 0 40px #00aa00, 0 0; 
   }
   
   50% {
-    text-shadow: 0 0 20px #fff, 0 0 30px #00ff4d, 0 0 40px #00ff4d, 0 0 50px #00ff4d, 0 0 60px #00ff4d, 0 0 70px #00ff4d, 0 0 80px #00ff4d;
+    text-shadow: 0 0 20px #fff, 0 0 30px #00aa19, 0 0 40px #00aa19, 0 0 50px #00aa19, 0 0 60px #00ff4d, 0 0 70px #00ff4d, 0 0 80px #00ff4d;
   }
   
   100% {
-  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00e600, 0 0 40px #00e600;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00aa00, 0 0 40px #00aa00;
   }
 }
 
