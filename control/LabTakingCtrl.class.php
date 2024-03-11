@@ -138,6 +138,10 @@ class LabTakingCtrl
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $group = filter_input(INPUT_POST, "group");
@@ -188,6 +192,11 @@ class LabTakingCtrl
         global $URI_PARAMS;
         global $_PUT;
 
+        $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $delivery_id = $URI_PARAMS[4];
         $completion = $_PUT["completion"];
         $duration =   $_PUT["duration"];
@@ -227,6 +236,10 @@ class LabTakingCtrl
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $group = filter_input(INPUT_POST, "group");
@@ -273,6 +286,11 @@ class LabTakingCtrl
         global $URI_PARAMS;
         global $_PUT;
 
+        $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $delivery_id = $URI_PARAMS[4];
         $completion = $_PUT["completion"];
         $duration =   $_PUT["duration"];
@@ -308,6 +326,10 @@ class LabTakingCtrl
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $group = filter_input(INPUT_POST, "group");
@@ -354,6 +376,11 @@ class LabTakingCtrl
         global $URI_PARAMS;
         global $_PUT;
 
+        $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $delivery_id = $URI_PARAMS[5];
         $completion = $_PUT["completion"];
         $duration =   $_PUT["duration"];
@@ -392,6 +419,10 @@ class LabTakingCtrl
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
+        if ($this->labEnded($lab_id)) {
+            return ["error" => "Lab is closed"];
+        }
+
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $delivery_id = filter_input(INPUT_POST, "delivery_id", FILTER_VALIDATE_INT);
@@ -462,5 +493,17 @@ class LabTakingCtrl
         }
 
         return $this->deliveryDao->byId($delivery_id);
+    }
+
+    private function labEnded($lab_id, $leewaySecs = 30)
+    {
+        $lab = $this->labDao->byId($lab_id);
+        $tz = new DateTimeZone(TIMEZONE);
+        $now = new DateTimeImmutable("now", $tz);
+        $stop = new DateTimeImmutable($lab['stop'], $tz);
+        // give leeway second 
+        $stop = $stop->add(new DateInterval("PT{$leewaySecs}S"));
+        $stopDiff = $now->diff($stop);
+        return $stopDiff->invert == 1; // is it in the past?
     }
 }
