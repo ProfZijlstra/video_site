@@ -149,6 +149,8 @@ window.addEventListener("load", () => {
             }
         }
 
+        const spinner = deliv.querySelector("i.spinner");
+        spinner.classList.add("rotate");
         fetch(`${lab_id}/${type}/file`, {
             method: "POST",
             body: data,
@@ -162,11 +164,17 @@ window.addEventListener("load", () => {
         .then(data => {
             submission_id = data.submission_id;
             deliv.dataset.id = data.id;
-            // TODO: show file name and glowing checkmark
+            spinner.classList.remove("rotate");
+            deliv.querySelector("i.fa-upload").setAttribute("title", `Replace ${type}`);
+            const link = deliv.querySelector("a.fileLink");
+            link.setAttribute("href", data.file);
+            link.textContent = data.name;
+            deliv.querySelector("span.check").classList.add("show");
             // TODO: if type is img show the image
         })
         .catch(error => {
             alert(error);
+            spinner.classList.remove("rotate");
         });
     }
 });

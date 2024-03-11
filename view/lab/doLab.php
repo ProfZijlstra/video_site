@@ -123,12 +123,15 @@
                             <?php else : ?>
                                 <?php if ($deliv['type'] == 'url') : ?>
                                     <div class="urlContainer">
-                                        <input type="url" class="url" placeholder="https://github.com/student/project" />
+                                        <input type="url" class="url" placeholder="https://github.com/student/project" value="<?= $item['text'] ?>" />
                                     </div>
                                 <?php else : /* type is: img, pdf, zip */ ?>
                                     <div class="fileContainer">
-                                        <i title="Upload <?= $deliv['type'] ?>" class="fa-solid fa-upload"></i>
+                                        <i title="<?= $item['text'] ? 'Replace' : 'Upload' ?> <?= $deliv['type'] ?>" class="fa-solid fa-upload"></i>
+                                        <i class="spinner fa-solid fa-circle-notch"></i>
                                         <input type="file" class="file" />
+                                        <a class="fileLink" href="<?= $item['text'] ?>" target="_blank"><?= $item['name'] ?></a>
+                                        <span class="check"><i class="fa-solid fa-check"></i></span>
                                     </div>
                                 <?php endif; ?>
                             <?php endif; ?>

@@ -446,7 +446,6 @@ class LabTakingCtrl
         } else {
             $delivery = $this->deliveryDao->byId($delivery_id);
             if ($delivery['text']) {
-                print("Deleting file: " . $delivery['text'] . "\n");
                 unlink($delivery['text']);
             }
 
