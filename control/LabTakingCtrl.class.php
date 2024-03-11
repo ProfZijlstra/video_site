@@ -403,7 +403,11 @@ class LabTakingCtrl
 
         return $this->deliveryDao->byId($delivery_id);
     }
-    #
+
+
+    /**
+     * Expects AJAX
+     */
     #[Post(uri: "/(\d+)/(img|pdf|zip)/file$", sec: "student")]
     public function addUpdateFile()
     {
