@@ -21,7 +21,7 @@ class QuizAdminCtrl
     public $markdownCtrl;
 
     #[Inject('ImageHlpr')]
-    public $imageCtrl;
+    public $imageHlpr;
 
     #[Inject('OfferingDao')]
     public $offeringDao;
@@ -172,8 +172,7 @@ class QuizAdminCtrl
         $question_id = $this->questionDao->add($quiz_id, $type, $text, $model_answer, $points, $seq);
 
         if ($type == "image" && $_FILES['image']['tmp_name']) {
-            $user_id = $_SESSION['user']['id'];
-            $res = $this->imageCtrl->process("image", $question_id, $user_id);
+            $res = $this->imageHlpr->process("image", $question_id);
             if (isset($res['error'])) {
                 return $res;
             }
@@ -223,9 +222,8 @@ class QuizAdminCtrl
         global $URI_PARAMS;
 
         $question_id = $URI_PARAMS[4];
-        $user_id = $_SESSION['user']['id'];
 
-        $res = $this->imageCtrl->process("image", $question_id, $user_id);
+        $res = $this->imageHlpr->process("image", $question_id);
         $this->questionDao->updateModelAnswer($question_id, $res['dst'], 0);
 
         return $res;
@@ -286,4 +284,3 @@ class QuizAdminCtrl
         return "quiz/csv.php";
     }
 }
-

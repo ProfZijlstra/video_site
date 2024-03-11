@@ -9,8 +9,13 @@
 class ImageHlpr
 {
 
-    public function process($img_name, $question_id, $user_id)
+    public function process($img_name, $question_id)
     {
+        global $URI_PARAMS;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
         // stop if there was an upload error
         if ($_FILES[$img_name]['error'] != UPLOAD_ERR_OK) {
             return ["error" => "Upload Error"];
@@ -25,7 +30,8 @@ class ImageHlpr
         }
 
         // move image to quiz location
-        $dst = $this->moveImage($img_file, $ext, $question_id, $user_id);
+        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+        $dst = $this->moveImage($img_file, $ext, $path);
 
         return ["dst" => $dst];
     }
@@ -41,18 +47,35 @@ class ImageHlpr
         return array_search($finfo->file($img_file), $types, true);
     }
 
-    private function moveImage($img_file, $ext, $question_id, $user_id)
+    private function moveImage($img_file, $ext, $path)
     {
-        global $URI_PARAMS;
+        $user_id = $_SESSION['user']['id'];
 
-        $course = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
+        // resize the image to width 1024px
+        if ($ext == "jpg") {
+            $img = imagecreatefromjpeg($img_file);
+        } elseif ($ext == "png") {
+            $img = imagecreatefrompng($img_file);
+        } elseif ($ext == "gif") {
+            $img = imagecreatefromgif($img_file);
+        }
+        $resized = imagescale($img, 1024);
 
+        // then save resized image to quiz location (no move_uploaded_file)
+        $this->ensureDirCreated($path);
         $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
         $ts = $time->format("Y-m-d_H:i:s");
-        $dst = "res/{$course}/{$block}/quiz/{$question_id}/{$ts}_{$user_id}.{$ext}";
-        $this->ensureDirCreated("res/{$course}/{$block}/quiz/{$question_id}");
-        move_uploaded_file($img_file, $dst);
+        $dst = $path . "/{$ts}_{$user_id}.{$ext}";
+        if ($ext == "jpg") {
+            imagejpeg($resized, $dst);
+        } elseif ($ext == "png") {
+            imagepng($resized, $dst);
+        } elseif ($ext == "gif") {
+            imagegif($resized, $dst);
+        }
+
+        // remove the original image
+        unlink($img_file);
 
         return $dst;
     }

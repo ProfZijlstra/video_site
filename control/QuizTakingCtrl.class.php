@@ -24,7 +24,7 @@ class QuizTakingCtrl
     public $markdownCtrl;
 
     #[Inject('ImageHlpr')]
-    public $imageCtrl;
+    public $imageHlpr;
 
 
     /**
@@ -132,7 +132,7 @@ class QuizTakingCtrl
 
         $user_id = $_SESSION['user']['id'];
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
-        $res = $this->imageCtrl->process("image", $question_id, $user_id);
+        $res = $this->imageHlpr->process("image", $question_id);
 
         if (isset($res['error'])) {
             return $res;
