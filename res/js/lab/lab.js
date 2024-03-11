@@ -16,7 +16,7 @@ window.addEventListener("load", () => {
     const group = document.getElementById("labGroup")?.dataset.id;
     let submission_id = document.getElementById("submission").dataset.id;
     function sendDeliverable() {
-        if (this.classList.contains("file")) {
+        if (this.classList.contains("fileUpload")) {
             return; // separate event listner for files below
         }
         const deliv = this.closest("div.deliv");
@@ -38,13 +38,13 @@ window.addEventListener("load", () => {
         if (stuComment) {
             const stuShifted = encodeURIComponent(MARKDOWN.ceasarShift(stuComment));
             data += "&stuComment=" + stuShifted;
-            const stuMD = deliv.querySelector(".fa-markdown.cmt").classList.contains("active") ? 1 : 0;
+            const stuMD = deliv.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
             data += "&stuCmntHasMD=" + stuMD;
         }
 
         let check = true;
         if (type == "txt") {
-            const md = deliv.querySelector(".fa-markdown.txt").classList.contains("active") ? 1 : 0
+            const md = deliv.querySelector("i.txt").classList.contains("active") ? 1 : 0
             const text = deliv.querySelector("textarea.txt").value;
             const shifted = encodeURIComponent(MARKDOWN.ceasarShift(text));
             data += "&hasMarkDown=" + md;
@@ -86,23 +86,26 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-        .then(response =>  {
-            if (!response.ok) {
-                throw new Error(action + " deliverable failed.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            submission_id = data.submission_id;
-            deliv.dataset.id = data.id;
-        })
-        .catch(error => {
-            alert(error);
-        });
+            .then(response =>  {
+                if (!response.ok) {
+                    throw new Error(action + " deliverable failed.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                submission_id = data.submission_id;
+                deliv.dataset.id = data.id;
+            })
+            .catch(error => {
+                alert(error);
+            });
     }
 
     // hook up icon click to file input
-    document.querySelectorAll("i.fa-upload").forEach(icon => {
+    document.querySelectorAll("i.upload").forEach(icon => {
         icon.addEventListener("click", function() {
             this.parentNode.querySelector("input.file").click();
         });
@@ -124,6 +127,7 @@ window.addEventListener("load", () => {
 
         const spinner = deliv.querySelector("i.spinner");
         const check = deliv.querySelector("span.check");
+        const upload = deliv.querySelector("i.upload");
         check.classList.remove("show");
 
         data.append("submission_id", submission_id);
@@ -137,7 +141,7 @@ window.addEventListener("load", () => {
         if (stuComment) {
             const stuShifted = encodeURIComponent(MARKDOWN.ceasarShift(stuComment));
             data.append("stuComment", stuShifted);
-            const stuMD = deliv.querySelector(".fa-markdown.cmt").classList.contains("active") ? 1 : 0;
+            const stuMD = deliv.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
             data.append("stuCmntHasMD", stuMD);
         }
 
@@ -158,26 +162,29 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data,
         })
-        .then(response =>  {
-            if (!response.ok) {
-                throw new Error("Uploading file failed.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            submission_id = data.submission_id;
-            deliv.dataset.id = data.id;
-            spinner.classList.remove("rotate");
-            deliv.querySelector("i.fa-upload").setAttribute("title", `Replace ${type}`);
-            const link = deliv.querySelector("a.fileLink");
-            link.setAttribute("href", data.file);
-            link.textContent = data.name;
-            check.classList.add("show");
-            // TODO: if type is img show the image
-        })
-        .catch(error => {
-            alert(error);
-            spinner.classList.remove("rotate");
-        });
+            .then(response =>  {
+                if (!response.ok) {
+                    throw new Error("Uploading file failed.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                submission_id = data.submission_id;
+                deliv.dataset.id = data.id;
+                spinner.classList.remove("rotate");
+                upload.setAttribute("title", `Replace ${type}`);
+                const link = deliv.querySelector("a.fileLink");
+                link.setAttribute("href", data.file);
+                link.textContent = data.name;
+                check.classList.add("show");
+                // TODO: if type is img show the image
+            })
+            .catch(error => {
+                alert(error);
+                spinner.classList.remove("rotate");
+            });
     }
 });

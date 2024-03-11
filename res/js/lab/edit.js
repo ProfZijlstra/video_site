@@ -67,7 +67,7 @@ window.addEventListener("load", () => {
 
     // enable remove attachment icons
     function delAttachment(e) {
-        if (e.target.classList.contains("fa-xmark")) {
+        if (e.target.classList.contains("remove")) {
             const attachment = e.target.parentElement;
             const link = attachment.querySelector("a");
             const name = link.textContent;
@@ -160,9 +160,11 @@ window.addEventListener("load", () => {
             .then((html) => {
                 const div = document.createElement("div");
                 div.innerHTML = html;
-                div.querySelector("i.fa-trash-alt").addEventListener("click", delDeliv);
+                div.querySelector("i.delDeliv").addEventListener("click", delDeliv);
                 div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
                 div.querySelector(".points").addEventListener("change", updatePoints);
+                div.querySelector("i.deliverable").addEventListener("click", MARKDOWN.toggleMarkDown);
+                div.querySelector("button.previewBtn").addEventListener("click", MARKDOWN.getHtmlForMarkdown);
                 const delivs = document.getElementById("deliverables");
                 delivs.appendChild(div);
                 document.getElementById("addDelivDialog").close();
@@ -200,7 +202,7 @@ window.addEventListener("load", () => {
         const id = dcontainer.dataset.id;
         const points = dcontainer.querySelector(".points").value;
         const desc = encodeURIComponent(MARKDOWN.ceasarShift(dcontainer.querySelector(".desc").value));
-        const hasMarkDown = dcontainer.querySelector(".fa-markdown").classList.contains("active") ? 1 : 0;
+        const hasMarkDown = dcontainer.querySelector("i.deliverable").classList.contains("active") ? 1 : 0;
         fetch(`deliverable/${id}`, {
             method: "PUT",
             body: `desc=${desc}&points=${points}&hasMarkDown=${hasMarkDown}`,

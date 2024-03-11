@@ -127,9 +127,9 @@
                                     </div>
                                 <?php else : /* type is: img, pdf, zip */ ?>
                                     <div class="fileContainer">
-                                        <i title="<?= $item['text'] ? 'Replace' : 'Upload' ?> <?= $deliv['type'] ?>" class="fa-solid fa-upload"></i>
+                                        <i title="<?= $item['text'] ? 'Replace' : 'Upload' ?> <?= $deliv['type'] ?>" class="upload fa-solid fa-upload"></i>
                                         <i class="spinner fa-solid fa-circle-notch"></i>
-                                        <input type="file" class="file" />
+                                        <input type="file" class="file fileUpload" />
                                         <a class="fileLink" href="<?= $item['text'] ?>" target="_blank"><?= $item['name'] ?></a>
                                         <span class="check"><i class="fa-solid fa-check"></i></span>
                                     </div>
@@ -139,7 +139,7 @@
                                 <textarea class="cmt <?= $deliv['type'] == 'txt' ? '' : 'file' ?>" placeholder="Write any questions or comments about this deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write any questions or comments about this deliverable here."><?= $item['stuComment'] ?></textarea>
 
                                 <i title="Markdown" class="cmt <?= $deliv['type'] == 'txt' ? 'stu' : 'file' ?> fa-brands fa-markdown <?= $item['stuCmntHasMD'] ? "active" : "" ?>"></i>
-                                <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
+                                <div class="mdContainer <?= $item['stuCmntHasMD'] ? "active" : "" ?>">
                                     <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                     <div class="previewArea"></div>
                                 </div>

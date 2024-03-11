@@ -73,5 +73,5 @@ const MARKDOWN = (function() {
         }
     }
 
-    return { getHtmlForMarkdown, enablePreview, ceasarShift, activateButtons };
+    return { getHtmlForMarkdown, enablePreview, ceasarShift, activateButtons, toggleMarkDown };
 })()
