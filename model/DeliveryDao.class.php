@@ -55,7 +55,8 @@ class DeliveryDao
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
-                :text, :hasMarkDown, NULL, 
+                :text, :hasMarkDown, 
+                NULL, NULL, 
                 :stuComment, :stuCmntHasMD, 
                 NULL, NULL, NULL)"
         );
@@ -122,7 +123,8 @@ class DeliveryDao
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
-                :url, NULL, NULL, 
+                :url, NULL, 
+                NULL, NULL, 
                 :stuComment, :stuCmntHasMD, 
                 NULL, NULL, NULL)"
         );
@@ -186,7 +188,8 @@ class DeliveryDao
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
-                :file, NULL, :name, 
+                NULL, NULL, 
+                :file, :name, 
                 :stuComment, :stuCmntHasMD, 
                 NULL, NULL, NULL)"
         );
@@ -245,7 +248,7 @@ class DeliveryDao
                 user_id = :user_id,
                 completion = :completion, 
                 duration = :duration, 
-                `text` = :file, 
+                `file` = :file, 
                 `name` = :name,
                 stuComment = :stuComment,
                 stuCmntHasMD = :stuCmntHasMD
