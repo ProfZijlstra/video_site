@@ -265,6 +265,15 @@ body#doLab {
             display: inline;
             animation: glow 2s 2;
         }
+        img {
+            width: 555px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            display: none;
+        }
+        img.show {
+            display: block;
+        }
     }
 
     div.urlContainer {

@@ -154,6 +154,10 @@ class QuizAdminCtrl
     #[Post(uri: "/(\d+)/question$", sec: "instructor")]
     public function addQuestion()
     {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
         $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
         $type = filter_input(INPUT_POST, "type");
         $qshifted = filter_input(INPUT_POST, "text");
@@ -172,7 +176,8 @@ class QuizAdminCtrl
         $question_id = $this->questionDao->add($quiz_id, $type, $text, $model_answer, $points, $seq);
 
         if ($type == "image" && $_FILES['image']['tmp_name']) {
-            $res = $this->imageHlpr->process("image", $question_id);
+            $path = "res/{$course}/{$block}/quiz/{$question_id}";
+            $res = $this->imageHlpr->process("image", $path);
             if (isset($res['error'])) {
                 return $res;
             }
@@ -221,9 +226,12 @@ class QuizAdminCtrl
     {
         global $URI_PARAMS;
 
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
         $question_id = $URI_PARAMS[4];
 
-        $res = $this->imageHlpr->process("image", $question_id);
+        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+        $res = $this->imageHlpr->process("image", $path);
         $this->questionDao->updateModelAnswer($question_id, $res['dst'], 0);
 
         return $res;

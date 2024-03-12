@@ -9,13 +9,8 @@
 class ImageHlpr
 {
 
-    public function process($img_name, $question_id)
+    public function process($img_name, $path)
     {
-        global $URI_PARAMS;
-
-        $course = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
-
         // stop if there was an upload error
         if ($_FILES[$img_name]['error'] != UPLOAD_ERR_OK) {
             return ["error" => "Upload Error"];
@@ -30,7 +25,6 @@ class ImageHlpr
         }
 
         // move image to quiz location
-        $path = "res/{$course}/{$block}/quiz/{$question_id}";
         $dst = $this->moveImage($img_file, $ext, $path);
 
         return ["dst" => $dst];

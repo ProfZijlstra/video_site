@@ -63,7 +63,7 @@
                 <h2><?= count($deliverables) ?> Deliverable(s) </h2>
                 <p class="delivInstr">Deliverables with 0:00 hours or 0% complete are auto-graded to zero points</p>
                 <?php foreach ($deliverables as $deliv) : ?>
-                    <?php $item = $delivered[$deliv['id']] ?? [] ?>
+                    <?php $delivery = $delivered[$deliv['id']] ?? [] ?>
                     <div class="dcontainer deliverables" data-id="<?= $deliv['id'] ?>" data-type="<?= $deliv['type'] ?>">
                         <div class="about">
                             <div class="meta" title="<?= $typeDesc[$deliv['type']] ?> to complete this deliverable">
@@ -77,7 +77,7 @@
                                 points
                             </div>
                         </div>
-                        <div class="deliv" data-id="<?= $item['id'] ?>">
+                        <div class="deliv" data-id="<?= $delivery['id'] ?>">
                             <div class="stats">
                                 <label title="Hours spent creating this deliverable">Hours:
                                     <select class="duration" autofocus>
@@ -88,7 +88,7 @@
                                         ?>
                                         <?php for ($i = 0.25; $i <= 23.75; $i += 0.25) : ?>
                                             <?php $time = $now->format('H:i'); ?>
-                                            <option value="<?= $time ?>" <?= $item['duration'] == $time . ":00" ? 'selected' : '' ?>>
+                                            <option value="<?= $time ?>" <?= $delivery['duration'] == $time . ":00" ? 'selected' : '' ?>>
                                                 <?= $time ?>
                                             </option>
                                             <?php $now->add($interval); ?>
@@ -99,7 +99,7 @@
                                 <label title="Approximately how far did you complete this deliverable" class="completion">Complete:
                                     <select class="completion">
                                         <?php for ($i = 0; $i <= 100; $i += 10) : ?>
-                                            <option value="<?= $i ?>" <?= $item['completion'] == $i ? 'selected' : '' ?>>
+                                            <option value="<?= $i ?>" <?= $delivery['completion'] == $i ? 'selected' : '' ?>>
                                                 <?= $i ?>%
                                             </option>
                                         <?php endfor; ?>
@@ -112,9 +112,9 @@
                             </div>
                             <?php if ($deliv['type'] == 'txt') : ?>
                                 <div class="textContainer">
-                                    <textarea class="txt" placeholder="Write the text for your deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write the text for your deliverable here."><?= $item['text'] ?></textarea>
+                                    <textarea class="txt" placeholder="Write the text for your deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write the text for your deliverable here."><?= $delivery['text'] ?></textarea>
 
-                                    <i title="Markdown" class="txt fa-brands fa-markdown <?= $item['hasMarkDown'] ? "active" : "" ?>"></i>
+                                    <i title="Markdown" class="txt fa-brands fa-markdown <?= $delivery['hasMarkDown'] ? "active" : "" ?>"></i>
                                     <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
                                         <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                         <div class="previewArea"></div>
@@ -123,23 +123,26 @@
                             <?php else : ?>
                                 <?php if ($deliv['type'] == 'url') : ?>
                                     <div class="urlContainer">
-                                        <input type="url" class="url" placeholder="https://github.com/student/project" value="<?= $item['text'] ?>" />
+                                        <input type="url" class="url" placeholder="https://github.com/student/project" value="<?= $delivery['text'] ?>" />
                                     </div>
                                 <?php else : /* type is: img, pdf, zip */ ?>
                                     <div class="fileContainer">
-                                        <i title="<?= $item['text'] ? 'Replace' : 'Upload' ?> <?= $deliv['type'] ?>" class="upload fa-solid fa-upload"></i>
+                                        <i title="<?= $delivery['text'] ? 'Replace' : 'Upload' ?> <?= $deliv['type'] ?>" class="upload fa-solid fa-upload"></i>
                                         <i class="spinner fa-solid fa-circle-notch"></i>
                                         <input type="file" class="file fileUpload" />
-                                        <a class="fileLink" href="<?= $item['text'] ?>" target="_blank"><?= $item['name'] ?></a>
+                                        <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
                                         <span class="check"><i class="fa-solid fa-check"></i></span>
+                                        <?php if ($deliv['type'] == 'img') : ?>
+                                            <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                             <?php endif; ?>
                             <div class="textContainer">
-                                <textarea class="cmt <?= $deliv['type'] == 'txt' ? '' : 'file' ?>" placeholder="Write any questions or comments about this deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write any questions or comments about this deliverable here."><?= $item['stuComment'] ?></textarea>
+                                <textarea class="cmt <?= $deliv['type'] == 'txt' ? '' : 'file' ?>" placeholder="Write any questions or comments about this deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write any questions or comments about this deliverable here."><?= $delivery['stuComment'] ?></textarea>
 
-                                <i title="Markdown" class="cmt <?= $deliv['type'] == 'txt' ? 'stu' : 'file' ?> fa-brands fa-markdown <?= $item['stuCmntHasMD'] ? "active" : "" ?>"></i>
-                                <div class="mdContainer <?= $item['stuCmntHasMD'] ? "active" : "" ?>">
+                                <i title="Markdown" class="cmt <?= $deliv['type'] == 'txt' ? 'stu' : 'file' ?> fa-brands fa-markdown <?= $delivery['stuCmntHasMD'] ? "active" : "" ?>"></i>
+                                <div class="mdContainer <?= $delivery['stuCmntHasMD'] ? "active" : "" ?>">
                                     <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                     <div class="previewArea"></div>
                                 </div>

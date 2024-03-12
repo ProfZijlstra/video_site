@@ -122,6 +122,8 @@ class QuizTakingCtrl
     {
         global $URI_PARAMS;
 
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
         $quiz_id = $URI_PARAMS[3];
         $question_id = $URI_PARAMS[4];
 
@@ -132,7 +134,8 @@ class QuizTakingCtrl
 
         $user_id = $_SESSION['user']['id'];
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
-        $res = $this->imageHlpr->process("image", $question_id);
+        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+        $res = $this->imageHlpr->process("image", $path);
 
         if (isset($res['error'])) {
             return $res;

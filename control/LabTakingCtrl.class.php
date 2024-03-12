@@ -32,6 +32,9 @@ class LabTakingCtrl
     #[Inject('MarkdownHlpr')]
     public $markdownHlpr;
 
+    #[Inject('ImageHlpr')]
+    public $imageHlpr;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -126,8 +129,6 @@ class LabTakingCtrl
             return "lab/doLab.php";
         }
     }
-
-    // FIXME: All these need to reject if the lab is closed
 
     /**
      * Expects AJAX
@@ -404,7 +405,6 @@ class LabTakingCtrl
         return $this->deliveryDao->byId($delivery_id);
     }
 
-
     /**
      * Expects AJAX
      */
@@ -423,6 +423,7 @@ class LabTakingCtrl
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
+        $type = $URI_PARAMS[4];
         if ($this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
@@ -436,9 +437,6 @@ class LabTakingCtrl
         $stuShifted = filter_input(INPUT_POST, "stuComment");
         $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
         $user_id = $_SESSION['user']['id'];
-
-        //$type = $URI_PARAMS[4];
-        // check if the file is of the correct type?
 
         $stuComment = NULL;
         if ($stuShifted) {
@@ -454,17 +452,27 @@ class LabTakingCtrl
             );
         }
 
-        $curr = $_FILES["file"]['tmp_name'];
-        $name = $_FILES["file"]['name'];
-        $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
-        $ts = $time->format("Y-m-d_H:i:s");
-        $dst = "res/{$course}/{$block}/lab/{$lab_id}/submit/"
-            . "{$submission_id}";
-        if (!file_exists($dst) && !is_dir($dst)) {
-            mkdir($dst, 0777, true);
+        if ($type == 'img') {
+            $name = $_FILES["file"]['name'];
+            $path = "res/{$course}/{$block}/lab/{$lab_id}/submit/{$submission_id}";
+            $res = $this->imageHlpr->process('file', $path);
+            if ($res['error']) {
+                return ["error" => $res['error']];
+            }
+            $dst = $res['dst'];
+        } else { // pdf and zip
+            $curr = $_FILES["file"]['tmp_name'];
+            $name = $_FILES["file"]['name'];
+            $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
+            $ts = $time->format("Y-m-d_H:i:s");
+            $dst = "res/{$course}/{$block}/lab/{$lab_id}/submit/"
+                . "{$submission_id}";
+            if (!file_exists($dst) && !is_dir($dst)) {
+                mkdir($dst, 0777, true);
+            }
+            $dst .= "/{$ts}_{$user_id}_{$name}";
+            move_uploaded_file($curr, $dst);
         }
-        $dst .= "/{$ts}_{$user_id}_{$name}";
-        move_uploaded_file($curr, $dst);
 
         if (!$delivery_id) {
             $delivery_id = $this->deliveryDao->createFile(
@@ -480,8 +488,8 @@ class LabTakingCtrl
             );
         } else {
             $delivery = $this->deliveryDao->byId($delivery_id);
-            if ($delivery['text']) {
-                unlink($delivery['text']);
+            if ($delivery['file']) {
+                unlink($delivery['file']);
             }
 
             $this->deliveryDao->updateFile(

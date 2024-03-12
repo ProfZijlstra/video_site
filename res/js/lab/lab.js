@@ -180,7 +180,12 @@ window.addEventListener("load", () => {
                 link.setAttribute("href", data.file);
                 link.textContent = data.name;
                 check.classList.add("show");
-                // TODO: if type is img show the image
+
+                if (type == "img") {
+                    const img = deliv.querySelector("img");
+                    img.setAttribute("src", data.file);
+                    img.classList.add("show");
+                }
             })
             .catch(error => {
                 alert(error);
