@@ -85,10 +85,8 @@ class LabTakingCtrl
                 }
 
                 if ($group == null) {
-                    // TODO: implement this error page
-                    $VIEW_DATA['title'] = "Lab: " . $lab['name'];
-                    $VIEW_DATA['error'] = "You need to be in a group for this lab";
-                    return "lab/error.php";
+                    $VIEW_DATA['title'] = "No Group";
+                    return "lab/nogroup.php";
                 }
 
                 // get the submission (or null)
