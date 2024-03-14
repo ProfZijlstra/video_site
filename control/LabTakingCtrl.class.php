@@ -425,6 +425,9 @@ class LabTakingCtrl
         if ($this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
+        if ($type == 'zip' && !$this->isZipFile($_FILES["file"]['tmp_name'])) {
+            return ["error" => "File does not seem to be a .zip file"];
+        }
 
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
@@ -450,6 +453,7 @@ class LabTakingCtrl
             );
         }
 
+        $listing = null;
         if ($type == 'img') {
             $name = $_FILES["file"]['name'];
             $path = "res/{$course}/{$block}/lab/{$lab_id}/submit/{$submission_id}";
@@ -459,6 +463,17 @@ class LabTakingCtrl
             }
             $dst = $res['dst'];
         } else { // pdf and zip
+            if ($type == 'zip') {
+                $zip = new ZipArchive();
+                if ($zip->open($_FILES["file"]['tmp_name']) !== TRUE) {
+                    return ["error" => "Zip file could not be opened"];
+                }
+                $listing = "";
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $listing .= $zip->getNameIndex($i) . "\n";
+                }
+                $zip->close();
+            }
             $curr = $_FILES["file"]['tmp_name'];
             $name = $_FILES["file"]['name'];
             $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
@@ -479,6 +494,7 @@ class LabTakingCtrl
                 $user_id,
                 $completion,
                 $duration,
+                $listing,
                 $dst,
                 $name,
                 $stuComment,
@@ -495,6 +511,7 @@ class LabTakingCtrl
                 $user_id,
                 $completion,
                 $duration,
+                $listing,
                 $dst,
                 $name,
                 $stuComment,
@@ -515,5 +532,14 @@ class LabTakingCtrl
         $stop = $stop->add(new DateInterval("PT{$leewaySecs}S"));
         $stopDiff = $now->diff($stop);
         return $stopDiff->invert == 1; // is it in the past?
+    }
+
+    // from: https://stackoverflow.com/questions/9098678/
+    private function isZipFile($path)
+    {
+        $fh = fopen($path, 'r');
+        $bytes = fread($fh, 4);
+        fclose($fh);
+        return ('504b0304' === bin2hex($bytes));
     }
 }

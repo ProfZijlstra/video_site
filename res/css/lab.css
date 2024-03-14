@@ -274,6 +274,10 @@ body#doLab {
         img.show {
             display: block;
         }
+        pre {
+            max-width: 585px;
+            overflow-x: scroll;
+        }
     }
 
     div.urlContainer {

@@ -1,6 +1,7 @@
 *.mp4
 *.pdf
 *.jpg
+*.zip
 node_modules
 settings.php
 context.php

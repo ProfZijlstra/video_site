@@ -134,6 +134,8 @@
                                         <span class="check"><i class="fa-solid fa-check"></i></span>
                                         <?php if ($deliv['type'] == 'img') : ?>
                                             <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
+                                        <?php elseif ($deliv['type'] == "zip") : ?>
+                                            <pre class="listing"><?= $delivery['text'] ?></pre>
                                         <?php endif; ?>
                                     </div>
                                 <?php endif; ?>

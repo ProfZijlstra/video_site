@@ -185,6 +185,9 @@ window.addEventListener("load", () => {
                     const img = deliv.querySelector("img");
                     img.setAttribute("src", data.file);
                     img.classList.add("show");
+                } else if (type == "zip") {
+                    const listing = deliv.querySelector(".listing");
+                    listing.innerText = data.text;
                 }
             })
             .catch(error => {
