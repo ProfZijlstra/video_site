@@ -5,7 +5,7 @@ nav.tools {
 div.questionText, div.answerText {
     border: 1px solid grey;
     padding: 5px;
-    background-color: #FAFAFA;
+    background-color: var(--light-gray);
 }
 div.done {
     margin-top: 50px;

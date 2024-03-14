@@ -159,7 +159,7 @@ body#editLab {
         margin-bottom: 3px;
         padding: 3px 5px;
         border: 1px solid var(--border);
-        background-color: var(--white);
+        background-color: var(--light-gray);
         position: relative;
 
         i.fa-xmark {
@@ -198,7 +198,7 @@ body#doLab {
     div.description {
         border: 1px solid var(--border);
         padding: 5px 10px;
-        background-color: var(--white);
+        background-color: var(--light-gray);
     }
 
     p.delivInstr {
