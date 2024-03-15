@@ -72,9 +72,7 @@
                                 </span>
                             </div>
                             <div title="The lab total is <?= $labPoints ?>, this deliverable is <?= $deliv['points'] ?> of that total">
-                                Worth <br />
-                                <?= $deliv['points'] ?> of <span class="labPoints"><?= $labPoints ?></span><br />
-                                points
+                                Points: <?= $deliv['points'] ?>
                             </div>
                         </div>
                         <div class="deliv" data-id="<?= $delivery['id'] ?>">
