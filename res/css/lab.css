@@ -182,7 +182,7 @@ body#editLab {
     }
 }
 
-body#doLab {
+body#doLab, body#labResults {
     div#content div.about {
         label {
             display: inline-block;
@@ -195,10 +195,19 @@ body#doLab {
         margin-bottom: 0px;
     }
 
-    div.description {
+    div.description, div.txtDelivery, div.comment {
         border: 1px solid var(--border);
         padding: 5px 10px;
         background-color: var(--light-gray);
+        pre {
+            white-space: pre-wrap;
+        }
+    }
+    div.txtDelivery {
+        margin: 10px 0px;
+    }
+    div.comment {
+        margin-bottom: 10px;
     }
 
     p.delivInstr {

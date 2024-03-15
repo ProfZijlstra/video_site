@@ -45,7 +45,11 @@
             </h1>
 
             <div class="description">
-                <?= $parsedown->text($lab['desc']) ?>
+                <?php if ($lab['hasMarkDown']) : ?>
+                    <?= $parsedown->text($lab['desc']) ?>
+                <?php else : ?>
+                    <pre><?= $lab['desc'] ?></pre>
+                <?php endif; ?>
             </div>
 
             <div class="attachments">
@@ -63,7 +67,7 @@
                 <h2><?= count($deliverables) ?> Deliverable(s) </h2>
                 <p class="delivInstr">Deliverables with 0:00 hours or 0% complete are auto-graded to zero points</p>
                 <?php foreach ($deliverables as $deliv) : ?>
-                    <?php $delivery = $delivered[$deliv['id']] ?? [] ?>
+                    <?php $delivery = $deliveries[$deliv['id']] ?? [] ?>
                     <div class="dcontainer deliverables" data-id="<?= $deliv['id'] ?>" data-type="<?= $deliv['type'] ?>">
                         <div class="about">
                             <div class="meta" title="<?= $typeDesc[$deliv['type']] ?> to complete this deliverable">
@@ -94,7 +98,7 @@
                                     </select>
                                 </label>
 
-                                <label title="Approximately how far did you complete this deliverable" class="completion">Complete:
+                                <label title="Approximately how far you completed this deliverable" class="completion">Complete:
                                     <select class="completion">
                                         <?php for ($i = 0; $i <= 100; $i += 10) : ?>
                                             <option value="<?= $i ?>" <?= $delivery['completion'] == $i ? 'selected' : '' ?>>
@@ -106,7 +110,11 @@
                             </div>
 
                             <div class="description">
-                                <?= $parsedown->text($deliv['desc']) ?>
+                                <?php if ($deliv['hasParseDown']) : ?>
+                                    <?= $parsedown->text($deliv['desc']) ?>
+                                <?php else : ?>
+                                    <pre><?= $deliv['desc'] ?></pre>
+                                <?php endif; ?>
                             </div>
                             <?php if ($deliv['type'] == 'txt') : ?>
                                 <div class="textContainer">

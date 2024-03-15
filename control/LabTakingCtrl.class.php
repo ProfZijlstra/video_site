@@ -68,64 +68,76 @@ class LabTakingCtrl
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['lab'] = $lab;
 
+        // lab is not open yet
         if ($startDiff->invert === 0) { // start is in the future
             // show countdown page
             $VIEW_DATA['title'] = "Lab Countdown";
             $VIEW_DATA['start'] = $startDiff;
             return "lab/countdown.php";
-        } else if ($stopDiff->invert === 1) { // stop is in the past
-            // TODO: implement the lab closed / grade status page
-        } else { // the lab is open
-            if ($lab['type'] == "group") {
-                // get the group
-                $enroll = $this->enrollmentDao->getEnrollment($user_id, $course, $block);
-                $group = $enroll['group'] ?? null;
-                if (!$group && $enroll['auth'] == 'instructor') {
-                    $group = 'instructor';
-                }
-
-                if ($group == null) {
-                    $VIEW_DATA['title'] = "No Group";
-                    return "lab/nogroup.php";
-                }
-
-                // get the submission (or null)
-                $submission = $this->submissionDao->forGroup($group, $lab_id);
-            } else { // type == "individual"
-                $submission = $this->submissionDao->forUser($user_id, $lab_id);
-            }
-
-            $delivered = [];
-            if ($submission) {
-                $delivered = $this->deliveryDao->forSubmission($submission['id']);
-            }
-
-            $deliverables = $this->deliverableDao->forLab($lab_id);
-            $labPoints = 0;
-            foreach ($deliverables as $deliv) {
-                $labPoints += $deliv['points'];
-            }
-            $typeDesc = [
-                'txt' => 'Type text into the textbox',
-                'img' => 'Upload an image',
-                'pdf' => 'Upload a .pdf file',
-                'url' => 'Write a URL in the text field',
-                'zip' => 'Upload a .zip file',
-            ];
-
-            require_once("lib/Parsedown.php");
-            $VIEW_DATA['title'] = "Lab: " . $lab['name'];
-            $VIEW_DATA['stop'] = $stopDiff;
-            $VIEW_DATA['group'] = $group;
-            $VIEW_DATA['labPoints'] = $labPoints;
-            $VIEW_DATA["parsedown"] = new Parsedown();
-            $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
-            $VIEW_DATA['typeDesc'] = $typeDesc;
-            $VIEW_DATA['deliverables'] = $deliverables;
-            $VIEW_DATA['submission'] = $submission;
-            $VIEW_DATA['delivered'] = $delivered;
-            return "lab/doLab.php";
         }
+
+        if ($lab['type'] == "group") {
+            // get the group
+            $enroll = $this->enrollmentDao->getEnrollment($user_id, $course, $block);
+            $group = $enroll['group'] ?? null;
+            if (!$group && $enroll['auth'] == 'instructor') {
+                $group = 'instructor';
+            }
+
+            if ($group == null) {
+                $VIEW_DATA['title'] = "No Group";
+                return "lab/nogroup.php";
+            }
+
+            // get the submission (or null)
+            $submission = $this->submissionDao->forGroup($group, $lab_id);
+        } else { // type == "individual"
+            $submission = $this->submissionDao->forUser($user_id, $lab_id);
+        }
+
+        $deliveries = [];
+        if ($submission) {
+            $deliveries = $this->deliveryDao->forSubmission($submission['id']);
+        }
+
+        $deliverables = $this->deliverableDao->forLab($lab_id);
+        $labPoints = 0;
+        foreach ($deliverables as $deliv) {
+            $labPoints += $deliv['points'];
+        }
+        $typeDesc = [
+            'txt' => 'Type text into the textbox',
+            'img' => 'Upload an image',
+            'pdf' => 'Upload a .pdf file',
+            'url' => 'Write a URL in the text field',
+            'zip' => 'Upload a .zip file',
+        ];
+
+        require_once("lib/Parsedown.php");
+        $VIEW_DATA['stop'] = $stopDiff;
+        $VIEW_DATA['group'] = $group;
+        $VIEW_DATA['labPoints'] = $labPoints;
+        $VIEW_DATA["parsedown"] = new Parsedown();
+        $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
+        $VIEW_DATA['typeDesc'] = $typeDesc;
+        $VIEW_DATA['deliverables'] = $deliverables;
+        $VIEW_DATA['submission'] = $submission;
+        $VIEW_DATA['deliveries'] = $deliveries;
+
+        // lab is done / over
+        if ($stopDiff->invert === 1) { // stop is in the past
+            $received = 0;
+            foreach ($deliveries as $delivery) {
+                $received += $delivery['points'];
+            }
+            $VIEW_DATA['received'] = $received;
+            $VIEW_DATA['title'] = "Lab Results";
+            return "lab/results.php";
+        }
+
+        // lab is open
+        $VIEW_DATA['title'] = "Lab: " . $lab['name'];
+        return "lab/doLab.php";
     }
 
     /**
