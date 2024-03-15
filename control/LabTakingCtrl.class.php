@@ -108,9 +108,9 @@ class LabTakingCtrl
             $typeDesc = [
                 'txt' => 'Type text into the textbox',
                 'img' => 'Upload an image',
-                'pdf' => 'Upload a pdf file',
+                'pdf' => 'Upload a .pdf file',
                 'url' => 'Write a URL in the text field',
-                'zip' => 'Upload a code zip file',
+                'zip' => 'Upload a .zip file',
             ];
 
             require_once("lib/Parsedown.php");
@@ -425,6 +425,9 @@ class LabTakingCtrl
         if ($this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
+        if ($type == 'pdf' && !$this->isPdfFile($_FILES["file"]['tmp_name'])) {
+            return ["error" => "File does not seem to be a .pdf file"];
+        }
         if ($type == 'zip' && !$this->isZipFile($_FILES["file"]['tmp_name'])) {
             return ["error" => "File does not seem to be a .zip file"];
         }
@@ -540,6 +543,15 @@ class LabTakingCtrl
         $fh = fopen($path, 'r');
         $bytes = fread($fh, 4);
         fclose($fh);
+        // ZIP file magic number is PK\003\004
         return ('504b0304' === bin2hex($bytes));
+    }
+
+    private function isPdfFile($path)
+    {
+        $fh = fopen($path, 'r');
+        $bytes = fread($fh, 4);
+        fclose($fh);
+        return ($bytes === "%PDF");
     }
 }
