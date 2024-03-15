@@ -105,7 +105,8 @@ div.question textarea {
     max-width: 600px;
 }
 div.question pre {
-    max-width: 550px;
+    max-width: 585px;
+    white-space: pre-wrap;
 }
 div.question img {
     width: 585px;
