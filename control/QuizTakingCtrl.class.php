@@ -63,25 +63,25 @@ class QuizTakingCtrl
             $VIEW_DATA['title'] = "Quiz Countdown";
             $VIEW_DATA['start'] = $startDiff;
             return "quiz/countdown.php";
-        } else if ($this->quizEnded($quiz_id)) {
-            // show quiz taken status page
+        }
+
+        $VIEW_DATA["parsedown"] = new Parsedown();
+        $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
+        $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
+
+        if ($this->quizEnded($quiz_id)) {
+            // show quiz taken / results page
             $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
-            $VIEW_DATA["parsedown"] = new Parsedown();
-            $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
-            $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
             $VIEW_DATA['possible'] = $this->sumPoints($VIEW_DATA['questions']);
             $VIEW_DATA['received'] = $this->sumPoints($VIEW_DATA['answers']);
             return "quiz/results.php";
-        } else { // the quiz is open
-            $this->quizEventDao->add($quiz_id, $user_id, "start");
-            // show the actual quiz page
-            $VIEW_DATA['title'] = "Quiz: " . $quiz['name'];
-            $VIEW_DATA["parsedown"] = new Parsedown();
-            $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
-            $VIEW_DATA['stop'] = $stopDiff;
-            $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
-            return "quiz/doQuiz.php";
         }
+
+        // show the actual quiz page
+        $this->quizEventDao->add($quiz_id, $user_id, "start");
+        $VIEW_DATA['title'] = "Quiz: " . $quiz['name'];
+        $VIEW_DATA['stop'] = $stopDiff;
+        return "quiz/doQuiz.php";
     }
 
     /**
