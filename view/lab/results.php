@@ -133,13 +133,15 @@
                             <?php endif; ?>
                             <?php if ($delivery['gradeComment']) : ?>
                                 <div>Grading Comment:</div>
-                                <?php if ($delivery['gradeCmntHasMd']) : ?>
-                                    <div class="description">
-                                        <?= $parsedown->text($delivery['gradeComment']) ?>
-                                    </div>
-                                <?php else : ?>
-                                    <pre><?= $delivery['gradeComment'] ?></pre>
-                                <?php endif; ?>
+                                <div class="comment">
+                                    <?php if ($delivery['gradeCmntHasMd']) : ?>
+                                        <div class="description">
+                                            <?= $parsedown->text($delivery['gradeComment']) ?>
+                                        </div>
+                                    <?php else : ?>
+                                        <pre><?= $delivery['gradeComment'] ?></pre>
+                                    <?php endif; ?>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
