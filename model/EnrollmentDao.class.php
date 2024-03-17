@@ -20,7 +20,8 @@ class EnrollmentDao
     public function getEnrollmentForOffering($offering_id)
     {
         $stmt = $this->db->prepare("SELECT u.id, u.knownAs, u.studentID, 
-                        u.firstname, u.lastname, u.email, u.teamsName, e.auth, e.id AS eid
+            u.firstname, u.lastname, u.email, u.teamsName, 
+            e.auth, e.group, e.id AS eid
             FROM enrollment e JOIN user u ON e.user_id = u.id 
             WHERE offering_id = :offering_id
                         ORDER BY u.firstname");

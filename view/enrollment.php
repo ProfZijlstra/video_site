@@ -74,203 +74,65 @@
                 <p class="error"><?= $msg ?></p>
             <?php endif; ?>
 
-            <?php if (!$instructors) : ?>
-                <h2>No Instructor(s) Yet</h2>
-            <?php else : ?>
-                <h2><?= count($instructors) ?> Instructor(s)</h2>
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>KnowAs</th>
-                        <th>Given</th>
-                        <th>Family</th>
-                        <th>Email</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <?php if ($offering['usesFlowcharts']) : ?>
-                            <th></th>
-                        <?php endif; ?>
-                    </tr>
-                    <?php foreach ($instructors as $instructor) : ?>
+            <?php function showList($type, $list, $showNoneMsg = false)
+            { ?>
+                <?php if ($showNoneMsg && !$list) : ?>
+                    <h2>No <?= $type ?>(s) Yet</h2>
+                <?php else : ?>
+                    <h2><?= count($list) ?> <?= $type ?>(s)</h2>
+                    <table>
                         <tr>
-                            <td class="center studentID"><?= $instructor["studentID"] ?></td>
-                            <td class="name"><?= $instructor["knownAs"] ?></td>
-                            <td><?= $instructor["firstname"] ?></td>
-                            <td><?= $instructor["lastname"] ?></td>
-                            <td><?= $instructor["email"] ?></td>
-                            <td class="center">
-                                <a title="Edit Student" href="../../user/<?= $instructor["id"] ?>">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </td>
-                            <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" data-uid="<?= $instructor['id'] ?>" data-auth="instructor" data-eid="<?= $instructor['eid'] ?>"></i>
-                            </td>
-                            <td class="center" title="Video Views">
-                                <a href="W1D1/views/<?= $instructor['id'] ?>"><i class="fa-solid fa-eye"></i></a>
-                            </td>
-                            <?php if ($offering['usesFlowcharts']) : ?>
-                                <td class="center" title="Flowcharts">
-                                    <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $instructor["id"] ?>">
-                                        <i class="fa-regular fa-chart-bar"></i>
-                                    </a>
-                                </td>
-                            <?php endif; ?>
-
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
-
-            <?php if ($assistants) : ?>
-                <h2><?= count($assistants) ?> Assistant(s)</h2>
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>KnowAs</th>
-                        <th>Given</th>
-                        <th>Family</th>
-                        <th>Email</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <?php if ($offering['usesFlowcharts']) : ?>
+                            <th>ID</th>
+                            <th>KnowAs</th>
+                            <th>Family Name</th>
+                            <th>Email</th>
+                            <th>Group</th>
                             <th></th>
-                        <?php endif; ?>
-                    </tr>
-                    <?php foreach ($assistants as $assistant) : ?>
-                        <tr>
-                            <td class="center studentID"><?= $assistant["studentID"] ?></td>
-                            <td class="name"><?= $assistant["knownAs"] ?></td>
-                            <td><?= $assistant["firstname"] ?></td>
-                            <td><?= $assistant["lastname"] ?></td>
-                            <td><?= $assistant["email"] ?></td>
-                            <td class="center">
-                                <a title="Edit Student" href="../../user/<?= $assistant["id"] ?>">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </td>
-                            <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" data-uid="<?= $assistant['id'] ?>" data-auth="assistant" data-eid="<?= $assistant['eid'] ?>"></i>
-                            </td>
-                            <td class="center" title="Video Views">
-                                <a href="W1D1/views/<?= $assistant['id'] ?>"><i class="fa-solid fa-eye"></i></a>
-                            </td>
-
-                            <?php if ($offering['usesFlowcharts']) : ?>
-                                <td class="center" title="Flowcharts">
-                                    <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $assistant["id"] ?>">
-                                        <i class="fa-regular fa-chart-bar"></i>
-                                    </a>
-                                </td>
-                            <?php endif; ?>
-
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
-
-
-
-            <?php if (!$students) : ?>
-                <h2>No Student(s) Yet</h2>
-            <?php else : ?>
-                <h2><?= count($students) ?> Student(s)</h2>
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>KnowAs</th>
-                        <th>Given</th>
-                        <th>Family</th>
-                        <th>Email</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <?php if ($offering['usesFlowcharts']) : ?>
                             <th></th>
-                        <?php endif; ?>
-                    </tr>
-                    <?php foreach ($students as $student) : ?>
-                        <tr>
-                            <td class="center studentID">
-                                <?= $student["studentID"] ?>
-                            </td>
-                            <td class="name"><?= $student["knownAs"] ?></td>
-                            <td><?= $student["firstname"] ?></td>
-                            <td><?= $student["lastname"] ?></td>
-                            <td><?= $student["email"] ?></td>
-                            <td class="center">
-                                <a title="Edit Student" href="../../user/<?= $student["id"] ?>">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </td>
-                            <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" data-uid="<?= $student['id'] ?>" data-auth="student" data-eid="<?= $student['eid'] ?>"></i>
-                            </td>
-                            <td class="center" title="Video Views">
-                                <a href="W1D1/views/<?= $student['id'] ?>"><i class="fa-solid fa-eye"></i></a>
-                            </td>
-                            <?php if ($offering['usesFlowcharts']) : ?>
-                                <td class="center" title="Flowcharts">
-                                    <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $student["id"] ?>">
-                                        <i class="fa-regular fa-chart-bar"></i>
-                                    </a>
-                                </td>
-                            <?php endif; ?>
-
                         </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
-
-            <?php if ($observers) : ?>
-                <h2><?= count($observers) ?> Observer(s)</h2>
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>KnowAs</th>
-                        <th>Given</th>
-                        <th>Family</th>
-                        <th>Email</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <?php if ($offering['usesFlowcharts']) : ?>
-                            <th></th>
-                        <?php endif; ?>
-                    </tr>
-                    <?php foreach ($observers as $student) : ?>
-                        <?php if ($student['auth'] == 'observer') : ?>
+                        <?php foreach ($list as $person) : ?>
                             <tr>
                                 <td class="center studentID">
-                                    <?= $student["studentID"] ?>
-                                </td>
-                                <td class="name"><?= $student["knownAs"] ?></td>
-                                <td><?= $student["firstname"] ?></td>
-                                <td><?= $student["lastname"] ?></td>
-                                <td><?= $student["email"] ?></td>
-                                <td class="center">
-                                    <a title="Edit Student" href="../../user/<?= $student["id"] ?>">
-                                        <i class="fa-solid fa-pencil"></i>
+                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
+                                        <?= $person["studentID"] ?>
                                     </a>
                                 </td>
-                                <td class="center"><i class="fa-solid fa-gear" title="Configure Enrollment" data-uid="<?= $student['id'] ?>" data-auth="observer" data-eid="<?= $student['eid'] ?>"></i>
+                                <td class="name">
+                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
+                                        <?= $person["knownAs"] ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
+                                        <?= $person["lastname"] ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
+                                        <?= $person["email"] ?>
+                                    </a>
+                                </td>
+                                <td class="center group">
+                                    <?= $person["group"] ?>
+                                </td>
+                                <td class="center">
+                                    <i class="fa-solid fa-gear config" title="Configure Enrollment" data-uid="<?= $person['id'] ?>" data-auth="<?= $person['auth'] ?>" data-eid="<?= $person['eid'] ?>"></i>
                                 </td>
                                 <td class="center" title="Video Views">
-                                    <a href="W1D1/views/<?= $student['id'] ?>"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="W1D1/views/<?= $person['id'] ?>">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
                                 </td>
-                                <?php if ($offering['usesFlowcharts']) : ?>
-                                    <td class="center" title="Flowcharts">
-                                        <a title="Flowcharts" target="_blank" href="/flowcharts/projects/<?= $student["id"] ?>">
-                                            <i class="fa-regular fa-chart-bar"></i>
-                                        </a>
-                                    </td>
-                                <?php endif; ?>
-
                             </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; // observers 
+                        <?php endforeach; ?>
+                    </table>
+                <?php endif; ?>
+            <?php } // end showList 
             ?>
+            <?php showList("Instructor", $instructors, true); ?>
+            <?php showList("Assistant", $assistants, false); ?>
+            <?php showList("Student", $students, true); ?>
+            <?php showList("Observer", $observers, false); ?>
 
         </div>
     </main>
@@ -348,6 +210,8 @@
                         <option value="instructor">instructor</option>
                     </select>
                 </div>
+                <label>Group:</label>
+                <input name="group" type="text" id="config_group" />
                 <div class="btn">
                     <button type="submit">Update</button>
                 </div>

@@ -7,18 +7,29 @@ window.addEventListener("load", () => {
         document.getElementById("remove_eid").value = eid;
         const tds = this.parentNode.parentNode.querySelectorAll("td");
         const known = tds[1].innerText;
-        const last = tds[3].innerText;
+        const last = tds[2].innerText;
         document.getElementById("configure_for").innerText = `For ${known} ${last}`;
         const auth = this.dataset.auth;
         document.getElementById("config_auth").value = auth;
+        const group = tds[4].innerText;
+        document.getElementById("config_group").value = group;
 
         overlay.classList.add("visible");
         document.getElementById("configure_modal").classList.remove("hide");
     }
-    const configs = document.querySelectorAll(".fa-gear");
+    const configs = document.querySelectorAll("i.config");
     for (const config of configs) {
         config.addEventListener('click', configure);
     }
+    function goToConfig() {
+        this.nextElementSibling.querySelector("i.config").click();
+    }
+    const groups = document.querySelectorAll("td.group");
+    for (const group of groups) {
+        group.addEventListener('click', goToConfig);
+    }
+
+
     document.getElementById('remove_icon').onclick = function() {
         if (confirm("Remove this enrollment?")) {
             document.forms["removeStudent"].submit();        }
