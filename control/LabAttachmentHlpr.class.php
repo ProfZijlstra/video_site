@@ -26,11 +26,41 @@ class LabAttachmentHlpr
 
         $curr = $_FILES[$key]['tmp_name'];
         $name = $_FILES[$key]['name'];
-        $dst = "res/{$course}/{$block}/lab/{$lab_id}/{$name}";
-        $this->ensureDirCreated("res/{$course}/{$block}/lab/{$lab_id}");
+        $dst = "res/{$course}/{$block}/lab/{$lab_id}/";
+        $zip = false;
+        if ($this->isZipFile($curr)) {
+            $zip = true;
+            $dst .= "upload/";
+        } else {
+            $dst .= "attachment/";
+        }
+        $this->ensureDirCreated($dst);
+        $dst .= $name;
         move_uploaded_file($curr, $dst);
 
-        return ["file" => $dst, "name" => $name, "lab_id" => $lab_id];
+        return ["file" => $dst, "name" => $name, "lab_id" => $lab_id, "zip" => $zip];
+    }
+
+    public function extract($attachment)
+    {
+        global $URI_PARAMS;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $lab_id = $attachment['lab_id'];
+        $aid = $attachment['id'];
+        $dst = "res/{$course}/{$block}/lab/{$lab_id}/unzip/{$aid}/";
+        $this->ensureDirCreated($dst);
+        $zip = new ZipArchive();
+        if ($zip->open($attachment['file']) === TRUE) {
+            $zip->extractTo($dst);
+            $zip->close();
+        } else {
+            throw new Exception("Failed to extract zip file");
+        }
+
+        // NOTE: when downloading make a temp dir as shown:
+        // https://stackoverflow.com/a/30010928/6933102
     }
 
     private function ensureDirCreated($dir)
@@ -46,5 +76,23 @@ class LabAttachmentHlpr
             $file = $attachment['file'];
             unlink($file);
         }
+    }
+
+    // from: https://stackoverflow.com/questions/9098678/
+    public function isZipFile($path)
+    {
+        $fh = fopen($path, 'r');
+        $bytes = fread($fh, 4);
+        fclose($fh);
+        // ZIP file magic number is PK\003\004
+        return ('504b0304' === bin2hex($bytes));
+    }
+
+    public function isPdfFile($path)
+    {
+        $fh = fopen($path, 'r');
+        $bytes = fread($fh, 4);
+        fclose($fh);
+        return ($bytes === "%PDF");
     }
 }

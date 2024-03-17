@@ -191,6 +191,9 @@ class LabAdminCtrl
             $res = $this->attachmentHlpr->process('attachment', $id);
             $aid = $this->attachmentDao->add($id, $res['file'], $res['name']);
             $res['id'] = $aid;
+            if ($res['zip']) {
+                $this->attachmentHlpr->extract($res);
+            }
         } catch (Exception $e) {
             error_log($e);
             http_response_code(500);

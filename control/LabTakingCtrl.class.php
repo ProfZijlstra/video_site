@@ -35,6 +35,9 @@ class LabTakingCtrl
     #[Inject('ImageHlpr')]
     public $imageHlpr;
 
+    #[Inject('LabAttachmentHlpr')]
+    public $labAttachmentHlpr;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -437,10 +440,10 @@ class LabTakingCtrl
         if ($this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
-        if ($type == 'pdf' && !$this->isPdfFile($_FILES["file"]['tmp_name'])) {
+        if ($type == 'pdf' && !$this->labAttachmentHlpr->isPdfFile($_FILES["file"]['tmp_name'])) {
             return ["error" => "File does not seem to be a .pdf file"];
         }
-        if ($type == 'zip' && !$this->isZipFile($_FILES["file"]['tmp_name'])) {
+        if ($type == 'zip' && !$this->labAttachmentHlpr->isZipFile($_FILES["file"]['tmp_name'])) {
             return ["error" => "File does not seem to be a .zip file"];
         }
 
@@ -547,23 +550,5 @@ class LabTakingCtrl
         $stop = $stop->add(new DateInterval("PT{$leewaySecs}S"));
         $stopDiff = $now->diff($stop);
         return $stopDiff->invert == 1; // is it in the past?
-    }
-
-    // from: https://stackoverflow.com/questions/9098678/
-    private function isZipFile($path)
-    {
-        $fh = fopen($path, 'r');
-        $bytes = fread($fh, 4);
-        fclose($fh);
-        // ZIP file magic number is PK\003\004
-        return ('504b0304' === bin2hex($bytes));
-    }
-
-    private function isPdfFile($path)
-    {
-        $fh = fopen($path, 'r');
-        $bytes = fread($fh, 4);
-        fclose($fh);
-        return ($bytes === "%PDF");
     }
 }
