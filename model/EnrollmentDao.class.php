@@ -108,14 +108,18 @@ class EnrollmentDao
         );
     }
 
-    public function update($user_id, $offering_id, $auth)
+    public function update($user_id, $offering_id, $auth, $group)
     {
+        if (!$group) {
+            $group = null;
+        }
         $stmt = $this->db->prepare("UPDATE enrollment 
-                                SET auth = :auth
+                                SET auth = :auth, `group` = :group
                                 WHERE user_id = :user_id 
                                 AND offering_id = :offering_id");
         $stmt->execute([
             "auth" => $auth,
+            "group" => $group,
             "user_id" => $user_id,
             "offering_id" => $offering_id
         ]);

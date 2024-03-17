@@ -238,8 +238,9 @@ EOD;
         $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
         $user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
         $auth = filter_input(INPUT_POST, "auth");
+        $group = filter_input(INPUT_POST, "group");
 
-        $this->enrollmentDao->update($user_id, $offering_id, $auth);
+        $this->enrollmentDao->update($user_id, $offering_id, $auth, $group);
         return "Location: enrolled";
     }
 
