@@ -189,11 +189,14 @@ class LabAdminCtrl
 
         try {
             $res = $this->attachmentHlpr->process('attachment', $id);
-            $aid = $this->attachmentDao->add($id, $res['file'], $res['name']);
-            $res['id'] = $aid;
+            $type = "lab simple";
             if ($res['zip']) {
-                $this->attachmentHlpr->extract($res);
+                $type = "lab zip";
             }
+            $file = $res['file'];
+            $name = $res['name'];
+            $aid = $this->attachmentDao->add($type, $id, null, $file, $name);
+            $res['id'] = $aid;
         } catch (Exception $e) {
             error_log($e);
             http_response_code(500);

@@ -43,30 +43,21 @@ class LabAttachmentHlpr
 
     public function extract($attachment)
     {
-        global $URI_PARAMS;
-
-        $course = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
-        $lab_id = $attachment['lab_id'];
         $aid = $attachment['id'];
-        $dst = "res/{$course}/{$block}/lab/{$lab_id}/unzip/{$aid}/";
-        $this->ensureDirCreated($dst);
+        $dir = sys_get_temp_dir();
+        $dir .= "/lmz/unzip/{$aid}/";
+        if (file_exists($dir) && is_dir($dir)) {
+            print("No need to unzip\n");
+            return; // already extracted
+        }
+
+        $this->ensureDirCreated($dir);
         $zip = new ZipArchive();
         if ($zip->open($attachment['file']) === TRUE) {
-            $zip->extractTo($dst);
+            $zip->extractTo($dir);
             $zip->close();
         } else {
             throw new Exception("Failed to extract zip file");
-        }
-
-        // NOTE: when downloading make a temp dir as shown:
-        // https://stackoverflow.com/a/30010928/6933102
-    }
-
-    private function ensureDirCreated($dir)
-    {
-        if (!file_exists($dir) && !is_dir($dir)) {
-            mkdir($dir, 0777, true);
         }
     }
 
@@ -75,6 +66,14 @@ class LabAttachmentHlpr
         if ($attachment) {
             $file = $attachment['file'];
             unlink($file);
+            if (
+                $attachment['type'] === "lab zip"
+                || $attachment['type'] === "deliv zip"
+            ) {
+                $dir = dirname(dirname($file));
+                $dir .= "download/{$attachment['id']}/";
+                shell_exec("rm -rf {$dir}");
+            }
         }
     }
 
@@ -94,5 +93,12 @@ class LabAttachmentHlpr
         $bytes = fread($fh, 4);
         fclose($fh);
         return ($bytes === "%PDF");
+    }
+
+    public function ensureDirCreated($dir)
+    {
+        if (!file_exists($dir) && !is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
     }
 }

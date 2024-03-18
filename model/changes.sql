@@ -490,8 +490,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `manalabs`.`attachment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `lab_id` BIGINT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL DEFAULT "lab simple",
+  `lab_id` BIGINT UNSIGNED DEFAULT NULL,
+  `deliverable_id` BIGINT UNSIGNED DEFAULT NULL,
   `file` VARCHAR(255) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_attachment_lab1_idx` (`lab_id` ASC) VISIBLE,
   CONSTRAINT `fk_attachment_lab1`

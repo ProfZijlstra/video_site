@@ -143,6 +143,84 @@ class LabTakingCtrl
         return "lab/doLab.php";
     }
 
+    #[Get(uri: "/(\d+)/download/(\d+)$", sec: "student")]
+    public function downloadFile()
+    {
+        global $URI_PARAMS;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $lab_id = $URI_PARAMS[3];
+        $attachment_id = $URI_PARAMS[4];
+
+        $lab = $this->labDao->byId($lab_id);
+        $attachment = $this->attachmentDao->byId($attachment_id);
+        $file = "res/{$course}/{$block}/lab/{$lab_id}/download/{$attachment_id}/";
+
+        // determine the donwload_id
+        $user_id = $_SESSION['user']['id'];
+        $download_id = $user_id;
+        if ($lab['type'] == "group") {
+            $group = $this->enrollmentDao->getGroup($user_id, $course, $block);
+            $download_id = $group;
+        }
+
+        $file .= "{$download_id}/{$attachment['name']}";
+        if (!file_exists($file)) {
+            // copy the unzipped files into a tmp dir
+            $aid = $attachment['id'];
+            $src = sys_get_temp_dir();
+            $src .= "/lmz/unzip/{$aid}";
+            if (!file_exists($src) || !is_dir($src)) {
+                $this->labAttachmentHlpr->extract($attachment);
+            }
+
+            $dst = sys_get_temp_dir();
+            $dst .= "/lmz/download/{$aid}/";
+            $this->labAttachmentHlpr->ensureDirCreated($dst);
+            $dst .= "{$download_id}";
+            $cmd = "cp -r {$src} {$dst}";
+            shell_exec($cmd);
+
+            // TODO: perform zip_actions as specified in the DB
+            // TODO: cerate a download event in the DB
+
+            // based on: https://stackoverflow.com/a/4914807/6933102
+            $this->labAttachmentHlpr->ensureDirCreated(dirname($file));
+            $zip = new ZipArchive();
+            $zip->open($file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dst),
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            foreach ($files as $f) {
+                $filePath = $f->getRealPath();
+                $relativePath = substr($filePath, strlen($dst));
+                if (!$f->isDir()) {
+                    $zip->addFile($filePath, $relativePath);
+                } else {
+                    $zip->addEmptyDir($relativePath);
+                }
+            }
+
+            // closing creates the zip file
+            $zip->close();
+
+            // delete the tmp dir
+            shell_exec("rm -rf {$dst}");
+        }
+
+        // based on: https://stackoverflow.com/a/2882523/6933102
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename=' . basename($file));
+        header('Content-Length: ' . filesize($file));
+        ob_clean();
+        flush();
+        readfile($file);
+        exit();
+    }
+
     /**
      * Expects AJAX
      */

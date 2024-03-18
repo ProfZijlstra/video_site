@@ -55,10 +55,14 @@
             <div class="attachments">
                 <?php foreach ($attachments as $attachment) : ?>
                     <div class="attachment">
-                        <a target="_blank" href="<?= $attachment['file'] ?>">
-                            <i class="fa-solid fa-paperclip"></i>
-                            <?= $attachment['name'] ?>
-                        </a>
+                        <?php if ($attachment['type'] == "lab zip") : ?>
+                            <a target="_blank" href="<?= $lab['id'] . '/download/' . $attachment['id'] ?>">
+                            <?php else : ?>
+                                <a target="_blank" href="<?= $attachment['file'] ?>">
+                                <?php endif; ?>
+                                <i class="fa-solid fa-paperclip"></i>
+                                <?= $attachment['name'] ?>
+                                </a>
                     </div>
                 <?php endforeach; ?>
             </div>
