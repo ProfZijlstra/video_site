@@ -83,4 +83,32 @@ class DeliverableDao
             "hasMarkDown" => $hasMarkDown
         ));
     }
+
+    public function setAnswerRelease($id, $lab_id, $release)
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE deliverable
+            SET ansRelease = :release
+            WHERE id = :id AND lab_id = :lab_id"
+        );
+        $stmt->execute(array(
+            "id" => $id,
+            "lab_id" => $lab_id,
+            "release" => $release
+        ));
+    }
+
+    public function setFromAttachment($id, $lab_id, $attachment_id)
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE deliverable
+            SET fromAttach_id = :attachment_id
+            WHERE id = :id AND lab_id = :lab_id"
+        );
+        $stmt->execute(array(
+            "id" => $id,
+            "lab_id" => $lab_id,
+            "attachment_id" => $attachment_id
+        ));
+    }
 }

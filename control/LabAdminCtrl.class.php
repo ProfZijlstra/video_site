@@ -292,6 +292,6 @@ class LabAdminCtrl
         $hasMarkDown = $_PUT["hasMarkDown"];
 
 
-        $this->deliverableDao->update($id, $lab_id, $points, $desc, $hasMarkDown);
+        $this->deliverableDao->update($id, $lab_id, $points, $desc, $hasMarkDown, null, null);
     }
 }

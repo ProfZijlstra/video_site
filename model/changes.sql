@@ -438,6 +438,8 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`deliverable` (
   `desc` TEXT NOT NULL DEFAULT "",
   `hasMarkDown` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `points` TINYINT UNSIGNED NOT NULL DEFAULT 10, 
+  `ansRelease` DATETIME NULL,
+  `fromAttach_id` BIGINT UNSIGNED NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_deliverable_lab1_idx` (`lab_id` ASC) VISIBLE,
   CONSTRAINT `fk_deliverable_lab1`
@@ -500,6 +502,25 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`attachment` (
   CONSTRAINT `fk_attachment_lab1`
     FOREIGN KEY (`lab_id`)
     REFERENCES `manalabs`.`lab` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `manalabs`.`download`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`download` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `attachment_id` BIGINT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
+  `group` VARCHAR(45) NULL,
+  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_download_attachment_idx` (`attachment_id` ASC) VISIBLE,
+  CONSTRAINT `fk_donwload_attachment1`
+    FOREIGN KEY (`attachment_id`)
+    REFERENCES `manalabs`.`attachment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

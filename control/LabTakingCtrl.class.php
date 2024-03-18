@@ -29,6 +29,9 @@ class LabTakingCtrl
     #[Inject('AttachmentDao')]
     public $attachmentDao;
 
+    #[Inject('DownloadDao')]
+    public $downloadDao;
+
     #[Inject('MarkdownHlpr')]
     public $markdownHlpr;
 
@@ -159,6 +162,7 @@ class LabTakingCtrl
 
         // determine the donwload_id
         $user_id = $_SESSION['user']['id'];
+        $group = null;
         $download_id = $user_id;
         if ($lab['type'] == "group") {
             $group = $this->enrollmentDao->getGroup($user_id, $course, $block);
@@ -179,11 +183,12 @@ class LabTakingCtrl
             $dst .= "/lmz/download/{$aid}/";
             $this->labAttachmentHlpr->ensureDirCreated($dst);
             $dst .= "{$download_id}";
-            $cmd = "cp -r {$src} {$dst}";
-            shell_exec($cmd);
+            shell_exec("cp -r {$src} {$dst}");
 
             // TODO: perform zip_actions as specified in the DB
-            // TODO: cerate a download event in the DB
+
+            // cerate a download event in the DB
+            $this->downloadDao->add($aid, $user_id, $group);
 
             // based on: https://stackoverflow.com/a/4914807/6933102
             $this->labAttachmentHlpr->ensureDirCreated(dirname($file));
@@ -218,7 +223,6 @@ class LabTakingCtrl
         ob_clean();
         flush();
         readfile($file);
-        exit();
     }
 
     /**
