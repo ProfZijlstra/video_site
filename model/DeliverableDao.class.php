@@ -25,7 +25,7 @@ class DeliverableDao
     {
         $stmt = $this->db->prepare(
             "INSERT INTO deliverable
-            VALUES(NULL, :lab_id, :type, :seq, '', 0, 0)"
+            VALUES(NULL, :lab_id, :type, :seq, '', 0, 0, NULL, NULL)"
         );
         $stmt->execute(array(
             "lab_id" => $lab_id,
@@ -102,7 +102,7 @@ class DeliverableDao
     {
         $stmt = $this->db->prepare(
             "UPDATE deliverable
-            SET fromAttach_id = :attachment_id
+            SET attachment_id = :attachment_id
             WHERE id = :id AND lab_id = :lab_id"
         );
         $stmt->execute(array(

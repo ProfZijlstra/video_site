@@ -439,7 +439,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`deliverable` (
   `hasMarkDown` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `points` TINYINT UNSIGNED NOT NULL DEFAULT 10, 
   `ansRelease` DATETIME NULL,
-  `fromAttach_id` BIGINT UNSIGNED NULL,
+  `zipAttachment_id` BIGINT UNSIGNED NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_deliverable_lab1_idx` (`lab_id` ASC) VISIBLE,
   CONSTRAINT `fk_deliverable_lab1`

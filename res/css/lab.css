@@ -170,6 +170,17 @@ body#editLab {
         }
     }
 
+    div.delivSrc {
+        margin: 10px 0px;
+        label {
+            display: inline-block;
+            width: 79px;
+        }
+        select {
+            width: 505px;
+        }
+    }
+
     #addDelivDialog {
         label {
             margin-top: 10px;

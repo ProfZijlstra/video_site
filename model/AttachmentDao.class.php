@@ -56,6 +56,22 @@ class AttachmentDao
         return $stmt->fetchAll();
     }
 
+    public function forOffering($offering_id, $type)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT a.* FROM attachment a
+            JOIN lab l ON a.lab_id = l.id
+            JOIN day d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            AND a.type = :type"
+        );
+        $stmt->execute(array(
+            "offering_id" => $offering_id,
+            "type" => $type
+        ));
+        return $stmt->fetchAll();
+    }
+
     public function delete($id, $lab_id)
     {
         $stmt = $this->db->prepare(
@@ -67,15 +83,5 @@ class AttachmentDao
             "id" => $id,
             "lab_id" => $lab_id
         ));
-    }
-
-    public function getById($id)
-    {
-        $stmt = $this->db->prepare(
-            "SELECT * FROM attachment
-            WHERE id = :id"
-        );
-        $stmt->execute(array("id" => $id));
-        return $stmt->fetch();
     }
 }

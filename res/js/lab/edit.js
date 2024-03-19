@@ -84,6 +84,8 @@ window.addEventListener("load", () => {
                             alert(data.error);
                         } else {
                             attachment.remove();
+
+                            // TODO: remove the entry from each labzip dropdown on the page
                         }
                         spinner.classList.remove('rotate');
                         const attachments = document.getElementById("attachments");
@@ -125,6 +127,10 @@ window.addEventListener("load", () => {
                 const attachments = document.getElementById("attachments");
                 attachments.appendChild(div);
                 spinner.classList.remove('rotate');
+
+                // TODO: check if this is a zip attachment
+                // if it is, get the name and id 
+                // and add an entry to each labzip dropdown on the page
             })
             .catch((error) => {
                 spinner.classList.remove('rotate');
@@ -203,6 +209,10 @@ window.addEventListener("load", () => {
         const points = dcontainer.querySelector(".points").value;
         const desc = encodeURIComponent(MARKDOWN.ceasarShift(dcontainer.querySelector(".desc").value));
         const hasMarkDown = dcontainer.querySelector("i.deliverable").classList.contains("active") ? 1 : 0;
+
+        // TODO: if this is a zip attachment, also send the zipAttachment_id
+        // or should we make a separate call to update the zipAttachment_id?
+
         fetch(`deliverable/${id}`, {
             method: "PUT",
             body: `desc=${desc}&points=${points}&hasMarkDown=${hasMarkDown}`,

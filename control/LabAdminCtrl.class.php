@@ -103,6 +103,7 @@ class LabAdminCtrl
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
         }
+        $labzips = $this->attachmentDao->forOffering($offering['id'], "lab zip");
 
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
@@ -111,6 +112,7 @@ class LabAdminCtrl
         $VIEW_DATA['labPoints'] = $labPoints;
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
+        $VIEW_DATA['labzips'] = $labzips;
         $VIEW_DATA['title'] = "Edit Lab";
 
         return "lab/edit.php";
@@ -220,7 +222,7 @@ class LabAdminCtrl
         $id = $URI_PARAMS[4];
 
         try {
-            $attachment = $this->attachmentDao->getById($id);
+            $attachment = $this->attachmentDao->byId($id);
             $this->attachmentHlpr->delete($attachment);
             $this->attachmentDao->delete($id, $lab_id);
         } catch (Exception $e) {

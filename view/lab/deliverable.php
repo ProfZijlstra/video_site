@@ -22,5 +22,16 @@
                 <div class="previewArea"></div>
             </div>
         </div>
+        <?php if ($deliv['type'] == "zip") : ?>
+            <div class="delivSrc" title="This deliverable will be based on the following zip attachment">
+                <label>Based on:</label>
+                <select>
+                    <option value="">None</option>
+                    <?php foreach ($labzips as $labzip) : ?>
+                        <option value="<?= $labzip['id'] ?>" <?= $labzip['id'] == $deliv['zipAttachment_id'] ? "selected" : "" ?>><?= $labzip['name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
