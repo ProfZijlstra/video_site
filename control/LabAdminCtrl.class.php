@@ -194,6 +194,7 @@ class LabAdminCtrl
             $type = "lab simple";
             if ($res['zip']) {
                 $type = "lab zip";
+                $res['type'] = $type;
             }
             $file = $res['file'];
             $name = $res['name'];
@@ -295,5 +296,28 @@ class LabAdminCtrl
 
 
         $this->deliverableDao->update($id, $lab_id, $points, $desc, $hasMarkDown, null, null);
+    }
+
+    /**
+     * Expects AJAX
+     *
+     * This sets the Zip Attachment for a zip type deliverable.
+     * With this relationship we can check if a submission is based on a the 
+     * zip attachment that the student downloaded (themselves).
+     *
+     * Once they upload the deliverable we go through the zip_actions to see if
+     * the watermarks these actions created during download are present.
+     */
+    #[Put(uri: "/(\d+)/deliverable/(\d+)/zipAttachment$", sec: "instructor")]
+    public function setZipAttachment()
+    {
+        global $URI_PARAMS;
+        global $_PUT;
+
+        $lab_id = $URI_PARAMS[3];
+        $id = $URI_PARAMS[4];
+        $zipAttachment_id = $_PUT["zipAttachment_id"];
+
+        $this->deliverableDao->setZipAttachment($id, $lab_id, $zipAttachment_id);
     }
 }

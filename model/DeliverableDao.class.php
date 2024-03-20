@@ -98,11 +98,11 @@ class DeliverableDao
         ));
     }
 
-    public function setFromAttachment($id, $lab_id, $attachment_id)
+    public function setZipAttachment($id, $lab_id, $attachment_id)
     {
         $stmt = $this->db->prepare(
             "UPDATE deliverable
-            SET attachment_id = :attachment_id
+            SET zipAttachment_id = :attachment_id
             WHERE id = :id AND lab_id = :lab_id"
         );
         $stmt->execute(array(

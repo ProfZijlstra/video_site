@@ -85,7 +85,12 @@ window.addEventListener("load", () => {
                         } else {
                             attachment.remove();
 
-                            // TODO: remove the entry from each labzip dropdown on the page
+                            // remove the entry from each labzip dropdown on the page
+                            document.querySelectorAll("select.zipAttachment option").forEach((e) => {
+                                if (e.value == id) {
+                                    e.remove();
+                                }
+                            });
                         }
                         spinner.classList.remove('rotate');
                         const attachments = document.getElementById("attachments");
@@ -128,9 +133,18 @@ window.addEventListener("load", () => {
                 attachments.appendChild(div);
                 spinner.classList.remove('rotate');
 
-                // TODO: check if this is a zip attachment
-                // if it is, get the name and id 
-                // and add an entry to each labzip dropdown on the page
+                // add an entry to each labzip dropdown on the page
+                const type = div.firstElementChild.dataset.type;
+                if (type == "lab zip") {
+                    const id = div.querySelector("i").dataset.id;
+                    const name = div.querySelector("a").textContent;
+                    document.querySelectorAll("select.zipAttachment").forEach((e) => {
+                        const option = document.createElement("option");
+                        option.value = id;
+                        option.textContent = name;
+                        e.appendChild(option);
+                    });
+                }
             })
             .catch((error) => {
                 spinner.classList.remove('rotate');
@@ -171,6 +185,7 @@ window.addEventListener("load", () => {
                 div.querySelector(".points").addEventListener("change", updatePoints);
                 div.querySelector("i.deliverable").addEventListener("click", MARKDOWN.toggleMarkDown);
                 div.querySelector("button.previewBtn").addEventListener("click", MARKDOWN.getHtmlForMarkdown);
+                div.querySelector("select.zipAttachment")?.addEventListener("change", updateZipAttachment);
                 const delivs = document.getElementById("deliverables");
                 delivs.appendChild(div);
                 document.getElementById("addDelivDialog").close();
@@ -210,9 +225,6 @@ window.addEventListener("load", () => {
         const desc = encodeURIComponent(MARKDOWN.ceasarShift(dcontainer.querySelector(".desc").value));
         const hasMarkDown = dcontainer.querySelector("i.deliverable").classList.contains("active") ? 1 : 0;
 
-        // TODO: if this is a zip attachment, also send the zipAttachment_id
-        // or should we make a separate call to update the zipAttachment_id?
-
         fetch(`deliverable/${id}`, {
             method: "PUT",
             body: `desc=${desc}&points=${points}&hasMarkDown=${hasMarkDown}`,
@@ -232,6 +244,32 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll(".dcontainer input, .dcontainer textarea").forEach((e) => {
         e.addEventListener("change", updateDeliv);
+    });
+
+    function updateZipAttachment() {
+        const dcontainer = this.closest(".dcontainer");
+        const id = dcontainer.dataset.id;
+        const zipAttachment_id = this.value;
+
+        fetch(`deliverable/${id}/zipAttachment`, {
+            method: "PUT",
+            body: `zipAttachment_id=${zipAttachment_id}`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("Updating deliverable failed.");
+        })
+        .catch((error) => {
+            alert(error);
+        });
+    }
+    document.querySelectorAll(".dcontainer select.zipAttachment").forEach((e) => {
+        e.addEventListener("change", updateZipAttachment);
     });
 
     // have points update when any deliverable points change
