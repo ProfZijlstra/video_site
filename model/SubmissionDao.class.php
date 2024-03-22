@@ -55,8 +55,12 @@ class SubmissionDao
     public function forLab($lab_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM submission 
-                WHERE lab_id = :lab_id"
+            "SELECT s.id, s.lab_id, s.user_id, s.group,
+            SUM(d.points) AS points, COUNT(d.id) AS delivs
+            FROM submission AS s
+            JOIN delivery AS d ON s.id = d.submission_id
+            WHERE s.lab_id = :lab_id
+            GROUP BY s.id"
         );
         $stmt->execute(["lab_id" => $lab_id]);
         return $stmt->fetchAll();

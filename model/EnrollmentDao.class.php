@@ -21,7 +21,7 @@ class EnrollmentDao
     {
         $stmt = $this->db->prepare("SELECT u.id, u.knownAs, u.studentID, 
             u.firstname, u.lastname, u.email, u.teamsName, 
-            e.auth, e.group, e.id AS eid
+            e.auth, e.group, e.id AS eid, e.group
             FROM enrollment e JOIN user u ON e.user_id = u.id 
             WHERE offering_id = :offering_id
                         ORDER BY u.firstname");
@@ -196,5 +196,13 @@ class EnrollmentDao
         } else {
             return null;
         }
+    }
+    public function getGroups($offering_id)
+    {
+        $stmt = $this->db->prepare("SELECT DISTINCT `group` 
+            FROM enrollment 
+            WHERE offering_id = :offering_id");
+        $stmt->execute(array("offering_id" => $offering_id));
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }
