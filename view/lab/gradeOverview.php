@@ -21,9 +21,7 @@
             cursor: pointer;
         }
 
-        td.start,
-        td.stop,
-        td.answers,
+        td.delivs,
         td.points {
             width: 75px;
             text-align: right;

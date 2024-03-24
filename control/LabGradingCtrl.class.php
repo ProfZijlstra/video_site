@@ -81,10 +81,6 @@ class LabGradingCtrl
                 $extra[$submission[$key]] = $submission;
             }
         }
-        var_dump($submissions);
-        var_dump($absent);
-        var_dump($taken);
-        var_dump($extra);
 
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
