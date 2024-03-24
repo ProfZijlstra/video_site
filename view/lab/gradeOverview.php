@@ -17,10 +17,8 @@
             margin-bottom: 0px;
         }
 
-        td {
-            cursor: pointer;
-        }
-
+        td.start,
+        td.stop,
         td.delivs,
         td.points {
             width: 75px;
@@ -29,18 +27,7 @@
         }
     </style>
     <script>
-        window.addEventListener("load", () => {
-            const tds = document.querySelectorAll('td');
-
-            function goToUser() {
-                const tr = this.parentNode;
-                const user_id = tr.dataset.user_id;
-                window.location = `user/${user_id}`
-            }
-            for (const td of tds) {
-                td.onclick = goToUser;
-            }
-        });
+        window.addEventListener("load", () => {});
     </script>
 </head>
 
@@ -53,7 +40,7 @@
             </a>
         </nav>
         <div id="content">
-            <h2>Quiz: <?= $lab['name'] ?></h2>
+            <h2>Lab: <?= $lab['name'] ?></h2>
             <!-- Links to grade by question -->
             <div id="deliverables">
                 <strong>Grade Deliverable:</strong>
@@ -97,6 +84,8 @@
                 <table>
                     <tr>
                         <th>Name</th>
+                        <th>Start</th>
+                        <th>Stop</th>
                         <th>Delivs</th>
                         <th>Points</th>
                     </tr>
@@ -108,14 +97,16 @@
                                         Group <?= $id ?>:
                                         <span class="members">
                                             <?php foreach ($groups[$id]['members'] as $member) : ?>
-                                                <?= $member['knowAs'] ?> <?= $member['lastname'] ?>,
+                                                <?= $member['knownAs'] ?> <?= $member['lastname'] ?>,
                                             <?php endforeach; ?>
                                         </span>
                                     <?php else : ?>
-                                        <?= $students[$id]['knowAs'] ?> <?= $students[$id]['lastname'] ?>
+                                        <?= $students[$id]['knownAs'] ?> <?= $students[$id]['lastname'] ?>
                                     <?php endif; ?>
                                 </a>
                             </td>
+                            <td class="start" title="<?= $submission['start'] ?>">d<?= substr($submission['start'], 8, 8) ?> </td>
+                            <td class="stop" title="<?= $submission['stop'] ?> ">d<?= substr($submission['stop'], 8, 8) ?> </td>
                             <td class="delivs"><?= $submission['delivs'] ?></td>
                             <td class="points"><?= $submission['points'] == floor($submission['points']) ? $submission['points'] : number_format($submission['points'], 2) ?></td>
                         </tr>
@@ -129,6 +120,8 @@
                 <table>
                     <tr>
                         <th>Name</th>
+                        <th>Start</th>
+                        <th>Stop</th>
                         <th>Delivs</th>
                         <th>Points</th>
                     </tr>
@@ -140,14 +133,16 @@
                                         Group <?= $id ?>:
                                         <span class="members">
                                             <?php foreach ($groups[$id]['members'] as $member) : ?>
-                                                <?= $member['knowAs'] ?> <?= $member['lastname'] ?>,
+                                                <?= $member['knownAs'] ?> <?= $member['lastname'] ?>,
                                             <?php endforeach; ?>
                                         </span>
                                     <?php else : ?>
-                                        <?= $students[$id]['knowAs'] ?> <?= $students[$id]['lastname'] ?>
+                                        <?= $students[$id]['knownAs'] ?> <?= $students[$id]['lastname'] ?>
                                     <?php endif; ?>
                                 </a>
                             </td>
+                            <td class="start"><?= $submission['start'] ?></td>
+                            <td class="stop"><?= $submission['stop'] ?></td>
                             <td class="delivs"><?= $submission['delivs'] ?></td>
                             <td class="points"><?= $submission['points'] == floor($submission['points']) ? $submission['points'] : number_format($submission['points'], 2) ?></td>
                         </tr>

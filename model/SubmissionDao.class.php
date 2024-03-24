@@ -56,7 +56,8 @@ class SubmissionDao
     {
         $stmt = $this->db->prepare(
             "SELECT s.id, s.lab_id, s.user_id, s.group,
-            SUM(d.points) AS points, COUNT(d.id) AS delivs
+            SUM(d.points) AS points, COUNT(d.id) AS delivs,
+            MIN(d.created) AS start, MAX(d.updated) AS stop
             FROM submission AS s
             JOIN delivery AS d ON s.id = d.submission_id
             WHERE s.lab_id = :lab_id
