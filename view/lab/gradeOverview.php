@@ -26,7 +26,7 @@
                 <strong>Grade Deliverable:</strong>
                 <?php $count = 1; ?>
                 <?php foreach ($deliverables as $deliv) : ?>
-                    <a href="deliverable/<?= $deliv['id'] ?>">Q<?= $count++ ?></a>
+                    <a href="deliverable/<?= $deliv['id'] ?>">D<?= $count++ ?></a>
                 <?php endforeach; ?>
             </div>
 
@@ -36,7 +36,7 @@
                 $time = substr($date, 11, 5);
                 return "{$day}<sup>th</sup> {$time}";
             } ?>
-            <?php function submissionTable($list, $title, $titleDetail, $showDetails, $type, $students, $groups)
+            <?php function submissionTable($list, $title, $titleDetail, $showDetails, $students, $members)
             { ?>
 
                 <?php if ($list) : ?>
@@ -52,19 +52,20 @@
                                 <th>Points</th>
                             <?php endif; ?>
                         </tr>
-                        <?php foreach ($list as $id => $submission) : ?>
+                        <?php foreach ($list as $submission) : ?>
                             <tr>
                                 <td>
                                     <a href="submission/<?= $submission['id'] ?>">
-                                        <?php if ($type == 'group') : ?>
-                                            Group <?= $id ?>:
+                                        <?php if ($submission['group']) : ?>
+                                            Group <?= $submission['group'] ?>:
                                             <span class="members">
-                                                <?php foreach ($groups[$id]['members'] as $member) : ?>
+                                                <?php foreach ($members[$submission['group']] as $member) : ?>
                                                     <?= $member['knownAs'] ?> <?= $member['lastname'] ?>,
                                                 <?php endforeach; ?>
                                             </span>
                                         <?php else : ?>
-                                            <?= $students[$id]['knownAs'] ?> <?= $students[$id]['lastname'] ?>
+                                            <?php $student = $students[$submission['user_id']] ?>
+                                            <?= $student['knownAs'] ?> <?= $student['lastname'] ?>
                                         <?php endif; ?>
                                     </a>
                                 </td>
@@ -72,16 +73,22 @@
                                     <td class="start" title="<?= $submission['start'] ?>"><?= shortDate($submission['start']) ?> </td>
                                     <td class="stop" title="<?= $submission['stop'] ?> "><?= shortDate($submission['stop']) ?> </td>
                                     <td class="delivs"><?= $submission['delivs'] ?></td>
-                                    <td class="points"><?= $submission['points'] == floor($submission['points']) ? $submission['points'] : number_format($submission['points'], 2) ?></td>
+                                    <td class="points">
+                                        <?php if ($submission['points']) : ?>
+                                            <?= $submission['points'] == floor($submission['points']) ? $submission['points'] : number_format($submission['points'], 2) ?>
+                                        <?php else : ?>
+                                            0
+                                        <?php endif; ?>
+                                    </td>
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     </table>
                 <?php endif; ?>
             <?php } ?>
-            <?php submissionTable($absent, "No Submission", "", false, $type, $students, $groups); ?>
-            <?php submissionTable($taken, "Results", "Submissions from enrolled students", true, $type, $students, $groups); ?>
-            <?php submissionTable($extra, "Extra", "Submissions from unenrolled students", true, $type, $students, $groups); ?>
+            <?php submissionTable($absent, "No Submission", "", false, $students, $groups); ?>
+            <?php submissionTable($taken, "Results", "Submissions from enrolled students", true, $students, $members); ?>
+            <?php submissionTable($extra, "Extra", "Submissions from unenrolled students", true, $students, $members); ?>
         </div>
     </main>
 </body>

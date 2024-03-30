@@ -59,8 +59,8 @@
                     <div>
                         <label>Type:</label>
                         <select name="type">
-                            <option value="individual" <?= $lab['type'] == "Individual" ? "selected" : "" ?>>Individual</option>
-                            <option value="group" <?= $lab['type'] == "Group" ? "selected" : "" ?>>Group</option>
+                            <option value="individual" <?= $lab['type'] == "individual" ? "selected" : "" ?>>Individual</option>
+                            <option value="group" <?= $lab['type'] == "group" ? "selected" : "" ?>>Group</option>
                         </select>
                     </div>
                     <div title="Calculated from deliverables">

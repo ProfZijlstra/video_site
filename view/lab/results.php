@@ -14,7 +14,7 @@
     <script src="res/js/back.js"></script>
 </head>
 
-<body id="labResults" class="lab">
+<body id="labResults" class="lab labDeliverables">
     <?php include("header.php"); ?>
     <main>
         <nav id="back" class="back" title="Back">

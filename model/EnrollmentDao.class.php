@@ -19,12 +19,14 @@ class EnrollmentDao
      */
     public function getEnrollmentForOffering($offering_id)
     {
-        $stmt = $this->db->prepare("SELECT u.id, u.knownAs, u.studentID, 
+        $stmt = $this->db->prepare(
+            "SELECT u.id, u.knownAs, u.studentID, 
             u.firstname, u.lastname, u.email, u.teamsName, 
             e.auth, e.group, e.id AS eid, e.group
             FROM enrollment e JOIN user u ON e.user_id = u.id 
             WHERE offering_id = :offering_id
-                        ORDER BY u.firstname");
+            ORDER BY u.firstname"
+        );
         $stmt->execute(array("offering_id" => $offering_id));
         return $stmt->fetchAll();
     }
@@ -36,8 +38,11 @@ class EnrollmentDao
      */
     public function getEnrollmentForStudent($user_id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM enrollment 
-                        WHERE user_id = :user_id ORDER BY id DESC LIMIT 1");
+        $stmt = $this->db->prepare(
+            "SELECT * FROM enrollment 
+            WHERE user_id = :user_id 
+            ORDER BY id DESC LIMIT 1"
+        );
         $stmt->execute(array("user_id" =>  $user_id));
         return $stmt->fetch();
     }
@@ -47,10 +52,10 @@ class EnrollmentDao
         $inject = implode(",", $offering_ids);
         $stmt = $this->db->prepare(
             "SELECT e.offering_id, u.knownAs, u.lastname 
-                        FROM enrollment AS e 
-                        JOIN user AS u ON e.user_id = u.id
-                        WHERE e.auth = 'instructor'
-                        AND e.offering_id IN ({$inject})"
+            FROM enrollment AS e 
+            JOIN user AS u ON e.user_id = u.id
+            WHERE e.auth = 'instructor'
+            AND e.offering_id IN ({$inject})"
         );
         $stmt->execute();
         return $stmt->fetchAll();
@@ -60,13 +65,13 @@ class EnrollmentDao
     {
         $stmt = $this->db->prepare(
             "SELECT u.firstname, u.lastname, u.teamsName, u.email 
-                                FROM enrollment AS e  
-                                JOIN offering AS o ON e.offering_id = o.id
-                                JOIN user AS u ON e.user_id = u.id
-                                WHERE e.auth = 'instructor'
-                                AND o.block = :block
-                                AND o.course_number = :course
-                                LIMIT 1"
+            FROM enrollment AS e  
+            JOIN offering AS o ON e.offering_id = o.id
+            JOIN user AS u ON e.user_id = u.id
+            WHERE e.auth = 'instructor'
+            AND o.block = :block
+            AND o.course_number = :course
+            LIMIT 1"
         );
         $stmt->execute([
             "course" => $course,
@@ -79,16 +84,18 @@ class EnrollmentDao
     {
         $stmt = $this->db->prepare(
             "DELETE FROM enrollment 
-                                WHERE offering_id = :offering_id
-                                AND auth = 'student'"
+            WHERE offering_id = :offering_id
+            AND auth = 'student'"
         );
         $stmt->execute(["offering_id" => $offering_id]);
     }
 
     public function enroll($user_id, $offering_id, $auth)
     {
-        $stmt = $this->db->prepare("INSERT INTO enrollment 
-                                VALUES(NULL, :user_id, :offering_id, :auth, NULL)");
+        $stmt = $this->db->prepare(
+            "INSERT INTO enrollment 
+            VALUES(NULL, :user_id, :offering_id, :auth, NULL)"
+        );
         $stmt->execute([
             "user_id" => $user_id,
             "offering_id" => $offering_id,
@@ -98,9 +105,11 @@ class EnrollmentDao
 
     public function unenroll($enrollment_id, $offering_id)
     {
-        $stmt = $this->db->prepare("DELETE FROM enrollment 
-                                WHERE id = :enrollment_id
-                                AND offering_id = :offering_id");
+        $stmt = $this->db->prepare(
+            "DELETE FROM enrollment 
+            WHERE id = :enrollment_id
+            AND offering_id = :offering_id"
+        );
         $stmt->execute(
             [
                 "enrollment_id" => $enrollment_id,
@@ -114,10 +123,12 @@ class EnrollmentDao
         if (!$group) {
             $group = null;
         }
-        $stmt = $this->db->prepare("UPDATE enrollment 
-                                SET auth = :auth, `group` = :group
-                                WHERE user_id = :user_id 
-                                AND offering_id = :offering_id");
+        $stmt = $this->db->prepare(
+            "UPDATE enrollment 
+            SET auth = :auth, `group` = :group
+            WHERE user_id = :user_id 
+            AND offering_id = :offering_id"
+        );
         $stmt->execute([
             "auth" => $auth,
             "group" => $group,
@@ -130,10 +141,10 @@ class EnrollmentDao
     {
         $stmt = $this->db->prepare(
             "SELECT e.auth FROM enrollment AS e 
-                        JOIN offering AS o ON e.offering_id = o.id
-                        WHERE e.user_id = :user_id
-                        AND o.course_number = :course
-                        AND o.block = :block"
+            JOIN offering AS o ON e.offering_id = o.id
+            WHERE e.user_id = :user_id
+            AND o.course_number = :course
+            AND o.block = :block"
         );
         $stmt->execute(array(
             "user_id" =>  $user_id,
@@ -147,8 +158,8 @@ class EnrollmentDao
     {
         $stmt = $this->db->prepare(
             "SELECT * FROM enrollment AS e 
-                        WHERE e.user_id = :user_id
-                        AND e.offering_id = :offering_id"
+            WHERE e.user_id = :user_id
+            AND e.offering_id = :offering_id"
         );
         $stmt->execute(array(
             "user_id" =>  $user_id,
@@ -162,10 +173,10 @@ class EnrollmentDao
         $stmt = $this->db->prepare(
             "SELECT e.group, e.auth 
             FROM enrollment AS e 
-                        JOIN offering AS o ON e.offering_id = o.id
-                        WHERE e.user_id = :user_id
-                        AND o.course_number = :course
-                        AND o.block = :block"
+            JOIN offering AS o ON e.offering_id = o.id
+            WHERE e.user_id = :user_id
+            AND o.course_number = :course
+            AND o.block = :block"
         );
         $stmt->execute(array(
             "user_id" =>  $user_id,
@@ -180,10 +191,10 @@ class EnrollmentDao
         $stmt = $this->db->prepare(
             "SELECT e.group 
             FROM enrollment AS e 
-                        JOIN offering AS o ON e.offering_id = o.id
-                        WHERE e.user_id = :user_id
-                        AND o.course_number = :course
-                        AND o.block = :block"
+            JOIN offering AS o ON e.offering_id = o.id
+            WHERE e.user_id = :user_id
+            AND o.course_number = :course
+            AND o.block = :block"
         );
         $stmt->execute(array(
             "user_id" =>  $user_id,
@@ -199,10 +210,28 @@ class EnrollmentDao
     }
     public function getGroups($offering_id)
     {
-        $stmt = $this->db->prepare("SELECT DISTINCT `group` 
+        $stmt = $this->db->prepare(
+            "SELECT DISTINCT `group` 
             FROM enrollment 
-            WHERE offering_id = :offering_id");
+            WHERE offering_id = :offering_id"
+        );
         $stmt->execute(array("offering_id" => $offering_id));
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function getMembers($offering_id, $group)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT u.id, u.knownAs, u.lastname 
+            FROM enrollment AS e 
+            JOIN user AS u ON e.user_id = u.id
+            WHERE e.offering_id = :offering_id
+            AND e.group = :group"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id,
+            "group" => $group
+        ]);
+        return $stmt->fetchAll();
     }
 }

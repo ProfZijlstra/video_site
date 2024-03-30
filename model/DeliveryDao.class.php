@@ -27,6 +27,18 @@ class DeliveryDao
         return $result;
     }
 
+    public function forDeliverable($deliverable_id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM delivery 
+                WHERE deliverable_id = :deliverable_id"
+        );
+        $stmt->execute([
+            "deliverable_id" => $deliverable_id
+        ]);
+        return $stmt->fetchAll();
+    }
+
     public function byId($id)
     {
         $stmt = $this->db->prepare(
@@ -269,5 +281,50 @@ class DeliveryDao
             "stuComment" => $stuComment,
             "stuCmntHasMD" => $stuCmntHasMD
         ]);
+    }
+
+    public function grade($id, $points, $comment, $hasMarkDown)
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE delivery 
+                SET points = :points, 
+                gradeComment = :comment,
+                gradeCmntHasMD = :hasMarkDown
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "points" => $points,
+            "comment" => $comment,
+            "hasMarkDown" => $hasMarkDown,
+            "id" => $id
+        ]);
+    }
+
+
+    public function createGrade(
+        $submission_id,
+        $deliverable_id,
+        $points,
+        $comment,
+        $hasMarkDown
+    ) {
+        $stmt = $this->db->prepare(
+            "INSERT INTO delivery VALUES (
+                NULL, :deliverable_id, :submission_id, NULL,
+                NOW(), NOW(), 
+                0, '00:00:00',
+                NULL, 0, 
+                NULL, NULL,
+                NULL, NULL,
+                :points, :comment, :hasMarkDown)"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "points" => $points,
+            "comment" => $comment,
+            "hasMarkDown" => $hasMarkDown
+        ]);
+        return $this->db->lastInsertId();
     }
 }

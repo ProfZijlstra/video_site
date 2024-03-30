@@ -17,7 +17,7 @@
     <script src="res/js/lab/lab.js"></script>
 </head>
 
-<body id="doLab" class="lab">
+<body id="doLab" class="lab labDeliverables">
     <?php include("header.php"); ?>
     <main>
         <nav id="back" class="back" title="Back">
