@@ -163,14 +163,12 @@ class OfferingDao
 		$hasLab,
 		$showDates,
 		$usesFlowcharts,
-		$hasCAMS
 	) {
 		$stmt = $this->db->prepare(
 			"INSERT INTO offering 
 			VALUES(NULL, :course_number, :block, :start,
 					:daysPerLesson, :lessonsPerPart, :lessonParts, 
-					:hasQuiz, :hasLab, 1, :showDates, :usesFlowcharts, 
-					:hasCAMS)"
+					:hasQuiz, :hasLab, 1, :showDates, :usesFlowcharts)"
 		);
 		$stmt->execute(array(
 			"course_number" => $course_number,
@@ -183,7 +181,6 @@ class OfferingDao
 			"hasLab" => $hasLab,
 			"showDates" => $showDates,
 			"usesFlowcharts" => $usesFlowcharts,
-			"hasCAMS" => $hasCAMS
 		));
 		return $this->db->lastInsertId();
 	}
@@ -202,15 +199,13 @@ class OfferingDao
 		$hasLab,
 		$showDates,
 		$usesFlowcharts,
-		$hasCAMS
 	) {
 		$stmt = $this->db->prepare(
 			"UPDATE offering 
 			SET `block` = :block, `start` = :start, 
 			daysPerLesson = :daysPerLesson, lessonsPerPart = :lessonsPerPart,
 			lessonParts = :lessonParts, hasQuiz = :hasQuiz, hasLab = :hasLab,
-			showDates = :showDates, usesFlowcharts = :usesFlowcharts,
-			hasCAMS = :hasCAMS
+			showDates = :showDates, usesFlowcharts = :usesFlowcharts
 			WHERE id = :id"
 		);
 		$stmt->execute(array(
@@ -224,7 +219,6 @@ class OfferingDao
 			"hasLab" => $hasLab,
 			"showDates" => $showDates,
 			"usesFlowcharts" => $usesFlowcharts,
-			"hasCAMS" => $hasCAMS
 		));
 	}
 

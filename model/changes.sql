@@ -524,3 +524,6 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`download` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- 31st of March 2024
+ALTER TABLE `offering` DROP COLUMN `hasCAMS`;

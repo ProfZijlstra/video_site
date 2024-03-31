@@ -35,6 +35,9 @@
     <?php include("header.php"); ?>
     <main>
         <nav class="tools">
+            <a href="attendance/config">
+                <i title="Config CAMS Integration" class="fa-solid fa-gear"></i>
+            </a>
             <i id="physical_icon" title="Physical Classroom Attendance" class="fas fa-chalkboard-teacher"></i>
             <a href="professionalism">
                 <i title="Professionalism Report" class="fab fa-black-tie"></i>

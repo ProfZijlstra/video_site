@@ -24,8 +24,6 @@ class CourseCtrl
     public $quizDao;
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
-    #[Inject('CamsDao')]
-    public $camsDao;
 
     #[Get(uri: "^/?$", sec: "login")]
     public function showMyCourses()
@@ -109,7 +107,6 @@ class CourseCtrl
             0,
             0,
             1,
-            0,
             0
         );
         $this->enrollmentDao->enroll($fac_user_id, $new_offering_id, "instructor");
@@ -144,7 +141,6 @@ class CourseCtrl
         $hasLab = filter_input(INPUT_POST, "hasLab", FILTER_SANITIZE_NUMBER_INT);
         $showDates = filter_input(INPUT_POST, "showDates", FILTER_SANITIZE_NUMBER_INT);
         $usesFlowcharts = filter_input(INPUT_POST, "usesFlowcharts", FILTER_SANITIZE_NUMBER_INT);
-        $hasCAMS = filter_input(INPUT_POST, "hasCAMS", FILTER_SANITIZE_NUMBER_INT);
 
         if ($hasQuiz == null) {
             $hasQuiz = 0;
@@ -177,7 +173,6 @@ class CourseCtrl
             $hasLab,
             $showDates,
             $usesFlowcharts,
-            $hasCAMS
         );
         $this->enrollmentDao->enroll($fac_user_id, $new_offering_id, "instructor");
         $this->dayDao->cloneDays($offering_id, $new_offering_id);
@@ -211,22 +206,10 @@ class CourseCtrl
         $block = $URI_PARAMS[2];
 
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
-        $CAMS = [
-            "username" => "",
-            "course_id" => "",
-            "AM_id" => "",
-            "PM_id" => "",
-            "SAT_id" => "",
-        ];
-        if ($offering['hasCAMS']) {
-            $CAMS = $this->camsDao->get($offering['id']);
-        }
-
         $VIEW_DATA['title'] = "Settings";
         $VIEW_DATA['course']  = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['offering'] = $offering;
-        $VIEW_DATA['CAMS'] = $CAMS;
 
         return "offeringSettings.php";
     }
@@ -248,7 +231,6 @@ class CourseCtrl
         $hasLab = filter_input(INPUT_POST, "hasLab", FILTER_SANITIZE_NUMBER_INT);
         $showDates = filter_input(INPUT_POST, "showDates", FILTER_SANITIZE_NUMBER_INT);
         $usesFlowcharts = filter_input(INPUT_POST, "usesFlowcharts", FILTER_SANITIZE_NUMBER_INT);
-        $hasCAMS = filter_input(INPUT_POST, "hasCAMS", FILTER_SANITIZE_NUMBER_INT);
 
         $this->offeringDao->update(
             $id,
@@ -261,17 +243,7 @@ class CourseCtrl
             $hasLab,
             $showDates,
             $usesFlowcharts,
-            $hasCAMS
         );
-        if (!$hasCAMS) {
-            return;
-        }
-        $username = filter_input(INPUT_POST, "username", FILTER_UNSAFE_RAW);
-        $course_id = filter_input(INPUT_POST, "course_id", FILTER_SANITIZE_NUMBER_INT);
-        $AM_id = filter_input(INPUT_POST, "AM_id", FILTER_SANITIZE_NUMBER_INT);
-        $PM_id = filter_input(INPUT_POST, "PM_id", FILTER_SANITIZE_NUMBER_INT);
-        $SAT_id = filter_input(INPUT_POST, "SAT_id", FILTER_SANITIZE_NUMBER_INT);
-        $this->camsDao->saveOrUpdate($id, $username, $course_id, $AM_id, $PM_id, $SAT_id);
     }
 
 

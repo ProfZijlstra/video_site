@@ -73,6 +73,44 @@ class AttendanceCtrl
         return "attendance/attendance.php";
     }
 
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/config$", sec: "assistant")]
+    public function getConfig()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_number = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
+        $cams = $this->camsDao->get($offering['id']);
+
+        $VIEW_DATA["course"] = $course_number;
+        $VIEW_DATA["block"] = $block;
+        $VIEW_DATA["CAMS"] = $cams;
+        $VIEW_DATA["title"] = "CAMS Attendance Export";
+
+        return "attendance/config.php";
+    }
+
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/config$", sec: "assistant")]
+    public function updateConfig()
+    {
+        global $URI_PARAMS;
+
+        $course_number = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $username = filter_input(INPUT_POST, "username");
+        $course_id = filter_input(INPUT_POST, "course_id", FILTER_SANITIZE_NUMBER_INT);
+        $AM_id = filter_input(INPUT_POST, "AM_id", FILTER_SANITIZE_NUMBER_INT);
+        $PM_id = filter_input(INPUT_POST, "PM_id", FILTER_SANITIZE_NUMBER_INT);
+        $SAT_id = filter_input(INPUT_POST, "SAT_id", FILTER_SANITIZE_NUMBER_INT);
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
+        $this->camsDao->saveOrUpdate($offering['id'], $username, $course_id, $AM_id, $PM_id, $SAT_id);
+
+        return "Location: config";
+    }
+
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$", sec: "assistant")]
     public function excuseAbsence()
