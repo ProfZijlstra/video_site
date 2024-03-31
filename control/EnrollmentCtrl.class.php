@@ -296,7 +296,9 @@ EOD;
             $id6,
             $teamsName,
             $hash,
-            1
+            1,
+            0,
+            0
         );
 
         # create custom welcome message
