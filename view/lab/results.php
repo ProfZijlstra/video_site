@@ -80,7 +80,17 @@
                             </div>
                         </div>
                         <div class="deliv">
+                            <div>Deliverable Description:</div>
+                            <div class="description">
+                                <?php if ($deliv['hasMarkDown']) : ?>
+                                    <?= $parsedown->text($deliv['desc']) ?>
+                                <?php else : ?>
+                                    <pre><?= $deliv['desc'] ?></pre>
+                                <?php endif; ?>
+                            </div>
+
                             <?php if ($delivery) : ?>
+                                <div>Your Submission:</div>
                                 <div class="stats">
                                     <label title="Hours spent creating this deliverable">Hours:
                                         <?= substr($delivery['duration'], 0, 5); ?>
@@ -89,14 +99,6 @@
                                     <label title="Approximately how far you completed this deliverable" class="completion">Complete:
                                         <?= $delivery['completion'] ?>%
                                     </label>
-                                </div>
-
-                                <div class="description">
-                                    <?php if ($deliv['hasMarkDown']) : ?>
-                                        <?= $parsedown->text($deliv['desc']) ?>
-                                    <?php else : ?>
-                                        <pre><?= $deliv['desc'] ?></pre>
-                                    <?php endif; ?>
                                 </div>
                                 <?php if ($deliv['type'] == 'txt') : ?>
                                     <div class="txtDelivery">
