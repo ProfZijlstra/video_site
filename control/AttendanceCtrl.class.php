@@ -105,6 +105,10 @@ class AttendanceCtrl
         $PM_id = filter_input(INPUT_POST, "PM_id", FILTER_SANITIZE_NUMBER_INT);
         $SAT_id = filter_input(INPUT_POST, "SAT_id", FILTER_SANITIZE_NUMBER_INT);
 
+        if ($course_id == 0 || $AM_id == 0 || $PM_id == 0 || $SAT_id == 0) {
+            return "error/400.php";
+        }
+
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $this->camsDao->saveOrUpdate($offering['id'], $username, $course_id, $AM_id, $PM_id, $SAT_id);
 
@@ -175,11 +179,6 @@ class AttendanceCtrl
         $VIEW_DATA["title"] = "Professionalism";
 
         return "attendance/professionalism.php";
-    }
-
-    private static function byTotal($a, $b)
-    {
-        return $b["totalSecs"] - $a["totalSecs"];
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$", sec: "assistant")]
