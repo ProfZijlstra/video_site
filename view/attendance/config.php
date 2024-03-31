@@ -30,6 +30,10 @@
                 const PM_id = document.getElementById("PM_id").value;
                 const SAT_id = document.getElementById("SAT_id").value;
 
+                if (!username || !course_id || !AM_id || !PM_id || !SAT_id) {
+                    return;
+                }
+
                 const body = new URLSearchParams();
                 body.append("username", username);
                 body.append("course_id", course_id);
