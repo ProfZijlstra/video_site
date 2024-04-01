@@ -1,5 +1,6 @@
 <?php
 require 'lib/guzzle/vendor/autoload.php';
+
 use GuzzleHttp\Client;
 
 
@@ -7,7 +8,8 @@ use GuzzleHttp\Client;
  * CAMS (MIU Attendance and Grade system) Helper
  * @author mzijlstra 2023-06-17
  */
-class CamsHlpr {
+class CamsHlpr
+{
     // conenction related data
     private $client;
     private $accesKey;
@@ -15,9 +17,6 @@ class CamsHlpr {
     // course related data
     private $username;
     private $course_id;
-    private $AM_id;
-    private $PM_id;
-    private $SAT_id;
 
     private $status = [
         "Absent" => 1049,
@@ -30,7 +29,8 @@ class CamsHlpr {
     ];
 
 
-    function __construct($cams) {
+    function __construct($cams)
+    {
         $this->client = new Client([
             'base_uri' => 'https://fac.miu.edu/',
             'cookies' => true,
@@ -38,22 +38,17 @@ class CamsHlpr {
 
         $this->username = $cams['username'];
         $this->course_id = $cams['course_id'];
-
-        // TODO if AM_id/PM_id/SAT_id null get them from CAMS
-        // and update the database with their values 
-        $this->AM_id = $cams['AM_id'];
-        $this->PM_id = $cams['PM_id'];
-        $this->SAT_id = $cams['SAT_id'];
     }
 
-    function login($password) {
+    function login($password)
+    {
         $this->client->request('GET', 'login.asp'); // gets cookies
         $this->client->request('POST', 'ceProcess.asp', [
             'form_params' => [
                 'txtUsername' => $this->username,
                 'txtPassword' => $password,
                 'term' => '131', // spring 2023 (term is irrelevant)
-                ''=> '',
+                '' => '',
                 'op' => 'login',
             ],
         ]);
@@ -71,14 +66,45 @@ class CamsHlpr {
         $url_components = parse_url($href);
         $params = [];
         parse_str($url_components['query'], $params);
-        $this->accesKey = $params['ak'];     
+        $this->accesKey = $params['ak'];
     }
 
-    function logout() {
+    function logout()
+    {
         $this->client->request('GET', '/logout.asp');
     }
 
-    function submitAttendance($students, $session_type, $date, $start, $stop) {
+    function getSessionTypes()
+    {
+        // select the course
+        $form_params = [
+            // "crs" => 57823,  // 57823 == CS4894B 2024-04
+            "crs" => $this->course_id,  // 50709 == CS544 2023-06
+            "accessKey" => $this->accesKey,
+        ];
+        $response = $this->client->request('POST', '/SetcmSessionObjects.asp', [
+            'form_params' => $form_params,
+        ]);
+
+        // Get the attendance entry page that contains the types
+        $response = $this->client->request('GET', '/cmFacultyAttendanceDateRange.asp');
+        $htmlString = (string) $response->getBody();
+        $doc = new DOMDocument();
+        $doc->loadHTML($htmlString);
+
+        // get the session types
+        $select = $doc->getElementById("srofferSchedule");
+        $options = $select->getElementsByTagName("option");
+        $session_types = [];
+        foreach ($options as $option) {
+            $session_types[$option->textContent] = $option->getAttribute("value");
+        }
+
+        return $session_types;
+    }
+
+    function submitAttendance($students, $session_type, $date, $start, $stop)
+    {
         // assumes session types id's are set in the constructor
         $prop = $session_type . "_id";
         $session_type_id = $this->$prop;
@@ -100,18 +126,18 @@ class CamsHlpr {
             "srofferSchedule" => $session_type_id,  // "32754" =10am to 12am for CS544 2023-06
             "pageSize" => "0"
         ];
-   
+
         // select the date and class session for attendance entry
         $response = $this->client->request('POST', "/cmFacultyAttendance.asp", [
             'form_params' => $form_params
         ]);
-    
+
         // build the data that we need to submit
         $htmlString = (string) $response->getBody();
         $doc = new DOMDocument();
         $doc->loadHTML($htmlString);
         $roomId = $doc->getElementById("RoomID")->getAttribute("value");
-    
+
         $data = [
             "RoomID" => $roomId,                // retrieved from HTML
             "HeaderTable" => "SROfferSchedule", // Always the same???
@@ -120,7 +146,7 @@ class CamsHlpr {
             "TimeToDis" => $stop,        // user specified stop time
             //"TimeFrom" => "10:00 AM",  // not needed, hidden field start time
             //"TimeTo" => "12:00 PM",    // not needed, hidden field stop time
-            "classdate" => $date,        
+            "classdate" => $date,
             "dateFrom" => $date,
             "newPage" => "",
             "currentPage" => "1",
@@ -130,47 +156,47 @@ class CamsHlpr {
             "hShowWithdrawn" => "False",
             "hShowPhoto" => "False",
             "accessKey" => $this->accesKey,
-            "srofferSchedule" => $session_type_id,  
+            "srofferSchedule" => $session_type_id,
             "op" => "SaveAttendancePaged",
         ];
-    
+
         $table = $doc->getElementById("AttendanceEntry");
         $rows = $table->getElementsByTagName('tr');
         foreach ($rows as $row) {
             $tds = $row->getElementsByTagName("td");
             if (count($tds) == 0) {
                 // the first TR doesn't contain a student (header)
-                continue; 
+                continue;
             }
-    
+
             $CAMS_UID = $tds[0]->getElementsByTagName("input")[0]->getAttribute('value');
             $MIU_studentId = trim($tds[0]->textContent);
             $student = $students[$MIU_studentId];
-    
+
             if (!is_numeric($CAMS_UID)) {
                 // the last TR doesn't contain a student (footer)
                 continue;
             }
-    
+
             $data["StudentUID" . $CAMS_UID] = $CAMS_UID;
             $data["Stu" . $CAMS_UID] = $this->status[$student['status']];
             if ($student['comment']) {
                 if ($student['inClass']) {
                     $data["inclass" . $CAMS_UID] = "INCLASS";
-                    $data["C" . $CAMS_UID] = "[InClass] - " . $student['comment'];    
+                    $data["C" . $CAMS_UID] = "[InClass] - " . $student['comment'];
                     $data["C_Edited" . $CAMS_UID] = $student['comment'];
                 } else {
-                    $data["C" . $CAMS_UID] = $student['comment'];    
+                    $data["C" . $CAMS_UID] = $student['comment'];
                     $data["C_Edited" . $CAMS_UID] = $student['comment'];
                 }
             } else {
                 if ($student['inClass']) {
                     $data["inclass" . $CAMS_UID] = "INCLASS";
-                    $data["C" . $CAMS_UID] = "[InClass] - ";    
+                    $data["C" . $CAMS_UID] = "[InClass] - ";
                     $data["C_Edited" . $CAMS_UID] = "";
                 } else {
-                    $data["C" . $CAMS_UID] = "";    
-                    $data["C_Edited" . $CAMS_UID] = "";    
+                    $data["C" . $CAMS_UID] = "";
+                    $data["C_Edited" . $CAMS_UID] = "";
                 }
             }
         }
@@ -180,4 +206,3 @@ class CamsHlpr {
     }
 }
 
-?>

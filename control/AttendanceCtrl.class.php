@@ -99,14 +99,36 @@ class AttendanceCtrl
 
         $course_number = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $username = filter_input(INPUT_POST, "username");
         $course_id = filter_input(INPUT_POST, "course_id", FILTER_SANITIZE_NUMBER_INT);
+        $username = filter_input(INPUT_POST, "username");
+        $password = filter_input(INPUT_POST, "password");
+
         $AM_id = filter_input(INPUT_POST, "AM_id", FILTER_SANITIZE_NUMBER_INT);
         $PM_id = filter_input(INPUT_POST, "PM_id", FILTER_SANITIZE_NUMBER_INT);
         $SAT_id = filter_input(INPUT_POST, "SAT_id", FILTER_SANITIZE_NUMBER_INT);
 
-        if ($course_id == 0 || $AM_id == 0 || $PM_id == 0 || $SAT_id == 0) {
+        if (!$course_id || !$username || !$password) {
             return "error/400.php";
+        }
+
+        if (!$AM_id || !$PM_id || !$SAT_id) {
+            require_once("control/CamsHlpr.class.php");
+            $cams = [
+                "course_id" => $course_id,
+                "username" => $username,
+            ];
+            $hlpr = new CamsHlpr($cams);
+            $hlpr->login($password);
+            $types = $hlpr->getSessionTypes();
+            foreach ($types as $type => $id) {
+                if (str_starts_with($type, "MTWRF 10:00:00 AM")) {
+                    $AM_id = $id;
+                } else if (str_starts_with($type, "MTWRF 1:00:00 PM")) {
+                    $PM_id = $id;
+                } else if (str_starts_with($type, "S 10:00:00 AM")) {
+                    $SAT_id = $id;
+                }
+            }
         }
 
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
