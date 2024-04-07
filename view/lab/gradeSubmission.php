@@ -13,6 +13,7 @@
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/lab/gradeSubmission.js"></script>
+    <script src="res/js/ensureSaved.js"></script>
 </head>
 
 <body id="gradeSubmission" class="lab labDeliverables">

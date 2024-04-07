@@ -141,7 +141,7 @@ window.addEventListener("load", () => {
         }).then(clearRegisterMsg);
     }
 
-    document.getElementById("regen").onclick = () => {
+    document.getElementById("regen_meeting").onclick = () => {
         const boxes = present.getElementsByClassName("phys");
         let has_phys = false;
         for (const box of boxes) {
