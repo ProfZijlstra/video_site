@@ -109,17 +109,39 @@ class LabGradingCtrl
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
+        $lab_id = $URI_PARAMS[3];
         $deliv_id = $URI_PARAMS[4];
 
         // get the deliverable and the deliveries
-        $deliverable = $this->deliverableDao->byId($deliv_id);
+        // $deliverable = $this->deliverableDao->byId($deliv_id);
+        $deliverables = $this->deliverableDao->forLab($lab_id);
         $deliveries = $this->deliveryDao->forDeliverable($deliv_id);
 
+        $next_id = null;
+        $prev_id = null;
+        $deliverable = null;
+        for ($i = 0; $i < count($deliverables); $i++) {
+            if ($deliverables[$i]['id'] == $deliv_id) {
+                $deliverable = $deliverables[$i];
+                if ($i > 0) {
+                    $prev_id = $deliverables[$i - 1]['id'];
+                }
+                if ($i < count($deliverables) - 1) {
+                    $next_id = $deliverables[$i + 1]['id'];
+                }
+                break;
+            }
+        }
+
+        require_once("lib/Parsedown.php");
+        $VIEW_DATA["parsedown"] = new Parsedown();
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Deliverable";
-        $VIEW_DATA['deliverable'] = $deliverable;
+        $VIEW_DATA['deliv'] = $deliverable;
         $VIEW_DATA['deliveries'] = $deliveries;
+        $VIEW_DATA['prev_id'] = $prev_id;
+        $VIEW_DATA['next_id'] = $next_id;
 
         return "lab/gradeDeliverable.php";
     }
@@ -148,6 +170,8 @@ class LabGradingCtrl
             $members[] = $this->userDao->retrieve($submission['user_id']);
         }
 
+        require_once("lib/Parsedown.php");
+        $VIEW_DATA["parsedown"] = new Parsedown();
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Submission";

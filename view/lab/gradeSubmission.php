@@ -16,7 +16,7 @@
     <script src="res/js/ensureSaved.js"></script>
 </head>
 
-<body id="gradeSubmission" class="lab labDeliverables">
+<body id="gradeSubmission" class="lab grade labDeliverables">
     <?php include("header.php"); ?>
     <main>
         <nav class="back" title="Back">

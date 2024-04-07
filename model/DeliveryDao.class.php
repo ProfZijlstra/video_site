@@ -30,8 +30,16 @@ class DeliveryDao
     public function forDeliverable($deliverable_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
-                WHERE deliverable_id = :deliverable_id"
+            "SELECT d.created, d.updated, d.completion, d.duration, 
+                d.text, d.hasMarkDown, d.file, d.name, 
+                d.stuComment, d.stuCmntHasMD, 
+                d.points, d.gradeComment, d.gradeCmntHasMD, 
+                u.knownAs, u.lastname, s.group
+            FROM delivery AS d
+                JOIN submission AS s ON d.submission_id = s.id
+                LEFT JOIN user AS u ON d.user_id = u.id
+                WHERE deliverable_id = :deliverable_id
+            ORDER BY d.completion DESC, d.duration DESC"
         );
         $stmt->execute([
             "deliverable_id" => $deliverable_id

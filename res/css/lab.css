@@ -327,6 +327,19 @@ body#doLab{
     }
 }
 
+body.grade {
+    div.timestamp {
+        font-size: 10pt;
+        color: gray;
+        font-family: monospace;
+    }
+    div.done {
+        position: absolute;
+        right: 70px;
+        font-size: 24px;
+    }
+}
+
 body#gradeLab {
     #content h2 {
         margin-bottom: 15px;
@@ -346,16 +359,57 @@ body#gradeLab {
 }
 
 body#gradeSubmission {
-    div.timestamp {
-        font-size: 10pt;
-        color: gray;
-        font-family: monospace;
-    }
     h3 {
         margin-bottom: 0px;
     }
     i.fa-markdown {
         top: -20px;
+    }
+}
+
+body#gradeDeliverable {
+    div#content {
+        width: 90%;
+        padding-bottom: 90px;
+    }
+
+    div.dcontainer.deliverables {
+        margin-bottom: 20px;
+        width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    td {
+        padding: 3px;
+    }
+
+    td.comment {
+        width: 30%;
+        vertical-align: top;
+    }
+
+    td.comment textarea.comment {
+        width: 95%;
+        min-height: 50px;
+    }
+
+    td.points {
+        width: 50px;
+        vertical-align: top;
+    }
+
+    td.points input.points {
+        width: 50px;
+    }
+
+    td.users {
+        width: 250px;
+        vertical-align: top;
+    }
+
+    td.answer img {
+        width: 800px;
     }
 }
 
