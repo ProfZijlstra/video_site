@@ -274,6 +274,9 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
         $attendance = [];
         foreach ($enrolled as $attendant) {
+            if ($attendant['auth'] == 'instructor') {
+                continue;
+            }
             $attendance[$attendant["teamsName"]] = [
                 "notEnrolled" => 0,
                 "absent" => 0,
@@ -448,4 +451,3 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         return $parts["year"] . "-" . $parts["month"] . "-" . $parts["day"];
     }
 }
-
