@@ -29,6 +29,9 @@ class MeetingCtrl
     #[Inject('ExcusedDao')]
     public $excusedDao;
 
+    #[Inject('DayDao')]
+    public $dayDao;
+
     #[Inject('MailHlpr')]
     public $mailHlpr;
 
@@ -44,6 +47,8 @@ class MeetingCtrl
         $meeting_id = $URI_PARAMS[3];
         $meeting = $this->meetingDao->get($meeting_id);
         $attendance = $this->attendanceDao->forMeeting($meeting_id);
+        $session = $this->classSessionDao->getSessionById($meeting['session_id']);
+        $day = $this->dayDao->get($session['day_id']);
 
         $visitors = [];
         $absent = [];
@@ -62,6 +67,8 @@ class MeetingCtrl
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["meeting"] = $meeting;
+        $VIEW_DATA["session"] = $session;
+        $VIEW_DATA["day"] = $day;
         $VIEW_DATA["visitors"] = $visitors;
         $VIEW_DATA["absent"] = $absent;
         $VIEW_DATA["present"] = $present;

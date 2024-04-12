@@ -132,6 +132,7 @@ td.student_id {
 #content .meeting h3 form {
     display: inline;
 }
+.fa-cloud-upload-alt,
 .fa-trash-alt, 
 .fa-paper-plane,
 .fa-rotate-right {
@@ -141,4 +142,7 @@ td.student_id {
 }
 .fa-rotate-right {
     right: 20px;
+}
+.fa-cloud-upload-alt {
+    right: 40px;
 }

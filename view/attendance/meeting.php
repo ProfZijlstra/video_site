@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="res/css/common-1.2.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/meeting-1.2.css">
-   <script src="res/js/meeting-1.5.js"></script>
-   <script src="res/js/lib/html5-qrcode.min.js"></script>
-   <script src="res/js/sounds.js"></script>
-   <script src="res/js/ensureSaved.js"></script>
+    <script src="res/js/meeting-1.5.js"></script>
+    <script src="res/js/lib/html5-qrcode.min.js"></script>
+    <script src="res/js/sounds.js"></script>
+    <script src="res/js/ensureSaved.js"></script>
 </head>
 
 <body>
@@ -36,7 +36,7 @@
         <div id="scannerContainer" class="sideContainer hide">
             <div><i class="fa-solid fa-barcode"></i></div>
             <div><input id="barcode" placeholder="barcode number" /></div>
-        </div> 
+        </div>
 
         <div id="readerContainer" class="sideContainer hide">
             <div id="rotate" class="hide">
@@ -67,15 +67,18 @@
                     Meeting Details:
                     <form id="regen_form" method="post" action="regen/<?= $meeting["id"] ?>">
                         <input type="hidden" name="session_id" value="<?= $meeting['session_id'] ?>" />
-                        <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" id="meeting_id"/>
-                        <input type="hidden" name="start" value="<?= $meeting["start"]?>" />
-                        <input type="hidden" name="stop" value="<?= $meeting["stop"]?>" />
+                        <input type="hidden" name="meeting_id" value="<?= $meeting["id"] ?>" id="meeting_id" />
+                        <input type="hidden" name="start" value="<?= $meeting["start"] ?>" />
+                        <input type="hidden" name="stop" value="<?= $meeting["stop"] ?>" />
                         <i id="regen_meeting" class="fa-solid fa-rotate-right" title="Renerate Meeting Report"></i>
                     </form>
 
-                    <form id="delete_form" method="post" action="<?= $meeting["id"]?>/delete"> 
+                    <form id="delete_form" method="post" action="<?= $meeting["id"] ?>/delete">
                         <i id="delete_meeting" class="far fa-trash-alt" title="Delete Meeting"></i>
                     </form>
+                    <a href="<?= "../attendance/{$day['abbr']}/{$session['type']}" ?>">
+                        <i title="Export Session Attendance" class="fas fa-cloud-upload-alt <?= $session["status"] ?>"></i>
+                    </a>
                 </h3>
                 <form method="post" id="meeting_form">
                     <input type="hidden" name="id" value="<?= $meeting["id"] ?>">
@@ -100,10 +103,10 @@
 
             <div class="btns">
             </div>
-            <form id="absentForm" method="post" action="<?= $meeting["id"]?>/absent">
+            <form id="absentForm" method="post" action="<?= $meeting["id"] ?>/absent">
                 <input id="absent_id" type="hidden" name="attendance_id" value="" />
             </form>
-            <form id="presentForm" method="post" action="<?= $meeting["id"]?>/present">
+            <form id="presentForm" method="post" action="<?= $meeting["id"] ?>/present">
                 <input id="present_id" type="hidden" name="attendance_id" value="" />
             </form>
 
@@ -120,7 +123,8 @@
                         <th>Excu</th>
                     </tr>
                     <?php foreach ($absent as $missing) : ?>
-                        <tr data-id="<?= $missing["id"] //is attendance id ?>" id="<?= $missing["id"] ?>">
+                        <tr data-id="<?= $missing["id"] //is attendance id 
+                                        ?>" id="<?= $missing["id"] ?>">
                             <td class="name">
                                 <a href="../../../user/<?= $missing["teamsName"] ?>"><?= $missing["teamsName"] ?></a>
                                 <span class="right present">present</span>
@@ -152,7 +156,8 @@
                         <th title="Excused">Excu</th>
                     </tr>
                     <?php foreach ($present as $student) : ?>
-                        <tr data-id="<?= $student["id"] //is attendance id, not student id ?>" id="<?= $student["id"]?>">
+                        <tr data-id="<?= $student["id"] //is attendance id, not student id 
+                                        ?>" id="<?= $student["id"] ?>">
                             <td class="student_id">
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["studentID"] ?></a>
                             </td>
