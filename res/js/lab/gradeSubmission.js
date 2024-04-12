@@ -47,7 +47,7 @@ window.addEventListener("load", () => {
             input.value = input.dataset.value;
             return;
         }
-        const points = container.querySelector("input").value;
+        const points = input.value;
         const hasMarkDown = container.querySelector("i.fa-markdown").classList.contains("active");
         const comment = container.querySelector("textarea").value;
         const shifted = encodeURIComponent(MARKDOWN.ceasarShift(comment));

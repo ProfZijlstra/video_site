@@ -30,7 +30,7 @@ class DeliveryDao
     public function forDeliverable($deliverable_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT d.created, d.updated, d.completion, d.duration, 
+            "SELECT d.id, d.created, d.updated, d.completion, d.duration, 
                 d.text, d.hasMarkDown, d.file, d.name, 
                 d.stuComment, d.stuCmntHasMD, 
                 d.points, d.gradeComment, d.gradeCmntHasMD, 

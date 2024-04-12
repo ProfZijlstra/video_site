@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Grade Question</title>
+    <title>Grade Deliverable</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
@@ -13,7 +13,51 @@
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/ensureSaved.js"></script>
-    <script></script>
+    <script>
+        window.addEventListener("load", () => {
+            // most of this code is directly copied from gradeSubmission.js
+            // should we pull it out into a common file?
+            function gradeDeliverable() {
+                const container = this.closest("tr");
+                const input = container.querySelector("input");
+                if (!input.checkValidity()) {
+                    alert("Points have an invalid value (beyond max or below zero).");
+                    input.value = input.dataset.value;
+                    return;
+                }
+                const points = input.value;
+                const hasMarkDown = true;
+                const comment = container.querySelector("textarea").value;
+                const shifted = encodeURIComponent(MARKDOWN.ceasarShift(comment));
+                const delivery_id = container.dataset.id;
+
+                const data = new URLSearchParams();
+                data.append("delivery_id", delivery_id);
+                data.append("points", points);
+                data.append("hasMarkDown", hasMarkDown);
+                data.append("comment", shifted);
+
+                fetch(`../delivery/${delivery_id}`, {
+                        method: "PUT",
+                        body: data,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Grading delivery failed.");
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+            }
+            document.querySelectorAll("textarea, input").forEach(input => {
+                input.addEventListener("change", gradeDeliverable);
+            });
+        });
+    </script>
 </head>
 
 <body id="gradeDeliverable" class="lab grade labDeliverables">
@@ -70,7 +114,7 @@
                 </tr>
                 <?php for ($i = 0; $i < count($deliveries); $i++) : ?>
                     <?php $delivery = $deliveries[$i]; ?>
-                    <tr>
+                    <tr data-id="<?= $delivery['id'] ?>">
                         <td class="users">
                             <div>
                                 <?php if ($delivery['group']) : ?>
@@ -82,7 +126,7 @@
                             <div class="timestamp">Created: <?= substr($delivery['created'], 11) ?></div>
                             <div class="timestamp">Updated: <?= substr($delivery['updated'], 11) ?></div>
                         </td>
-                        <td class="delivery">
+                        <td class="delivery" data-id="<?= $delivery['id'] ?>">
                             <div class="stats">
                                 <label title="Hours spent creating this deliverable">
                                     Hours:
@@ -131,10 +175,10 @@
                         </td>
 
                         <td class="comment">
-                            <textarea class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
+                            <textarea autofocus class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
                         </td>
                         <td class="points">
-                            <input type="number" value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
+                            <input type="number" value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
                         </td>
                     </tr>
                 <?php endfor; ?>
@@ -143,18 +187,18 @@
             <div class="done">
 
                 <?php if ($prev_id) : ?>
-                    <a href="<?= $prev_id ?>" tabindex="-1">
+                    <a href="<?= $prev_id ?>">
                         <i title="Previous Deliverable" class="fa-solid fa-arrow-left"></i>
                     </a>
                 <?php endif; ?>
                 <?php if ($next_id) : ?>
-                    <a href="<?= $next_id ?>" tabindex="-1">
+                    <a href="<?= $next_id ?>">
                         <i title="Next Deliverable" class="fa-solid fa-arrow-right"></i>
                     </a>
                 <?php endif; ?>
 
 
-                <a href="../grade" tabindex="-1">
+                <a href="../grade">
                     <i title="Finish Grading" class="fa-solid fa-check"></i>
                 </a>
             </div>

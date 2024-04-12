@@ -468,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`delivery` (
   `name` VARCHAR(255) NULL,
   `stuComment` TEXT,
   `stuCmntHasMD` TINYINT UNSIGNED,
-  `points` INT UNSIGNED,
+  `points` FLOAT UNSIGNED,
   `gradeComment` TEXT NULL,
   `gradeCmntHasMD` TINYINT UNSIGNED NULL,
   PRIMARY KEY (`id`),
