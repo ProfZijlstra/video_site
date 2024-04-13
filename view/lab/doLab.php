@@ -104,7 +104,8 @@
 
                                 <label title="Approximately how far you completed this deliverable" class="completion">Complete:
                                     <select class="completion">
-                                        <?php for ($i = 0; $i <= 100; $i += 10) : ?>
+                                        <option value="0">0%</option>
+                                        <?php for ($i = 100; $i >= 10; $i -= 10) : ?>
                                             <option value="<?= $i ?>" <?= $delivery['completion'] == $i ? 'selected' : '' ?>>
                                                 <?= $i ?>%
                                             </option>
