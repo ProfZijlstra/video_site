@@ -456,6 +456,7 @@ class LabTakingCtrl
             $duration,
             '',
             '',
+            '',
             $stuComment,
             $stuCmntHasMD
         );
