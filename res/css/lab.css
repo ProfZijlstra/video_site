@@ -328,14 +328,16 @@ body#doLab{
 }
 
 body.grade {
+    div#content {
+        padding-bottom: 90px;
+    }
     div.timestamp {
         font-size: 10pt;
         color: gray;
         font-family: monospace;
     }
     div.done {
-        position: absolute;
-        right: 70px;
+        text-align: right;
         font-size: 24px;
     }
 }
@@ -370,7 +372,6 @@ body#gradeSubmission {
 body#gradeDeliverable {
     div#content {
         width: 90%;
-        padding-bottom: 90px;
     }
 
     div.dcontainer.deliverables {
@@ -410,6 +411,10 @@ body#gradeDeliverable {
 
     td.answer img {
         width: 800px;
+    }
+    div.done {
+        position: absolute;
+        right: 70px;
     }
 }
 

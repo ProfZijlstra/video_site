@@ -67,6 +67,16 @@ class SubmissionDao
         return $stmt->fetchAll();
     }
 
+    public function idsForLab($lab_id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT id FROM submission 
+                WHERE lab_id = :lab_id"
+        );
+        $stmt->execute(["lab_id" => $lab_id]);
+        return $stmt->fetchAll();
+    }
+
     public function byId($id)
     {
         $stmt = $this->db->prepare(

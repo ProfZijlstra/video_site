@@ -133,6 +133,24 @@
                 <?php $tabindex += 2; ?>
             <?php endforeach; ?>
 
+            <div class="done">
+
+                <?php if ($idx > 0) : ?>
+                    <a href="<?= $ids[$idx - 1] ?>?idx=<?= $idx - 1 ?>">
+                        <i title="Previous Submission" class="fa-solid fa-arrow-left"></i>
+                    </a>
+                <?php endif; ?>
+                <?php if ($idx < count($ids) - 1) : ?>
+                    <a href="<?= $ids[$idx + 1] ?>?idx=<?= $idx + 1 ?>">
+                        <i title="Next Submission" class="fa-solid fa-arrow-right"></i>
+                    </a>
+                <?php endif; ?>
+
+
+                <a href="../grade">
+                    <i title="Finish Grading" class="fa-solid fa-check"></i>
+                </a>
+            </div>
         </div>
     </main>
 </body>

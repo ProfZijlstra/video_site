@@ -157,11 +157,17 @@ class LabGradingCtrl
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
         $submission_id = $URI_PARAMS[4];
+        $idx = filter_input(INPUT_GET, "idx", FILTER_VALIDATE_INT);
 
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $deliverables = $this->deliverableDao->forLab($lab_id);
         $submission = $this->submissionDao->byId($submission_id);
         $deliveries = $this->deliveryDao->forSubmission($submission_id);
+        $ids = array_column($this->submissionDao->idsForLab($lab_id), 'id');
+
+        if ($idx === null) {
+            $idx = array_search($submission_id, $ids);
+        }
 
         $members = [];
         if ($submission['group']) {
@@ -177,6 +183,8 @@ class LabGradingCtrl
         $VIEW_DATA['title'] = "Grade Submission";
         $VIEW_DATA['members'] = $members;
         $VIEW_DATA['submission'] = $submission;
+        $VIEW_DATA['ids'] = $ids;
+        $VIEW_DATA['idx'] = $idx;
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['deliveries'] = $deliveries;
 
