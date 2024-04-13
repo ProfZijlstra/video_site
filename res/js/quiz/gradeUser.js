@@ -1,7 +1,4 @@
 window.addEventListener("load", () => {   
-    // focus first comment area to get started
-    document.querySelector('textarea.comment').focus();
-
     // hookup markdown previews
     MARKDOWN.enablePreview("../../../markdown");
 

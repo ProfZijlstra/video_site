@@ -1,126 +1,134 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Grade Quiz by Student</title>
-        <meta charset="utf-8" />
-        <meta name=viewport content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common-1.2.css">
-        <link rel="stylesheet" href="res/css/adm.css">
-        <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.4.css">
-        <style>
-            #content > h3 {
-                margin-bottom: 0px;
-            }
-        </style>
-        <script src="res/js/lib/prism.js"></script>
-        <script src="res/js/markdown-1.1.js"></script>
-        <script src="res/js/quiz/gradeUser.js"></script>
-    </head>
-    <body>
-        <?php include("header.php"); ?>
-        <main>
-            <nav class="back" title="Back">
-                <a href="../grade">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </a>
-            </nav>
-            <div id="content">
-                <!-- Student Being Graded -->
-                <h3 id="user" data-user_id="<?= $user['id'] ?>">
-                    <?= $user['studentID'] ?> <?= $user['knownAs']?> <?= $user['lastname'] ?>
-                </h3>
-                <?php foreach($events as $event): ?>
-                    <div><span class="timestamp"><?= $event['timestamp'] ?> <?= $event['type']?></span></div>
-                <?php endforeach; ?>
 
-                <!-- For erach question show -->
-                <?php $tabindex = 1; ?>
-                <?php foreach($questions as $question): ?>
-                    <div class="qcontainer">
-                        <div class="about">
-                            <div class="seq"><?= $question['seq'] ?></div>
-                            Points Possible: <?= $question['points'] ?> <br />
-                            <input    class="points"
-                                type="number" 
-                                value="<?= $answers[$question['id']]['points'] ? $answers[$question['id']]['points'] : 0 ?>" 
-                                step="0.01" 
-                                max="<?= $question['points'] ?>"
-                                name="points" 
-                                class="points" 
-                                tabindex="<?= $tabindex + 1?>"/>
+<head>
+    <title>Grade Quiz by Student</title>
+    <meta charset="utf-8" />
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="res/css/common-1.2.css">
+    <link rel="stylesheet" href="res/css/adm.css">
+    <link rel="stylesheet" href="res/css/lib/prism.css">
+    <link rel="stylesheet" href="res/css/quiz-1.4.css">
+    <style>
+        #content>h3 {
+            margin-bottom: 0px;
+        }
+    </style>
+    <script src="res/js/lib/prism.js"></script>
+    <script src="res/js/markdown-1.1.js"></script>
+    <script src="res/js/quiz/gradeUser.js"></script>
+</head>
+
+<body>
+    <?php include("header.php"); ?>
+    <main>
+        <nav class="back" title="Back">
+            <a href="../grade">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </nav>
+        <div id="content">
+            <!-- Student Being Graded -->
+            <h3 id="user" data-user_id="<?= $user['id'] ?>">
+                <?= $user['studentID'] ?> <?= $user['knownAs'] ?> <?= $user['lastname'] ?>
+            </h3>
+            <?php foreach ($events as $event) : ?>
+                <div><span class="timestamp"><?= $event['timestamp'] ?> <?= $event['type'] ?></span></div>
+            <?php endforeach; ?>
+
+            <!-- For erach question show -->
+            <?php foreach ($questions as $question) : ?>
+                <div class="qcontainer">
+                    <div class="about">
+                        <div class="seq"><?= $question['seq'] ?></div>
+                        Points Possible: <?= $question['points'] ?> <br />
+                        <input class="points" autofocus type="number" value="<?= $answers[$question['id']]['points'] ? $answers[$question['id']]['points'] : 0 ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
+                    </div>
+                    <div class="question" data-id="<?= $question['id'] ?>">
+                        <div>Question Text:</div>
+                        <div class="questionText">
+                            <?php if ($question['hasMarkDown']) : ?>
+                                <?= $parsedown->text($question['text']) ?>
+                            <?php else : ?>
+                                <pre><?= $question['text'] ?></pre>
+                            <?php endif; ?>
                         </div>
-                        <div class="question" data-id="<?= $question['id']?>">
-                            <div>Question Text:</div> 
-                            <div class="questionText">
-                                <?php if($question['hasMarkDown']): ?>
-                                    <?= $parsedown->text($question['text']) ?>
-                                <?php else: ?>
-                                    <pre><?= $question['text'] ?></pre>
-                                <?php endif; ?>
-                            </div>
-                            <?php if($question['modelAnswer']): ?>
-                            <div>Model Answer:</div> 
+                        <?php if ($question['modelAnswer']) : ?>
+                            <div>Model Answer:</div>
                             <div class="answerText">
-                                <?php if($question['type'] == "text"): ?>
-                                    <?php if($question['mdlAnsHasMD']): ?>
+                                <?php if ($question['type'] == "text") : ?>
+                                    <?php if ($question['mdlAnsHasMD']) : ?>
                                         <?= $parsedown->text($question['modelAnswer']) ?>
-                                    <?php else: ?>
+                                    <?php else : ?>
                                         <pre><?= $question['modelAnswer'] ?></pre>
                                     <?php endif; ?>
-                                <?php elseif ($question['type'] == "image"): ?>
+                                <?php elseif ($question['type'] == "image") : ?>
                                     <img src="<?= $question['modelAnswer'] ?>" />
                                 <?php endif; ?>
                             </div>
-                            <?php endif; ?>
+                        <?php endif; ?>
 
-                            <?php if($answers[$question['id']] && $answers[$question['id']]['text']): ?>
+                        <?php if ($answers[$question['id']] && $answers[$question['id']]['text']) : ?>
 
                             <div>
                                 <strong>Student Answer:</strong>
                                 <span class="timestamp"><?= $answers[$question['id']]['created'] ?></span>
-                                <?php if($answers[$question['id']]['updated']): ?>
+                                <?php if ($answers[$question['id']]['updated']) : ?>
                                     <span class="timestamp">&nbsp;&nbsp;&nbsp;&nbsp;updated: <?= $answers[$question['id']]['updated'] ?></span>
                                 <?php endif; ?>
 
-                            </div> 
+                            </div>
                             <div class="answerText">
 
-                                <?php if($question['type'] == 'text'): ?>
-                                    <?php if($answers[$question['id']]['hasMarkDown']): ?>
+                                <?php if ($question['type'] == 'text') : ?>
+                                    <?php if ($answers[$question['id']]['hasMarkDown']) : ?>
                                         <?= $parsedown->text($answers[$question['id']]['text']) ?>
-                                    <?php else: ?>
+                                    <?php else : ?>
                                         <pre><?= $answers[$question['id']]['text'] ?></pre>
                                     <?php endif; ?>
-                                <?php elseif ($question['type'] == "image"): ?>
+                                <?php elseif ($question['type'] == "image") : ?>
                                     <img src="<?= $answers[$question['id']]['text'] ?>" />
                                 <?php endif; ?>
 
                             </div>
-                            
-                            <?php else: ?>
+
+                        <?php else : ?>
 
                             <h3>Not Answered</h3>
 
-                            <?php endif; ?>
+                        <?php endif; ?>
 
-                            <div>Grading Comment:</div> 
-                            <textarea class="comment" 
-                                tabindex="<?= $tabindex ?>"
-                                data-id="<?= $answers[$question['id']]['id'] ?>" 
-                                placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"
-                                ><?= $answers[$question['id']]['comment']?></textarea>
-                            <div>
-                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                                <div class="previewArea"></div>
-                            </div>
+                        <div>Grading Comment:</div>
+                        <textarea class="comment" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answers[$question['id']]['comment'] ?></textarea>
+                        <div>
+                            <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                            <div class="previewArea"></div>
                         </div>
                     </div>
-                    <?php $tabindex += 2; ?>
-                <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
 
+            <div class="done user">
+
+                <?php if ($idx > 0) : ?>
+                    <a href="<?= $ids[$idx - 1] ?>?idx=<?= $idx - 1 ?>">
+                        <i title="Previous Submission" class="fa-solid fa-arrow-left"></i>
+                    </a>
+                <?php endif; ?>
+                <?php if ($idx < count($ids) - 1) : ?>
+                    <a href="<?= $ids[$idx + 1] ?>?idx=<?= $idx + 1 ?>">
+                        <i title="Next Submission" class="fa-solid fa-arrow-right"></i>
+                    </a>
+                <?php endif; ?>
+
+
+                <a href="../grade">
+                    <i title="Finish Grading" class="fa-solid fa-check"></i>
+                </a>
             </div>
-        </main>
-    </body>
+        </div>
+    </main>
+</body>
+
 </html>

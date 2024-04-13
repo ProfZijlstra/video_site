@@ -212,4 +212,16 @@ class UserDao
                                     WHERE studentID = :studentID");
         $stmt->execute(array("studentID" => $studentID, "badge" => $badge));
     }
+
+    public function idsForQuiz($quiz_id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT DISTINCT a.user_id 
+            FROM answer AS a
+            JOIN question AS q ON a.question_id = q.id
+            WHERE q.quiz_id = :quiz_id"
+        );
+        $stmt->execute(array("quiz_id" => $quiz_id));
+        return $stmt->fetchAll();
+    }
 }

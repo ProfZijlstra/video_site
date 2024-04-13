@@ -125,6 +125,13 @@ class QuizGradingCtrl
         $quiz_id = $URI_PARAMS[3];
         $user_id = $URI_PARAMS[4];
 
+        $idx = filter_input(INPUT_GET, "idx", FILTER_VALIDATE_INT);
+        $ids = array_column($this->userDao->idsForQuiz($quiz_id), 'user_id');
+        if ($idx === null) {
+            $idx = array_search($submission_id, $ids);
+        }
+
+
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Quiz by Student";
@@ -132,6 +139,8 @@ class QuizGradingCtrl
         $VIEW_DATA['events'] = $this->quizEventDao->forUser($quiz_id, $user_id);
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
+        $VIEW_DATA['idx'] = $idx;
+        $VIEW_DATA['ids'] = $ids;
         $VIEW_DATA["parsedown"] = new Parsedown();
 
         return "quiz/gradeUser.php";
