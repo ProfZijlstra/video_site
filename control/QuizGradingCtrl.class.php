@@ -127,8 +127,8 @@ class QuizGradingCtrl
 
         $idx = filter_input(INPUT_GET, "idx", FILTER_VALIDATE_INT);
         $ids = array_column($this->userDao->idsForQuiz($quiz_id), 'user_id');
-        if ($idx === null) {
-            $idx = array_search($submission_id, $ids);
+        if ($idx == "") {
+            $idx = array_search($user_id, $ids);
         }
 
 
