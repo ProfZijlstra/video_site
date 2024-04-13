@@ -30,7 +30,6 @@
 <body>
     <?php include("header.php"); ?>
     <main>
-        <?php if (hasMinAuth('admin')) : ?>
             <nav class="tools">
                 <?php if ($type == "my"): ?>
                 <a href="all">
@@ -41,9 +40,10 @@
                     <i class="fa-solid fa-user" title="My Courses"></i>
                 </a>
                 <?php endif; ?>
-                <i id="createCourse" title="Create Course" class="fa-regular fa-square-plus"></i>
+				<?php if (hasMinAuth('admin')) : ?>
+					<i id="createCourse" title="Create Course" class="fa-regular fa-square-plus"></i>
+				<?php endif; ?>
             </nav>
-        <?php endif; ?>
         <div id="content">
             <?php if ($msg) : ?>
                 <p class="error"><?= $msg ?></p>
