@@ -109,7 +109,7 @@ div.question pre {
     white-space: pre-wrap;
 }
 div.question img {
-    width: 585px;
+    width: 100%;
 }
 i.fa-circle-notch {
     display: none;
@@ -181,6 +181,7 @@ div.done.user {
         top: 0px;
         right: 125px;
         background-color: white;
+        z-index: 100;
     }
     nav.tools h3 {
         margin: 0px;
