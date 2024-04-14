@@ -145,7 +145,7 @@ class QuizTakingCtrl
 
         // create / update answer in the db
         if ($answer_id) {
-            $this->answerDao->update($answer_id, $dst, $user_id);
+            $this->answerDao->update($answer_id, $dst, $user_id, 0);
         } else {
             $answer_id = $this->answerDao->add($dst, $question_id, $user_id, 0);
         }
