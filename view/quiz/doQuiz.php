@@ -48,7 +48,7 @@
                                 <pre><?= $question['text'] ?></pre>
                             <?php endif; ?>
                         </div>
-                        <div>Your Answer:</div>
+                        <span>Your Answer:</span>
                         <?php if ($question['type'] == "text") : ?>
                             <div class="textContainer">
                                 <i title="Markdown" class="fa-brands fa-markdown <?= $answers[$question['id']]['hasMarkDown'] ? 'active' : "" ?>"></i>
@@ -59,21 +59,23 @@
                                 </div>
                             </div>
                         <?php elseif ($question['type'] == "image") : ?>
+                            <span>
+                                <input type="file" class="img_replace" />
+                                <i title="Upload image" class="fa-solid fa-upload"></i>
+                                <i class="fa-solid fa-circle-notch"></i>
+                                <?php if ($answers[$question['id']]) : ?>
+                                    <a href="<?= $answers[$question['id']]['text'] ?>" target="_blank">
+                                        <?= basename($answers[$question['id']]['text']) ?>
+                                    </a>
+                                <?php else : ?>
+                                    <a href="" target="_blank"></a>
+                                <?php endif; ?>
+                            </span>
                             <?php if ($answers[$question['id']]) : ?>
                                 <img class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" src="<?= $answers[$question['id']]['text'] ?>" />
                             <?php else : ?>
                                 <img class="answer hide" />
                             <?php endif; ?>
-                            <div>
-                                <?php if ($answers[$question['id']]) : ?>
-                                    <label>Upload Replacement: </label>
-                                <?php else : ?>
-                                    <label>Upload Answer: </label>
-                                <?php endif; ?>
-                                <input type="file" class="img_replace" />
-                                <i class="fa-solid fa-circle-notch"></i>
-                            </div>
-
                         <?php endif; ?>
                     </div>
                 </div>

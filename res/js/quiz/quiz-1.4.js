@@ -50,7 +50,7 @@ window.addEventListener("load", () => {
         }
         const qid = this.parentNode.parentNode.dataset.id;
         const spinner = this.parentNode.querySelector('i.fa-circle-notch');
-        const label = this.parentNode.querySelector('label');
+        const anchor = this.parentNode.querySelector('a');
         spinner.classList.add('rotate');
         const data = new FormData();
         data.append("answer_id", aid);
@@ -68,7 +68,9 @@ window.addEventListener("load", () => {
                 img.src = data.dst;
                 img.dataset.id = data.answer_id;
                 img.classList.remove('hide');
-                label.innerText = "Upload Replacement";
+                anchor.href = data.dst;
+                const name = data.dst.split('/').pop();
+                anchor.innerText = name;
             }
             spinner.classList.remove('rotate');    
         });
@@ -77,6 +79,12 @@ window.addEventListener("load", () => {
     const files = document.querySelectorAll("div.question input[type=file]");
     for (const file of files) {
         file.onchange = uploadImage;
+    }
+    const uploads = document.querySelectorAll("i.fa-upload");
+    for (const upload of uploads) {
+        upload.onclick = () => {
+            upload.parentNode.querySelector("input[type=file]").click();
+        }
     }
     
 

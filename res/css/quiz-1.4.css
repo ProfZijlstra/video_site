@@ -112,10 +112,21 @@ div.question pre {
 div.question img {
     width: 100%;
 }
-i.fa-circle-notch {
+div.question span {
+    display: inline-block;
+    margin: 10px 0px;
+}
+div.question span i.fa-upload {
+    cursor: pointer;
+}
+div.question span input[type="file"] {
     display: none;
 }
+i.fa-circle-notch {
+    visibility: hidden;
+}
 i.fa-circle-notch.rotate {
+    visibility: visible;
     display: inline-block;
     width: 16px;
     animation: rotation 2s infinite linear;
