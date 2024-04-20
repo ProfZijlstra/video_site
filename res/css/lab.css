@@ -78,16 +78,6 @@ body.lab {
             top: 10px;
         }
     }
-
-    i.fa-circle-notch {
-        visibility: hidden;
-    }
-    i.fa-circle-notch.rotate {
-        visibility: visible;
-        display: inline-block;
-        animation: rotate 2s infinite linear;
-    }
-
 }
 
 
@@ -143,10 +133,6 @@ body#editLab {
         }
         i.fa-circle-notch {
             right: 25px;
-            visibility: hidden;
-        }
-        i.fa-circle-notch.rotate {
-            visibility: visible;
         }
     }
 
