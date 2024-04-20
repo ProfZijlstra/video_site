@@ -163,7 +163,7 @@
                             </td>
                             <td class="name" title="<?= $student["start"] . " - " . $student["stop"] ?>">
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["teamsName"] ?></a>
-                                <span class="right absent">absent</span>
+                                <span title="Click to mark absent" class="right absent">absent?</span>
                             </td>
                             <td>
                                 <input class="time start" value="<?= $student["start"] ?>">

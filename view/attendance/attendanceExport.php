@@ -112,11 +112,11 @@
             <h3>Export Attendance to CAMS</h3>
             <form action="export" method="post">
                 <div>
-                    <label>CAMS Pwd</label> 
-                    <input id="camsPwd" type="password" name="password" placeholder="Your CAMS Password"/>
+                    <label>CAMS Pwd</label>
+                    <input id="camsPwd" type="password" name="password" placeholder="Your CAMS Password" />
                 </div>
                 <div>
-                    <label>Session Type</label> 
+                    <label>Session Type</label>
                     <select name="stype" id="stype">
                         <option>AM</option>
                         <option>PM</option>
@@ -136,7 +136,10 @@
                     <input id="stop" type="time" name="stop" value="<?= $session["stop"] ?>" />
                 </div>
 
-                <div id="doExport" class="btn"><button>Export</button></div>
+                <div id="doExport" class="btn">
+                    <i id="exportSpinner" class="fa-solid fa-circle-notch"></i>
+                    <button>Export</button>
+                </div>
             </form>
         </div>
     </div>

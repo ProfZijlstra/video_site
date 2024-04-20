@@ -45,6 +45,10 @@ window.addEventListener("load", () => {
             select.value = stype; 
         }
         document.getElementById("camsPwd").focus();
+        const modals = document.querySelectorAll(".modal");
+        for (const modal of modals) {
+            modal.classList.remove("hide");
+        }
     };
 
     // hide overlay and any/all modal(s)
@@ -63,24 +67,7 @@ window.addEventListener("load", () => {
     };
 
     document.getElementById("doExport").onclick = function() {
-        const data = {
-            "pwd": document.getElementById("camsPwd").value,
-            "stype": document.getElementById('stype').value,
-            "date": document.getElementById('date').value,
-            "start": document.getElementById("start").value,
-            "stop": document.getElementById("stop").value
-        }
-
-        fetch(`export`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });            
-    }
-
-
-
-    
+        this.disabled = true;
+        document.getElementById("exportSpinner").classList.add("rotate");
+    };
 });
