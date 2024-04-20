@@ -364,7 +364,7 @@ Manalabs Attendance System.
         $stats["status"] = "EXPORTED";
         $this->classSessionDao->setStatus($stats);
 
-        return "Location: $real_stype";
+        return "Location: ../../attendance";
     }
 
 
