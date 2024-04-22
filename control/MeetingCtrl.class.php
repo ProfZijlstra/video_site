@@ -290,6 +290,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
                 "arriveLate" => 0,
                 "leaveEarly" => 0,
                 "middleMissing" => 0,
+                "inClass" => 1,
                 "excused" => isset($excused[$attendant["teamsName"]]) ? 1 : 0,
                 "start" => $start,
                 "stop" => $stop
@@ -297,7 +298,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         }
         $this->attendanceDao->addReport($meeting_id, $attendance);
 
-        return "Location: attendance";
+        return "Location: meeting/{$meeting_id}";
     }
 
 
@@ -374,6 +375,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
                 "arriveLate" => 0,
                 "leaveEarly" => 0,
                 "middleMissing" => 0,
+                "inClass" => 0,
                 "excused" => 0,
                 "start" => null,
                 "stop" => null
@@ -393,6 +395,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
                     "arriveLate" => 0,
                     "leaveEarly" => 0,
                     "middleMissing" => 0,
+                    "inClass" => 0,
                     "excused" => 0,
                     "start" => null,
                     "stop" => null

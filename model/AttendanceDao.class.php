@@ -32,7 +32,7 @@ class AttendanceDao
                 "arriveLate" => $attend["arriveLate"],
                 "leaveEarly" => $attend["leaveEarly"],
                 "middleMissing" => $attend["middleMissing"],
-                "inClass" => 0,
+                "inClass" => $attend["inClass"],
                 "excused" => $attend["excused"],
                 "start" => $attend["start"],
                 "stop" => $attend["stop"],
@@ -170,4 +170,3 @@ class AttendanceDao
         return $stmt->fetchAll();
     }
 }
-
