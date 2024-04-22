@@ -87,8 +87,99 @@ window.addEventListener("load", () => {
         }
     }
     
+    // enable camera uploads
+    let videoDevs = undefined;
+    let deviceIdx = 0;
+    function openCamera() {
+        const parent = this.closest('div');
+        const video = parent.querySelector('video');
+        const switchCam = parent.querySelector('.switchCamera');
+        const close = parent.querySelector(".closeCamera");
+        const camera = parent.querySelector('div.camera');
+        const spinner = parent.querySelector('i.fa-circle-notch');
+        const img = parent.querySelector('img');
+        const pic = parent.querySelector('div.takePicture');
+        spinner.classList.add('rotate');
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false})
+            .then((stream) => {
+                video.srcObject = stream;
+                video.classList.add('show');
+                video.play();
+                img.classList.add('hide');
+                camera.classList.remove('hide');
+                close.classList.remove('hide');
+                pic.classList.remove('hide');
+                spinner.classList.remove('rotate');
+                if (videoDevs && videoDevs.length > 1) {
+                    switchCam.classList.remove('hide');
+                }
+            })
+            .catch(() => {
+                alert("Unable to open camera");
+                spinner.classList.remove('rotate');
+            });
+        navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                videoDevs = devices.filter(d => d.kind == "videoinput");
+            });
+    }
+    document.querySelectorAll("span i.fa-camera").forEach((camera) => {
+        camera.onclick = openCamera;
+    });
 
-    // make back button work
+    function stopCamera() {
+        const parent = this.parentNode.closest('div.camera');
+        const video = parent.querySelector('video');
+        const tracks = video.srcObject.getTracks();
+        tracks.forEach(track => track.stop());
+        parent.classList.add('hide');
+    }
+    document.querySelectorAll('div.closeCamera').forEach((div) => {
+        div.onclick = function() {
+            stopCamera.call(this); 
+            this.closest("div.question")
+                .querySelector('img')
+                .classList.remove('hide');
+        } 
+    });
+
+    function switchCamera() {
+        stopCamera.call(this);
+
+        const parent = this.closest('div.question');
+        const spinner = parent.querySelector('i.fa-circle-notch');
+        const video = parent.querySelector('video');
+        const camera = parent.querySelector('div.camera');
+        spinner.classList.add('rotate');
+
+        // start the stream for the next device
+        deviceIdx = (deviceIdx + 1) % videoDevs.length; 
+        const deviceId = videoDevs[deviceIdx]['deviceId'];
+        navigator.mediaDevices.getUserMedia(
+            { video: { deviceId: { exact: deviceId } } }
+        ).then(stream => {
+            video.srcObject = stream;
+            video.play();
+            spinner.classList.remove('rotate');
+            camera.classList.remove('hide');
+        })
+        .catch((e) => {
+            alert('Fairled to switch camera: ' + e);
+            spinner.classList.remove('rotate');
+        });
+    }
+    document.querySelectorAll('div.switchCamera').forEach((div) => {
+        div.onclick = switchCamera;
+    });
+    function takePicture() {
+        // TODO: implement
+    }
+    document.querySelectorAll('div.takePicture').forEach((div) => {
+        div.onclick = takePicture;
+    });
+
+
+    // make back button also send 'finish' signal
     document.getElementById('back').onclick = function() {
         document.getElementById('finish').click();
     }

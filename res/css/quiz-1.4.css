@@ -133,7 +133,8 @@ div.question {
 div.question div.camera {
     position: relative;
 
-    div.rotate,
+    div.takePicture,
+    div.switchCamera,
     div.closeCamera {
         position: absolute;
         font-size: 50px;
@@ -142,13 +143,23 @@ div.question div.camera {
         -webkit-text-stroke: 2px black;
         cursor: pointer;
     }
-    div.rotate {
+    div.switchCamera {
         bottom: 10px;
         right: 20px;
     }
     div.closeCamera {
         top: 10px;
         right: 20px;
+    }
+    div.takePicture {
+        border: 2px solid black;
+        border-radius: 50%;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 75px;
+        height: 75px;
+        background-color: rgba(255,255,255,0.5);
     }
     div.camera_icon {
         position: absolute;

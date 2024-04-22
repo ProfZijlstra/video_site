@@ -63,6 +63,7 @@
                                 <input type="file" class="img_replace" />
                                 <i title="Upload image" class="fa-solid fa-upload"></i>
                                 <i class="fa-solid fa-circle-notch"></i>
+                                <i title="Open camera" class="fa-solid fa-camera"></i>
                                 <?php if ($answers[$question['id']]) : ?>
                                     <a href="<?= $answers[$question['id']]['text'] ?>" target="_blank">
                                         <?= basename($answers[$question['id']]['text']) ?>
@@ -71,6 +72,20 @@
                                     <a href="" target="_blank"></a>
                                 <?php endif; ?>
                             </span>
+                            <div class="camera">
+                                <video></video>
+                                <div title="Close Camera" class="closeCamera hide">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </div>
+                                <div title="Take picture" class="takePicture hide"></div>
+                                <div title="Switch Camera" class="switchCamera hide">
+                                    <i class="fas fa-sync"></i>
+                                    <div class="camera_icon">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                                <canvas></canvas>
+                            </div>
                             <?php if ($answers[$question['id']]) : ?>
                                 <img class="answer" data-id="<?= $answers[$question['id']]['id'] ?>" src="<?= $answers[$question['id']]['text'] ?>" />
                             <?php else : ?>
