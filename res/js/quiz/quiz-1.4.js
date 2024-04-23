@@ -171,13 +171,58 @@ window.addEventListener("load", () => {
     document.querySelectorAll('div.switchCamera').forEach((div) => {
         div.onclick = switchCamera;
     });
+
     function takePicture() {
-        // TODO: implement
+        const parent = this.closest('div.question');
+        const video = parent.querySelector('video');
+        const canvas = parent.querySelector('canvas');
+        const img = parent.querySelector('img');
+        const context = canvas.getContext("2d");
+        canvas.width = 640;
+        canvas.height = 480;
+        context.drawImage(video, 0, 0, 640, 480);
+        const picture = canvas.toDataURL("image/png");
+        img.setAttribute("src", picture);
+        video.classList.add('hide');
+        stopCamera.call(this);
+        img.classList.remove('hide');
+
+        // upload the image
+        // if there already is an image, get the answer_id from it
+        let aid = false;
+        if (img.dataset.id) {
+            aid = img.dataset.id;
+        }
+        const qid = parent.dataset.id;
+        const spinner = parent.querySelector('i.fa-circle-notch');
+        const anchor = parent.querySelector('a');
+        spinner.classList.add('rotate');
+        const data = new FormData();
+        data.append("answer_id", aid);
+        data.append("image", picture);
+
+        fetch(`${quiz_id}/question/${qid}/picture`, {
+            method: "POST",
+            body: data
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                img.src = data.dst;
+                img.dataset.id = data.answer_id;
+                img.classList.remove('hide');
+                anchor.href = data.dst;
+                const name = data.dst.split('/').pop();
+                anchor.innerText = name;
+            }
+            spinner.classList.remove('rotate');    
+        });
     }
     document.querySelectorAll('div.takePicture').forEach((div) => {
         div.onclick = takePicture;
     });
-
 
     // make back button also send 'finish' signal
     document.getElementById('back').onclick = function() {

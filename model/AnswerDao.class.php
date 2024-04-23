@@ -10,6 +10,15 @@ class AnswerDao
     #[Inject('DB')]
     public $db;
 
+    public function byId($id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM answer WHERE id = :id"
+        );
+        $stmt->execute(array("id" => $id));
+        return $stmt->fetch();
+    }
+
     public function add($text, $question_id, $user_id, $hasMarkDown)
     {
         $stmt = $this->db->prepare(
@@ -131,4 +140,3 @@ class AnswerDao
         return $stmt->fetchAll();
     }
 }
-

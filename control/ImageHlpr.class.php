@@ -8,6 +8,28 @@
 #[Controller]
 class ImageHlpr
 {
+    public function save($img, $path)
+    {
+        // based on https://stackoverflow.com/a/31128229/6933102
+        $img = str_replace('data:image/png;base64,', '', $img);
+        $img = str_replace(' ', '+', $img);
+        $fileData = base64_decode($img);
+
+        $this->ensureDirCreated($path);
+        $ext = "png";
+        $user_id = $_SESSION['user']['id'];
+        $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
+        $ts = $time->format("Y-m-d_H:i:s");
+        $dst = $path . "/{$ts}_{$user_id}.{$ext}";
+        file_put_contents($dst, $fileData);
+
+        return $dst;
+    }
+
+    public function delete($img)
+    {
+        unlink($img);
+    }
 
     public function process($img_name, $path)
     {

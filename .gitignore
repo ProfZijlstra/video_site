@@ -2,6 +2,7 @@
 *.pdf
 *.jpg
 *.zip
+*.png
 node_modules
 settings.php
 context.php

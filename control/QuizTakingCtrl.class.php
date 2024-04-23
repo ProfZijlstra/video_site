@@ -145,6 +145,8 @@ class QuizTakingCtrl
 
         // create / update answer in the db
         if ($answer_id) {
+            $img = $this->answerDao->byId($answer_id)['text'];
+            $this->imageHlpr->delete($img);
             $this->answerDao->update($answer_id, $dst, $user_id, 0);
         } else {
             $answer_id = $this->answerDao->add($dst, $question_id, $user_id, 0);
@@ -153,6 +155,41 @@ class QuizTakingCtrl
         return ["dst" => $dst, "answer_id" => $answer_id];
     }
 
+    /**
+     * Expects AJAX
+     **/
+    #[Post(uri: "/(\d+)/question/(\d+)/picture$", sec: "observer")]
+    public function takePicture()
+    {
+        global $URI_PARAMS;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $quiz_id = $URI_PARAMS[3];
+        $question_id = $URI_PARAMS[4];
+
+        // reject answers after quiz stop time
+        if ($this->quizEnded($quiz_id, 30)) {
+            return "error/403.php";
+        }
+
+        $user_id = $_SESSION['user']['id'];
+        $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
+        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+        $img = filter_input(INPUT_POST, "image");
+        $dst = $this->imageHlpr->save($img, $path);
+
+        // create / update answer in the db
+        if ($answer_id) {
+            $img = $this->answerDao->byId($answer_id)['text'];
+            $this->imageHlpr->delete($img);
+            $this->answerDao->update($answer_id, $dst, $user_id, 0);
+        } else {
+            $answer_id = $this->answerDao->add($dst, $question_id, $user_id, 0);
+        }
+
+        return ["dst" => $dst, "answer_id" => $answer_id];
+    }
 
     #[Post(uri: "/(\d+)/finish$", sec: "observer")]
     public function finishQuiz()
