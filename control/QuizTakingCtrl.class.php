@@ -50,7 +50,6 @@ class QuizTakingCtrl
         $now = new DateTimeImmutable("now", $tz);
         $start = new DateTimeImmutable($quiz['start'], $tz);
         $stop = new DateTimeImmutable($quiz['stop'], $tz);
-
         $startDiff = $now->diff($start);
         $stopDiff = $now->diff($stop);
 
@@ -69,7 +68,7 @@ class QuizTakingCtrl
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
 
-        if ($this->quizEnded($quiz_id)) {
+        if ($stopDiff->invert === 1) { // stop is in the past
             // show quiz taken / results page
             $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
             $VIEW_DATA['possible'] = $this->sumPoints($VIEW_DATA['questions']);
