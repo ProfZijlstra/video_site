@@ -262,7 +262,7 @@ EOD;
         foreach ($lines as $line) {
 
             # lines that do not start with an index and a studentId are ignored
-            if (preg_match("/^\d+\s*,\s*0{3}-[169]\d-\d{4}/", $line)) {
+            if (preg_match("/^\d+\s*,\s*0{3}-\d{2}-\d{4}/", $line)) {
                 list($idx, $sid, $first, $middle, $last, $email) = str_getcsv($line);
 
                 # create user if not already in DB
