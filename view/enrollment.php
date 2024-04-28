@@ -78,6 +78,8 @@
             { ?>
                 <?php if ($showNoneMsg && !$list) : ?>
                     <h2>No <?= $type ?>(s) Yet</h2>
+                <?php elseif (count($list) == 0 && !$showNoneMsg) : ?>
+                    <!-- do nothing -->
                 <?php else : ?>
                     <h2><?= count($list) ?> <?= $type ?>(s)</h2>
                     <table>
