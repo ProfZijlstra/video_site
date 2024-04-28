@@ -242,7 +242,7 @@ window.addEventListener("load", () => {
             alert(error);
         });
     }
-    document.querySelectorAll(".dcontainer input, .dcontainer textarea").forEach((e) => {
+    document.querySelectorAll(".about input, .deliv textarea").forEach((e) => {
         e.addEventListener("change", updateDeliv);
     });
 
