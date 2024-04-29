@@ -100,8 +100,10 @@
                 <i id="addDelivIcon" title="Add Deliverable" class="far fa-plus-square"></i>
             </h3>
             <?php if (!$deliverables) : ?>
-                <h2>No Deliverables Yet!</h2>
-                <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one deliverable.</p>
+                <div id="noDelivs">
+                    <h2>No Deliverables Yet!</h2>
+                    <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one deliverable.</p>
+                </div>
             <?php endif; ?>
             <div id="deliverables">
                 <?php foreach ($deliverables as $deliv) : ?>

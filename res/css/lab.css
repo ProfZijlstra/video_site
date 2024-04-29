@@ -105,6 +105,9 @@ body#editLab {
     div.lab input[type="time"], div.lab input[type="date"] {
         width: 150px;
     }
+    div#noDelivs.hide {
+        display: none;
+    }
 
     #updateLab .lab {
         margin-top: 20px;
