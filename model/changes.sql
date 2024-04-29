@@ -409,7 +409,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `manalabs`.`submission` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `lab_id` BIGINT UNSIGNED NOT NULL,
-  `user_id` INT UNSIGNED NOT NULL,
+  `user_id` INT NOT NULL,
   `group` VARCHAR(45) NULL, -- should I index this?
   PRIMARY KEY (`id`),
   INDEX `fk_hw_submit_lab1_idx` (`lab_id` ASC) VISIBLE,
@@ -457,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`delivery` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `deliverable_id` INT UNSIGNED NOT NULL,
   `submission_id` BIGINT UNSIGNED NOT NULL,
-  `user_id` INT UNSIGNED,
+  `user_id` INT,
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `completion` TINYINT UNSIGNED NOT NULL DEFAULT 0,
