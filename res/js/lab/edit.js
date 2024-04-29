@@ -181,10 +181,11 @@ window.addEventListener("load", () => {
                 document.getElementById("noDelivs")?.classList.add("hide");
                 const div = document.createElement("div");
                 div.innerHTML = html;
-                div.querySelector("textarea.desc").addEventListener("change", updateDeliv);
+                div.querySelector("textarea")?.addEventListener("change", updateDeliv);
                 div.querySelector("i.delDeliv").addEventListener("click", delDeliv);
                 div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
                 div.querySelector(".points").addEventListener("change", updatePoints);
+                div.querySelector(".points").addEventListener("change", updateDeliv);
                 div.querySelector("i.deliverable").addEventListener("click", MARKDOWN.toggleMarkDown);
                 div.querySelector("button.previewBtn").addEventListener("click", MARKDOWN.getHtmlForMarkdown);
                 div.querySelector("select.zipAttachment")?.addEventListener("change", updateZipAttachment);
