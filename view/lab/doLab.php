@@ -126,7 +126,7 @@
                                     <textarea class="txt" placeholder="Write the text for your deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write the text for your deliverable here."><?= $delivery['text'] ?></textarea>
 
                                     <i title="Markdown" class="txt fa-brands fa-markdown <?= $delivery['hasMarkDown'] ? "active" : "" ?>"></i>
-                                    <div class="mdContainer <?= $deliv['hasMarkDown'] ? "active" : "" ?>">
+                                    <div class="mdContainer <?= $delivery['hasMarkDown'] ? "active" : "" ?>">
                                         <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                         <div class="previewArea"></div>
                                     </div>
