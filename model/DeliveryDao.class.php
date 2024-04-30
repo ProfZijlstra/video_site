@@ -291,6 +291,49 @@ class DeliveryDao
         ]);
     }
 
+    public function createPicture(
+        $submission_id,
+        $deliverable_id,
+        $user_id,
+        $file,
+        $name,
+    ) {
+        $stmt = $this->db->prepare(
+            "INSERT INTO delivery VALUES (
+                NULL, :deliverable_id, :submission_id, :user_id,
+                NOW(), NOW(), 
+                0, '00:00:00', 
+                '', 0, 
+                :file, :name, 
+                '', 0, 
+                NULL, NULL, NULL)"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id,
+            "file" => $file,
+            "name" => $name,
+        ]);
+        return $this->db->lastInsertId();
+    }
+
+    public function updatePicture($id, $file, $name)
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE delivery 
+                SET updated = NOW(),
+                `file` = :file, 
+                `name` = :name
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "file" => $file,
+            "name" => $name,
+            "id" => $id
+        ]);
+    }
+
     public function grade($id, $points, $comment, $hasMarkDown)
     {
         $stmt = $this->db->prepare(

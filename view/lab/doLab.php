@@ -14,7 +14,8 @@
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/back.js"></script>
-    <script src="res/js/lab/lab.js"></script>
+    <script src="res/js/camera.js"></script>
+    <script src="res/js/lab/lab-1.1.js"></script>
 </head>
 
 <body id="doLab" class="lab labDeliverables">
@@ -72,7 +73,7 @@
                 <p class="delivInstr">Deliverables with 0:00 hours or 0% complete are auto-graded to zero points</p>
                 <?php foreach ($deliverables as $deliv) : ?>
                     <?php $delivery = $deliveries[$deliv['id']] ?? [] ?>
-                    <div class="dcontainer deliverables" data-id="<?= $deliv['id'] ?>" data-type="<?= $deliv['type'] ?>">
+                    <div class="dcontainer deliverables camContainer" data-id="<?= $deliv['id'] ?>" data-type="<?= $deliv['type'] ?>">
                         <div class="about">
                             <div class="meta" title="<?= $typeDesc[$deliv['type']] ?> to complete this deliverable">
                                 <span class="type">
@@ -140,11 +141,28 @@
                                     <div class="fileContainer">
                                         <i title="<?= $delivery['text'] ? 'Replace' : 'Upload' ?> <?= $deliv['type'] ?>" class="upload fa-solid fa-upload"></i>
                                         <i class="spinner fa-solid fa-circle-notch"></i>
+                                        <?php if ($deliv['type'] == 'img') : ?>
+                                            <span><i class="fa-solid fa-camera" title="Open Camera"></i></span>
+                                        <?php endif; ?>
                                         <input type="file" class="file fileUpload" />
                                         <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
                                         <span class="check"><i class="fa-solid fa-check"></i></span>
                                         <?php if ($deliv['type'] == 'img') : ?>
-                                            <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
+                                            <div class="camera">
+                                                <video></video>
+                                                <div title="Close Camera" class="closeCamera hide">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </div>
+                                                <div title="Take picture" class="takePicture hide"></div>
+                                                <div title="Switch Camera" class="switchCamera hide">
+                                                    <i class="fas fa-sync"></i>
+                                                    <div class="camera_icon">
+                                                        <i class="fas fa-camera"></i>
+                                                    </div>
+                                                </div>
+                                                <canvas></canvas>
+                                            </div>
+                                            <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>" data-id="<?= $delivery['id'] ?>">
                                         <?php elseif ($deliv['type'] == "zip") : ?>
                                             <pre class="listing"><?= $delivery['text'] ?></pre>
                                         <?php endif; ?>

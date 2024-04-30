@@ -14,7 +14,7 @@
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/camera.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.4.js"></script>
+    <script src="res/js/quiz/quiz-1.5.js"></script>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
                         <div class="seq"><?= $question['seq'] ?></div>
                         <div class="points">Points: <?= $question['points'] ?></div>
                     </div>
-                    <div class="question" data-id="<?= $question['id'] ?>">
+                    <div class="question camContainer" data-id="<?= $question['id'] ?>">
                         <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == "text" ? "Text" : "Image Upload" ?></div>
                         <div>Question Text:</div>
                         <div class="questionText">

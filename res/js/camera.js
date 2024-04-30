@@ -6,6 +6,27 @@ const CAMERA = (function() {
 
     function init(url) {
         urlBase = url;
+
+        document.querySelectorAll("span i.fa-camera").forEach((camera) => {
+            camera.onclick = openCamera;
+        });
+
+        document.querySelectorAll('div.closeCamera').forEach((div) => {
+            div.onclick = function() {
+                stopCamera.call(this); 
+                this.closest("div.question")
+                    .querySelector('img')
+                    .classList.remove('hide');
+            } 
+        });
+
+        document.querySelectorAll('div.switchCamera').forEach((div) => {
+            div.onclick = switchCamera;
+        });
+
+        document.querySelectorAll('div.takePicture').forEach((div) => {
+            div.onclick = takePicture;
+        });
     }
 
     function openCamera() {
@@ -77,7 +98,7 @@ const CAMERA = (function() {
     }
 
     function takePicture() {
-        const parent = this.closest('div.question');
+        const parent = this.closest('div.camContainer');
         const video = parent.querySelector('video');
         const canvas = parent.querySelector('canvas');
         const img = parent.querySelector('img');

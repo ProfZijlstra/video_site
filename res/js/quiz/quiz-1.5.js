@@ -89,26 +89,6 @@ window.addEventListener("load", () => {
     
     // Hook up the camera functions
     CAMERA.init(`${quiz_id}/question`); 
-    document.querySelectorAll("span i.fa-camera").forEach((camera) => {
-        camera.onclick = CAMERA.openCamera;
-    });
-
-    document.querySelectorAll('div.closeCamera').forEach((div) => {
-        div.onclick = function() {
-            CAMERA.stopCamera.call(this); 
-            this.closest("div.question")
-                .querySelector('img')
-                .classList.remove('hide');
-        } 
-    });
-
-    document.querySelectorAll('div.switchCamera').forEach((div) => {
-        div.onclick = CAMERA.switchCamera;
-    });
-
-    document.querySelectorAll('div.takePicture').forEach((div) => {
-        div.onclick = CAMERA.takePicture;
-    });
 
     // make back button also send 'finish' signal
     document.getElementById('back').onclick = function() {

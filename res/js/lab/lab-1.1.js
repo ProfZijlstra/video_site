@@ -86,22 +86,22 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-            .then(response =>  {
-                if (!response.ok) {
-                    throw new Error(action + " deliverable failed.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                submission_id = data.submission_id;
-                deliv.dataset.id = data.id;
-            })
-            .catch(error => {
-                alert(error);
-            });
+        .then(response =>  {
+            if (!response.ok) {
+                throw new Error(action + " deliverable failed.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            submission_id = data.submission_id;
+            deliv.dataset.id = data.id;
+        })
+        .catch(error => {
+            alert(error);
+        });
     }
 
     // hook up icon click to file input
@@ -162,37 +162,41 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data,
         })
-            .then(response =>  {
-                if (!response.ok) {
-                    throw new Error("Uploading file failed.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                submission_id = data.submission_id;
-                deliv.dataset.id = data.id;
-                spinner.classList.remove("rotate");
-                upload.setAttribute("title", `Replace ${type}`);
-                const link = deliv.querySelector("a.fileLink");
-                link.setAttribute("href", data.file);
-                link.textContent = data.name;
-                check.classList.add("show");
+        .then(response =>  {
+            if (!response.ok) {
+                throw new Error("Uploading file failed.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            submission_id = data.submission_id;
+            deliv.dataset.id = data.id;
+            spinner.classList.remove("rotate");
+            upload.setAttribute("title", `Replace ${type}`);
+            const link = deliv.querySelector("a.fileLink");
+            link.setAttribute("href", data.file);
+            link.textContent = data.name;
+            check.classList.add("show");
 
-                if (type == "img") {
-                    const img = deliv.querySelector("img");
-                    img.setAttribute("src", data.file);
-                    img.classList.add("show");
-                } else if (type == "zip") {
-                    const listing = deliv.querySelector(".listing");
-                    listing.innerText = data.text;
-                }
-            })
-            .catch(error => {
-                alert(error);
-                spinner.classList.remove("rotate");
-            });
+            if (type == "img") {
+                const img = deliv.querySelector("img");
+                img.setAttribute("src", data.file);
+                img.classList.add("show");
+            } else if (type == "zip") {
+                const listing = deliv.querySelector(".listing");
+                listing.innerText = data.text;
+            }
+        })
+        .catch(error => {
+            alert(error);
+            spinner.classList.remove("rotate");
+        });
     }
+
+    // Hook up the camera functions
+    CAMERA.init(`${lab_id}`); 
+
 });

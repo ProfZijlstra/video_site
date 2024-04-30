@@ -623,6 +623,71 @@ class LabTakingCtrl
         return $this->deliveryDao->byId($delivery_id);
     }
 
+    /**
+     * Expects AJAX
+     **/
+    #[Post(uri: "/(\d+)/(\d+)/picture$", sec: "observer")]
+    public function takePicture()
+    {
+        global $URI_PARAMS;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $lab_id = $URI_PARAMS[3];
+        $deliverable_id = $URI_PARAMS[3];
+
+        // reject answers after quiz stop time
+        if ($this->labEnded($lab_id, 30)) {
+            return "error/403.php";
+        }
+
+        $user_id = $_SESSION['user']['id'];
+        $delivery_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
+        $img = filter_input(INPUT_POST, "image");
+
+        // get submission_id
+        $lab = $this->labDao->byId($lab_id);
+        if ($lab['type'] == "group") {
+            $group = $this->enrollmentDao->getGroup($user_id, $course, $block);
+        } else {
+            $group = null;
+        }
+        if ($delivery_id) {
+            $submission_id = $this->deliveryDao->byId($delivery_id)['submission_id'];
+        } else {
+            $submission_id = $this->submissionDao->create(
+                $lab_id,
+                $user_id,
+                $group
+            );
+        }
+
+        $path = "res/{$course}/{$block}/lab/{$lab_id}/submit/{$submission_id}";
+        $dst = $this->imageHlpr->save($img, $path);
+        $name = basename($dst);
+
+        // create / update answer in the db
+        if ($delivery_id) {
+            $img = $this->deliveryDao->byId($delivery_id)['text'];
+            $this->imageHlpr->delete($img);
+            $this->deliveryDao->updatePicture(
+                $delivery_id,
+                $dst,
+                $name
+            );
+        } else {
+            $delivery_id = $this->deliveryDao->createPicture(
+                $submission_id,
+                $deliverable_id,
+                $user_id,
+                $dst,
+                $name,
+            );
+        }
+
+        return ["dst" => $dst, "answer_id" => $delivery_id];
+    }
+
     private function labEnded($lab_id, $leewaySecs = 30)
     {
         $lab = $this->labDao->byId($lab_id);
