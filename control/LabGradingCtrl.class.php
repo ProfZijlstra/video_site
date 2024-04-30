@@ -52,8 +52,10 @@ class LabGradingCtrl
         $groups = [];
         $members = [];
         $absent = [];
+
         $taken = [];
         $extra = [];
+        $none = [];
         foreach ($enrollment as $student) {
             $students[$student['id']] = $student;
         }
@@ -70,20 +72,35 @@ class LabGradingCtrl
             }
             $key = "group";
         } else {
+            // they all start absent
             foreach ($enrollment as $student) {
                 $absent[$student["id"]] = $student;
             }
             $key = "user_id";
         }
 
-        // they all start absent
+        // sort submissions into taken, none, extra
         foreach ($submissions as $submission) {
             if ($absent[$submission[$key]]) {
+                if ($submission['delivs'] > 0) {
+                    $taken[$submission[$key]] = $submission;
+                } else {
+                    $none[$submission[$key]] = $submission;
+                }
                 unset($absent[$submission[$key]]);
-                $taken[$submission[$key]] = $submission;
             } else {
                 $extra[$submission[$key]] = $submission;
             }
+        }
+
+        // create missing submissions for absents (group or individual)
+        foreach ($absent as $key => $item) {
+            if ($lab['type'] == 'group') {
+                $sid = $this->submissionDao->create($lab_id, null, $item['group']);
+            } else {
+                $sid = $this->submissionDao->create($lab_id, $item['id'], null);
+            }
+            $none[$key] = $this->submissionDao->byId($sid);
         }
 
         $VIEW_DATA['course'] = $course;
@@ -91,7 +108,7 @@ class LabGradingCtrl
         $VIEW_DATA['title'] = "Grade Overview";
         $VIEW_DATA['lab'] = $lab;
         $VIEW_DATA['deliverables'] = $deliverables;
-        $VIEW_DATA['absent'] = $absent;
+        $VIEW_DATA['none'] = $none;
         $VIEW_DATA['taken'] = $taken;
         $VIEW_DATA['extra'] = $extra;
         $VIEW_DATA['students'] = $students;

@@ -86,7 +86,7 @@
                     </table>
                 <?php endif; ?>
             <?php } ?>
-            <?php submissionTable($absent, "No Submission", "", false, $students, $groups); ?>
+            <?php submissionTable($none, "No Submission", "", false, $students, $groups); ?>
             <?php submissionTable($taken, "Results", "Submissions from enrolled students", true, $students, $members); ?>
             <?php submissionTable($extra, "Extra", "Submissions from unenrolled students", true, $students, $members); ?>
         </div>
