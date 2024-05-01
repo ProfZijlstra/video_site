@@ -102,7 +102,8 @@ class AttendanceDao
     public function markAbsent($id, $absent)
     {
         $stmt = $this->db->prepare("UPDATE attendance SET 
-            `absent` = :absent 
+            `absent` = :absent,
+            `inClass` = 0
             WHERE id = :id");
         $stmt->execute(["id" => $id, "absent" => $absent]);
     }
