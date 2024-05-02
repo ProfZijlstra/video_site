@@ -15,7 +15,7 @@ class QuestionDao
         $stmt = $this->db->prepare(
             "INSERT INTO question 
 			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
-                    0, 0)"
+                    1, 0)"
         );
         $stmt->execute(array(
             "quiz_id" => $quiz_id,
