@@ -292,8 +292,8 @@ class DeliveryDao
     }
 
     public function createPicture(
-        $submission_id,
         $deliverable_id,
+        $submission_id,
         $user_id,
         $file,
         $name,
@@ -309,8 +309,8 @@ class DeliveryDao
                 NULL, NULL, NULL)"
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
             "deliverable_id" => $deliverable_id,
+            "submission_id" => $submission_id,
             "user_id" => $user_id,
             "file" => $file,
             "name" => $name,

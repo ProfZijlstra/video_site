@@ -138,6 +138,7 @@ const CAMERA = (function() {
                 img.src = data.dst;
                 img.dataset.id = data.answer_id;
                 img.classList.remove('hide');
+                img.classList.add('show');
                 anchor.href = data.dst;
                 const name = data.dst.split('/').pop();
                 anchor.innerText = name;

@@ -634,9 +634,9 @@ class LabTakingCtrl
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
-        $deliverable_id = $URI_PARAMS[3];
+        $deliverable_id = $URI_PARAMS[4];
 
-        // reject answers after quiz stop time
+        // reject answers after lab stop time
         if ($this->labEnded($lab_id, 30)) {
             return "error/403.php";
         }
@@ -655,11 +655,18 @@ class LabTakingCtrl
         if ($delivery_id) {
             $submission_id = $this->deliveryDao->byId($delivery_id)['submission_id'];
         } else {
-            $submission_id = $this->submissionDao->create(
-                $lab_id,
-                $user_id,
-                $group
-            );
+            // try to find submission by lab_id and user_id
+            $submission = $this->submissionDao->forUser($user_id, $lab_id);
+            $submission_id = $submission['id'] ?? null;
+
+            // create submission if it does not exist
+            if ($submission_id == null) {
+                $submission_id = $this->submissionDao->create(
+                    $lab_id,
+                    $user_id,
+                    $group
+                );
+            }
         }
 
         $path = "res/{$course}/{$block}/lab/{$lab_id}/submit/{$submission_id}";
@@ -677,8 +684,8 @@ class LabTakingCtrl
             );
         } else {
             $delivery_id = $this->deliveryDao->createPicture(
-                $submission_id,
                 $deliverable_id,
+                $submission_id,
                 $user_id,
                 $dst,
                 $name,
