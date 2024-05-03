@@ -54,20 +54,6 @@
                                 <pre><?= $question['text'] ?></pre>
                             <?php endif; ?>
                         </div>
-                        <?php if ($question['modelAnswer']) : ?>
-                            <div>Model Answer:</div>
-                            <div class="answerText">
-                                <?php if ($question['type'] == "text") : ?>
-                                    <?php if ($question['mdlAnsHasMD']) : ?>
-                                        <?= $parsedown->text($question['modelAnswer']) ?>
-                                    <?php else : ?>
-                                        <pre><?= $question['modelAnswer'] ?></pre>
-                                    <?php endif; ?>
-                                <?php elseif ($question['type'] == "image") : ?>
-                                    <img src="<?= $question['modelAnswer'] ?>" />
-                                <?php endif; ?>
-                            </div>
-                        <?php endif; ?>
 
                         <?php if ($answers[$question['id']] && $answers[$question['id']]['text']) : ?>
 
@@ -97,6 +83,21 @@
 
                             <h3>Not Answered</h3>
 
+                        <?php endif; ?>
+
+                        <?php if ($question['modelAnswer']) : ?>
+                            <div>Model Answer:</div>
+                            <div class="answerText">
+                                <?php if ($question['type'] == "text") : ?>
+                                    <?php if ($question['mdlAnsHasMD']) : ?>
+                                        <?= $parsedown->text($question['modelAnswer']) ?>
+                                    <?php else : ?>
+                                        <pre><?= $question['modelAnswer'] ?></pre>
+                                    <?php endif; ?>
+                                <?php elseif ($question['type'] == "image") : ?>
+                                    <img src="<?= $question['modelAnswer'] ?>" />
+                                <?php endif; ?>
+                            </div>
                         <?php endif; ?>
 
                         <div>Grading Comment:</div>

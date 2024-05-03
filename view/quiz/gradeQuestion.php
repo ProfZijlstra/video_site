@@ -171,16 +171,16 @@
 
             <div class="done">
                 <?php if ($prev_id) : ?>
-                    <a href="<?= $prev_id ?>" tabindex="-1">
+                    <a href="<?= $prev_id ?>">
                         <i title="Previous Question" class="fa-solid fa-arrow-left"></i>
                     </a>
                 <?php endif; ?>
                 <?php if ($next_id) : ?>
-                    <a href="<?= $next_id ?>" tabindex="-1">
+                    <a href="<?= $next_id ?>">
                         <i title="Next Question" class="fa-solid fa-arrow-right"></i>
                     </a>
                 <?php endif; ?>
-                <a href="../grade" tabindex="-1">
+                <a href="../grade">
                     <i title="Finish Grading" class="fa-solid fa-check"></i>
                 </a>
             </div>
