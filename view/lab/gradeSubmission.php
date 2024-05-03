@@ -61,7 +61,7 @@
                     <div class="deliv">
                         <h3>Deliverable Description</h3>
                         <div class="description">
-                            <?php if ($deliv['hasParseDown']) : ?>
+                            <?php if ($deliv['hasMarkDown']) : ?>
                                 <?= $parsedown->text($deliv['desc']) ?>
                             <?php else : ?>
                                 <pre><?= $deliv['desc'] ?></pre>
