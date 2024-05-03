@@ -111,4 +111,29 @@ class DeliverableDao
             "attachment_id" => $attachment_id
         ));
     }
+
+    public function clone($lab_id, $new_lab_id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM deliverable
+            WHERE lab_id = :lab_id"
+        );
+        $stmt->execute(array("lab_id" =>  $lab_id));
+        $deliverables = $stmt->fetchAll();
+
+        $stmt = $this->db->prepare(
+            "INSERT INTO deliverable 
+			VALUES(NULL, :lab_id, :type, :seq, :desc, :hasMarkDown, :points, NULL, NULL)"
+        );
+        foreach ($deliverables as $deliverable) {
+            $stmt->execute(array(
+                "lab_id" => $new_lab_id,
+                "type" => $deliverable['type'],
+                "seq" => $deliverable['seq'],
+                "desc" => $deliverable['desc'],
+                "hasMarkDown" => $deliverable['hasMarkDown'],
+                "points" => $deliverable['points']
+            ));
+        }
+    }
 }

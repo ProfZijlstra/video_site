@@ -24,6 +24,8 @@ class CourseCtrl
     public $quizDao;
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
+    #[Inject('LabDao')]
+    public $labDao;
 
     #[Get(uri: "^/?$", sec: "login")]
     public function showMyCourses()
@@ -178,6 +180,7 @@ class CourseCtrl
         $this->dayDao->cloneDays($offering_id, $new_offering_id);
         $this->classSessionDao->createForOffering($new_offering_id);
         $this->quizDao->clone($offering_id, $new_offering_id);
+        $this->labDao->clone($offering_id, $new_offering_id);
 
         return "Location: ../$block/";
     }
