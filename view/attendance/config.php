@@ -40,6 +40,9 @@
         </nav>
 
         <div id="content">
+            <div class="error">
+                <?= $error ?>
+            </div>
             <h3 id="CAMSheader">
                 CAMS Integration
             </h3>

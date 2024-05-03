@@ -62,11 +62,15 @@ class CamsHlpr
         $doc = new DOMDocument();
         $doc->loadHTML($htmlString);
         $elem = $doc->getElementById("A2");
+        if ($elem == null) {
+            return false;
+        }
         $href = $elem->getAttribute("href");
         $url_components = parse_url($href);
         $params = [];
         parse_str($url_components['query'], $params);
         $this->accesKey = $params['ak'];
+        return true;
     }
 
     function logout()
@@ -205,4 +209,3 @@ class CamsHlpr
         ]);
     }
 }
-

@@ -96,6 +96,7 @@ class AttendanceCtrl
     public function updateConfig()
     {
         global $URI_PARAMS;
+        global $VIEW_DATA;
 
         $course_number = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -118,7 +119,11 @@ class AttendanceCtrl
                 "username" => $username,
             ];
             $hlpr = new CamsHlpr($cams);
-            $hlpr->login($password);
+            if ($hlpr->login($password) == false) {
+                $VIEW_DATA['error'] = 'CAMS Login Failed - incorrect username or password';
+                return "Location: config";
+            }
+
             $types = $hlpr->getSessionTypes();
             foreach ($types as $type => $id) {
                 if (str_starts_with($type, "MTWRF 10:00:00 AM")) {
@@ -313,6 +318,7 @@ Manalabs Attendance System.
     public function export()
     {
         global $URI_PARAMS;
+        global $VIEW_DATA;
 
         $course_number = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -352,7 +358,10 @@ Manalabs Attendance System.
         try {
             require_once("control/CamsHlpr.class.php");
             $hlpr = new CamsHlpr($cams);
-            $hlpr->login($pwd);
+            if ($hlpr->login($pwd) == false) {
+                $VIEW_DATA['error'] = "CAMS Login Failed -- incorrect username or password";
+                return "Location: {$stype}";
+            }
             $hlpr->submitAttendance($students, $stype, $date, $start, $stop);
             $hlpr->logout();
         } catch (Exception) {

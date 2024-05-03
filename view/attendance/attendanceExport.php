@@ -46,6 +46,9 @@
             <a href="../../attendance"><i class="fa-solid fa-arrow-left"></i></a>
         </nav>
         <div id="content">
+            <div class="error">
+                <?= $error ?>
+            </div>
             <!-- General Session Info here -->
             <div class="session" id="session" data-stype="<?= $stype ?>" data-day="<?= $day_abbr ?>">
                 <h3>Session Details:</h3>
