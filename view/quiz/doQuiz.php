@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
-    <script src="res/js/camera.js"></script>
+    <script src="res/js/camera-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/quiz/quiz-1.5.js"></script>
 </head>
@@ -78,7 +78,7 @@
                                 <div title="Close Camera" class="closeCamera hide">
                                     <i class="fa-solid fa-xmark"></i>
                                 </div>
-                                <div title="Take picture" class="takePicture hide"></div>
+                                <div title="[Space] Take picture" class="takePicture hide"></div>
                                 <div title="Switch Camera" class="switchCamera hide">
                                     <i class="fas fa-sync"></i>
                                     <div class="camera_icon">
