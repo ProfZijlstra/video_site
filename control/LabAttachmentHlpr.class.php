@@ -28,7 +28,8 @@ class LabAttachmentHlpr
         $name = $_FILES[$key]['name'];
         $dst = "res/{$course}/{$block}/lab/{$lab_id}/";
         $zip = false;
-        if ($this->isZipFile($curr)) {
+        $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        if ($extension == "zip" && $this->isZipFile($curr)) {
             $zip = true;
             $dst .= "upload/";
         } else {
