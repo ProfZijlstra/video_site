@@ -3,6 +3,7 @@ const CAMERA = (function() {
     let videoDevs = undefined;
     let deviceIdx = 0;
     let urlBase = "";
+    let pictureBtn = null;
 
     function init(url) {
         urlBase = url;
@@ -31,6 +32,8 @@ const CAMERA = (function() {
 
     function openCamera() {
         const parent = this.closest('div');
+        const body = this.closest('body');
+        body.addEventListener('keypress', takePictureOnKeyPress);
         const video = parent.querySelector('video');
         const switchCam = parent.querySelector('.switchCamera');
         const close = parent.querySelector(".closeCamera");
@@ -38,6 +41,7 @@ const CAMERA = (function() {
         const spinner = parent.querySelector('i.fa-circle-notch');
         const img = parent.querySelector('img');
         const pic = parent.querySelector('div.takePicture');
+        pictureBtn = pic;
         spinner.classList.add('rotate');
         navigator.mediaDevices.getUserMedia({ video: true, audio: false})
             .then((stream) => {
@@ -64,6 +68,8 @@ const CAMERA = (function() {
     }
 
     function stopCamera() {
+        const body = this.closest('body');
+        body.removeEventListener('keypress', takePictureOnKeyPress);
         const parent = this.parentNode.closest('div.camera');
         const video = parent.querySelector('video');
         const tracks = video.srcObject.getTracks();
@@ -73,6 +79,9 @@ const CAMERA = (function() {
 
     function switchCamera() {
         stopCamera.call(this);
+
+        const body = this.closest('body');
+        body.addEventListener('keypress', takePictureOnKeyPress);
 
         const parent = this.closest('div.question');
         const spinner = parent.querySelector('i.fa-circle-notch');
@@ -148,6 +157,13 @@ const CAMERA = (function() {
         .catch((error) => {
             alert(error);
         });
+    }
+
+    function takePictureOnKeyPress(event) {
+        if (event.code === "Space") {
+            event.preventDefault();
+            pictureBtn.click();
+        }
     }
 
     return {
