@@ -201,7 +201,8 @@ class LabTakingCtrl
 
             foreach ($files as $f) {
                 $filePath = $f->getRealPath();
-                $relativePath = substr($filePath, strlen($dst));
+                // +1 to remove the leading slash (it breaks windows unzip)
+                $relativePath = substr($filePath, strlen($dst) + 1);
                 if (!$f->isDir()) {
                     $zip->addFile($filePath, $relativePath);
                 } else {
