@@ -162,6 +162,10 @@ class VideoCtrl
             $video_file["parts"][0] . "_" . $video_file["parts"][1] . ".pdf";
 
         // fix video play speed if broken
+        if ($_COOKIE['viewspeed']) {
+            $_SESSION['user']['speed'] = $_COOKIE['viewspeed'];
+            setcookie("viewspeed", $_SESSION['user']['speed'], time() + 7 * 24 * 60 * 60, "/videos");
+        };
         if (!$_SESSION['user']['speed'] || $_SESSION['user']['speed'] < 0.4) {
             $_SESSION['user']['speed'] = 1;
         }
