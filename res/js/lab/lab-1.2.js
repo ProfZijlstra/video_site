@@ -133,10 +133,12 @@ window.addEventListener("load", () => {
         data.append("submission_id", submission_id);
         data.append("deliverable_id", deliv.parentNode.dataset.id);
         data.append("delivery_id", id);
-        data.append("group", group);
         data.append("completion", completion);
         data.append("duration", duration);
         data.append("file", this.files[0]);
+        if (group) {
+            data.append("group", group);
+        }
 
         if (stuComment) {
             const stuShifted = encodeURIComponent(MARKDOWN.ceasarShift(stuComment));

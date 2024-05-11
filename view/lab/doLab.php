@@ -15,7 +15,7 @@
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/back.js"></script>
     <script src="res/js/camera-1.1.js"></script>
-    <script src="res/js/lab/lab-1.1.js"></script>
+    <script src="res/js/lab/lab-1.2.js"></script>
 </head>
 
 <body id="doLab" class="lab labDeliverables">
