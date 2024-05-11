@@ -127,11 +127,14 @@ class AnswerDao
         $stmt = $this->db->prepare(
             "SELECT u.id, u.knownAs, u.firstname, u.lastname, 
                 count(a.id) AS answers, 
-                sum(a.points) AS points
+                sum(a.points) AS points,
+                count(a2.id) AS ungraded
             FROM answer AS a 
             JOIN user AS u ON a.user_id = u.id
             JOIN question AS q ON a.question_id = q.id
-            AND q.quiz_id = :quiz_id 
+                AND q.quiz_id = :quiz_id 
+            LEFT JOIN answer AS a2 ON a.id = a2.id 
+                AND a2.points IS NULL
             GROUP BY a.user_id "
         );
         $stmt->execute(array(

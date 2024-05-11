@@ -30,11 +30,15 @@ class QuestionDao
 
     public function forQuiz($quiz_id)
     {
-        $stmt = $this->db->prepare(
-            "SELECT * FROM question
-            WHERE quiz_id = :quiz_id
-            ORDER BY seq"
-        );
+        $stmt = $this->db->prepare("
+            SELECT q.*, COUNT(a.id) AS answers, COUNT(a2.id) AS ungraded 
+            FROM question AS q
+            LEFT JOIN answer AS a ON q.id = a.question_id
+            LEFT JOIN answer AS a2 ON a.id = a2.id AND a2.points IS NULL
+            WHERE q.quiz_id = :quiz_id
+            GROUP BY q.id
+            ORDER BY seq
+        ");
         $stmt->execute(array("quiz_id" => $quiz_id));
         return $stmt->fetchAll();
     }

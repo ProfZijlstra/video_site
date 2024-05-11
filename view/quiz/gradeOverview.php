@@ -61,74 +61,71 @@
                 <strong>Grade Question:</strong>
                 <?php $count = 1; ?>
                 <?php foreach ($questions as $question) : ?>
-                    <a href="question/<?= $question['id'] ?>">Q<?= $count++ ?></a>
+                    <?php
+                    $gradeStatus = '';
+                    if ($question['answers'] != 0) {
+                        $gradeStatus = 'graded';
+                        if ($question['ungraded'] != 0) {
+                            $gradeStatus = 'ungraded';
+                        }
+                    }
+                    ?>
+                    <a href="question/<?= $question['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
+                        Q<?= $count++ ?>
+                    </a>
                 <?php endforeach; ?>
             </div>
 
-            <?php if ($absent) : ?>
-                <!-- Table showing absent students -->
-                <h3>No Submission:</h3>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                    <?php foreach ($absent as $id => $result) : ?>
-                        <tr data-user_id="<?= $result['id'] ?>">
-                            <td>
-                                <a href="user/<?= $id ?>">
-                                    <?= $result['knownAs'] ?> (<?= $result['firstname'] ?>) <?= $result['lastname'] ?>
-                                </a>
-                            </td>
+            <?php function answerTable($list, $detail, $title, $longTitle)
+            {
+                global $starts;
+                global $stops;
+            ?>
+                <?php if ($list) : ?>
+                    <!-- Table showing results of enrolled students -->
+                    <h3 title="<?= $longTitle ?>"><?= $title ?></h3>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <?php if ($detail) : ?>
+                                <th>Start</th>
+                                <th>Stop</th>
+                                <th>Answers</th>
+                                <th>Points</th>
+                            <?php endif; ?>
                         </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
+                        <?php foreach ($list as $result) : ?>
+                            <?php
+                            $gradeStatus = '';
+                            if ($result['answers'] != 0) {
+                                $gradeStatus = 'graded';
+                                if ($result['ungraded'] != 0) {
+                                    $gradeStatus = 'ungraded';
+                                }
+                            }
+                            ?>
+                            <tr data-user_id="<?= $result['id'] ?>">
+                                <td>
+                                    <a href="user/<?= $result['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
+                                        <?= $result['knownAs'] ?> <?= $result['lastname'] ?>
+                                    </a>
+                                </td>
+                                <?php if ($detail) : ?>
+                                    <td class="start" title="<?= $starts[$result['id']] ?>"><?= substr($starts[$result['id']], 11) ?></td>
+                                    <td class="stop" title="<?= $stops[$result['id']] ?>"><?= substr($stops[$result['id']], 11) ?></td>
+                                    <td class="answers"><?= $result['answers'] ?></td>
+                                    <td class="points"><?= $result['points'] == floor($result['points']) ? $result['points'] : number_format($result['points'], 2) ?></td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                <?php endif; ?>
+            <?php }  ?>
 
-            <?php if ($taken) : ?>
-                <!-- Table showing results of enrolled students -->
-                <h3 title="Submission from enrolled students">Results</h3>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Start</th>
-                        <th>Stop</th>
-                        <th>Answers</th>
-                        <th>Points</th>
-                    </tr>
-                    <?php foreach ($taken as $result) : ?>
-                        <tr data-user_id="<?= $result['id'] ?>">
-                            <td><a href="user/<?= $result['id'] ?>"><?= $result['knownAs'] ?> <?= $result['lastname'] ?></a></td>
-                            <td class="start" title="<?= $starts[$result['id']] ?>"><?= substr($starts[$result['id']], 11) ?></td>
-                            <td class="stop" title="<?= $stops[$result['id']] ?>"><?= substr($stops[$result['id']], 11) ?></td>
-                            <td class="answers"><?= $result['answers'] ?></td>
-                            <td class="points"><?= $result['points'] == floor($result['points']) ? $result['points'] : number_format($result['points'], 2) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
+            <?php answerTable($absent, false, "Nu Submission", ""); ?>
+            <?php answerTable($taken, true, "Results", "Submissions from enrolled students"); ?>
+            <?php answerTable($extra, true, "Extra", "Submissions from unenrolled students"); ?>
 
-            <?php if ($extra) : ?>
-                <!-- Table showing results of extra students -->
-                <h3 title="Submissions from unenrolled students">Extra</h3>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Start</th>
-                        <th>Stop</th>
-                        <th>Answers</th>
-                        <th>Points</th>
-                    </tr>
-                    <?php foreach ($extra as $result) : ?>
-                        <tr data-user_id="<?= $result['id'] ?>">
-                            <td><?= $result['knownAs'] ?> (<?= $result['firstname'] ?>) <?= $result['lastname'] ?></td>
-                            <td class="start" title="<?= $starts[$result['id']] ?>"><?= substr($starts[$result['id']], 11) ?></td>
-                            <td class="stop" title="<?= $stops[$result['id']] ?>"><?= substr($stops[$result['id']], 11) ?></td>
-                            <td class="answers"><?= $result['answers'] ?></td>
-                            <td class="points"><?= $result['points'] == floor(floatval($result['points'])) ? $result['points'] : number_format($result['points'], 2) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
         </div>
     </main>
 </body>
