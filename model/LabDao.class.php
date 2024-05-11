@@ -42,6 +42,46 @@ class LabDao
         return $stmt->fetchAll();
     }
 
+    public function getInstructorGradingStatus($offering_id)
+    {
+        $stmt = $this->db->prepare("
+            SELECT a.id, count(c1.id) AS answers, count(c2.id) AS ungraded
+            FROM lab AS a
+            JOIN day AS d ON a.day_id = d.id
+            JOIN offering AS o ON d.offering_id = o.id
+            JOIN deliverable AS b ON a.id = b.lab_id
+            LEFT JOIN delivery AS c1 ON b.id = c1.deliverable_id 
+            LEFT JOIN delivery AS c2 ON c1.id = c2.id AND c2.points IS NULL
+            WHERE o.id = :offering_id
+            AND o.active = 1
+            GROUP BY a.id
+        ");
+        $stmt->execute(array("offering_id" => $offering_id));
+        return $stmt->fetchAll();
+    }
+
+    public function getStudentGradingStatus($offering_id, $user_id)
+    {
+        $stmt = $this->db->prepare("
+            SELECT a.id, count(c1.id) AS answers, count(c2.id) AS ungraded
+            FROM lab AS a
+            JOIN day AS d ON a.day_id = d.id
+            JOIN offering AS o ON d.offering_id = o.id
+            JOIN deliverable AS b ON a.id = b.lab_id
+            LEFT JOIN delivery AS c1 ON b.id = c1.deliverable_id 
+            LEFT JOIN delivery AS c2 ON c1.id = c2.id AND c2.points IS NULL
+            WHERE o.id = :offering_id
+            AND o.active = 1
+            AND c1.user_id = :user_id
+            GROUP BY a.id
+        ");
+        $stmt->execute(array(
+            "offering_id" => $offering_id,
+            "user_id" => $user_id
+        ));
+        return $stmt->fetchAll();
+    }
+
     public function add(string $name, int $day_id, string $start, string $stop): int
     {
         $stmt = $this->db->prepare(

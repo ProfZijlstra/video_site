@@ -59,8 +59,18 @@
                         <?php endif; ?>
 
                         <?php foreach ($days["W{$w}D{$d}"]['labs'] as $lab) : ?>
+                            <?php
+                            $grade = $graded[$lab['id']];
+                            $gradeStatus = '';
+                            if ($grade['answers'] != 0) {
+                                $gradeStatus = 'answered';
+                                if ($grade['ungraded'] != 0) {
+                                    $gradeStatus = 'ungraded';
+                                }
+                            }
+                            ?>
                             <div>
-                                <a href="<?= "lab/" . $lab['id'] ?>" class="<?= $lab['visible'] ? 'visible' : 'invisible' ?>" title="<?= $lab['visible'] ? 'visible' : 'invisible' ?>">
+                                <a href="<?= "lab/" . $lab['id'] ?>" class="<?= $lab['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $lab['visible'] ? 'visible' : 'invisible' ?>">
                                     <?= $lab['name'] ?>
                                 </a>
                                 <?php if (hasMinAuth('instructor')) : ?>

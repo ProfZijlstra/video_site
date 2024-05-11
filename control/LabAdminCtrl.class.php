@@ -52,8 +52,16 @@ class LabAdminCtrl
             $_SESSION['user']['isFaculty']
         ) {
             $labs = $this->labDao->allForOffering($oid);
+            $grading = $this->labDao->getInstructorGradingStatus($oid);
         } else {
             $labs = $this->labDao->visibleForOffering($oid);
+            $user_id = $_SESSION['user']['id'];
+            $grading = $this->labDao->getStudentGradingStatus($oid, $user_id);
+        }
+
+        $graded = [];
+        foreach ($grading as $grade) {
+            $graded[$grade['id']] = $grade;
         }
 
         // integrate the labs data into the days data
@@ -65,6 +73,7 @@ class LabAdminCtrl
         }
 
         $VIEW_DATA['title'] = 'Labs';
+        $VIEW_DATA['graded'] = $graded;
         $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
         return "lab/overview.php";
     }

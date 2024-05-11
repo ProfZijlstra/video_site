@@ -64,8 +64,8 @@
                         <?php endif; ?>
 
                         <?php foreach ($days["W{$w}D{$d}"]['quizzes'] as $quiz) : ?>
-                            <?php $grade = $graded[$quiz['id']] ?>
                             <?php
+                            $grade = $graded[$quiz['id']];
                             $gradeStatus = '';
                             if ($grade['answers'] != 0) {
                                 $gradeStatus = 'answered';
