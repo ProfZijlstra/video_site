@@ -3,6 +3,8 @@
 *.jpg
 *.zip
 *.png
+res/LICENSE.md
+utils/wm-test.php
 node_modules
 settings.php
 context.php
