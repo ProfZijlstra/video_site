@@ -3,9 +3,10 @@ window.addEventListener("load", () => {
         evt.preventDefault();
         evt.stopImmediatePropagation();
         const href = this.getAttribute("href");
-        setTimeout(() => window.location.href = href, 500);
+        this.removeEventListener("click", ensureSaveSent);
+        setTimeout(() => this.click(), 500);
     }
     for (const a of document.links) {
-        a.onclick = ensureSaveSent;
+        a.addEventListener("click", ensureSaveSent);
     }
 });
