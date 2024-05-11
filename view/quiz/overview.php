@@ -64,8 +64,18 @@
                         <?php endif; ?>
 
                         <?php foreach ($days["W{$w}D{$d}"]['quizzes'] as $quiz) : ?>
+                            <?php $grade = $graded[$quiz['id']] ?>
+                            <?php
+                            $gradeStatus = '';
+                            if ($grade['answers'] != 0) {
+                                $gradeStatus = 'answered';
+                                if ($grade['ungraded'] != 0) {
+                                    $gradeStatus = 'ungraded';
+                                }
+                            }
+                            ?>
                             <div>
-                                <a href="<?= "quiz/" . $quiz['id'] ?>" class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?>" title="<?= $quiz['visible'] ? 'visible' : 'invisible' ?>">
+                                <a href="<?= "quiz/" . $quiz['id'] ?>" class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $quiz['visible'] ? 'visible' : 'invisible' ?>">
                                     <?= $quiz['name'] ?>
                                 </a>
                                 <?php if (hasMinAuth('instructor')) : ?>

@@ -1,4 +1,12 @@
 div#days {
+    a.answered {
+        color: green;
+    }
+    a.ungraded {
+        color: blue;
+    }
+}
+div#days {
     margin-top: 50px;
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto; /* 7 cols */

@@ -13,6 +13,7 @@ class QuizDao
     #[Inject('QuestionDao')]
     public $questionDao;
 
+
     public function allForOffering($offering_id)
     {
         $stmt = $this->db->prepare(
@@ -39,6 +40,48 @@ class QuizDao
             AND o.active = 1"
         );
         $stmt->execute(array("offering_id" => $offering_id));
+        return $stmt->fetchAll();
+    }
+
+    function getInstructorGradingStatus($offering_id)
+    {
+        $stmt = $this->db->prepare("
+            SELECT q.id, count(a1.id) AS answers, count(a2.id) AS ungraded
+            FROM quiz AS q
+            JOIN day AS d ON q.day_id = d.id
+            JOIN offering AS o ON d.offering_id = o.id
+            JOIN question qu ON q.id = qu.quiz_id
+            LEFT JOIN answer a1 ON qu.id = a1.question_id
+            LEFT JOIN answer a2 ON a1.id = a2.id AND a2.points IS NULL
+            WHERE o.id = :offering_id
+            AND o.active = 1
+            GROUP BY q.id
+            ");
+        $stmt->execute(array(
+            "offering_id" => $offering_id,
+        ));
+        return $stmt->fetchAll();
+    }
+
+    function getStudentGradingStatus($offering_id, $user_id)
+    {
+        $stmt = $this->db->prepare("
+            SELECT q.id, count(a1.id) AS answers, count(a2.id) AS ungraded
+            FROM quiz AS q
+            JOIN day AS d ON q.day_id = d.id
+            JOIN offering AS o ON d.offering_id = o.id
+            JOIN question qu ON q.id = qu.quiz_id
+            LEFT JOIN answer a1 ON qu.id = a1.question_id
+            LEFT JOIN answer a2 ON a1.id = a2.id AND a2.points IS NULL
+            WHERE o.id = :offering_id
+            AND o.active = 1
+            AND a1.user_id = :user_id
+            GROUP BY q.id
+            ");
+        $stmt->execute(array(
+            "offering_id" => $offering_id,
+            "user_id" => $user_id
+        ));
         return $stmt->fetchAll();
     }
 
@@ -190,4 +233,3 @@ class QuizDao
         return $stmt->fetchAll();
     }
 }
-

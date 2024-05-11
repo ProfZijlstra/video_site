@@ -48,8 +48,16 @@ class QuizAdminCtrl
             $_SESSION['user']['isFaculty']
         ) {
             $quizzes = $this->quizDao->allForOffering($oid);
+            $grading = $this->quizDao->getInstructorGradingStatus($oid);
         } else {
             $quizzes = $this->quizDao->visibleForOffering($oid);
+            $user_id = $_SESSION['user']['id'];
+            $grading = $this->quizDao->getStudentGradingStatus($oid, $user_id);
+        }
+
+        $graded = [];
+        foreach ($grading as $grade) {
+            $graded[$grade['id']] = $grade;
         }
 
         // integrate the quizzes data into the days data
@@ -61,6 +69,7 @@ class QuizAdminCtrl
         }
 
         $VIEW_DATA['title'] = 'Quizzes';
+        $VIEW_DATA['graded'] = $graded;
         $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
         return "quiz/overview.php";
     }
