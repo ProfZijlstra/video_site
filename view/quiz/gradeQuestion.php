@@ -163,7 +163,7 @@
                             <textarea class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answer['comment'] ?></textarea>
                         </td>
                         <td class="points">
-                            <input type="number" value="<?= $answer['points'] ? $answer['points'] : 0 ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
+                            <input type="number" value="<?= $answer['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
                         </td>
                     </tr>
                 <?php endfor; ?>

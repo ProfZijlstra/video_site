@@ -178,7 +178,7 @@
                             <textarea autofocus class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
                         </td>
                         <td class="points">
-                            <input type="number" value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
+                            <input type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
                         </td>
                     </tr>
                 <?php endfor; ?>

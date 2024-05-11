@@ -45,7 +45,6 @@
             <div class="timestamp">Submission updated: <?= $submission['stop'] ?></div>
 
             <!-- For erach deliverable show -->
-            <?php $tabindex = 1; ?>
             <?php foreach ($deliverables as $deliv) : ?>
                 <?php $delivery = $deliveries[$deliv['id']] ?? [] ?>
                 <div class="dcontainer deliverables" data-id="<?= $delivery['id'] ?>" data-deliverable="<?= $deliv['id'] ?>">
@@ -56,7 +55,7 @@
                             </span>
                         </div>
                         Points Possible: <?= $deliv['points'] ?> <br />
-                        <input autofocus class="points" type="number" value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" tabindex="<?= $tabindex ?>" data-value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" />
+                        <input autofocus class="points" type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" data-value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" />
                     </div>
                     <div class="deliv">
                         <h3>Deliverable Description</h3>
@@ -121,7 +120,7 @@
 
                         <h3>Grading Comment:</h3>
                         <div class="textContainer">
-                            <textarea class="comment" tabindex="<?= $tabindex + 1 ?>" data-id="<?= $delivery['id'] ?>" placeholder="Write grading comments here" data-txt="Write grading comments here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
+                            <textarea class="comment" data-id="<?= $delivery['id'] ?>" placeholder="Write grading comments here" data-txt="Write grading comments here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
                             <i title="Markdown" class="cmt fa-brands fa-markdown <?= $delivery['gradeCmntHasMD'] ? "active" : "" ?>"></i>
                             <div class="mdContainer <?= $delivery['gradeCmntHasMD'] ? "active" : "" ?>">
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
@@ -130,7 +129,6 @@
                         </div>
                     </div>
                 </div>
-                <?php $tabindex += 2; ?>
             <?php endforeach; ?>
 
             <div class="done">
