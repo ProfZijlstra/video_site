@@ -26,7 +26,18 @@
                 <strong>Grade Deliverable:</strong>
                 <?php $count = 1; ?>
                 <?php foreach ($deliverables as $deliv) : ?>
-                    <a href="deliverable/<?= $deliv['id'] ?>">D<?= $count++ ?></a>
+                    <?php
+                    $gradeStatus = '';
+                    if ($deliv['answers'] != 0) {
+                        $gradeStatus = 'graded';
+                        if ($deliv['ungraded'] != 0) {
+                            $gradeStatus = 'ungraded';
+                        }
+                    }
+                    ?>
+                    <a href="deliverable/<?= $deliv['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
+                        D<?= $count++ ?>
+                    </a>
                 <?php endforeach; ?>
             </div>
 
@@ -55,7 +66,16 @@
                         <?php foreach ($list as $submission) : ?>
                             <tr>
                                 <td>
-                                    <a href="submission/<?= $submission['id'] ?>">
+                                    <?php
+                                    $gradeStatus = '';
+                                    if ($submission['delivs'] != 0) {
+                                        $gradeStatus = 'graded';
+                                        if ($submission['ungraded'] != 0) {
+                                            $gradeStatus = 'ungraded';
+                                        }
+                                    }
+                                    ?>
+                                    <a href="submission/<?= $submission['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
                                         <?php if ($submission['group']) : ?>
                                             Group <?= $submission['group'] ?>:
                                             <span class="members">

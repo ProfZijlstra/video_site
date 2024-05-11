@@ -79,6 +79,12 @@ i.fa-circle-notch.rotate {
 .error {
     color: red;
 }
+a.graded {
+    color: green;
+}
+a.ungraded {
+    color: blue;
+}
 header {
     height: 80px;
     /* background: rgb(204,76,233);

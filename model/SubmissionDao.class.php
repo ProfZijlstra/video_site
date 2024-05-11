@@ -54,15 +54,17 @@ class SubmissionDao
 
     public function forLab($lab_id)
     {
-        $stmt = $this->db->prepare(
-            "SELECT s.id, s.lab_id, s.user_id, s.group,
+        $stmt = $this->db->prepare("
+            SELECT s.id, s.lab_id, s.user_id, s.group,
                 SUM(d.points) AS points, COUNT(d.id) AS delivs,
-                MIN(d.created) AS start, MAX(d.updated) AS stop
+                MIN(d.created) AS start, MAX(d.updated) AS stop,
+                COUNT(d2.id) AS ungraded
                 FROM submission AS s
-                LEFT JOIN delivery AS d ON s.id = d.submission_id
+            LEFT JOIN delivery AS d ON s.id = d.submission_id
+            LEFT JOIN delivery AS d2 ON d.id = d2.id AND d2.points IS NULL
                 WHERE s.lab_id = :lab_id
-                GROUP BY s.id"
-        );
+                GROUP BY s.id
+        ");
         $stmt->execute(["lab_id" => $lab_id]);
         return $stmt->fetchAll();
     }

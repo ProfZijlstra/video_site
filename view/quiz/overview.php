@@ -68,14 +68,14 @@
                             $grade = $graded[$quiz['id']];
                             $gradeStatus = '';
                             if ($grade['answers'] != 0) {
-                                $gradeStatus = 'answered';
+                                $gradeStatus = 'graded';
                                 if ($grade['ungraded'] != 0) {
                                     $gradeStatus = 'ungraded';
                                 }
                             }
                             ?>
                             <div>
-                                <a href="<?= "quiz/" . $quiz['id'] ?>" class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $quiz['visible'] ? 'visible' : 'invisible' ?>">
+                                <a href="<?= "quiz/" . $quiz['id'] ?>" class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>">
                                     <?= $quiz['name'] ?>
                                 </a>
                                 <?php if (hasMinAuth('instructor')) : ?>

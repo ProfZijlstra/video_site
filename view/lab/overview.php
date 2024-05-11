@@ -63,14 +63,14 @@
                             $grade = $graded[$lab['id']];
                             $gradeStatus = '';
                             if ($grade['answers'] != 0) {
-                                $gradeStatus = 'answered';
+                                $gradeStatus = 'graded';
                                 if ($grade['ungraded'] != 0) {
                                     $gradeStatus = 'ungraded';
                                 }
                             }
                             ?>
                             <div>
-                                <a href="<?= "lab/" . $lab['id'] ?>" class="<?= $lab['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $lab['visible'] ? 'visible' : 'invisible' ?>">
+                                <a href="<?= "lab/" . $lab['id'] ?>" class="<?= $lab['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $lab['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>">
                                     <?= $lab['name'] ?>
                                 </a>
                                 <?php if (hasMinAuth('instructor')) : ?>
