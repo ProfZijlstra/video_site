@@ -67,6 +67,9 @@ if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
 if ($MY_METHOD === "PUT") {
     $_PUT = array();
     parse_str(file_get_contents("php://input"), $_PUT);
+    foreach ($_PUT as $key => $value) {
+        $_PUT[$key] = urldecode($value);
+    }
 }
 
 
