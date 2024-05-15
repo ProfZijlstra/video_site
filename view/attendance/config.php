@@ -14,9 +14,20 @@
             margin-bottom: 10px;
         }
 
+        .defaults {
+            display: grid;
+            grid-template-columns: 70px 80px 30px 80px;
+            row-gap: 10px;
+            column-gap: 20px;
+
+            #physical {
+                grid-column: 2 / span 3;
+            }
+        }
+
         .settings {
             display: grid;
-            grid-template-columns: 50px auto;
+            grid-template-columns: 70px auto;
             row-gap: 10px;
             column-gap: 20px;
         }
@@ -43,6 +54,45 @@
             <div class="error">
                 <?= $error ?>
             </div>
+            <h3>Meeting Defaults</h3>
+            <form method="post" action="defaults">
+                <div class="defaults">
+                    <div>
+                        <label for="AM_start">AM Start</label>
+                    </div>
+                    <div>
+                        <input type="time" name="AM_start" id="AM_start" value="<?= substr($defaults['AM_start'], 0, 5) ?>" />
+                    </div>
+
+                    <div>
+                        <label for="AM_stop">Stop </label>
+                    </div>
+                    <div>
+                        <input type="time" name="AM_stop" id="AM_stop" value="<?= substr($defaults['AM_stop'], 0, 5) ?>" />
+                    </div>
+
+                    <div>
+                        <label for="PM_start">PM Start</label>
+                    </div>
+                    <div>
+                        <input type="time" name="PM_start" id="PM_start" value="<?= substr($defaults['PM_start'], 0, 5) ?>" />
+                    </div>
+
+                    <div>
+                        <label for="PM_stop">Stop </label>
+                    </div>
+                    <div>
+                        <input type="time" name="PM_stop" id="PM_stop" value="<?= substr($defaults['PM_stop'], 0, 5) ?>" />
+                    </div>
+                    <div title="Do students default to physically being in class?">
+                        <label for="inClass">In Class</label>
+                    </div>
+                    <div id="physical" title="Do students default to physically being in class?">
+                        <input type="checkbox" name="inClass" id="inClass" value="1" <?= $defaults['inClass'] ? "checked" : "" ?> />
+                    </div>
+                </div>
+                <input type="submit" value="Save Defaults" />
+            </form>
             <h3 id="CAMSheader">
                 CAMS Integration
             </h3>
@@ -69,8 +119,8 @@
                         <input required type="password" name="password" id="password" placeholder="Will not be stored" />
                     </div>
                 </div>
-                <input type="submit" value="Save / Retrieve Optional" />
-                <h4>Optional / System will try to determine</h4>
+                <input type="submit" value="Save CAMS settings / Retrieve Optional" />
+                <h4>CAMS Optional / System will try to determine</h4>
                 <div id="optional" class="settings">
                     <div>
                         <label for="AM_id">AM id</label>

@@ -527,3 +527,20 @@ ENGINE = InnoDB;
 
 -- 31st of March 2024
 ALTER TABLE `offering` DROP COLUMN `hasCAMS`;
+
+-- 14th of May 2024
+CREATE TABLE `manalabs`.`attendance_config` (
+  `offering_id` INT NOT NULL,
+  `AM_start` TIME NOT NULL,
+  `AM_stop` TIME NOT NULL,
+  `PM_start` TIME NOT NULL,
+  `PM_stop` TIME NOT NULL,
+  `inClass` TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  INDEX `fk_att_conf_offering1_idx` (`offering_id` ASC) VISIBLE,
+  PRIMARY KEY (`offering_id`),
+  CONSTRAINT `fk_att_conf_offering1`
+    FOREIGN KEY (`offering_id`)
+    REFERENCES `manalabs`.`offering` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) 
+ENGINE = InnoDB;

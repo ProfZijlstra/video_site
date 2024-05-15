@@ -28,6 +28,8 @@ class AttendanceCtrl
     public $mailHlpr;
     #[Inject('CamsDao')]
     public $camsDao;
+    #[Inject('AttendanceConfigDao')]
+    public $AttendanceConfigDao;
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$", sec: "assistant")]
     public function overview()
@@ -40,6 +42,7 @@ class AttendanceCtrl
 
         $offering_id = $VIEW_DATA["offering_id"];
         $days = $VIEW_DATA["days"];
+        $defaults = $this->AttendanceConfigDao->byId($offering_id);
 
         // get sessions for these days
         $sessions = $this->classSessionDao->allForOffering($offering_id);
@@ -69,6 +72,7 @@ class AttendanceCtrl
         $VIEW_DATA["title"] = "Attendance";
         $VIEW_DATA['enrollment'] = $enrollment;
         $VIEW_DATA['excused'] = $excused;
+        $VIEW_DATA['defaults'] = $defaults;
 
         return "attendance/attendance.php";
     }
@@ -83,13 +87,52 @@ class AttendanceCtrl
         $block = $URI_PARAMS[2];
         $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
         $cams = $this->camsDao->get($offering['id']);
+        $defaults = $this->AttendanceConfigDao->byId($offering['id']);
+
+        if (!$defaults) {
+            $defaults = [
+                "AM_start" => "10:00",
+                "AM_stop" => "12:30",
+                "PM_start" => "13:30",
+                "PM_stop" => "15:20",
+                "inClass" => "1",
+            ];
+        }
 
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["CAMS"] = $cams;
-        $VIEW_DATA["title"] = "CAMS Attendance Export";
+        $VIEW_DATA["defaults"] = $defaults;
+        $VIEW_DATA["title"] = "Attendance Configuration";
 
         return "attendance/config.php";
+    }
+
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/defaults$", sec: "assistant")]
+    public function updateDefaults()
+    {
+        global $URI_PARAMS;
+
+        $course_number = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
+        $AM_start = filter_input(INPUT_POST, "AM_start");
+        $AM_stop = filter_input(INPUT_POST, "AM_stop");
+        $PM_start = filter_input(INPUT_POST, "PM_start");
+        $PM_stop = filter_input(INPUT_POST, "PM_stop");
+        $inClass = filter_input(INPUT_POST, "inClass", FILTER_SANITIZE_NUMBER_INT);
+        $inClass = $inClass ? "1" : "0";
+
+        $this->AttendanceConfigDao->saveOrUpdate(
+            $offering['id'],
+            $AM_start,
+            $AM_stop,
+            $PM_start,
+            $PM_stop,
+            $inClass
+        );
+
+        return "Location: config";
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/config$", sec: "assistant")]

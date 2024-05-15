@@ -16,18 +16,23 @@ window.addEventListener("load", () => {
     };
 
     // showing the add_meeting overlay
+    const days = document.getElementById("days");
+    const AM_start = days.dataset.amstart;
+    const AM_stop = days.dataset.amstop;
+    const PM_start = days.dataset.pmstart;
+    const PM_stop = days.dataset.pmstop;
     function addMeeting() {
         const session_id = this.parentNode.dataset.session_id;
         const date= this.parentNode.parentNode.dataset.date;
         const day = this.parentNode.parentNode.dataset.day; 
         const stype = this.parentNode.dataset.stype;
         let day_part = " Morning";
-        let start = "10:00:00";
-        let stop = "12:30:00";
+        let start =  AM_start;
+        let stop = AM_stop;
         if (stype == "PM") {
             day_part = " Afternoon";
-            start = "13:30:00";
-            stop = "15:20:00"
+            start = PM_start;
+            stop = PM_stop;
         }
         document.getElementById("session_id").value = session_id;
         document.getElementById("start").value = start;
