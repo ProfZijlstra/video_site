@@ -80,7 +80,6 @@ class QuizGradingCtrl
     #[Get(uri: "/(\d+)/question/(\d+)$", sec: "assistant")]
     public function gradeQuestion()
     {
-        require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -100,12 +99,15 @@ class QuizGradingCtrl
             }
         }
 
+        require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Question";
         $VIEW_DATA['prev_id'] = $prev_id;
         $VIEW_DATA['next_id'] = $next_id;
-        $VIEW_DATA["parsedown"] = new Parsedown();
         $VIEW_DATA['quiz'] = $this->quizDao->byId($quiz_id);
         $VIEW_DATA['question'] = $this->questionDao->get($question_id);
         $VIEW_DATA['answers'] = $this->answerDao->forQuestion($question_id);
@@ -116,7 +118,6 @@ class QuizGradingCtrl
     #[Get(uri: "/(\d+)/user/(\d+)$", sec: "assistant")]
     public function gradeUser()
     {
-        require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -131,7 +132,10 @@ class QuizGradingCtrl
             $idx = array_search($user_id, $ids);
         }
 
-
+        require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Quiz by Student";
@@ -141,7 +145,6 @@ class QuizGradingCtrl
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
         $VIEW_DATA['idx'] = $idx;
         $VIEW_DATA['ids'] = $ids;
-        $VIEW_DATA["parsedown"] = new Parsedown();
 
         return "quiz/gradeUser.php";
     }

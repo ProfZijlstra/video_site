@@ -151,7 +151,9 @@ class LabGradingCtrl
         }
 
         require_once("lib/Parsedown.php");
-        $VIEW_DATA["parsedown"] = new Parsedown();
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Deliverable";
@@ -194,7 +196,9 @@ class LabGradingCtrl
         }
 
         require_once("lib/Parsedown.php");
-        $VIEW_DATA["parsedown"] = new Parsedown();
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Submission";

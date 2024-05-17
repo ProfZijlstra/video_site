@@ -120,10 +120,12 @@ class LabTakingCtrl
         ];
 
         require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['stop'] = $stopDiff;
         $VIEW_DATA['group'] = $group;
         $VIEW_DATA['labPoints'] = $labPoints;
-        $VIEW_DATA["parsedown"] = new Parsedown();
         $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
         $VIEW_DATA['typeDesc'] = $typeDesc;
         $VIEW_DATA['deliverables'] = $deliverables;

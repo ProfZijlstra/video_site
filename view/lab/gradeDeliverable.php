@@ -99,7 +99,7 @@
                         <?php if ($deliv['hasMarkDown']) : ?>
                             <?= $parsedown->text($deliv['desc']) ?>
                         <?php else : ?>
-                            <pre><?= $deliv['desc'] ?></pre>
+                            <pre><?= htmlspecialchars($deliv['desc']) ?></pre>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                                     <?php if ($delivery['hasMarkDown']) : ?>
                                         <?= $parsedown->text($delivery['text']) ?>
                                     <?php else : ?>
-                                        <pre><?= $delivery['text'] ?></pre>
+                                        <pre><?= htmlspecialchars($delivery['text']) ?></pre>
                                     <?php endif; ?>
                                 </div>
                             <?php else : ?>
@@ -168,7 +168,7 @@
                                     <?php if ($delivery['stuCmntHasMd']) : ?>
                                         <?= $parsedown->text($delivery['stuComment']) ?>
                                     <?php else : ?>
-                                        <pre><?= $delivery['stuComment'] ?></pre>
+                                        <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>

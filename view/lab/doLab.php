@@ -49,14 +49,14 @@
                 <?php if ($lab['hasMarkDown']) : ?>
                     <?= $parsedown->text($lab['desc']) ?>
                 <?php else : ?>
-                    <pre><?= $lab['desc'] ?></pre>
+                    <pre><?= htmlspecialchars($lab['desc']) ?></pre>
                 <?php endif; ?>
             </div>
 
             <div class="attachments">
                 <?php foreach ($attachments as $attachment) : ?>
                     <div class="attachment">
-                        <?php if ($attachment['type'] == "lab zip") : ?>
+                        <?php if ($attachment['type'] == "zip") : ?>
                             <a target="_blank" href="<?= $lab['id'] . '/download/' . $attachment['id'] ?>">
                             <?php else : ?>
                                 <a target="_blank" href="<?= $attachment['file'] ?>">
@@ -119,7 +119,7 @@
                                 <?php if ($deliv['hasParseDown']) : ?>
                                     <?= $parsedown->text($deliv['desc']) ?>
                                 <?php else : ?>
-                                    <pre><?= $deliv['desc'] ?></pre>
+                                    <pre><?= htmlspecialchars($deliv['desc']) ?></pre>
                                 <?php endif; ?>
                             </div>
                             <?php if ($deliv['type'] == 'txt') : ?>

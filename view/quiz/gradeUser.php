@@ -51,7 +51,7 @@
                             <?php if ($question['hasMarkDown']) : ?>
                                 <?= $parsedown->text($question['text']) ?>
                             <?php else : ?>
-                                <pre><?= $question['text'] ?></pre>
+                                <pre><?= htmlspecialchars($question['text']) ?></pre>
                             <?php endif; ?>
                         </div>
 
@@ -71,7 +71,7 @@
                                     <?php if ($answers[$question['id']]['hasMarkDown']) : ?>
                                         <?= $parsedown->text($answers[$question['id']]['text']) ?>
                                     <?php else : ?>
-                                        <pre><?= $answers[$question['id']]['text'] ?></pre>
+                                        <pre><?= htmlspecialchars($answers[$question['id']]['text']) ?></pre>
                                     <?php endif; ?>
                                 <?php elseif ($question['type'] == "image") : ?>
                                     <img src="<?= $answers[$question['id']]['text'] ?>" />
@@ -92,7 +92,7 @@
                                     <?php if ($question['mdlAnsHasMD']) : ?>
                                         <?= $parsedown->text($question['modelAnswer']) ?>
                                     <?php else : ?>
-                                        <pre><?= $question['modelAnswer'] ?></pre>
+                                        <pre><?= htmlspecialchars($question['modelAnswer']) ?></pre>
                                     <?php endif; ?>
                                 <?php elseif ($question['type'] == "image") : ?>
                                     <img src="<?= $question['modelAnswer'] ?>" />

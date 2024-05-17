@@ -20,7 +20,9 @@ class MarkdownHlpr
         $shifted = filter_input(INPUT_GET, "markdown");
         $markdown = $this->ceasarShift($shifted);
 
-        $VIEW_DATA["parsedown"] = new Parsedown();
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['markdown'] = $markdown;
         return "markdown.php";
     }
@@ -36,4 +38,3 @@ class MarkdownHlpr
         return $result;
     }
 }
-

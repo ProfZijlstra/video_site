@@ -37,7 +37,6 @@ class QuizTakingCtrl
     #[Get(uri: "/(\d+)$", sec: "observer")]
     public function viewQuiz()
     {
-        require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -64,7 +63,10 @@ class QuizTakingCtrl
             return "quiz/countdown.php";
         }
 
-        $VIEW_DATA["parsedown"] = new Parsedown();
+        require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
 

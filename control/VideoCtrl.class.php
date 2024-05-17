@@ -102,7 +102,6 @@ class VideoCtrl
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$", sec: "observer")]
     public function video()
     {
-        require_once("lib/Parsedown.php");
         global $URI_PARAMS;
         global $VIEW_DATA;
         $course_num = $URI_PARAMS[1];
@@ -203,7 +202,10 @@ class VideoCtrl
         $VIEW_DATA["pdf_file"] = $pdf_file;
 
         // comments related
-        $VIEW_DATA["parsedown"] = new Parsedown();
+        require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA["comments"] = $comments;
         $VIEW_DATA["replies"] = $replies;
 
