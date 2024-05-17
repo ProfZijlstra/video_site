@@ -544,3 +544,7 @@ CREATE TABLE `manalabs`.`attendance_config` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION) 
 ENGINE = InnoDB;
+
+--- 17th of May 2024
+ALTER TABLE `attachment` DROP COLUMN `deliverable_id`;
+ALTER TABLE `attachment` MODIFY `lab_id` BIGINT UNSIGNED NOT NULL;

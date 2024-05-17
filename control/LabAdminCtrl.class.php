@@ -207,7 +207,7 @@ class LabAdminCtrl
             }
             $file = $res['file'];
             $name = $res['name'];
-            $aid = $this->attachmentDao->add($type, $id, null, $file, $name);
+            $aid = $this->attachmentDao->add($type, $id, $file, $name);
             $res['id'] = $aid;
         } catch (Exception $e) {
             error_log($e);

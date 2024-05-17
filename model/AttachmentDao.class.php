@@ -10,16 +10,15 @@ class AttachmentDao
     #[Inject('DB')]
     public $db;
 
-    public function add($type, $lab_id, $deliverable_id, $file, $name)
+    public function add($type, $lab_id, $file, $name)
     {
         $stmt = $this->db->prepare(
             "INSERT INTO attachment
-            VALUES(NULL, :type, :lab_id, :deliverable_id, :file, :name)"
+            VALUES(NULL, :type, :lab_id, :file, :name)"
         );
         $stmt->execute(array(
             "type" => $type,
             "lab_id" => $lab_id,
-            "deliverable_id" => $deliverable_id,
             "file" => $file,
             "name" => $name,
         ));
