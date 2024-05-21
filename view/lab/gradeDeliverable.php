@@ -148,7 +148,7 @@
                             <?php else : ?>
                                 <?php if ($deliv['type'] == 'url') : ?>
                                     <div class="urlContainer">
-                                        <a href="<?= $delivery['text'] ?>"><?= $delivery['text'] ?></a>
+                                        <a href="<?= $delivery['text'] ?>" target="_blank"><?= $delivery['text'] ?></a>
                                     </div>
                                 <?php else : /* type is: img, pdf, zip */ ?>
                                     <div class="fileContainer">
