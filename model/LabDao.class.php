@@ -177,7 +177,7 @@ class LabDao
         // get all the old labs
         $stmt = $this->db->prepare(
             "SELECT l.id, l.name, l.desc, l.hasMarkDown, l.start, l.stop, 
-            l.visible, l.type, l.points, d.abbr 
+            l.visible, l.type, d.abbr 
             FROM lab AS l
             JOIN `day` AS d on l.day_id = d.id
             WHERE d.offering_id = :offering_id"
@@ -207,7 +207,6 @@ class LabDao
                 "stop" => $stop->format("Y-m-d H:i:s"),
                 "visible" => $lab['visible'] ? 1 : 0,
                 "type" => $lab['type'],
-                "points" => $lab['points']
             ));
             $new_lab_id = $this->db->lastInsertId();
 
