@@ -49,7 +49,7 @@
                                 <pre><?= $question['text'] ?></pre>
                             <?php endif; ?>
                         </div>
-                        <span>Your Answer:</span>
+                        <span class="block">Your Answer:</span>
                         <?php if ($question['type'] == "text") : ?>
                             <div class="textContainer">
                                 <i title="Markdown" class="fa-brands fa-markdown <?= $answers[$question['id']]['hasMarkDown'] ? 'active' : "" ?>"></i>
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                         <?php elseif ($question['type'] == "image") : ?>
-                            <span>
+                            <span class="block">
                                 <input type="file" class="img_replace" />
                                 <i title="Upload image" class="fa-solid fa-upload"></i>
                                 <i class="fa-solid fa-circle-notch"></i>

@@ -112,11 +112,11 @@ div.question pre {
 div.question img {
     width: 100%;
 }
-div.question span {
+div.question span.block {
     display: inline-block;
     margin: 10px 0px;
 }
-div.question span {
+div.question span.block {
     i.fa-upload, i.fa-camera {
         cursor: pointer;
     }
