@@ -126,6 +126,32 @@
             <button id="addDelivBtn" data-seq="<?= count($deliverables) + 1 ?>" data-lab_id="<?= $lab['id'] ?>">Add</button>
         </div>
     </dialog>
+
+    <dialog id="zipActionDialog" class="modal">
+        <i id="closeZipDialog" class="fas fa-times-circle close"></i>
+        <h3>Zip Actions</h3>
+        <div id="zipActions">
+            <!-- Get zip actions when dialog opens -->
+        </div>
+        <!--List zip actions -->
+        <form id="zipActionForm" method="POST" action="">
+            <input type="hidden" name="attachment_id" id="attachment_id" value="">
+            <label>Action:</label>
+            <select id="zipAction" autofocus>
+                <option value="text">Watermark a plain text file</option>
+                <option value="png">Watermark a .png image file</option>
+            </select>
+            <label>File:</label>
+            <select id="fileSelect">
+                <!-- Get zip file listing when dialog opens -->
+            </select>
+            <label>Byte:</label>
+            <input type="number" id="byte" placeholder="Insert at byte" />
+            <div class="btn">
+                <button type="button" id="addZipActionBtn">Add Action</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 
 </html>

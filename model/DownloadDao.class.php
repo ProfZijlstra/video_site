@@ -23,4 +23,13 @@ class DownloadDao
         ));
         return $this->db->lastInsertId();
     }
+
+    public function deleteForAttachment($attachment_id)
+    {
+        $stmt = $this->db->prepare(
+            "DELETE FROM download
+            WHERE attachment_id = :attachment_id"
+        );
+        $stmt->execute(array("attachment_id" => $attachment_id));
+    }
 }

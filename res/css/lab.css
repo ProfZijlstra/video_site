@@ -144,13 +144,19 @@ body#editLab {
         border-bottom: 1px solid var(--border);
     }
 
-    .attachment {
+    .attachment, .zipAction {
         margin-bottom: 3px;
         padding: 3px 5px;
         border: 1px solid var(--border);
         background-color: var(--light-gray);
         position: relative;
 
+        i.fa-gear {
+            position: absolute;
+            top: 5px;
+            right: 25px;
+            cursor: pointer;
+        }
         i.fa-xmark {
             position: absolute;
             top: 5px;
@@ -170,7 +176,7 @@ body#editLab {
         }
     }
 
-    #addDelivDialog {
+    .modal {
         label {
             margin-top: 10px;
             display: inline-block;
@@ -179,6 +185,13 @@ body#editLab {
         select {
             width: 620px;
         }
+        input[type=number] {
+            width: 610px;
+        }
+    }
+
+    #zipActionDialog h3 {
+        margin-bottom: 5px;   
     }
 }
 

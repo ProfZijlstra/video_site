@@ -548,3 +548,65 @@ ENGINE = InnoDB;
 --- 17th of May 2024
 ALTER TABLE `attachment` DROP COLUMN `deliverable_id`;
 ALTER TABLE `attachment` MODIFY `lab_id` BIGINT UNSIGNED NOT NULL;
+
+-- 23th of May 2024
+-- -----------------------------------------------------
+-- Table `manalabs`.`zip_dl_action`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`zip_dl_action` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `attachment_id` BIGINT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `file` VARCHAR(255) NOT NULL,
+  `byte` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_action_attachment1_idx` (`attachment_id` ASC) VISIBLE,
+  CONSTRAINT `fk_action_attachment1`
+    FOREIGN KEY (`attachment_id`)
+    REFERENCES `manalabs`.`attachment` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `manalabs`.`zip_ul_check`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`zip_ul_check` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `deliverable_id` INT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `file` VARCHAR(255) NOT NULL,
+  `byte` INT UNSIGNED NULL,
+  `public` TINYINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_zip_check_deliverable1_idx` (`deliverable_id` ASC) VISIBLE,
+  CONSTRAINT `fk_zip_check_deliverable1`
+    FOREIGN KEY (`deliverable_id`)
+    REFERENCES `manalabs`.`deliverable` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `manalabs`.`zip_ul_stat`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `manalabs`.`zip_ul_stat` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `delivery_id` BIGINT UNSIGNED NOT NULL,
+  `zip_check_id` BIGINT UNSIGNED NOT NULL,
+  `pass` TINYINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_checks_delivery1_idx` (`delivery_id` ASC) VISIBLE,
+  INDEX `fk_checks_zip_check1_idx` (`zip_check_id` ASC) VISIBLE,
+  CONSTRAINT `fk_checks_delivery1`
+    FOREIGN KEY (`delivery_id`)
+    REFERENCES `manalabs`.`delivery` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_checks_zip_check1`
+    FOREIGN KEY (`zip_check_id`)
+    REFERENCES `manalabs`.`zip_ul_check` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

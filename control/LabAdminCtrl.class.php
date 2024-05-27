@@ -35,6 +35,11 @@ class LabAdminCtrl
     #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
+    #[Inject('ZipDlActionDao')]
+    public $zipDlActionDao;
+
+    #[Inject('DownloadDao')]
+    public $downloadDao;
 
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
@@ -112,7 +117,7 @@ class LabAdminCtrl
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
         }
-        $labzips = $this->attachmentDao->forOffering($offering['id'], "lab zip");
+        $labzips = $this->attachmentDao->forOffering($offering['id'], "zip");
 
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
@@ -200,9 +205,9 @@ class LabAdminCtrl
 
         try {
             $res = $this->attachmentHlpr->process('attachment', $id);
-            $type = "lab simple";
+            $type = "simple";
             if ($res['zip']) {
-                $type = "lab zip";
+                $type = "zip";
                 $res['type'] = $type;
             }
             $file = $res['file'];
@@ -233,8 +238,10 @@ class LabAdminCtrl
 
         try {
             $attachment = $this->attachmentDao->byId($id);
-            $this->attachmentHlpr->delete($attachment);
+            $this->downloadDao->deleteForAttachment($id);
+            $this->zipDlActionDao->deleteForAttachment($id);
             $this->attachmentDao->delete($id, $lab_id);
+            $this->attachmentHlpr->delete($attachment);
         } catch (Exception $e) {
             error_log($e);
             return ["error" => "Failed to remove attachment"];
@@ -328,5 +335,71 @@ class LabAdminCtrl
         $zipAttachment_id = $_PUT["zipAttachment_id"];
 
         $this->deliverableDao->setZipAttachment($id, $lab_id, $zipAttachment_id);
+    }
+
+    /**
+     * Zip Action related code
+     */
+    #[Get(uri: "/(\d+)/attachment/(\d+)$", sec: "instructor")]
+    public function getZipFiles()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $attachment_id = $URI_PARAMS[4];
+
+        $output = [];
+        $zip = new ZipArchive();
+        $attachment = $this->attachmentDao->byId($attachment_id);
+        if ($zip->open($attachment['file']) !== TRUE) {
+            $output[] = "Error: Zip file could not be opened";
+            return "lab/options.php";
+        }
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $name = $zip->getNameIndex($i);
+            $output[$name] = $name;
+        }
+        $zip->close();
+        $VIEW_DATA['output'] = $output;
+        return "lab/options.php";
+    }
+
+    #[Get(uri: "/(\d+)/(\d+)/zipActions$", sec: "instructor")]
+    public function getZipActions()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $attachment_id = $URI_PARAMS[4];
+        $actions = $this->zipDlActionDao->forAttachment($attachment_id);
+
+        $VIEW_DATA['actions'] = $actions;
+        return "lab/zipActions.php";
+    }
+
+    #[Post(uri: "/(\d+)/(\d+)/zipActions$", sec: "instructor")]
+    public function addZipAction()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $attachment_id = $URI_PARAMS[4];
+        $type = filter_input(INPUT_POST, "type");
+        $file = filter_input(INPUT_POST, "file");
+        $byte = filter_input(INPUT_POST, "byte", FILTER_SANITIZE_NUMBER_INT);
+
+        $this->zipDlActionDao->add($attachment_id, $type, $file, $byte);
+
+        $VIEW_DATA['actions'] = $this->zipDlActionDao->forAttachment($attachment_id);
+        return "lab/zipActions.php";  // zipAction view
+    }
+
+    #[Delete(uri: "/(\d+)/zipActions/(\d+)$", sec: "instructor")]
+    public function deleteZipAction()
+    {
+        global $URI_PARAMS;
+
+        $id = $URI_PARAMS[4];
+        $this->zipDlActionDao->delete($id);
     }
 }

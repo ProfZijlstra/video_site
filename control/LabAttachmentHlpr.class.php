@@ -8,6 +8,14 @@
 #[Controller]
 class LabAttachmentHlpr
 {
+    private static $zero;
+    private static $one;
+
+    public function __construct()
+    {
+        self::$zero = pack("CCC", 0xe2, 0x80, 0x8b); // zero width space
+        self::$one = pack("CCC", 0xe2, 0x80, 0x8c); // zero width non-joiner
+    }
 
     public function process($key, $lab_id)
     {
@@ -67,10 +75,7 @@ class LabAttachmentHlpr
         if ($attachment) {
             $file = $attachment['file'];
             unlink($file);
-            if (
-                $attachment['type'] === "lab zip"
-                || $attachment['type'] === "deliv zip"
-            ) {
+            if ($attachment['type'] === "zip") {
                 $dir = dirname(dirname($file));
                 $dir .= "download/{$attachment['id']}/";
                 shell_exec("rm -rf {$dir}");
@@ -101,5 +106,65 @@ class LabAttachmentHlpr
         if (!file_exists($dir) && !is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
+    }
+
+    public function wmTxt($path, $inzip, $bytepos, $num) 
+    {
+        $wm = $this->makeTxtWm($num);
+        $filename = "{$path}/{$inzip}";
+        $contents = file_get_contents($filename);
+        $file = fopen($filename, "w");
+        fwrite($file, $contents, $bytepos);
+        $contents = substr($contents, $bytepos);
+        fwrite($file, $wm);
+        fwrite($file, $contents);
+        fclose($file);
+    }
+
+    public function wmPng($path, $file, $byte, $num) 
+    {
+        $filename = "{$path}/{$file}";
+        $watermark = decbin($num);
+        while (strlen($watermark) < 32) {
+            $watermark = '0' . $watermark;
+        }
+        $png = imagecreatefrompng($filename);
+        $info = getimagesize($filename);
+        $width = $info[0];
+        $y = floor($byte / $width);
+        $x = $byte - $y * $width;
+
+        for ($i = 0; $i < 32; $i++) {
+            $color = imagecolorat($png, $x, $y);
+            $r = ($color >> 16) & 0xFF;
+
+            if ($watermark[$i] == '1') {
+                $r |= 1; // set last bit to 1
+            } else {
+                $r &= 0xFE; // set last bit to 0
+            }
+            $color = ($color & 0xFF00FFFF) | ($r << 16);
+            imagesetpixel($png, $x, $y, $color);
+
+            $x++;
+            if ($x >= $width) {
+                $x = 0;
+                $y++;
+            }
+        }
+
+        imagepng($png, $filename);
+    }
+
+    private function makeTxtWm($num) 
+    {
+        $num = decbin($num);
+        // pad with zeros to 32 bits
+        while (strlen($num) < 32) {
+            $num = '0' . $num;
+        }
+        $num = str_replace('0', self::$zero, $num);
+        $num = str_replace('1', self::$one, $num);
+        return $num;
     }
 }

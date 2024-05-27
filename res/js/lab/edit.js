@@ -1,4 +1,16 @@
 window.addEventListener("load", () => {
+    function htmlOrError(error) {
+        return function responseToHTML(response) {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error(error);
+            }
+        }
+    }
+    function alertError(error) {
+        alert(error);
+    }
     // auto update on detail change
     function updateDetails() {
         const form = document.forms.updateLab;
@@ -50,18 +62,11 @@ window.addEventListener("load", () => {
             fetch(`../${document.forms.delLab.dataset.id}`, {
                 method: "DELETE"
             })
-            .then((response) => {
-                if (response.ok) {
-                    return response.text();
-                }
-                throw new Error("Deleting lab failed (probably has submissions).");
-            })
+            .then(htmlOrError("Deleting lab failed (probably has submissions)."))
             .then(() => {
                 window.location = "../../lab";
             })
-            .catch((error) => {
-                alert(error);
-            });
+            .catch(alertError);
         }
     });
 
@@ -72,32 +77,32 @@ window.addEventListener("load", () => {
             const link = attachment.querySelector("a");
             const name = link.textContent;
             const id = e.target.dataset.id;
-            if (confirm(`Are you sure you want to remove ${name}?`)) {
+            if (confirm(`Are you sure you want to remove ${name}? Including download data, and possibly related zip actions?`)) {
                 const spinner = document.getElementById("attachSpin");
                 spinner.classList.add("rotate");
                 fetch(`attach/${id}`, {
                         method: "DELETE",
                     })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            attachment.remove();
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        attachment.remove();
 
-                            // remove the entry from each labzip dropdown on the page
-                            document.querySelectorAll("select.zipAttachment option").forEach((e) => {
-                                if (e.value == id) {
-                                    e.remove();
-                                }
-                            });
-                        }
-                        spinner.classList.remove('rotate');
-                        const attachments = document.getElementById("attachments");
-                        if (attachments.childElementCount == 0) {
-                            attachments.previousElementSibling.classList.add("empty");
-                        }
-                    });
+                        // remove the entry from each labzip dropdown on the page
+                        document.querySelectorAll("select.zipAttachment option").forEach((e) => {
+                            if (e.value == id) {
+                                e.remove();
+                            }
+                        });
+                    }
+                    spinner.classList.remove('rotate');
+                    const attachments = document.getElementById("attachments");
+                    if (attachments.childElementCount == 0) {
+                        attachments.previousElementSibling.classList.add("empty");
+                    }
+                });
             }
         }
     }
@@ -119,31 +124,19 @@ window.addEventListener("load", () => {
                 method: "POST",
                 body: data
         })
-            .then((response) => {
-                if (response.ok) {
-                    return response.text();
-                }
-                throw new Error("Upload attachment failed.");
-            })
+            .then(htmlOrError("Upload attachment failed."))
             .then((html) => {
                 const div = document.createElement("div");
                 div.innerHTML = html;
-                div.querySelector("i").addEventListener("click", delAttachment);
+                div.querySelector("i.remove").addEventListener("click", delAttachment);
                 const attachments = document.getElementById("attachments");
                 attachments.appendChild(div);
                 spinner.classList.remove('rotate');
 
-                // add an entry to each labzip dropdown on the page
+                // zip attachments also have a config icon
                 const type = div.firstElementChild.dataset.type;
-                if (type == "lab zip") {
-                    const id = div.querySelector("i").dataset.id;
-                    const name = div.querySelector("a").textContent;
-                    document.querySelectorAll("select.zipAttachment").forEach((e) => {
-                        const option = document.createElement("option");
-                        option.value = id;
-                        option.textContent = name;
-                        e.appendChild(option);
-                    });
+                if (type == "zip") {
+                    div.querySelector("i.zipActionConfig").addEventListener("click", openZipActionDialog);
                 }
             })
             .catch((error) => {
@@ -171,12 +164,7 @@ window.addEventListener("load", () => {
                 method: "POST",
                 body: data,
             })
-            .then((response) => {
-                if (response.ok) {
-                    return response.text();
-                }
-                throw new Error("Adding deliverable failed.");
-            })
+            .then(htmlOrError("Adding deliverable failed."))
             .then((html) => {
                 document.getElementById("noDelivs")?.classList.add("hide");
                 const div = document.createElement("div");
@@ -235,15 +223,8 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
         })
-        .then((response) => {
-            if (response.ok) {
-                return response.text();
-            }
-            throw new Error("Updating deliverable failed.");
-        })
-        .catch((error) => {
-            alert(error);
-        });
+        .then(htmlOrError("Updating deliverable failed."))
+        .catch(alertError);
     }
     document.querySelectorAll(".about input, .deliv textarea").forEach((e) => {
         e.addEventListener("change", updateDeliv);
@@ -261,15 +242,8 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
         })
-        .then((response) => {
-            if (response.ok) {
-                return response.text();
-            }
-            throw new Error("Updating deliverable failed.");
-        })
-        .catch((error) => {
-            alert(error);
-        });
+        .then(htmlOrError("Updating deliverable failed."))
+        .catch(alertError);
     }
     document.querySelectorAll(".dcontainer select.zipAttachment").forEach((e) => {
         e.addEventListener("change", updateZipAttachment);
@@ -289,4 +263,97 @@ window.addEventListener("load", () => {
     document.querySelectorAll(".points").forEach((e) => {
         e.addEventListener("change", updatePoints);
     });
+
+    // enable zip action dialog
+    function setZipActionHTML(html) {
+        const zipActions = document.getElementById("zipActions");
+        zipActions.innerHTML = html;
+        zipActions.querySelectorAll(".remove").forEach((e) => {
+            e.onclick = removeZipAction;
+        });
+    }
+    function removeZipAction() {
+        const action_id = this.parentNode.dataset.id;
+        fetch("zipActions/" + action_id, {
+                method: "DELETE",
+            })
+            .then((response) => {
+                if (response.ok) {
+                    this.parentNode.remove();
+                } else {
+                    throw new Error("Error deleting zip action.");
+                }
+            })
+            .catch(alertError);
+    }
+    function openZipActionDialog() {
+        const dialog = document.getElementById("zipActionDialog");
+        dialog.showModal();
+        const aid = this.parentNode.dataset.aid;
+        document.getElementById("attachment_id").value = aid;
+        document.getElementById("zipActionForm").setAttribute("action", `${aid}/zipActions`);
+
+        // get all zip actions for this zip attachment
+        fetch(aid + "/zipActions")
+            .then(htmlOrError("Getting zip actions failed."))
+            .then(setZipActionHTML)
+            .catch(alertError);
+        // get all files for this zip attachment
+        fetch("attachment/" + aid)
+            .then(htmlOrError("Getting zip listing failed."))
+            .then((html) => {
+                document.getElementById("fileSelect").innerHTML = html;
+            })
+            .catch(alertError);
+
+        };
+    document.querySelectorAll(".zipActionConfig").forEach((e) => {
+        e.onclick = openZipActionDialog;
+    });
+    document.getElementById("closeZipDialog").onclick = function() {
+        document.getElementById("zipActionDialog").close();
+    };
+
+    // add action to zip attachment
+    document.getElementById("addZipActionBtn").onclick = function(evt) {
+        evt.preventDefault();
+        const aid = document.getElementById("attachment_id").value;
+        
+        // check if byte is a number
+        const byteField = document.getElementById("byte");
+        const byte = byteField.value;
+        const num = parseInt(byte);
+        if (isNaN(num) || num < 0) {
+            alert("Byte must be a non-negative number.");
+            byteField.value = "";
+            byteField.focus();
+            return false;
+        }
+
+        // when action is png, check that the file ends in .png
+        const fileField = document.getElementById("fileSelect");
+        const file = fileField.value;
+        const actionField = document.getElementById("zipAction");
+        const action = actionField.value;
+        const name = file.toLowerCase();
+        if (action == "png" && !name.endsWith(".png")) {
+            alert("File must end in .png for watermarking a png.");
+            fileField.focus();
+            return false;
+        }
+
+        const data = new FormData();
+        data.append("type", action);
+        data.append("file", file);
+        data.append("byte", num);
+        fetch(aid + "/zipActions", {
+                method: "POST",
+                body: data,
+            })
+            .then(htmlOrError("Adding action failed"))
+            .then(setZipActionHTML)
+            .catch(alertError);
+
+        byteField.value = "";
+    }
 });

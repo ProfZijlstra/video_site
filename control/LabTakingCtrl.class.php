@@ -41,6 +41,9 @@ class LabTakingCtrl
     #[Inject('LabAttachmentHlpr')]
     public $labAttachmentHlpr;
 
+    #[Inject('ZipDlActionDao')]
+    public $zipDlActionDao;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -186,11 +189,22 @@ class LabTakingCtrl
             $this->labAttachmentHlpr->ensureDirCreated($dst);
             $dst .= "{$download_id}";
             shell_exec("cp -r {$src} {$dst}");
+            
+            // create a download event in the DB
+            $id = $this->downloadDao->add($aid, $user_id, $group);
 
-            // TODO: perform zip_actions as specified in the DB
-
-            // cerate a download event in the DB
-            $this->downloadDao->add($aid, $user_id, $group);
+            // perform zip_actions as specified in the DB
+            $actions = $this->zipDlActionDao->forAttachment($aid);
+            foreach ($actions as $action) {
+                $type = $action['type'];
+                $file = $action['file'];
+                $byte = $action['byte'];
+                if ($type == "text") {
+                    $this->labAttachmentHlpr->wmTxt($dst, $file, $byte, $id);
+                } else if ($type = "png") {
+                    $this->labAttachmentHlpr->wmPng($dst, $file, $byte, $id);
+                }
+            }
 
             // based on: https://stackoverflow.com/a/4914807/6933102
             $this->labAttachmentHlpr->ensureDirCreated(dirname($file));
