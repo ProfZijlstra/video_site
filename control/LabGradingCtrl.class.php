@@ -96,9 +96,9 @@ class LabGradingCtrl
         // create missing submissions for absents (group or individual)
         foreach ($absent as $key => $item) {
             if ($lab['type'] == 'group') {
-                $sid = $this->submissionDao->create($lab_id, null, $item['group']);
+                $sid = $this->submissionDao->getOrCreate($lab_id, null, $item['group']);
             } else {
-                $sid = $this->submissionDao->create($lab_id, $item['id'], null);
+                $sid = $this->submissionDao->getOrCreate($lab_id, $item['id'], null);
             }
             $none[$key] = $this->submissionDao->byId($sid);
         }
@@ -243,7 +243,7 @@ class LabGradingCtrl
 
 
         if (!$submission_id) {
-            $submission_id = $this->submissionDao->create(
+            $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
                 $user_id,
                 $group

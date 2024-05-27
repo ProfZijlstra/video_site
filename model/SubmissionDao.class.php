@@ -10,8 +10,23 @@ class SubmissionDao
     #[Inject('DB')]
     public $db;
 
-    public function create($lab_id, $user_id, $group)
+    public function getOrCreate($lab_id, $user_id, $group)
     {
+        $stmt = $this->db->prepare(
+            "SELECT id FROM submission 
+                WHERE lab_id = :lab_id 
+                AND user_id = :user_id 
+                AND `group` = :group"
+        );
+        $stmt->execute([
+            "user_id" => $user_id,
+            "lab_id" => $lab_id,
+            "group" => $group
+        ]);
+        $submission = $stmt->fetch();
+        if ($submission) {
+            return $submission['id'];
+        }
         $stmt = $this->db->prepare(
             "INSERT INTO submission 
                 VALUES (NULL, :lab_id, :user_id, :group)"

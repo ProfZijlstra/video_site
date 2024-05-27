@@ -274,7 +274,7 @@ class LabTakingCtrl
         }
 
         if (!$submission_id) {
-            $submission_id = $this->submissionDao->create(
+            $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
                 $_SESSION['user']['id'],
                 $group
@@ -369,7 +369,7 @@ class LabTakingCtrl
         }
 
         if (!$submission_id) {
-            $submission_id = $this->submissionDao->create(
+            $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
                 $_SESSION['user']['id'],
                 $group
@@ -458,7 +458,7 @@ class LabTakingCtrl
         }
 
         if (!$submission_id) {
-            $submission_id = $this->submissionDao->create(
+            $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
                 $_SESSION['user']['id'],
                 $group
@@ -564,7 +564,7 @@ class LabTakingCtrl
         }
 
         if (!$submission_id) {
-            $submission_id = $this->submissionDao->create(
+            $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
                 $_SESSION['user']['id'],
                 $group
@@ -678,7 +678,7 @@ class LabTakingCtrl
 
             // create submission if it does not exist
             if ($submission_id == null) {
-                $submission_id = $this->submissionDao->create(
+                $submission_id = $this->submissionDao->getOrCreate(
                     $lab_id,
                     $user_id,
                     $group
