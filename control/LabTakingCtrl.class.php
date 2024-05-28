@@ -528,7 +528,7 @@ class LabTakingCtrl
         if ($_FILES["file"]['error'] != UPLOAD_ERR_OK) {
             return ["error" => "Upload Error"];
         }
-        if ($_FILES["file"]['size'] > 5252880) {
+        if ($_FILES["file"]['size'] > 52428800) {
             return ["error" => "File too large, 50MB is the maximum"];
         }
 
