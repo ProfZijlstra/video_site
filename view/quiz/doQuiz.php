@@ -46,7 +46,7 @@
                             <?php if ($question['hasMarkDown']) : ?>
                                 <?= $parsedown->text($question['text']) ?>
                             <?php else : ?>
-                                <pre><?= $question['text'] ?></pre>
+                                <pre><?= htmlspecialchars($question['text']) ?></pre>
                             <?php endif; ?>
                         </div>
                         <span class="block">Your Answer:</span>

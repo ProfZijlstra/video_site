@@ -152,7 +152,7 @@
                                 <?php if ($answer['hasMarkDown']) : ?>
                                     <?= $parsedown->text($answer['text']) ?>
                                 <?php else : ?>
-                                    <pre><?= $answer['text'] ?></pre>
+                                    <pre><?= htmlspecialchars($answer['text']) ?></pre>
                                 <?php endif; ?>
                             <?php elseif ($question['type'] == "image") : ?>
                                 <img src="<?= $answer['text'] ?>" />
