@@ -22,6 +22,20 @@ class AnswerDao
     public function add($text, $question_id, $user_id, $hasMarkDown)
     {
         $stmt = $this->db->prepare(
+            "SELECT id FROM answer 
+            WHERE question_id = :question_id
+            AND user_id = :user_id
+        ");
+        $stmt->execute(array(
+            "question_id" => $question_id,
+            "user_id" => $user_id
+        ));
+        $row = $stmt->fetch();
+        if ($row) {
+            return $row['id'];
+        }
+
+        $stmt = $this->db->prepare(
             "INSERT INTO answer 
 			VALUES(NULL, :text, :question_id, :user_id, 
             NOW(), NULL, NULL, NULL, :hasMarkDown)"
