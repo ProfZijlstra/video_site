@@ -25,6 +25,12 @@ body.lab {
                 right: 10px;
                 cursor: pointer;
             }
+            i.fa-gear {
+                position: absolute;
+                top: 35px;
+                right: 9px;
+                cursor: pointer;
+            }
         }
 
         .deliv {
@@ -76,6 +82,15 @@ body.lab {
         border-top: 1px solid var(--border);
         .textContainer .fa-markdown {
             top: 10px;
+        }
+    }
+    div.listing {
+        font-family: monospace;
+        position: relative;
+
+        span.time {
+            position: absolute;
+            right: 0px;
         }
     }
 }
@@ -500,7 +515,7 @@ body#gradeDeliverable {
             div.urlContainer input.url {
                 width: 100%;
             }
-            pre.listing {
+            div.listing {
                 max-width: 70vw;
                 overflow-x: scroll;
             }

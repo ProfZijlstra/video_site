@@ -588,7 +588,16 @@ class LabTakingCtrl
                 }
                 $listing = "";
                 for ($i = 0; $i < $zip->numFiles; $i++) {
-                    $listing .= $zip->getNameIndex($i) . "\n";
+                    $name = htmlspecialchars($zip->getNameIndex($i));
+                    if (str_starts_with($name, "__MACOSX")) {
+                        continue;
+                    }
+                    $mtime = $zip->statIndex($i)['mtime'];
+                    $listing .= '<div class="zFile">';
+                    $listing .= "<span class='name'>{$name}</span>";
+                    $listing .= "<span class='time'>";
+                    $listing .= date("Y-m-d H:i:s", $mtime)."</span>";
+                    $listing .= "</div>";
                 }
                 $zip->close();
             }

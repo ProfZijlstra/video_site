@@ -97,7 +97,7 @@
                                         <?php if ($deliv['type'] == 'img') : ?>
                                             <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
                                         <?php elseif ($deliv['type'] == "zip") : ?>
-                                            <pre class="listing"><?= $delivery['text'] ?></pre>
+                                            <div class="listing"><?= $delivery['text'] ?></div>
                                         <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
