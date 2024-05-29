@@ -189,7 +189,7 @@ class LabTakingCtrl
             $this->labAttachmentHlpr->ensureDirCreated($dst);
             $dst .= "{$download_id}";
             shell_exec("cp -r {$src} {$dst}");
-            
+
             // create a download event in the DB
             $id = $this->downloadDao->add($aid, $user_id, $group);
 
@@ -582,6 +582,9 @@ class LabTakingCtrl
             $dst = $res['dst'];
         } else { // pdf and zip
             if ($type == 'zip') {
+                $lab = $this->labDao->byId($lab_id);
+                $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start']);
+                $ts = $date->getTimestamp();
                 $zip = new ZipArchive();
                 if ($zip->open($_FILES["file"]['tmp_name']) !== TRUE) {
                     return ["error" => "Zip file could not be opened"];
@@ -589,14 +592,22 @@ class LabTakingCtrl
                 $listing = "";
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     $name = htmlspecialchars($zip->getNameIndex($i));
-                    if (str_starts_with($name, "__MACOSX")) {
+                    if (
+                        str_starts_with($name, "__MACOSX")
+                        || str_starts_with($name, ".DS_Store")
+                        || str_starts_with($name, "._")
+                    ) {
                         continue;
                     }
                     $mtime = $zip->statIndex($i)['mtime'];
+                    $class = 'time';
+                    if ($mtime < $ts) {
+                        $class .= " old";
+                    }
                     $listing .= '<div class="zFile">';
                     $listing .= "<span class='name'>{$name}</span>";
-                    $listing .= "<span class='time'>";
-                    $listing .= date("Y-m-d H:i:s", $mtime)."</span>";
+                    $listing .= "<span class='{$class}'>";
+                    $listing .= date("Y-m-d H:i:s", $mtime) . "</span>";
                     $listing .= "</div>";
                 }
                 $zip->close();
