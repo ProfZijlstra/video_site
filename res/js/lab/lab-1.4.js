@@ -202,7 +202,7 @@ window.addEventListener("load", () => {
                 img.classList.add("show");
             } else if (type == "zip") {
                 const listing = deliv.querySelector(".listing");
-                listing.innerText = data.text;
+                listing.innerHTML = data.text;
             }
         })
         .catch(error => {
