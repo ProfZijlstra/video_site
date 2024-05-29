@@ -5,6 +5,10 @@ div#days {
     margin-left: auto;
     margin-right: auto;
     width: 67vw;
+
+    div.dayHeader {
+        text-align: center;
+    }
 }
 div#days div.data {
     cursor: pointer;

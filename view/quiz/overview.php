@@ -47,6 +47,15 @@
         </nav>
 
         <div id="days" class="lab">
+            <?php if ($offering['showDates']): ?>
+                <div class="dayHeader">Monday</div>
+                <div class="dayHeader">Tuesday</div>
+                <div class="dayHeader">Wednesday</div>
+                <div class="dayHeader">Thursday</div>
+                <div class="dayHeader">Friday</div>
+                <div class="dayHeader">Saturday</div>
+                <div class="dayHeader">Sunday</div>
+            <?php endif; ?>
             <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
                 <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
                     <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering["daysPerLesson"]; ?>
