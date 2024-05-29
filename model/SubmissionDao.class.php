@@ -12,17 +12,23 @@ class SubmissionDao
 
     public function getOrCreate($lab_id, $user_id, $group)
     {
-        $stmt = $this->db->prepare(
-            "SELECT id FROM submission 
-                WHERE lab_id = :lab_id 
-                AND user_id = :user_id 
-                AND `group` = :group"
-        );
-        $stmt->execute([
-            "user_id" => $user_id,
-            "lab_id" => $lab_id,
-            "group" => $group
-        ]);
+        $select = "SELECT id FROM submission 
+                WHERE lab_id = :lab_id ";
+        if (!$group) {
+            $select .= "AND user_id = :user_id ";
+            $stmt = $this->db->prepare($select);
+            $stmt->execute([
+                "user_id" => $user_id,
+                "lab_id" => $lab_id,
+            ]);
+        } else {
+            $select .= "AND `group` = :group ";
+            $stmt = $this->db->prepare($select);
+            $stmt->execute([
+                "lab_id" => $lab_id,
+                "group" => $group
+            ]);
+        }
         $submission = $stmt->fetch();
         if ($submission) {
             return $submission['id'];
