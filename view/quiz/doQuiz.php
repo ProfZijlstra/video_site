@@ -14,7 +14,7 @@
     <script src="res/js/markdown-1.1.js"></script>
     <script src="res/js/camera-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.5.js"></script>
+    <script src="res/js/quiz/quiz-1.6.js"></script>
 </head>
 
 <body>
