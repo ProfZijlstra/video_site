@@ -29,7 +29,7 @@
                 if (!points) {
                     points = 0;
                 }
-                const hasMarkDown = 1;
+                const hasMarkDown = 0;
                 const comment = container.querySelector("textarea").value;
                 const shifted = encodeURIComponent(MARKDOWN.ceasarShift(comment));
                 const delivery_id = container.dataset.id;
