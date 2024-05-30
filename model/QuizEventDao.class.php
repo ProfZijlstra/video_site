@@ -26,7 +26,6 @@ class QuizEventDao
 
     public function getStartTimes($quiz_id)
     {
-        $this->db->exec("SET time_zone = '" . TIMEZONE . "'");
         $stmt = $this->db->prepare(
             "SELECT e.user_id, MIN(e.timestamp) AS `start`
             FROM quiz_event AS e 
@@ -47,7 +46,6 @@ class QuizEventDao
 
     public function getStopTimes($quiz_id)
     {
-        $this->db->exec("SET time_zone = '" . TIMEZONE . "'");
         $stmt = $this->db->prepare(
             "SELECT e.user_id, MAX(e.timestamp) AS `stop`
             FROM quiz_event AS e 
@@ -68,7 +66,6 @@ class QuizEventDao
 
     public function forUser($quiz_id, $user_id)
     {
-        $this->db->exec("SET time_zone = '" . TIMEZONE . "'");
         $stmt = $this->db->prepare(
             "SELECT *
             FROM quiz_event 

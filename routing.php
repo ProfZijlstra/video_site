@@ -105,6 +105,7 @@ try {
     $output = "error/500.php";
     try {
         $db->beginTransaction();
+        $db->exec("SET time_zone = '" . TIMEZONE . "'");
         $output = $controler->{$method}();
         $db->commit();
     } catch (PDOException $e) {

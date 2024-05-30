@@ -69,7 +69,6 @@ class AnswerDao
 
     public function forQuestion($question_id)
     {
-        $this->db->exec("SET time_zone = '" . TIMEZONE . "'");
         $stmt = $this->db->prepare(
             "SELECT a.id, a.text, a.user_id, a.points, a.comment,
                 u.knownAs, u.lastname,
@@ -115,7 +114,6 @@ class AnswerDao
 
     public function forUser($user_id, $quiz_id)
     {
-        $this->db->exec("SET time_zone = '" . TIMEZONE . "'");
         $stmt = $this->db->prepare(
             "SELECT a.text, a.id, a.question_id, 
                 a.points, a.comment,
