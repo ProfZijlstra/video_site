@@ -83,7 +83,7 @@
                                     <?php if ($delivery['hasMarkDown']) : ?>
                                         <?= $parsedown->text($delivery['text']) ?>
                                     <?php else : ?>
-                                        <pre><?= htmlspecialchars($delivery['text']) ?></pre>
+                                        <pre><?= htmlspecialchars($delivery['text'] ?: "") ?></pre>
                                     <?php endif; ?>
                                 </div>
                             <?php else : ?>
