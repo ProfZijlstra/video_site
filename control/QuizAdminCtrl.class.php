@@ -32,6 +32,9 @@ class QuizAdminCtrl
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
+    #[Inject('AnswerDao')]
+    public $answerDao;
+
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
@@ -113,6 +116,39 @@ class QuizAdminCtrl
         $VIEW_DATA['title'] = "Edit Quiz";
 
         return "quiz/edit.php";
+    }
+
+    #[Get(uri: "/(\d+)/preview$", sec: "instructor")]
+    public function previewQuiz() 
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $quiz_id = $URI_PARAMS[3];
+
+        $user_id = $_SESSION['user']['id'];
+        $quiz = $this->quizDao->byId($quiz_id);
+        $quiz = $this->quizDao->byId($quiz_id);
+        $tz = new DateTimeZone(TIMEZONE);
+        $now = new DateTimeImmutable("now", $tz);
+        $stop = new DateTimeImmutable($quiz['stop'], $tz);
+        $stopDiff = $now->diff($stop);
+
+        require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+
+        $VIEW_DATA['course'] = $course_num;
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['quiz'] = $quiz;
+        $VIEW_DATA["parsedown"] = $parsedown;
+        $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
+        $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
+        $VIEW_DATA['title'] = "Quiz: " . $quiz['name'];
+        $VIEW_DATA['stop'] = $stopDiff;
+        return "quiz/doQuiz.php";
     }
 
     /**

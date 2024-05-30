@@ -22,6 +22,9 @@
                 </a>
             </nav>
             <nav class="tools">
+                <a href="preview">
+                    <i id="previewBtn" class="fa-solid fa-eye"></i>
+                </a>
                 <i id="addQuestion" title="Add Question" class="far fa-plus-square"></i>
                 <form id="delQuiz" data-qcount="<?= $questions ? count($questions) : 0 ?>" action="del" method="POST"><i id="delBtn" title="Delete Quiz" class="far fa-trash-alt"></i></form>
             </nav>
