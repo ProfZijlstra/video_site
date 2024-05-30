@@ -15,7 +15,7 @@
     <script src="res/js/tabKey.js"></script>
     <script src="res/js/camera-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.6.js"></script>
+    <script src="res/js/quiz/quiz-1.7.js"></script>
     <script src="res/js/ensureSaved.js"></script>
 </head>
 

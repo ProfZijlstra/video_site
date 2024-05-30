@@ -9,19 +9,6 @@ window.addEventListener("load", () => {
     MARKDOWN.enablePreview("../markdown");
     MARKDOWN.activateButtons(saveQuestionChange)
 
-    // make tab insert 4 spaces when in a textarea with markdown enabled
-    function doTab(evt) {
-        const mdc = this.parentNode.querySelector("div.mdContainer");
-        if (mdc.classList.contains('active') &&  evt.key === "Tab") {
-            evt.preventDefault();
-            this.value += "    ";
-        }
-    }
-    document.querySelectorAll('textarea').forEach((area) => {
-        area.onkeydown = doTab;
-    });
-
-
     // automatically save changes to answers
     function saveQuestionChange() {
         let parent = this.parentNode;

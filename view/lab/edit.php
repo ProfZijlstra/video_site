@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="res/css/lab.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.1.js"></script>
+    <script src="res/js/tabKey.js"></script>
     <script src="res/js/lab/edit.js"></script>
 </head>
 
@@ -24,7 +25,7 @@
             </a>
         </nav>
         <nav class="tools">
-            <form id="delLab" data-id="<?= $lab['id'] ?>" data-scount="<?= 0 /* TODO submit count */ ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
+            <form id="delLab" data-id="<?= $lab['id'] ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>
         </nav>
         <div id="content">
             <div class="lab">
@@ -129,11 +130,10 @@
 
     <dialog id="zipActionDialog" class="modal">
         <i id="closeZipDialog" class="fas fa-times-circle close"></i>
-        <h3>Zip Actions</h3>
+        <h3>Zip Download Actions</h3>
         <div id="zipActions">
             <!-- Get zip actions when dialog opens -->
         </div>
-        <!--List zip actions -->
         <form id="zipActionForm" method="POST" action="">
             <input type="hidden" name="attachment_id" id="attachment_id" value="">
             <label>Action:</label>
@@ -150,6 +150,32 @@
             <div class="btn">
                 <button type="button" id="addZipActionBtn">Add Action</button>
             </div>
+        </form>
+    </dialog>
+
+    <dialog id="zipCheckDialog" class="modal">
+        <i id="closeCheckDialog" class="fas fa-times-circle close"></i>
+        <h3>Zip Upload Checks</h3>
+        <idv id="zipChecks">
+            <!-- Get zip checks when dialog opens -->
+        </idv>
+        <form id="zipCheckForm" method="POST" action="">
+            <input type="hidden" name="deliverable_id" id="deliverable_id" value="">
+
+            <label>Type</label>
+            <select name="type" id="checkType">
+                    <option value="present">Is Present</option>
+                    <option value="not_present">Is Not Present</option>
+                    <option value="txt_wm">Text Watermark</option>
+                    <option value="png_wm">.png Watermark</option>
+            </select>
+            <i id="checkPublic" title="Publicly announced / reported check" class="fa-solid fa-eye"></i>
+
+            <label>File:</label>
+            <input type="text" name="file">
+
+            <label>Byte:</label>
+            <input type="number" name="byte" placeholder="Check at byte">
         </form>
     </dialog>
 </body>

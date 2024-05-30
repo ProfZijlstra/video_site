@@ -8,18 +8,6 @@ window.addEventListener("load", () => {
     MARKDOWN.enablePreview("../markdown");
     MARKDOWN.activateButtons(mdToggle);
 
-    // make tab insert 4 spaces when in a textarea with markdown enabled
-    function doTab(evt) {
-        const mdc = this.parentNode.querySelector("div.mdContainer");
-        if (mdc.classList.contains('active') &&  evt.key === "Tab") {
-            evt.preventDefault();
-            this.value += "    ";
-        }
-    }
-    document.querySelectorAll('textarea').forEach((area) => {
-        area.onkeydown = doTab;
-    });
-
     // automatically save changes to deliverables
     document.querySelectorAll("input, select, textarea").forEach(input => {
         input.addEventListener("change", sendDeliverable);
