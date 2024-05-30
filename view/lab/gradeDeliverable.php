@@ -25,8 +25,11 @@
                     input.value = input.dataset.value;
                     return;
                 }
-                const points = input.value;
-                const hasMarkDown = true;
+                let points = input.value;
+                if (!points) {
+                    points = 0;
+                }
+                const hasMarkDown = 1;
                 const comment = container.querySelector("textarea").value;
                 const shifted = encodeURIComponent(MARKDOWN.ceasarShift(comment));
                 const delivery_id = container.dataset.id;
