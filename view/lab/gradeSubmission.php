@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Grade Quiz by Student</title>
+    <title>Grade Lab by Submission</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
