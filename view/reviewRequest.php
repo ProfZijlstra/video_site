@@ -25,13 +25,13 @@
             <p>
                 <?= $first ?> <?= $last ?> would like to observe <?= $course ?> <?= $block ?>
             </p>
-            <form method="POST" action="observe">
+            <form method="POST">
                 <input type="hidden" name="uid" value="<?= $user_id ?>" />
                 <input type="hidden" name="oid" value="<?= $offering_id ?>" />
                 <input type="hidden" name="allow" value="1" />
                 <button>Allow Request</button>
             </form>
-            <form method="POST" action="observe">
+            <form method="POST">
                 <input type="hidden" name="uid" value="<?= $user_id ?>" />
                 <input type="hidden" name="oid" value="<?= $offering_id ?>" />
                 <input type="hidden" name="allow" value="0" />

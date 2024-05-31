@@ -93,7 +93,7 @@ class EnrollmentCtrl
 $first $last would like to join $course $block as observer.
 
 Approve or deny this request at:
-https://manalabs.org/videos/observe?uid=$user_id&oid=$oid
+https://manalabs.org/videos/$course/$block/observeReq?uid=$user_id&oid=$oid
 
 EOD;
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
@@ -113,10 +113,10 @@ EOD;
         $to = [$email, $name];
         $this->mailHlpr->mail($to, "Observer Request", $msg);
 
-        return "Location: ../$block/";
+        return "msgSent.php";
     }
 
-    #[Get(uri: "/observe$", sec: "instructor")]
+    #[Get(uri: "/observeReq$", sec: "instructor")]
     public function showRequest()
     {
         global $VIEW_DATA;
@@ -138,9 +138,11 @@ EOD;
     }
 
 
-    #[Post(uri: "/observe$", sec: "instructor")]
+    #[Post(uri: "/observeReq$", sec: "instructor")]
     public function observerAllowDeny()
     {
+        global $MY_BASE;
+
         $offering_id = filter_input(INPUT_POST, "oid", FILTER_SANITIZE_NUMBER_INT);
         $user_id = filter_input(INPUT_POST, "uid", FILTER_SANITIZE_NUMBER_INT);
         $allow = filter_input(INPUT_POST, "allow", FILTER_SANITIZE_NUMBER_INT);
@@ -165,7 +167,7 @@ EOD;
 
         $this->mailHlpr->mail($to, $subject, $msg);
 
-        return "Location: ../videos/";
+        return "Location: {$MY_BASE}"; 
     }
 
 
