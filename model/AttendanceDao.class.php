@@ -42,7 +42,9 @@ class AttendanceDao
 
     public function forMeeting($meeting_id)
     {
-        $stmt = $this->db->prepare("SELECT a.id, a.teamsName, u.studentID,
+        $stmt = $this->db->prepare(
+            "SELECT a.id, a.teamsName, u.studentID,
+                    u.knownAs, u.lastname,
                     a.arriveLate, a.middleMissing, a.leaveEarly, a.inClass,
                     a.notEnrolled, a.absent, a.excused, a.meeting_id,
                     a.start, a.stop, u.badge 

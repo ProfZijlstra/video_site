@@ -126,7 +126,7 @@
                         <tr data-id="<?= $missing["id"] //is attendance id 
                                         ?>" id="<?= $missing["id"] ?>">
                             <td class="name">
-                                <a href="../../../user/<?= $missing["teamsName"] ?>"><?= $missing["teamsName"] ?></a>
+                                <a href="../../../user/<?= $missing["teamsName"] ?>"><?= $missing["knownAs"] ?> <?= $missing['lastname'] ?></a>
                                 <span class="right present">present</span>
                             </td>
                             <td class="cbox" title="Excused">
@@ -162,7 +162,7 @@
                                 <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["studentID"] ?></a>
                             </td>
                             <td class="name" title="<?= $student["start"] . " - " . $student["stop"] ?>">
-                                <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["teamsName"] ?></a>
+                                <a href="../../../user/<?= $student["teamsName"] ?>"><?= $student["knownAs"] ?> <?= $student['lastname'] ?></a>
                                 <span title="Click to mark absent" class="right absent">absent?</span>
                             </td>
                             <td>
