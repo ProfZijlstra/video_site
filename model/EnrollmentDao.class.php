@@ -143,7 +143,7 @@ class EnrollmentDao
             "SELECT e.auth FROM enrollment AS e 
             JOIN offering AS o ON e.offering_id = o.id
             WHERE e.user_id = :user_id
-            AND o.course_number = :course";
+            AND o.course_number = :course ";
         if ($block != "none") {
             $select .= "AND o.block = :block";
         }
