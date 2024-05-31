@@ -28,7 +28,10 @@ const MARKDOWN = (function() {
         container.className = 'pcontainer';
         area.appendChild(container);
 
-        fetch(mdurl + "?markdown=" + encodeURIComponent(shifted))
+        const data = new FormData();
+        data.append("markdown", shifted);
+
+        fetch(mdurl, { method: "POST", body: data })
             .then((response) => response.text())
             .then((data) => {
                 container.innerHTML = data;

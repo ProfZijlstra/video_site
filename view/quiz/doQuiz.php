@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
-    <script src="res/js/markdown-1.2.js"></script>
+    <script src="res/js/markdown-1.3.js"></script>
     <script src="res/js/camera-1.1.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/quiz/quiz-1.7.js"></script>

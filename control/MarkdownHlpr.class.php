@@ -11,13 +11,13 @@ class MarkdownHlpr
     /**
      * AJAX call to get a markdown preview
      */
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/markdown$", sec: "observer")]
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/markdown$", sec: "observer")]
     public function markdownPreview()
     {
         require_once("lib/Parsedown.php");
         global $VIEW_DATA;
 
-        $shifted = filter_input(INPUT_GET, "markdown");
+        $shifted = filter_input(INPUT_POST, "markdown");
         $markdown = $this->ceasarShift($shifted);
 
         $parsedown = new Parsedown();
