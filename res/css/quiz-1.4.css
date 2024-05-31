@@ -36,11 +36,30 @@ div.quiz select {
 div.quiz input[type="time"], div.quiz input[type="date"] {
     width: 150px;
 }
+body#editQuiz {
+    #content h3 {
+        position: relative;
+        margin-bottom: 0px;
+        
+        i#addQuestion {
+            position: absolute;
+            right: 10px;
+            top: 0px;
+            cursor: pointer;
+        }
+    }
+    #content h3.empty {
+        border-bottom: 1px solid var(--border);
+    }
+    p.warning {
+        text-align: center;
+    }
+}
 
 div.qcontainer {
     display: flex;
     border-top: 1px solid var(--border);
-    margin-top: 30px;
+    margin-bottom: 30px;
 }
 div.qcontainer div.about {
     flex-basis: 150px;

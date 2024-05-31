@@ -13,7 +13,7 @@
         <script src="res/js/markdown-1.3.js"></script>
         <script src="res/js/quiz/edit-1.5.js"></script>
     </head>
-    <body>
+    <body id="editQuiz">
         <?php include("header.php"); ?>
         <main>
             <nav class="back" title="Back">
@@ -25,7 +25,6 @@
                 <a title="Preview" href="../preview?q=<?= $quiz['id'] ?>">
                     <i id="previewBtn" class="fa-solid fa-eye"></i>
                 </a>
-                <i id="addQuestion" title="Add Question" class="far fa-plus-square"></i>
                 <form id="delQuiz" data-qcount="<?= $questions ? count($questions) : 0 ?>" action="del" method="POST"><i id="delBtn" title="Delete Quiz" class="far fa-trash-alt"></i></form>
             </nav>
             <div id="content">
@@ -61,8 +60,14 @@
                     </form>
                 </div>
 
+
+                <h3 class="<?= count($questions) == 0 ? 'empty' : '' ?>">
+                    Questions
+                    <i id="addQuestion" title="Add Question" class="far fa-plus-square"></i>
+                </h3>
                 <?php if(!$questions): ?>
-                    <h2>No Questions Yet</h2>
+                    <h2>No Questions Yet!</h2>
+                    <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one question.</p>
                 <?php endif; ?>
                 <?php foreach ($questions as $question): ?>
                     <div class="qcontainer">
