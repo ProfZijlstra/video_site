@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="res/css/lab.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/back.js"></script>
+    <script>
+window.addEventListener("load", () => {    
+    document.getElementById("total2").innerHTML = document.getElementById("total").innerHTML;
+});
+    </script>
 </head>
 
 <body id="labResults" class="lab labDeliverables">
@@ -24,6 +29,8 @@
         <nav class="tools">
         </nav>
         <div id="content">
+            <div id="total2" class="done">
+            </div>
             <div class="about">
                 <div><label>Start:</label> <?= $lab['start'] ?></div>
                 <div><label>Stop:</label> <?= $lab['stop'] ?></div>
@@ -156,10 +163,12 @@
             </div>
 
             <div class="done">
-                <?php if ($not_graded) : ?>
-                    <div>Not all questions have been graded yet</div>
-                <?php endif; ?>
-                <strong>Total Score:</strong> <?= $received ?> out of <?= $labPoints ?>
+                <div id="total">
+                    <?php if ($not_graded) : ?>
+                        <div>Not all questions have been graded yet</div>
+                    <?php endif; ?>
+                    <strong>Total Score:</strong> <?= $received ?> out of <?= $labPoints ?>
+                </div>
                 <nav class="back" title="Back">
                     <i class="fa-solid fa-arrow-left"></i>
                 </nav>

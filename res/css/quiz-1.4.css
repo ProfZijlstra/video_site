@@ -136,7 +136,7 @@ div.question span input[type="file"] {
 i.fa-circle-notch.rotate {
     width: 16px;
 }
-div#total {
+div#total, div#total2 {
     margin-top: 2em;
     text-align: center;
 }

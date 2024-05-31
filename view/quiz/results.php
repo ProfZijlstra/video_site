@@ -14,6 +14,11 @@ $not_graded = false;
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
+    <script>
+window.addEventListener("load", () => {    
+    document.getElementById("total2").innerHTML = document.getElementById("total").innerHTML;
+});
+    </script>
 </head>
 
 <body>
@@ -25,6 +30,9 @@ $not_graded = false;
             </a>
         </nav>
         <div id="content">
+            <div id="total2">
+
+            </div>
             <!-- For erach question show -->
             <?php foreach ($questions as $question) : ?>
                 <div class="qcontainer">
@@ -112,7 +120,6 @@ $not_graded = false;
                 <?php endif; ?>
                 <strong>Total Score:</strong> <?= $received ?> out of <?= $possible ?>
             </div>
-
         </div>
     </main>
 </body>
