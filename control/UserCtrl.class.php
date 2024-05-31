@@ -351,6 +351,9 @@ class UserCtrl
         $this->userDao->setBadge($data["studentID"], $data["badge"]);
     }
 
+    /* This is not a good location for this function
+     * TODO: put this in a better location
+     */
     #[Get(uri: "^/remap$", sec: "admin")]
     public function remap()
     {
