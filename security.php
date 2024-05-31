@@ -59,7 +59,6 @@ function reAuthRemembered() {
 
 // helper function to check if a user has the minimum requested authentication
 function hasMinAuth($req_auth) {
-    global $MY_BASE;
     global $SEC_LVLS;
     global $URI_PARAMS;
     global $context;
@@ -68,17 +67,15 @@ function hasMinAuth($req_auth) {
         return true;
     } 
 
-    if (count($URI_PARAMS) < 3) {
-        return false;
-    }
-
     $course = $URI_PARAMS[1];
-    $block = $URI_PARAMS[2];
-    $user_id = $_SESSION['user']['id'];
-    if (!preg_match('/[a-z]{2,3}\d{3,4}/', $course) || 
-        !preg_match('!20\d{2}-\d{2}[^/]*!', $block)) {
+    if (!$course) {
         return false;
     }
+    $block = $URI_PARAMS[2];
+    if (!$block) {
+        $block = "none";
+    }
+    $user_id = $_SESSION['user']['id'];
 
     if (!$_SESSION[$course]) {
         $_SESSION[$course] = [];
@@ -111,7 +108,9 @@ function hasMinAuth($req_auth) {
 }
 
 function isAuthorized($lvl) {
+    global $MY_MAPPING;
     if (!hasMinAuth($lvl)) {
+        var_dump($MY_MAPPING);
         require "view/error/403.php";
         exit();
     }

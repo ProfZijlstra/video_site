@@ -139,18 +139,27 @@ class EnrollmentDao
 
     public function checkEnrollmentAuth($user_id, $course, $block)
     {
-        $stmt = $this->db->prepare(
+        $select = 
             "SELECT e.auth FROM enrollment AS e 
             JOIN offering AS o ON e.offering_id = o.id
             WHERE e.user_id = :user_id
-            AND o.course_number = :course
-            AND o.block = :block"
-        );
-        $stmt->execute(array(
-            "user_id" =>  $user_id,
-            "course" => $course,
-            "block" => $block
-        ));
+            AND o.course_number = :course";
+        if ($block != "none") {
+            $select .= "AND o.block = :block";
+        }
+        $stmt = $this->db->prepare($select);
+        if ($block != "none") {
+            $stmt->execute(array(
+                "user_id" =>  $user_id,
+                "course" => $course,
+                "block" => $block
+            ));
+        } else {
+            $stmt->execute(array(
+                "user_id" =>  $user_id,
+                "course" => $course
+            ));
+        }
         return $stmt->fetch();
     }
 
