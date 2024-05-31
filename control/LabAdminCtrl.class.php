@@ -41,6 +41,9 @@ class LabAdminCtrl
     #[Inject('DownloadDao')]
     public $downloadDao;
 
+    #[Inject('DeliveryDao')]
+    public $deliveryDao;
+
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
@@ -130,6 +133,48 @@ class LabAdminCtrl
         $VIEW_DATA['title'] = "Edit Lab";
 
         return "lab/edit.php";
+    }
+
+    #[Get(uri: "/preview$", sec: "instructor")]
+    public function previewLab() 
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $lab_id = filter_input(INPUT_GET, "l", FILTER_SANITIZE_NUMBER_INT);
+        $user_id = $_SESSION['user']['id'];
+        
+        $lab = $this->labDao->byId($lab_id);
+        $stopDiff = new DateInterval("PT1H"); // 1 hour
+
+        require_once("lib/Parsedown.php");
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+
+        $VIEW_DATA['course'] = $course_num;
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['lab'] = $lab;
+        $VIEW_DATA["parsedown"] = $parsedown;
+        $VIEW_DATA['title'] = "Lab: " . $lab['name'];
+        $VIEW_DATA['stop'] = $stopDiff;
+        $VIEW_DATA['group'] = 'instructor';
+
+        $deliverables = $this->deliverableDao->forLab($lab_id);
+        $labPoints = 0;
+        foreach ($deliverables as $deliv) {
+            $labPoints += $deliv['points'];
+        }
+        $VIEW_DATA['labPoints'] = $labPoints;
+        $VIEW_DATA['deliverables'] = $deliverables;
+        $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
+
+        $submission = $this->submissionDao->forUser($user_id, $lab_id);
+        $deliveries = $this->deliveryDao->forSubmission($submission['id']);
+        $VIEW_DATA['submission'] = $submission;
+        $VIEW_DATA['deliveries'] = $deliveries;
+        return "lab/doLab.php";
     }
 
     /**

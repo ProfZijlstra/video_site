@@ -22,7 +22,7 @@
                 </a>
             </nav>
             <nav class="tools">
-                <a href="preview">
+                <a title="Preview" href="../preview?q=<?= $quiz['id'] ?>">
                     <i id="previewBtn" class="fa-solid fa-eye"></i>
                 </a>
                 <i id="addQuestion" title="Add Question" class="far fa-plus-square"></i>

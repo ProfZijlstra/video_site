@@ -114,13 +114,6 @@ class LabTakingCtrl
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
         }
-        $typeDesc = [
-            'txt' => 'Type text into the textbox',
-            'img' => 'Upload an image',
-            'pdf' => 'Upload a .pdf file',
-            'url' => 'Write a URL in the text field',
-            'zip' => 'Upload a .zip file',
-        ];
 
         require_once("lib/Parsedown.php");
         $parsedown = new Parsedown();
@@ -130,7 +123,6 @@ class LabTakingCtrl
         $VIEW_DATA['group'] = $group;
         $VIEW_DATA['labPoints'] = $labPoints;
         $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
-        $VIEW_DATA['typeDesc'] = $typeDesc;
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['submission'] = $submission;
         $VIEW_DATA['deliveries'] = $deliveries;
@@ -251,7 +243,7 @@ class LabTakingCtrl
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
 
@@ -306,7 +298,7 @@ class LabTakingCtrl
         global $_PUT;
 
         $lab_id = $URI_PARAMS[3];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
 
@@ -349,7 +341,7 @@ class LabTakingCtrl
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
 
@@ -400,7 +392,7 @@ class LabTakingCtrl
         global $_PUT;
 
         $lab_id = $URI_PARAMS[3];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
 
@@ -439,7 +431,7 @@ class LabTakingCtrl
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
 
@@ -491,7 +483,7 @@ class LabTakingCtrl
         global $_PUT;
 
         $lab_id = $URI_PARAMS[3];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
 
@@ -537,7 +529,7 @@ class LabTakingCtrl
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
         $type = $URI_PARAMS[4];
-        if ($this->labEnded($lab_id)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
         if ($type == 'pdf' && !$this->labAttachmentHlpr->isPdfFile($_FILES["file"]['tmp_name'])) {
@@ -674,7 +666,7 @@ class LabTakingCtrl
         $deliverable_id = $URI_PARAMS[4];
 
         // reject answers after lab stop time
-        if ($this->labEnded($lab_id, 30)) {
+        if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id, 30)) {
             return "error/403.php";
         }
 

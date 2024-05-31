@@ -1,3 +1,4 @@
+<?php require("view/lab/typeDesc.php"); ?>
 <!DOCTYPE html>
 <html>
 

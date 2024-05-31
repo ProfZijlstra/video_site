@@ -118,7 +118,7 @@ class QuizAdminCtrl
         return "quiz/edit.php";
     }
 
-    #[Get(uri: "/(\d+)/preview$", sec: "instructor")]
+    #[Get(uri: "/preview$", sec: "instructor")]
     public function previewQuiz() 
     {
         global $URI_PARAMS;
@@ -126,15 +126,11 @@ class QuizAdminCtrl
 
         $course_num = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $quiz_id = $URI_PARAMS[3];
-
+        $quiz_id = filter_input(INPUT_GET, "q", FILTER_SANITIZE_NUMBER_INT);
         $user_id = $_SESSION['user']['id'];
+        
         $quiz = $this->quizDao->byId($quiz_id);
-        $quiz = $this->quizDao->byId($quiz_id);
-        $tz = new DateTimeZone(TIMEZONE);
-        $now = new DateTimeImmutable("now", $tz);
-        $stop = new DateTimeImmutable($quiz['stop'], $tz);
-        $stopDiff = $now->diff($stop);
+        $stopDiff = new DateInterval("PT1H"); // 1 hour
 
         require_once("lib/Parsedown.php");
         $parsedown = new Parsedown();
