@@ -163,7 +163,6 @@ class CourseCtrl
             return "Location: $MY_BASE";
         }
 
-        $this->videoDao->clone($course_number, $block, $old_block);
         $new_offering_id = $this->offeringDao->create(
             $course_number,
             $block,
@@ -181,6 +180,8 @@ class CourseCtrl
         $this->classSessionDao->createForOffering($new_offering_id);
         $this->quizDao->clone($offering_id, $new_offering_id);
         $this->labDao->clone($offering_id, $new_offering_id);
+        // update the filesystem last, after DB changes (which can be rolled back)
+        $this->videoDao->clone($course_number, $block, $old_block);
 
         return "Location: ../$block/";
     }
