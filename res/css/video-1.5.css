@@ -199,6 +199,7 @@ video:focus {
 }
 main article video {
     width: 80%;
+    min-height: 37.5vw;
 }
 main article .progress {
     position: relative;
@@ -429,5 +430,6 @@ textarea.commentText {
     }
     main article video {
         width: 100%;
+        height: auto;
     }
 }
