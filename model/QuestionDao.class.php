@@ -31,7 +31,8 @@ class QuestionDao
     public function forQuiz($quiz_id)
     {
         $stmt = $this->db->prepare("
-            SELECT q.*, COUNT(a.id) AS answers, COUNT(a2.id) AS ungraded 
+            SELECT q.*, COUNT(a.id) AS answers, COUNT(a2.id) AS ungraded,
+            AVG(a.points) AS avgPoints
             FROM question AS q
             LEFT JOIN answer AS a ON q.id = a.question_id
             LEFT JOIN answer AS a2 ON a.id = a2.id AND a2.points IS NULL

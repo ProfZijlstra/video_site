@@ -71,16 +71,12 @@
                     }
                     ?>
                     <a href="question/<?= $question['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
-                        Q<?= $count++ ?>
+                        Q<?= $count++ ?>(<?= number_format($question['avgPoints'], 1) ?>)
                     </a>
                 <?php endforeach; ?>
             </div>
 
-            <?php function answerTable($list, $detail, $title, $longTitle)
-            {
-                global $starts;
-                global $stops;
-            ?>
+            <?php function answerTable($list, $detail, $title, $longTitle, $starts, $stops) { ?>
                 <?php if ($list) : ?>
                     <!-- Table showing results of enrolled students -->
                     <h3 title="<?= $longTitle ?>"><?= $title ?></h3>
@@ -122,9 +118,9 @@
                 <?php endif; ?>
             <?php }  ?>
 
-            <?php answerTable($absent, false, "Nu Submission", ""); ?>
-            <?php answerTable($taken, true, "Results", "Submissions from enrolled students"); ?>
-            <?php answerTable($extra, true, "Extra", "Submissions from unenrolled students"); ?>
+            <?php answerTable($absent, false, "Nu Submission", "", $starts, $stops); ?>
+            <?php answerTable($taken, true, "Results", "Submissions from enrolled students", $starts, $stops); ?>
+            <?php answerTable($extra, true, "Extra", "Submissions from unenrolled students", $starts, $stops); ?>
 
         </div>
     </main>

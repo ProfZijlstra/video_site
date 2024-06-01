@@ -13,7 +13,8 @@ class DeliverableDao
     public function forLab($lab_id)
     {
         $stmt = $this->db->prepare("
-            SELECT d.*, COUNT(a.id) AS answers, COUNT(b.id) as ungraded
+            SELECT d.*, COUNT(a.id) AS answers, COUNT(b.id) as ungraded,
+            AVG(a.points) as avgPoints
             FROM deliverable AS d 
             LEFT JOIN delivery AS a ON d.id = a.deliverable_id
             LEFT JOIN delivery AS b ON a.id = b.id AND b.points IS NULL
