@@ -36,7 +36,7 @@
     <main>
         <nav class="tools">
             <a href="attendance/config">
-                <i title="Config CAMS Integration" class="fa-solid fa-gear"></i>
+                <i title="Configure" class="fa-solid fa-gear"></i>
             </a>
             <i id="physical_icon" title="Physical Classroom Attendance" class="fas fa-chalkboard-teacher"></i>
             <a href="professionalism">
