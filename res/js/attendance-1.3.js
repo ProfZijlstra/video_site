@@ -17,10 +17,10 @@ window.addEventListener("load", () => {
 
     // showing the add_meeting overlay
     const days = document.getElementById("days");
-    const AM_start = days.dataset.amstart;
-    const AM_stop = days.dataset.amstop;
-    const PM_start = days.dataset.pmstart;
-    const PM_stop = days.dataset.pmstop;
+    const AM_start = days.dataset.amstart ? days.dataset.amstart : '10:00';
+    const AM_stop = days.dataset.amstop ? days.dataset.amstop : '12:30';
+    const PM_start = days.dataset.pmstart ? days.dataset.pmstart : '13:30';
+    const PM_stop = days.dataset.pmstop ? days.dataset.pmstop : '15:20';
     function addMeeting() {
         const session_id = this.parentNode.dataset.session_id;
         const date= this.parentNode.parentNode.dataset.date;
