@@ -232,9 +232,11 @@ body.labDeliverables {
         }
     }
     div.txtDelivery {
+        position: relative;
         margin: 10px 0px;
     }
     div.comment {
+        position: relative;
         margin-bottom: 10px;
     }
 

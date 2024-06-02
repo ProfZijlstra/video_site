@@ -4,6 +4,7 @@ nav.tools {
     z-index: 100;
 }
 div.questionText, div.answerText {
+    position: relative;
     border: 1px solid grey;
     padding: 5px;
     background-color: var(--light-gray);
@@ -185,6 +186,76 @@ span.timestamp {
 div.done.user {
     text-align: right;
     font-size: 24px;
+}
+body#gradeUser {
+    #content>h3 {
+        margin-bottom: 0px;
+    }
+}
+body#gradeQuestion {
+    div#content {
+        width: 90%;
+    }
+
+    div.question div.text {
+        position: relative;
+        border: 1px solid grey;
+        padding: 5px;
+        background-color: #FAFAFA;
+    }
+
+    div.question div.text img {
+        max-width: 800px;
+    }
+
+    div.qcontainer {
+        margin-bottom: 30px;
+    }
+
+    div#content div.done {
+        margin-top: 30px;
+        text-align: right;
+    }
+
+    td {
+        padding: 3px;
+    }
+
+    td.comment {
+        width: 30%;
+        vertical-align: top;
+    }
+
+    td.comment textarea.comment {
+        width: 95%;
+        min-height: 50px;
+    }
+
+    td.points {
+        width: 50px;
+        vertical-align: top;
+    }
+
+    td.points input.points {
+        width: 50px;
+    }
+
+    td.users {
+        width: 300px;
+        vertical-align: top;
+    }
+
+    td.answer {
+        position: relative;
+    }
+
+    td.answer img {
+        width: 100%;
+    }
+
+    div.done {
+        font-size: 24px;
+    }
 }
 
 @media screen and (max-width: 900px) {

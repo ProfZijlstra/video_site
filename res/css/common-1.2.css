@@ -49,6 +49,13 @@ i.fa-circle-notch.rotate {
     display: inline-block;
     animation: rotate 2s infinite linear;
 }
+i.copy-button {
+    position: absolute;
+    margin-top: 10px;
+    right: 10px;
+    cursor: pointer;
+    transition: 0s;
+}
 @keyframes wiggle {
     0% {
         transform: scale(1.25) rotate(0deg);

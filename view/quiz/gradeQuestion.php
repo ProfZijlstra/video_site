@@ -14,69 +14,10 @@
     <script src="res/js/markdown-1.3.js"></script>
     <script src="res/js/quiz/gradeQuestion-1.0.js"></script>
     <script src="res/js/ensureSaved.js"></script>
-    <style>
-        div#content {
-            width: 90%;
-        }
-
-        div.question div.text {
-            border: 1px solid grey;
-            padding: 5px;
-            background-color: #FAFAFA;
-        }
-
-        div.question div.text img {
-            max-width: 800px;
-        }
-
-        div.qcontainer {
-            margin-bottom: 30px;
-        }
-
-        div#content div.done {
-            margin-top: 30px;
-            text-align: right;
-        }
-
-        td {
-            padding: 3px;
-        }
-
-        td.comment {
-            width: 30%;
-            vertical-align: top;
-        }
-
-        td.comment textarea.comment {
-            width: 95%;
-            min-height: 50px;
-        }
-
-        td.points {
-            width: 50px;
-            vertical-align: top;
-        }
-
-        td.points input.points {
-            width: 50px;
-        }
-
-        td.users {
-            width: 300px;
-            vertical-align: top;
-        }
-
-        td.answer img {
-            width: 100%;
-        }
-
-        div.done {
-            font-size: 24px;
-        }
-    </style>
+    <script src="res/js/copyAnswer.js"></script>
 </head>
 
-<body>
+<body id="gradeQuestion">
     <?php include("header.php"); ?>
     <main>
         <nav class="back" title="Back">

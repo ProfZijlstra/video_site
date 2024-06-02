@@ -10,17 +10,14 @@
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
-    <style>
-        #content>h3 {
-            margin-bottom: 0px;
-        }
-    </style>
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.3.js"></script>
     <script src="res/js/quiz/gradeUser.js"></script>
+    <script src="res/js/ensureSaved.js"></script>
+    <script src="res/js/copyAnswer.js"></script>
 </head>
 
-<body>
+<body id="gradeUser">
     <?php include("header.php"); ?>
     <main>
         <nav class="back" title="Back">

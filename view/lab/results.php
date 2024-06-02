@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="res/css/lab.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/back.js"></script>
+    <script src="res/js/copyAnswer.js"></script>
     <script>
 window.addEventListener("load", () => {    
     document.getElementById("total2").innerHTML = document.getElementById("total").innerHTML;
@@ -135,7 +136,7 @@ window.addEventListener("load", () => {
                                 <?php if ($delivery['stuComment']) : ?>
                                     <div>Your Comment:</div>
                                     <div class="comment">
-                                        <?php if ($delivery['stuCmntHasMd']) : ?>
+                                        <?php if ($delivery['stuCmntHasMD']) : ?>
                                             <?= $parsedown->text($delivery['stuComment']) ?>
                                         <?php else : ?>
                                             <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>

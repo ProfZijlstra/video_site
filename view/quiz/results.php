@@ -14,6 +14,7 @@ $not_graded = false;
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
+    <script src="res/js/copyAnswer.js"></script>
     <script>
 window.addEventListener("load", () => {    
     document.getElementById("total2").innerHTML = document.getElementById("total").innerHTML;

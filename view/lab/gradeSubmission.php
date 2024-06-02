@@ -14,6 +14,7 @@
     <script src="res/js/markdown-1.3.js"></script>
     <script src="res/js/lab/gradeSubmission.js"></script>
     <script src="res/js/ensureSaved.js"></script>
+    <script src="res/js/copyAnswer.js"></script>
 </head>
 
 <body id="gradeSubmission" class="lab grade labDeliverables">
@@ -106,7 +107,7 @@
                             <?php if ($delivery['stuComment']) : ?>
                                 <h3>Student Comment:</h3>
                                 <div class="comment">
-                                    <?php if ($delivery['stuCmntHasMd']) : ?>
+                                    <?php if ($delivery['stuCmntHasMD']) : ?>
                                         <?= $parsedown->text($delivery['stuComment']) ?>
                                     <?php else : ?>
                                         <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>
