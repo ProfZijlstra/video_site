@@ -37,6 +37,42 @@
             margin-top: 10px;
         }
     </style>
+    <script src="res/js/ensureSaved.js"></script>
+    <script>
+        window.addEventListener("load", function() {
+            const defaults = document.querySelector(".defaults");
+            function saveDefaults() {
+                const amStart = document.querySelector("#AM_start").value;
+                const amStop = document.querySelector("#AM_stop").value;
+                const pmStart = document.querySelector("#PM_start").value;
+                const pmStop = document.querySelector("#PM_stop").value;
+                const inClass = document.querySelector("#inClass").checked ? 1 : 0;
+                const data = new FormData();
+                data.append("AM_start", amStart);
+                data.append("AM_stop", amStop);
+                data.append("PM_start", pmStart);
+                data.append("PM_stop", pmStop);
+                data.append("inClass", inClass);
+                fetch("defaults", {
+                    method: "POST",
+                    body: data
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error("Error saving defaults");
+                    }
+                }).then(text => {
+                    console.log(text);
+                }).catch(error => {
+                    alert(error.message);
+                });
+            }
+            defaults.querySelectorAll("input").forEach(input => {
+                input.addEventListener("change", saveDefaults);
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -55,44 +91,41 @@
                 <?= $error ?>
             </div>
             <h3>Meeting Defaults</h3>
-            <form method="post" action="defaults">
-                <div class="defaults">
-                    <div>
-                        <label for="AM_start">AM Start</label>
-                    </div>
-                    <div>
-                        <input type="time" name="AM_start" id="AM_start" value="<?= substr($defaults['AM_start'], 0, 5) ?>" />
-                    </div>
-
-                    <div>
-                        <label for="AM_stop">Stop </label>
-                    </div>
-                    <div>
-                        <input type="time" name="AM_stop" id="AM_stop" value="<?= substr($defaults['AM_stop'], 0, 5) ?>" />
-                    </div>
-
-                    <div>
-                        <label for="PM_start">PM Start</label>
-                    </div>
-                    <div>
-                        <input type="time" name="PM_start" id="PM_start" value="<?= substr($defaults['PM_start'], 0, 5) ?>" />
-                    </div>
-
-                    <div>
-                        <label for="PM_stop">Stop </label>
-                    </div>
-                    <div>
-                        <input type="time" name="PM_stop" id="PM_stop" value="<?= substr($defaults['PM_stop'], 0, 5) ?>" />
-                    </div>
-                    <div title="Do students default to physically being in class?">
-                        <label for="inClass">In Class</label>
-                    </div>
-                    <div id="physical" title="Do students default to physically being in class?">
-                        <input type="checkbox" name="inClass" id="inClass" value="1" <?= $defaults['inClass'] ? "checked" : "" ?> />
-                    </div>
+            <div class="defaults">
+                <div>
+                    <label for="AM_start">AM Start</label>
                 </div>
-                <input type="submit" value="Save Defaults" />
-            </form>
+                <div>
+                    <input type="time" name="AM_start" id="AM_start" value="<?= substr($defaults['AM_start'], 0, 5) ?>" />
+                </div>
+
+                <div>
+                    <label for="AM_stop">Stop </label>
+                </div>
+                <div>
+                    <input type="time" name="AM_stop" id="AM_stop" value="<?= substr($defaults['AM_stop'], 0, 5) ?>" />
+                </div>
+
+                <div>
+                    <label for="PM_start">PM Start</label>
+                </div>
+                <div>
+                    <input type="time" name="PM_start" id="PM_start" value="<?= substr($defaults['PM_start'], 0, 5) ?>" />
+                </div>
+
+                <div>
+                    <label for="PM_stop">Stop </label>
+                </div>
+                <div>
+                    <input type="time" name="PM_stop" id="PM_stop" value="<?= substr($defaults['PM_stop'], 0, 5) ?>" />
+                </div>
+                <div title="Do students default to physically being in class?">
+                    <label for="inClass">In Class</label>
+                </div>
+                <div id="physical" title="Do students default to physically being in class?">
+                    <input type="checkbox" name="inClass" id="inClass" value="1" <?= $defaults['inClass'] ? "checked" : "" ?> />
+                </div>
+            </div>
             <h3 id="CAMSheader">
                 CAMS Integration
             </h3>
@@ -119,8 +152,8 @@
                         <input required type="password" name="password" id="password" placeholder="Will not be stored" />
                     </div>
                 </div>
-                <input type="submit" value="Save CAMS settings / Retrieve Optional" />
-                <h4>CAMS Optional / System will try to determine</h4>
+                <input type="submit" value="Save CAMS settings / Retrieve Additional" />
+                <h4>CAMS Additional / System will try to determine</h4>
                 <div id="optional" class="settings">
                     <div>
                         <label for="AM_id">AM id</label>
