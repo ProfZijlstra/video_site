@@ -108,6 +108,9 @@ class AttendanceCtrl
         return "attendance/config.php";
     }
 
+    /**
+     * Expects AJAX
+     */
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/defaults$", sec: "assistant")]
     public function updateDefaults()
     {
@@ -131,8 +134,6 @@ class AttendanceCtrl
             $PM_stop,
             $inClass
         );
-
-        return "Location: config";
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/config$", sec: "assistant")]
