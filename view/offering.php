@@ -69,7 +69,7 @@
             </div>
         </nav>
         <div id="days">
-            <?php if ($offering['showDates']): ?>
+            <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']): ?>
                 <div class="dayHeader">Monday</div>
                 <div class="dayHeader">Tuesday</div>
                 <div class="dayHeader">Wednesday</div>
