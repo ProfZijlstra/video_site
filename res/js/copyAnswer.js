@@ -3,6 +3,8 @@ window.addEventListener('load', function() {
     document.querySelectorAll('pre').forEach(function(pre) {
         for (const className of pre.classList) {
             if (className.startsWith('language-')) {
+                // Remove tabindex added by prism.js to prevent focus
+                pre.removeAttribute('tabindex'); 
                 answers.push(pre);
             }
         }
