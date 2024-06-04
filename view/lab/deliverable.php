@@ -9,6 +9,9 @@
             Points: <input class="points" type="number" value="<?= $deliv['points'] ?>" /><br />
             of <span class="labPoints"><?= $labPoints ?></span>
         </div>
+        <?php if ($deliv['type'] == 'zip'): ?>
+            <i title="Configure Upload Checks" class="fa-solid fa-gear configCheck"></i>
+        <?php endif; ?>
         <i title="Remove deliverable" class="far fa-trash-alt delDeliv" data-id="<?= $deliv['id'] ?>"></i>
     </div>
     <div class="deliv">
