@@ -655,7 +655,7 @@ class LabTakingCtrl
     /**
      * Expects AJAX
      **/
-    #[Post(uri: "/(\d+)/(\d+)/picture$", sec: "observer")]
+    #[Post(uri: "/(\d+)/(\d+)/picture$", sec: "student")]
     public function takePicture()
     {
         global $URI_PARAMS;
