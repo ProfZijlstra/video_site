@@ -86,7 +86,7 @@ window.addEventListener("load", () => {
             return;
         }
         const mdc = this.parentNode.querySelector("div.mdContainer");
-        if (!mdc.classList.contains('active')) {
+        if (!mdc || !mdc.classList.contains('active')) {
             return;
         }
         evt.preventDefault();
