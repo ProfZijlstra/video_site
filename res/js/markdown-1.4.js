@@ -81,7 +81,31 @@ const MARKDOWN = (function() {
 
 window.addEventListener("load", () => {
     // make tab insert 4 spaces when in a textarea with markdown enabled
-    function doTab(evt) {
+    function keyEventHandler(evt) {
+        // make CTRL-M toggle markdown
+        if (evt.ctrlKey && evt.key == "m") {
+            evt.preventDefault();
+            const parent = this.parentNode;
+            const btn = parent.querySelector("i.fa-markdown");
+            MARKDOWN.toggleMarkDown.call(btn);
+            return;
+        }
+
+        // make Escape move you to the next input field
+        if (evt.key == "Escape") {
+            evt.preventDefault();
+            const content = document.getElementById('content');
+            const inputs = content.querySelectorAll('input, textarea, button');
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i] === this) {
+                    const next = inputs[(i + 1) % inputs.length];
+                    next.focus();
+                    next.select();
+                    break;
+                }
+            }
+            return;
+        }
         if (evt.key !== "Tab") {
             return;
         }
@@ -92,12 +116,39 @@ window.addEventListener("load", () => {
         evt.preventDefault();
         const selStart = this.selectionStart;
         const selStop = this.selectionEnd;
-        if (selStart == selStop) {
+
+        // normal tab press adds 4 spaces
+        if (selStart == selStop && !evt.shiftKey) {
             const txtBegin = this.value.substring(0, this.selectionStart);
             const txtStop = this.value.substring(this.selectionEnd);
             this.value = txtBegin + "    " + txtStop;
             this.selectionStart = selStart + 4;
             this.selectionEnd = selStart + 4;
+            return;
+        }
+
+        // shift-tab removes 4 spaces (or tab) from the beginning of the line
+        if (selStart == selStop && evt.shiftKey) {
+            let lineStart = selStart;
+            while (this.value[lineStart] != "\n" && lineStart > 0) {
+                lineStart--;
+            }
+            if (this.value[lineStart] == "\n") {
+                lineStart++;
+            }
+            let lineEnd = selStop;
+            while (this.value[lineEnd] != "\n" && lineEnd < this.value.length) {
+                lineEnd++;
+            }
+            const txtBegin = this.value.substring(0, lineStart);
+            const txtStop = this.value.substring(lineEnd);
+            let line = this.value.substring(lineStart, lineEnd);
+            if (line.startsWith("    ")) {
+                line = line.substring(4);
+            } else if (line.startsWith("\t")) {
+                line = line.substring(1);
+            }
+            this.value = txtBegin + line + txtStop;
             return;
         }
 
@@ -115,14 +166,20 @@ window.addEventListener("load", () => {
             const txtBegin = this.value.substring(0, this.selectionStart);
             const txtStop = this.value.substring(this.selectionEnd);
             const lines = this.value.substring(selStart, selStop).split("\n");
-            const newLines = lines.map((line) => line.substring(4));
-            const newText = newLines.join("\n");
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].startsWith("    ")) {
+                    lines[i] = lines[i].substring(4);
+                } else if (lines[i].startsWith("\t")) {
+                    lines[i] = lines[i].substring(1);
+                }
+            }
+            const newText = lines.join("\n");
             this.value = txtBegin + newText + txtStop;
             this.selectionStart = selStart;
             this.selectionEnd = selStop - (newLines.length - 1) * 4;
         }
     }
     document.querySelectorAll('textarea').forEach((area) => {
-        area.onkeydown = doTab;
+        area.onkeydown = keyEventHandler;
     });
 });            
