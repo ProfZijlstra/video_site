@@ -70,6 +70,32 @@ class DeliveryDao
         $stuComment,
         $stuCmntHasMD
     ) {
+        // to prevent duplicate entries, check if it's already been made
+        $stmt = $this->db->prepare(
+            "SELECT * FROM delivery 
+                WHERE submission_id = :submission_id 
+                AND deliverable_id = :deliverable_id 
+                AND user_id = :user_id"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id
+        ]);
+        // update if exists
+        if ($stmt->fetch()) {
+            $this->updateTxt(
+                $stmt->fetch()['id'],
+                $user_id,
+                $completion,
+                $duration,
+                $text,
+                $hasMarkDown,
+                $stuComment,
+                $stuCmntHasMD
+            );
+            return;
+        }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
