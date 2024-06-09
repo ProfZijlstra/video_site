@@ -171,13 +171,15 @@
                     <option value="txt_wm">Text Watermark</option>
                     <option value="png_wm">.png Watermark</option>
             </select>
-            <i id="checkPublic" title="Publicly announced / reported check" class="fa-solid fa-eye"></i>
 
             <label>File:</label>
-            <input type="text" name="file">
+            <input id="checkFile" type="text" name="file">
 
             <label>Byte:</label>
             <input type="number" name="byte" placeholder="Check at byte">
+            <div class="btn">
+                <button type="button" id="addZipCheckBtn">Add Check</button>
+            </div>
         </form>
     </dialog>
 </body>

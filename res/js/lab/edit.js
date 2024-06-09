@@ -264,7 +264,9 @@ window.addEventListener("load", () => {
         e.addEventListener("change", updatePoints);
     });
 
-    // enable zip action dialog
+    /**
+     * Zip Action related code
+     */
     function setZipActionHTML(html) {
         const zipActions = document.getElementById("zipActions");
         zipActions.innerHTML = html;
@@ -356,4 +358,35 @@ window.addEventListener("load", () => {
 
         byteField.value = "";
     }
+
+    /**
+     * Zip Check related code
+     */
+    function setZipCheckHTML(html) {
+        const zipChecks = document.getElementById("zipChecks");
+        zipChecks.innerHTML = html;
+        zipChecks.querySelectorAll(".remove").forEach((e) => {
+            e.onclick = removeZipCheck;
+        });
+    }
+    function openZipCheckDialog() {
+        const dialog = document.getElementById("zipCheckDialog");
+        dialog.showModal();
+
+        // get all zip checks for this zip attachment
+        const did = this.dataset.id;
+        fetch(did + "/zipChecks")
+            .then(htmlOrError("Getting zip checks failed."))
+            .then(setZipCheckHTML)
+            .catch(alertError);
+    }
+    document.querySelectorAll(".zipCheckConfig").forEach((e) => {
+        e.onclick = openZipCheckDialog;
+    });
+    document.getElementById("closeCheckDialog").onclick = function() {
+        document.getElementById("zipCheckDialog").close();
+    };
+    document.getElementById("addZipCheckBtn").onclick = function(evt) {
+        // TODO: AJAX to add zip check
+    };
 });

@@ -10,7 +10,8 @@
             of <span class="labPoints"><?= $labPoints ?></span>
         </div>
         <?php if ($deliv['type'] == 'zip'): ?>
-            <i title="Configure Upload Checks" class="fa-solid fa-gear configCheck"></i>
+            <i title="Configure Upload Checks" class="fa-solid fa-gear zipCheckConfig"
+            data-id="<?= $deliv['id'] ?>"></i>
         <?php endif; ?>
         <i title="Remove deliverable" class="far fa-trash-alt delDeliv" data-id="<?= $deliv['id'] ?>"></i>
     </div>

@@ -35,14 +35,17 @@ class LabAdminCtrl
     #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
-    #[Inject('ZipDlActionDao')]
-    public $zipDlActionDao;
-
     #[Inject('DownloadDao')]
     public $downloadDao;
 
     #[Inject('DeliveryDao')]
     public $deliveryDao;
+
+    #[Inject('ZipDlActionDao')]
+    public $zipDlActionDao;
+
+    #[Inject('ZipUlCheckDao')]
+    public $zipUlCheckDao;
 
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
@@ -446,5 +449,21 @@ class LabAdminCtrl
 
         $id = $URI_PARAMS[4];
         $this->zipDlActionDao->delete($id);
+    }
+
+    /**
+     * Zip check related code
+     */
+    #[Get(uri: "/(\d+)/(\d+)/zipChecks$", sec: "instructor")]
+    function getZipChecks()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $deliverable_id = $URI_PARAMS[4];
+        $checks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
+
+        $VIEW_DATA['checks'] = $checks;
+        return "lab/zipChecks.php";
     }
 }
