@@ -250,6 +250,9 @@ dialog {
         font-size: 35px;;
     }
 }
+dialog.modal {
+    position: fixed;
+}
 dialog::backdrop {
     backdrop-filter: blur(3px);
 }
