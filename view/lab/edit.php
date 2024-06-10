@@ -164,19 +164,25 @@
         <form id="zipCheckForm" method="POST" action="">
             <input type="hidden" name="deliverable_id" id="deliverable_id" value="">
 
-            <label>Type</label>
-            <select name="type" id="checkType">
-                    <option value="present">Is Present</option>
-                    <option value="not_present">Is Not Present</option>
-                    <option value="txt_wm">Text Watermark</option>
-                    <option value="png_wm">.png Watermark</option>
-            </select>
+            <div>
+                <label>Type</label>
+                <select name="type" id="checkType">
+                        <option value="present">Is Present</option>
+                        <option value="not_present">Is Not Present</option>
+                        <option value="txt_wm">Text Watermark</option>
+                        <option value="png_wm">.png Watermark</option>
+                </select>
+            </div>
 
-            <label>File:</label>
-            <input id="checkFile" type="text" name="file">
+            <div>
+                <label>File:</label>
+                <input id="checkFile" type="text" name="file">
+            </div>
 
-            <label>Byte:</label>
-            <input type="number" name="byte" placeholder="Check at byte">
+            <div id="byteField" class="hide">
+                <label>Byte:</label>
+                <input type="number" name="byte" placeholder="Check at byte">
+            </div>
             <div class="btn">
                 <button type="button" id="addZipCheckBtn">Add Check</button>
             </div>

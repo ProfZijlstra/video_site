@@ -386,6 +386,14 @@ window.addEventListener("load", () => {
     document.getElementById("closeCheckDialog").onclick = function() {
         document.getElementById("zipCheckDialog").close();
     };
+    const byteField = document.getElementById("byteField");
+    document.getElementById("checkType").addEventListener("change", function() {
+        if (this.value.endsWith("wm")) {
+            byteField.classList.remove("hide");
+        } else {
+            byteField.classList.add("hide"); 
+        }
+    });
     document.getElementById("addZipCheckBtn").onclick = function(evt) {
         // TODO: AJAX to add zip check
     };
