@@ -466,4 +466,39 @@ class LabAdminCtrl
         $VIEW_DATA['checks'] = $checks;
         return "lab/zipChecks.php";
     }
+
+    #[Post(uri: "/(\d+)/(\d+)/zipChecks$", sec: "instructor")]
+    function addZipCheck()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $deliverable_id = $URI_PARAMS[4];
+        $type = filter_input(INPUT_POST, "type");
+        $file = filter_input(INPUT_POST, "file");
+        $byte = filter_input(INPUT_POST, "byte", FILTER_SANITIZE_NUMBER_INT);
+
+        if (!$byte || $byte < 0) {
+            $byte = 0;
+        } 
+
+        $public = 1;
+        if (str_ends_with($type, "wm")) {
+            $public = 0;
+        }
+
+        $this->zipUlCheckDao->add($deliverable_id, $type, $file, $byte, $public);
+
+        $VIEW_DATA['checks'] = $this->zipUlCheckDao->forDeliverable($deliverable_id);
+        return "lab/zipChecks.php";  // zipCheck view
+    }
+
+    #[Delete(uri: "/(\d+)/zipChecks/(\d+)$", sec: "instructor")]
+    function deleteZipCheck()
+    {
+        global $URI_PARAMS;
+
+        $id = $URI_PARAMS[4];
+        $this->zipUlCheckDao->delete($id);
+    }
 }

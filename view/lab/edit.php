@@ -181,10 +181,10 @@
 
             <div id="byteField" class="hide">
                 <label>Byte:</label>
-                <input type="number" name="byte" placeholder="Check at byte">
+                <input id="checkByte" type="number" name="byte" placeholder="Check at byte">
             </div>
             <div class="btn">
-                <button type="button" id="addZipCheckBtn">Add Check</button>
+                <button type="submit" id="addZipCheckBtn">Add Check</button>
             </div>
         </form>
     </dialog>

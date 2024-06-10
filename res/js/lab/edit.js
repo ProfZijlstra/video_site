@@ -362,6 +362,20 @@ window.addEventListener("load", () => {
     /**
      * Zip Check related code
      */
+    function removeZipCheck() {
+        const check_id = this.parentNode.dataset.id;
+        fetch("zipChecks/" + check_id, {
+                method: "DELETE",
+            })
+            .then((response) => {
+                if (response.ok) {
+                    this.parentNode.remove();
+                } else {
+                    throw new Error("Error deleting zip check.");
+                }
+            })
+            .catch(alertError);
+    }
     function setZipCheckHTML(html) {
         const zipChecks = document.getElementById("zipChecks");
         zipChecks.innerHTML = html;
@@ -375,6 +389,9 @@ window.addEventListener("load", () => {
 
         // get all zip checks for this zip attachment
         const did = this.dataset.id;
+        document.getElementById("deliverable_id").value = did;
+        document.getElementById("zipCheckForm").setAttribute("action", `${did}/zipChecks`);
+
         fetch(did + "/zipChecks")
             .then(htmlOrError("Getting zip checks failed."))
             .then(setZipCheckHTML)
@@ -395,6 +412,18 @@ window.addEventListener("load", () => {
         }
     });
     document.getElementById("addZipCheckBtn").onclick = function(evt) {
-        // TODO: AJAX to add zip check
+        evt.preventDefault();
+        const did = document.getElementById("deliverable_id").value;
+        const data = new FormData();
+        data.append("type", document.getElementById("checkType").value);
+        data.append("file", document.getElementById("checkFile").value);
+        data.append("byte", document.getElementById("checkByte").value);
+        fetch(did + "/zipChecks", {
+                method: "POST",
+                body: data,
+            })
+            .then(htmlOrError("Adding check failed"))
+            .then(setZipCheckHTML)
+            .catch(alertError);
     };
 });

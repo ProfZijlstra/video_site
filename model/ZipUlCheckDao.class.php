@@ -19,4 +19,29 @@ class ZipUlCheckDao
         $stmt->execute(array("deliverable_id" => $deliverable_id));
         return $stmt->fetchAll();
     }
+
+    function add($deliverable_id, $type, $file, $byte, $public) 
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO zip_ul_check 
+            VALUES (NULL, :deliverable_id, :type, :file, :byte, :public)
+        ");
+        $stmt->execute(array(
+            "deliverable_id" => $deliverable_id,
+            "type" => $type,
+            "public" => $public,
+            "file" => $file,
+            "byte" => $byte
+        ));
+        return $this->db->lastInsertId();
+    }
+
+    function delete($id) 
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM zip_ul_check
+            WHERE id = :id
+        ");
+        $stmt->execute(array("id" => $id));
+    }
 }
