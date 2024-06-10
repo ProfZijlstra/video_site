@@ -44,6 +44,9 @@ class LabTakingCtrl
     #[Inject('ZipDlActionDao')]
     public $zipDlActionDao;
 
+    #[Inject('ZipUlCheckDao')]
+    public $zipUlCheckDao;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -111,8 +114,12 @@ class LabTakingCtrl
 
         $deliverables = $this->deliverableDao->forLab($lab_id);
         $labPoints = 0;
+        $zips = [];
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
+            if ($deliv['type'] == "zip") {
+                $zips[] = $deliv['id'];
+            }
         }
 
         require_once("lib/Parsedown.php");
@@ -139,6 +146,11 @@ class LabTakingCtrl
         }
 
         // lab is open
+        $checks = [];
+        foreach ($zips as $zip) {
+            $checks[$zip] = $this->zipUlCheckDao->forDeliverable($zip);
+        }
+        $VIEW_DATA['checks'] = $checks;
         $VIEW_DATA['title'] = "Lab: " . $lab['name'];
         return "lab/doLab.php";
     }

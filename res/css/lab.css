@@ -349,6 +349,23 @@ body#doLab{
             margin-top: 0px;
         }
     }
+
+    div.checks {
+        h3 {
+            margin: 5px 0px;
+        }
+       
+        div.zipCheck {
+            border: 1px solid var(--border);
+            padding: 5px;
+            margin-bottom: 3px;
+            background-color: var(--light-gray);
+
+            i {
+                margin-right: 5px;
+            }
+        }
+    }
 }
 
 body.grade {

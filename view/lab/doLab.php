@@ -124,6 +124,41 @@
                                     <pre><?= htmlspecialchars($deliv['desc']) ?></pre>
                                 <?php endif; ?>
                             </div>
+                            <?php if ($deliv['type'] == "zip" && $checks[$deliv['id']]): ?>
+                                <?php 
+                                    $presents = [];
+                                    $not_presents = [];
+                                    foreach ($checks[$deliv['id']] as $check) {
+                                        if ($check['type'] == 'present') {
+                                            $presents[] = $check;
+                                        } else if ($check['type'] == 'not_present') {
+                                            $not_presents[] = $check;
+                                        }
+                                    }
+                                ?>
+                                <?php if ($presents): ?>
+                                <div class="checks presents">
+                                    <h3>Should be present in zip file root:</h3>
+                                    <?php foreach($presents as $check): ?>
+                                        <div class="zipCheck present" id="c<?= $check['id']?>">
+                                            <i class="fa-solid fa-check"></i>
+                                            <?= $check['file'] ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php endif; ?>
+                                <?php if ($not_presents): ?>
+                                <div class="checks notPresents">
+                                    <h3>Should not be in zip file root:</h3>
+                                    <?php foreach($not_presents as $check): ?>
+                                        <div class="zipCheck notPresent" id="c<?= $check['id']?>">
+                                            <i class="fa-solid fa-xmark"></i>
+                                            <?= $check['file'] ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
                             <?php if ($deliv['type'] == 'txt') : ?>
                                 <div class="textContainer">
                                     <textarea class="txt" placeholder="Write the text for your deliverable here." data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write the text for your deliverable here."><?= $delivery['text'] ?></textarea>
