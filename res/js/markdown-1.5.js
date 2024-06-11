@@ -35,6 +35,7 @@ const MARKDOWN = (function() {
             .then((response) => response.text())
             .then((data) => {
                 container.innerHTML = data;
+                container.querySelectorAll('pre').forEach(addCopyButton);
                 Prism.highlightAllUnder(container);
             });
     }
@@ -76,7 +77,50 @@ const MARKDOWN = (function() {
         }
     }
 
-    return { getHtmlForMarkdown, enablePreview, ceasarShift, activateButtons, toggleMarkDown };
+    // private function
+    function getCodeText(elem) {
+        // If the user pasted tab characters they are copied
+        // as form feed (ASCII code 12) and 3 spaces. 
+        let txt = elem.innerText.split('');
+        for (let i = 0; i < txt.length; i++) {
+            if (txt[i].charCodeAt(0) == 12) {
+                txt[i] = ' ';
+            }
+        }
+        return txt.join('');
+    }
+
+    // private function
+    function showCopied(elem) {
+        return function() {
+            elem.classList.remove('fa-regular', 'fa-copy');
+            elem.classList.add('fa-solid', 'fa-check');
+            setTimeout(function() {
+                elem.classList.remove('fa-solid', 'fa-check');
+                elem.classList.add('fa-regular', 'fa-copy');
+            }, 1000);
+        }
+    }
+
+    function addCopyButton(elem) {
+        const button = document.createElement('i');
+        button.setAttribute('title', 'Copy');
+        button.classList.add('fa-regular', 'fa-copy', 'copy-button');
+        button.addEventListener('mousedown', function() {
+            navigator.clipboard.writeText(getCodeText(elem))
+                .then(showCopied(button));
+        });
+        elem.before(button);
+    }
+
+    return { 
+        getHtmlForMarkdown, 
+        enablePreview, 
+        ceasarShift, 
+        activateButtons, 
+        toggleMarkDown,
+        addCopyButton,
+    };
 })()
 
 window.addEventListener("load", () => {
@@ -181,5 +225,16 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll('textarea').forEach((area) => {
         area.onkeydown = keyEventHandler;
+    });
+
+    // hook up copy buttons inside already rendered markdown
+    document.querySelectorAll('pre').forEach(function(pre) {
+        for (const className of pre.classList) {
+            if (className.startsWith('language-')) {
+                // Remove tabindex added by prism.js to prevent focus
+                pre.removeAttribute('tabindex'); 
+                MARKDOWN.addCopyButton(pre);
+            }
+        }
     });
 });            

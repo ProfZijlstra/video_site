@@ -9,12 +9,12 @@ $not_graded = false;
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.2.css">
+    <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
-    <script src="res/js/copyAnswer.js"></script>
+    <script src="res/js/markdown-1.5.js"></script>
     <script>
 window.addEventListener("load", () => {    
     document.getElementById("total2").innerHTML = document.getElementById("total").innerHTML;

@@ -56,6 +56,9 @@ i.copy-button {
     cursor: pointer;
     transition: 0s;
 }
+div.previewArea {
+    position: relative;
+}
 @keyframes wiggle {
     0% {
         transform: scale(1.25) rotate(0deg);
