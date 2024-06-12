@@ -38,7 +38,7 @@ class AnswerDao
         $stmt = $this->db->prepare(
             "INSERT INTO answer 
 			VALUES(NULL, :text, :question_id, :user_id, 
-            NOW(), NULL, NULL, NULL, :hasMarkDown)"
+            NOW(), NULL, NULL, NULL, :hasMarkDown, 0)"
         );
         $stmt->execute(array(
             "text" => $text,
@@ -70,7 +70,7 @@ class AnswerDao
     public function forQuestion($question_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT a.id, a.text, a.user_id, a.points, a.comment,
+            "SELECT a.id, a.text, a.user_id, a.points, a.comment, a.cmntHasMD,
                 u.knownAs, u.lastname,
                 a.created, a.updated,
                 a.hasMarkDown
@@ -83,31 +83,33 @@ class AnswerDao
         return $stmt->fetchAll();
     }
 
-    public function grade($answer_ids, $points, $comment)
+    public function grade($answer_ids, $points, $comment, $cmntHasMD)
     {
         $stmt = $this->db->prepare(
             "UPDATE answer 
-            SET `points` = :points, `comment` = :comment
+            SET `points` = :points, `comment` = :comment, cmntHasMD = :cmntHasMD
             WHERE id IN ({$answer_ids})"
         );
         $stmt->execute(array(
             "points" => $points,
-            "comment" => $comment
+            "comment" => $comment,
+            "cmntHasMD" => $cmntHasMD
         ));
     }
 
-    public function gradeUnanswered($user_id, $question_id, $comment, $points)
+    public function gradeUnanswered($user_id, $question_id, $comment, $points, $cmntHasMD)
     {
         $stmt = $this->db->prepare(
             "INSERT INTO answer 
 			VALUES(NULL, '', :question_id, :user_id, NOW(), NULL, 
-                :points, :comment, 0)"
+                :points, :comment, 0, :cmntHasMD)"
         );
         $stmt->execute(array(
             "question_id" => $question_id,
             "user_id" => $user_id,
             "comment" => $comment,
-            "points" => $points
+            "points" => $points,
+            "cmntHasMD" => $cmntHasMD
         ));
         return $this->db->lastInsertId();
     }
@@ -115,10 +117,7 @@ class AnswerDao
     public function forUser($user_id, $quiz_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT a.text, a.id, a.question_id, 
-                a.points, a.comment,
-                a.created, a.updated,
-                a.hasMarkDown
+            "SELECT a.*
             FROM answer AS a
             JOIN question AS q on a.question_id = q.id
             WHERE q.quiz_id = :quiz_id

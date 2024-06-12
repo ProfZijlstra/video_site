@@ -97,10 +97,13 @@
                         <?php endif; ?>
 
                         <div>Grading Comment:</div>
-                        <textarea class="comment" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answers[$question['id']]['comment'] ?></textarea>
-                        <div>
-                            <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                            <div class="previewArea"></div>
+                        <div class="textContainer">
+                            <textarea class="comment" data-id="<?= $answers[$question['id']]['id'] ?>" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answers[$question['id']]['comment'] ?></textarea>
+                            <i title="Markdown" class="txt fa-brands fa-markdown <?= $answers[$question['id']]['cmntHasMD'] ? "active" : ""?>"></i>
+                            <div class="mdContainer <?= $answers[$question['id']]['cmntHasMD'] ? "active" : ""?>">
+                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
+                                <div class="previewArea"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

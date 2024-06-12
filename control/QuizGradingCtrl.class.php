@@ -158,13 +158,17 @@ class QuizGradingCtrl
         $answer_ids = filter_input(INPUT_POST, "answer_ids");
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
         $shifted = filter_input(INPUT_POST, "comment");
+        $cmntHasMD = filter_input(INPUT_POST, "cmntHasMD", FILTER_VALIDATE_INT);
+        if (!$cmntHasMD) {
+            $cmntHasMD = 0;
+        }
 
         $comment = "";
         if ($shifted) {
             $comment = $this->markdownCtrl->ceasarShift($shifted);
         }
 
-        $this->answerDao->grade($answer_ids, $points, $comment);
+        $this->answerDao->grade($answer_ids, $points, $comment, $cmntHasMD);
     }
 
     /**
@@ -178,6 +182,10 @@ class QuizGradingCtrl
         $question_id = filter_input(INPUT_POST, "question_id", FILTER_VALIDATE_INT);
         $points = filter_input(INPUT_POST, "points", FILTER_VALIDATE_FLOAT);
         $shifted = filter_input(INPUT_POST, "comment");
+        $cmntHasMD = filter_input(INPUT_POST, "cmntHasMD", FILTER_VALIDATE_INT);
+        if (!$cmntHasMD) {
+            $cmntHasMD = 0;
+        }
 
         $comment = "";
         if ($shifted) {
@@ -185,9 +193,9 @@ class QuizGradingCtrl
         }
 
         if ($answer_id) {
-            $this->answerDao->grade($answer_id, $points, $comment);
+            $this->answerDao->grade($answer_id, $points, $comment, $cmntHasMD);
         } else {
-            $answer_id = $this->answerDao->gradeUnanswered($user_id, $question_id, $comment, $points);
+            $answer_id = $this->answerDao->gradeUnanswered($user_id, $question_id, $comment, $points, $cmntHasMD);
         }
 
         return ["answer_id" => $answer_id];

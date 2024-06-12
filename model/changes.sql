@@ -610,3 +610,8 @@ CREATE TABLE IF NOT EXISTS `manalabs`.`zip_ul_stat` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
+-- 12th of June 2024
+ALTER TABLE `answer` ADD COLUMN `cmntHasMD` TINYINT UNSIGNED DEFAULT 0;
+ALTER TABLE `zip_ul_check` DROP COLUMN `public`;

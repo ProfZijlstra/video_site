@@ -1,6 +1,7 @@
 const MARKDOWN = (function() {
     let mdurl = "markdown";
     let btnCallback = null;
+    let closePreview = false;
 
     // we ceasar shift because dreamhost has some very solid XSS injection 
     // protection... which stops a variety of markdown submits
@@ -34,18 +35,26 @@ const MARKDOWN = (function() {
         fetch(mdurl, { method: "POST", body: data })
             .then((response) => response.text())
             .then((data) => {
+                if (closePreview) {
+                    let close = '<i title="Close" class="fas fa-times-circle"></i>'; 
+                    data = close + data;
+                }
                 container.innerHTML = data;
+                container.querySelector('i.fa-times-circle').onclick = function() {
+                    container.replaceChildren();
+                }
                 container.querySelectorAll('pre').forEach(addCopyButton);
                 Prism.highlightAllUnder(container);
             });
     }
 
-    function enablePreview(url) {
+    function enablePreview(url, closable = false) {
         mdurl = url;
-        const buttons = document.querySelectorAll('button.previewBtn');
+        const buttons = document.querySelectorAll('.previewBtn');
         for (const button of buttons) {
             button.onclick = getHtmlForMarkdown;
         }    
+        closePreview = closable;
     }
 
     function toggleMarkDown() {

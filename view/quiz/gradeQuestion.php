@@ -99,6 +99,12 @@
 
                     <div class="comment">
                         <textarea class="comment" autofocus placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answer['comment'] ?></textarea>
+
+                        <i title="Markdown" class="txt fa-brands fa-markdown <?= $answer['cmntHasMD'] ? "active" : ""?>"></i>
+                        <div class="mdContainer <?= $answer['cmntHasMD'] ? "active" : ""?>">
+                            <i title="Preview Markdown" class="fa-solid fa-eye previewBtn"></i>
+                            <div class="previewArea"></div>
+                        </div>
                     </div>
                     <div class="points">
                         <input type="number" value="<?= $answer['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />

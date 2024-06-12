@@ -49,6 +49,9 @@ i.fa-circle-notch.rotate {
     display: inline-block;
     animation: rotate 2s infinite linear;
 }
+i.fa-markdown {
+    transition: color 0s;
+}
 i.copy-button {
     position: absolute;
     margin-top: 10px;
