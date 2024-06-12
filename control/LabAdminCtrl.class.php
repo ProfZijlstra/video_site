@@ -482,12 +482,7 @@ class LabAdminCtrl
             $byte = 0;
         } 
 
-        $public = 1;
-        if (str_ends_with($type, "wm")) {
-            $public = 0;
-        }
-
-        $this->zipUlCheckDao->add($deliverable_id, $type, $file, $byte, $public);
+        $this->zipUlCheckDao->add($deliverable_id, $type, $file, $byte);
 
         $VIEW_DATA['checks'] = $this->zipUlCheckDao->forDeliverable($deliverable_id);
         return "lab/zipChecks.php";  // zipCheck view

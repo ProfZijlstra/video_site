@@ -20,16 +20,15 @@ class ZipUlCheckDao
         return $stmt->fetchAll();
     }
 
-    function add($deliverable_id, $type, $file, $byte, $public) 
+    function add($deliverable_id, $type, $file, $byte) 
     {
         $stmt = $this->db->prepare("
             INSERT INTO zip_ul_check 
-            VALUES (NULL, :deliverable_id, :type, :file, :byte, :public)
+            VALUES (NULL, :deliverable_id, :type, :file, :byte)
         ");
         $stmt->execute(array(
             "deliverable_id" => $deliverable_id,
             "type" => $type,
-            "public" => $public,
             "file" => $file,
             "byte" => $byte
         ));
