@@ -224,9 +224,9 @@
                                         <form method="post" action="delComment">
                                             <input type="hidden" name="id" value="<?= $comment['id'] ?>" />
                                             <input type="hidden" name="tab" value="<?= $video ?>" />
-                                            <i class="far fa-trash-alt" data-id=""></i>
+                                            <i title="Delete" class="far fa-trash-alt" data-id=""></i>
                                         </form>
-                                        <i class="far fa-edit" data-id="<?= $comment['id'] ?>"></i>
+                                        <i title="Edit" class="far fa-edit" data-id="<?= $comment['id'] ?>"></i>
                                     <?php endif; ?>
                                     <div class="vote" data-id="<?= $comment['id'] ?>" <?php if ($comment["vote_id"]) : ?> data-vid="<?= $comment["vote_id"] ?>" <?php endif; ?> <?php if ($comment["vote"]) : ?> data-type="<?= $comment["vote"] > 0 ? "up" : "down" ?>" <?php endif; ?>>
                                         <i class="fas fa-angle-up <?= $comment["vote"] > 0 ? 'selected' : "" ?>" title="Vote Up"></i>
