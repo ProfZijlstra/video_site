@@ -246,9 +246,9 @@
                                                 <form method="post" action="delReply">
                                                     <input type="hidden" name="id" value="<?= $reply['id'] ?>" />
                                                     <input type="hidden" name="tab" value="<?= $video ?>" />
-                                                    <i class="far fa-trash-alt" data-id=""></i>
+                                                    <i title="Delete" class="far fa-trash-alt" data-id=""></i>
                                                 </form>
-                                                <i class="far fa-edit" data-id="<?= $reply['id'] ?>"></i>
+                                                <i title="Edit" class="far fa-edit" data-id="<?= $reply['id'] ?>"></i>
                                             <?php endif; ?>
                                             <div class="vote" data-id="<?= $reply['id'] ?>" <?php if ($reply["vote_id"]) : ?> data-vid="<?= $reply["vote_id"] ?>" <?php endif; ?> <?php if ($reply["vote"]) : ?> data-type="<?= $reply["vote"] > 0 ? "up" : "down" ?>" <?php endif; ?>>
                                                 <i class="fas fa-angle-up <?= $reply["vote"] > 0 ? 'selected' : "" ?>" title="Vote Up"></i>
