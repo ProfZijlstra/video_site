@@ -63,51 +63,48 @@
                 </div>
             </div>
 
-            <table>
-                <tr>
-                    <th>User(s)</th>
-                    <th>Answer</th>
-                    <th>Comment</th>
-                    <th>Points</th>
-                </tr>
+            <div class="gradeContainer">
+                <div class="header">User(s)</div>
+                <div class="header">Answer</div>
+                <div class="header">Comment</div>
+                <div class="header">Points</div>
+
                 <?php for ($i = 0; $i < count($answers); $i++) : ?>
                     <?php $answer = $answers[$i]; ?>
-                    <tr>
-                        <td class="users">
+                    <div class="users">
+                        <span class="timestamp"><?= substr($answer['created'], 11) ?></span>
+                        <?= $answer['knownAs'] . " " . $answer['lastname'] ?><br />
+                        <?php $ids = [];
+                        $ids[] = $answer['id']; ?>
+                        <?php while ($i < count($answers) - 1 && $answers[$i + 1]['text'] == $answer['text']) : ?>
+                            <?php $i++;
+                            $answer = $answers[$i];
+                            $ids[] = $answer['id'] ?>
                             <span class="timestamp"><?= substr($answer['created'], 11) ?></span>
                             <?= $answer['knownAs'] . " " . $answer['lastname'] ?><br />
-                            <?php $ids = [];
-                            $ids[] = $answer['id']; ?>
-                            <?php while ($i < count($answers) - 1 && $answers[$i + 1]['text'] == $answer['text']) : ?>
-                                <?php $i++;
-                                $answer = $answers[$i];
-                                $ids[] = $answer['id'] ?>
-                                <span class="timestamp"><?= substr($answer['created'], 11) ?></span>
-                                <?= $answer['knownAs'] . " " . $answer['lastname'] ?><br />
-                            <?php endwhile; ?>
-                            <input type="hidden" name="answer_ids" class="answer_ids" value="<?= implode(",", $ids) ?>" />
-                        </td>
-                        <td class="answer">
-                            <?php if ($question['type'] == "text") : ?>
-                                <?php if ($answer['hasMarkDown']) : ?>
-                                    <?= $parsedown->text($answer['text']) ?>
-                                <?php else : ?>
-                                    <pre><?= htmlspecialchars($answer['text']) ?></pre>
-                                <?php endif; ?>
-                            <?php elseif ($question['type'] == "image") : ?>
-                                <img src="<?= $answer['text'] ?>" />
+                        <?php endwhile; ?>
+                        <input type="hidden" name="answer_ids" class="answer_ids" value="<?= implode(",", $ids) ?>" />
+                    </div>
+                    <div class="answer">
+                        <?php if ($question['type'] == "text") : ?>
+                            <?php if ($answer['hasMarkDown']) : ?>
+                                <?= $parsedown->text($answer['text']) ?>
+                            <?php else : ?>
+                                <pre><?= htmlspecialchars($answer['text']) ?></pre>
                             <?php endif; ?>
-                        </td>
+                        <?php elseif ($question['type'] == "image") : ?>
+                            <img src="<?= $answer['text'] ?>" />
+                        <?php endif; ?>
+                    </div>
 
-                        <td class="comment">
-                            <textarea class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answer['comment'] ?></textarea>
-                        </td>
-                        <td class="points">
-                            <input type="number" value="<?= $answer['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
-                        </td>
-                    </tr>
+                    <div class="comment">
+                        <textarea class="comment" autofocus placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $answer['comment'] ?></textarea>
+                    </div>
+                    <div class="points">
+                        <input type="number" value="<?= $answer['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
+                    </div>
                 <?php endfor; ?>
-            </table>
+            </div>
 
             <div class="done">
                 <?php if ($prev_id) : ?>
