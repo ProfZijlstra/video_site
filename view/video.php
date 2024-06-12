@@ -129,7 +129,7 @@
                             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
                             <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
                             <div class="time"><?= $totalTime ?></div>
-                            <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $autoplay ?>"></i></div>
+                            <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
                             <div id="shortcuts" title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard"></i></div>
                         </div>
 

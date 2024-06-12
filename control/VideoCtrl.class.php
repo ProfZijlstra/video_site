@@ -218,7 +218,7 @@ class VideoCtrl
     {
         $toggle = filter_input(INPUT_POST, "toggle");
         $_SESSION['user']["autoplay"] = $toggle;
-        setcookie("autoplay", $toggle, time() + 7 * 24 * 60 * 60, "/videos");
+        setcookie("autoplay", $toggle, time() + 30 * 24 * 60 * 60, "/videos");
     }
 
 
