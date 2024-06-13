@@ -41,8 +41,11 @@
                 <?php endforeach; ?>
             </div>
 
-            <?php function shortDate(string $date)
+            <?php function shortDate($date)
             {
+                if (!$date) {
+                    return '';
+                }
                 $day = substr($date, 8, 2);
                 $time = substr($date, 11, 5);
                 return "{$day}<sup>th</sup> {$time}";
@@ -108,7 +111,7 @@
             <?php } ?>
             <?php submissionTable($none, "No Submission", "", false, $students, $groups); ?>
             <?php submissionTable($taken, "Results", "Submissions from enrolled students", true, $students, $members); ?>
-            <?php submissionTable($extra, "Extra", "Submissions from unenrolled students", true, $students, $members); ?>
+            <?php submissionTable($extra, "Extra", "Submissions from unenrolled students", true, $observers, $members); ?>
         </div>
     </main>
 </body>

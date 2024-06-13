@@ -51,6 +51,9 @@ class QuizGradingCtrl
         $taken = [];
         $extra = [];
         foreach ($enrollment as $student) {
+            if ($student['auth'] == 'observer') {
+                continue;
+            }
             $absent[$student["id"]] = $student; // all start as absent
         }
 

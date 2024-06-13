@@ -49,6 +49,7 @@ class LabGradingCtrl
         $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
 
         $students = [];
+        $observers = [];
         $groups = [];
         $members = [];
         $absent = [];
@@ -57,6 +58,9 @@ class LabGradingCtrl
         $extra = [];
         $none = [];
         foreach ($enrollment as $student) {
+            if ($student['auth'] == 'observer') {
+                $observers[$student['id']] = $student;
+            }
             $students[$student['id']] = $student;
         }
         if ($lab['type'] == 'group') {
@@ -74,6 +78,9 @@ class LabGradingCtrl
         } else {
             // they all start absent
             foreach ($enrollment as $student) {
+                if ($student['auth'] == 'observer') {
+                    continue;
+                }
                 $absent[$student["id"]] = $student;
             }
             $key = "user_id";
@@ -112,6 +119,7 @@ class LabGradingCtrl
         $VIEW_DATA['taken'] = $taken;
         $VIEW_DATA['extra'] = $extra;
         $VIEW_DATA['students'] = $students;
+        $VIEW_DATA['observers'] = $observers;
         $VIEW_DATA['groups'] = $groups;
         $VIEW_DATA['members'] = $members;
 
