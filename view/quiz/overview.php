@@ -40,11 +40,13 @@
             </div>
         </nav>
 
-        <nav class="tools">
-            <a href="quiz/report">
-                <i title="Download Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
-            </a>
-        </nav>
+        <?php if (hasMinAuth('student')) : ?>
+            <nav class="tools">
+                <a href="quiz/report">
+                    <i title="Download Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
+                </a>
+            </nav>
+        <?php endif; ?>
 
         <div id="days" class="lab">
             <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']): ?>
