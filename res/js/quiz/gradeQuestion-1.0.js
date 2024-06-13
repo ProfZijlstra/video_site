@@ -1,12 +1,7 @@
 window.addEventListener("load", () => {    
     // enable markdown previews
-    MARKDOWN.enablePreview("../../../markdown", hidePreview);
+    MARKDOWN.enablePreview("../../../markdown", true);
     MARKDOWN.activateButtons(saveGrading);
-
-    function hidePreview() {
-        const mdContainer = this.closest('.mdContainer');
-        mdContainer.classList.remove('active');
-    }
 
     // automatically save changes to comments or points
     function saveGrading() {
