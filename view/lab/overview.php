@@ -40,12 +40,12 @@
             </div>
         </nav>
 
-        <?php if (hasMinAuth('instructor')) : ?>
-        <nav class="tools">
-            <a href="lab/report">
-                <i title="Download Lab Totals Report" class="fa-solid fa-square-poll-vertical"></i>
-            </a>
-        </nav>
+        <?php if (hasMinAuth('student')) : ?>
+            <nav class="tools">
+                <a href="lab/report">
+                    <i title="Download Lab Totals Report" class="fa-solid fa-square-poll-vertical"></i>
+                </a>
+            </nav>
         <?php endif; ?>
 
         <div id="days" class="lab">

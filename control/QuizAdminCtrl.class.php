@@ -288,7 +288,7 @@ class QuizAdminCtrl
         return "Location: ../../edit";
     }
 
-    #[Get(uri: "/report$", sec: "instructor")]
+    #[Get(uri: "/report$", sec: "student")]
     public function resultsReport()
     {
         global $URI_PARAMS;
@@ -302,14 +302,26 @@ class QuizAdminCtrl
 
         // create data two dimensional array and initialize first 3 columns
         $data = [];
-        foreach ($enrolled as $user) {
-            if ($user['auth'] == 'instructor' || $user['auth'] == 'observer') {
-                continue;
+        if ($_SESSION['user']['isFaculty']) {
+            foreach ($enrolled as $user) {
+                if ($user['auth'] == 'instructor' || $user['auth'] == 'observer') {
+                    continue;
+                }
+                $data[$user['id']] = [];
+                $data[$user['id']][] = $user['studentID'];
+                $data[$user['id']][] = $user['firstname'];
+                $data[$user['id']][] = $user['lastname'];
             }
-            $data[$user['id']] = [];
-            $data[$user['id']][] = $user['studentID'];
-            $data[$user['id']][] = $user['firstname'];
-            $data[$user['id']][] = $user['lastname'];
+        } else {
+            // only give them their own data
+            foreach ($enrolled as $user) {
+                if ($user['id'] == $_SESSION['user']['id']) {
+                    $data[$user['id']] = [];
+                    $data[$user['id']][] = $user['studentID'];
+                    $data[$user['id']][] = $user['firstname'];
+                    $data[$user['id']][] = $user['lastname'];
+                }
+            }
         }
 
         $quizzes = $this->quizDao->allForOffering($offering['id']);
