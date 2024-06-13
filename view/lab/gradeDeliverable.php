@@ -61,84 +61,87 @@
                 </div>
             </div>
 
-            <table>
-                <tr>
-                    <th>Group/User</th>
-                    <th>Answer</th>
-                    <th>Comment</th>
-                    <th>Points</th>
-                </tr>
+            <div class="gradeContainer">
+                <div class="header">Group/User</div>
+                <div class="header">Answer</div>
+                <div class="header">Comment</div>
+                <div class="header">Points</div>
+
                 <?php for ($i = 0; $i < count($deliveries); $i++) : ?>
                     <?php $delivery = $deliveries[$i]; ?>
-                    <tr data-id="<?= $delivery['id'] ?>">
-                        <td class="users">
-                            <div>
-                                <?php if ($delivery['group']) : ?>
-                                    Group: <?= $delivery['group'] ?>,
-                                <?php endif; ?>
-                                <?= $delivery['knownAs'] ?>
-                                <?= $delivery['lastname'] ?>
-                            </div>
-                            <div class="timestamp">Created: <?= substr($delivery['created'], 11) ?></div>
-                            <div class="timestamp">Updated: <?= substr($delivery['updated'], 11) ?></div>
-                        </td>
-                        <td class="delivery" data-id="<?= $delivery['id'] ?>">
-                            <div class="stats">
-                                <label title="Hours spent creating this deliverable">
-                                    Hours:
-                                    <?= substr($delivery['duration'], 0, 5) ?>
-                                </label>
-                                <label title="Approximately how far you completed this deliverable" class="completion">
-                                    Complete:
-                                    <?= $delivery['completion'] ?>%
-                                </label>
-                            </div>
-                            <?php if ($deliv['type'] == 'txt') : ?>
-                                <div class="txtDelivery">
-                                    <?php if ($delivery['hasMarkDown']) : ?>
-                                        <?= $parsedown->text($delivery['text']) ?>
-                                    <?php else : ?>
-                                        <pre><?= htmlspecialchars($delivery['text']) ?></pre>
-                                    <?php endif; ?>
-                                </div>
-                            <?php else : ?>
-                                <?php if ($deliv['type'] == 'url') : ?>
-                                    <div class="urlContainer">
-                                        <a href="<?= $delivery['text'] ?>" target="_blank"><?= $delivery['text'] ?></a>
-                                    </div>
-                                <?php else : /* type is: img, pdf, zip */ ?>
-                                    <div class="fileContainer">
-                                        <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
-                                        <?php if ($deliv['type'] == 'img') : ?>
-                                            <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
-                                        <?php elseif ($deliv['type'] == "zip") : ?>
-                                            <div class="listing>"<?= $delivery['text'] ?></div>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
+                    <div class="users">
+                        <div>
+                            <?php if ($delivery['group']) : ?>
+                                Group: <?= $delivery['group'] ?>,
                             <?php endif; ?>
-
-                            <?php if ($delivery['stuComment']) : ?>
-                                <div>Submission Comment:</div>
-                                <div class="comment">
-                                    <?php if ($delivery['stuCmntHasMD']) : ?>
-                                        <?= $parsedown->text($delivery['stuComment']) ?>
-                                    <?php else : ?>
-                                        <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>
+                            <?= $delivery['knownAs'] ?>
+                            <?= $delivery['lastname'] ?>
+                        </div>
+                        <div class="timestamp">Created: <?= substr($delivery['created'], 11) ?></div>
+                        <div class="timestamp">Updated: <?= substr($delivery['updated'], 11) ?></div>
+                    </div>
+                    <div class="delivery">
+                        <div class="stats">
+                            <label title="Hours spent creating this deliverable">
+                                Hours:
+                                <?= substr($delivery['duration'], 0, 5) ?>
+                            </label>
+                            <label title="Approximately how far you completed this deliverable" class="completion">
+                                Complete:
+                                <?= $delivery['completion'] ?>%
+                            </label>
+                        </div>
+                        <?php if ($deliv['type'] == 'txt') : ?>
+                            <div class="txtDelivery">
+                                <?php if ($delivery['hasMarkDown']) : ?>
+                                    <?= $parsedown->text($delivery['text']) ?>
+                                <?php else : ?>
+                                    <pre><?= htmlspecialchars($delivery['text']) ?></pre>
+                                <?php endif; ?>
+                            </div>
+                        <?php else : ?>
+                            <?php if ($deliv['type'] == 'url') : ?>
+                                <div class="urlContainer">
+                                    <a href="<?= $delivery['text'] ?>" target="_blank"><?= $delivery['text'] ?></a>
+                                </div>
+                            <?php else : /* type is: img, pdf, zip */ ?>
+                                <div class="fileContainer">
+                                    <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
+                                    <?php if ($deliv['type'] == 'img') : ?>
+                                        <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
+                                    <?php elseif ($deliv['type'] == "zip") : ?>
+                                        <div class="listing"><?= $delivery['text'] ?></div>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
-                        </td>
+                        <?php endif; ?>
 
-                        <td class="comment">
-                            <textarea autofocus class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
-                        </td>
-                        <td class="points">
-                            <input type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
-                        </td>
-                    </tr>
+                        <?php if ($delivery['stuComment']) : ?>
+                            <div>Submission Comment:</div>
+                            <div class="comment">
+                                <?php if ($delivery['stuCmntHasMD']) : ?>
+                                    <?= $parsedown->text($delivery['stuComment']) ?>
+                                <?php else : ?>
+                                    <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="comment" data-delivery_id="<?= $delivery['id'] ?>">
+                        <textarea autofocus class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
+
+                        <i title="Markdown" class="txt fa-brands fa-markdown <?= $delivery['gradeCmntHasMD'] ? "active" : ""?>"></i>
+                        <div class="mdContainer <?= $delivery['gradeCmntHasMD'] ? "active" : ""?>">
+                            <i title="Preview Markdown" class="fa-solid fa-eye previewBtn"></i>
+                            <div class="previewArea"></div>
+                        </div>
+                    </div>
+                    <div class="points">
+                        <input type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
+                    </div>
                 <?php endfor; ?>
-            </table>
+            </div>
 
             <div class="done">
 

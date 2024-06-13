@@ -217,6 +217,9 @@ body#gradeQuestion {
         text-align: right;
     }
 
+    /* copy / pasted to lab.css
+     * TODO: extract to common file
+     */
     div.gradeContainer {
         display: grid;
         grid-template-columns: 300px auto 350px 70px;
@@ -247,6 +250,7 @@ body#gradeQuestion {
         div.comment { 
             min-height: 100px;
             position: relative;
+            margin-bottom: 0px;
 
             i.previewBtn, i.fa-markdown {
                 position: absolute;

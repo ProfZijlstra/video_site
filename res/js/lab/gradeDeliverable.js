@@ -1,9 +1,21 @@
 window.addEventListener("load", () => {
-    // most of this code is directly copied from gradeSubmission.js
-    // should we pull it out into a common file?
+    // enable markdown previews
+    MARKDOWN.enablePreview("../../../markdown", true);
+    MARKDOWN.activateButtons(gradeDeliverable);
+
     function gradeDeliverable() {
-        const container = this.closest("tr");
-        const input = container.querySelector("input");
+        const parent = this.parentElement;
+        let pointsDiv = parent;
+        let commentDiv = parent;
+        if (parent.classList.contains('points')) {
+            commentDiv = parent.previousElementSibling;
+        } else if (parent.classList.contains('comment')) {
+            pointsDiv = parent.nextElementSibling;
+        } else {
+            alert('Error: gradeDeliverable called with invalid element');
+        }
+
+        const input = pointsDiv.querySelector("input");
         if (!input.checkValidity()) {
             alert("Points have an invalid value (beyond max or below zero).");
             input.value = input.dataset.value;
@@ -13,10 +25,11 @@ window.addEventListener("load", () => {
         if (!points) {
             points = 0;
         }
-        const hasMarkDown = 0;
-        const comment = container.querySelector("textarea").value;
-        const shifted = encodeURIComponent(MARKDOWN.ceasarShift(comment));
-        const delivery_id = container.dataset.id;
+        const mdBtn = commentDiv.querySelector("i.fa-markdown");
+        const hasMarkDown = mdBtn.classList.contains("active") ? 1 : 0;
+        const comment = commentDiv.querySelector("textarea").value;
+        const shifted = MARKDOWN.ceasarShift(comment);
+        const delivery_id = commentDiv.dataset.delivery_id;
 
         const data = new URLSearchParams();
         data.append("delivery_id", delivery_id);
