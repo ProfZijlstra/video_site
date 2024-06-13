@@ -100,21 +100,12 @@ class LabGradingCtrl
             }
         }
 
-        // create missing submissions for absents (group or individual)
-        foreach ($absent as $key => $item) {
-            if ($lab['type'] == 'group') {
-                $sid = $this->submissionDao->getOrCreate($lab_id, null, $item['group']);
-            } else {
-                $sid = $this->submissionDao->getOrCreate($lab_id, $item['id'], null);
-            }
-            $none[$key] = $this->submissionDao->byId($sid);
-        }
-
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Overview";
         $VIEW_DATA['lab'] = $lab;
         $VIEW_DATA['deliverables'] = $deliverables;
+        $VIEW_DATA['absent'] = $absent;
         $VIEW_DATA['none'] = $none;
         $VIEW_DATA['taken'] = $taken;
         $VIEW_DATA['extra'] = $extra;

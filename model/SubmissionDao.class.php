@@ -35,7 +35,7 @@ class SubmissionDao
         }
         $stmt = $this->db->prepare(
             "INSERT INTO submission 
-                VALUES (NULL, :lab_id, :user_id, :group)"
+                VALUES (NULL, :lab_id, :user_id, :group, NOW())"
         );
         $stmt->execute([
             "user_id" => $user_id,
@@ -78,7 +78,7 @@ class SubmissionDao
         $stmt = $this->db->prepare("
             SELECT s.id, s.lab_id, s.user_id, s.group,
                 SUM(d.points) AS points, COUNT(d.id) AS delivs,
-                MIN(d.created) AS start, MAX(d.updated) AS stop,
+                s.created AS start, MAX(d.updated) AS stop,
                 COUNT(d2.id) AS ungraded
                 FROM submission AS s
             LEFT JOIN delivery AS d ON s.id = d.submission_id
@@ -105,7 +105,7 @@ class SubmissionDao
         $stmt = $this->db->prepare(
             "SELECT s.id, s.lab_id, s.user_id, s.group,
                 SUM(d.points) AS points, COUNT(d.id) AS delivs,
-                MIN(d.created) AS start, MAX(d.updated) AS stop
+                s.created AS start, MAX(d.updated) AS stop
                 FROM submission AS s
                 LEFT JOIN delivery AS d ON s.id = d.submission_id
                 WHERE s.id = :id

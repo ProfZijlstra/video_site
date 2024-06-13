@@ -41,6 +41,19 @@
                 <?php endforeach; ?>
             </div>
 
+            <?php if ($absent): ?>
+                <h3 title="Students that have not started yet">Not Started</h3>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                <?php foreach ($absent as $student) : ?>
+                    <tr>
+                        <td><?= $student['knownAs'] ?> <?= $student['lastname'] ?></td>
+                    </t>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
             <?php function shortDate($date)
             {
                 if (!$date) {
@@ -109,7 +122,7 @@
                     </table>
                 <?php endif; ?>
             <?php } ?>
-            <?php submissionTable($none, "No Submission", "", false, $students, $groups); ?>
+            <?php submissionTable($none, "Started", "", false, $students, $groups); ?>
             <?php submissionTable($taken, "Results", "Submissions from enrolled students", true, $students, $members); ?>
             <?php submissionTable($extra, "Extra", "Submissions from unenrolled students", true, $observers, $members); ?>
         </div>

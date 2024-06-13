@@ -148,6 +148,16 @@ class LabTakingCtrl
         }
 
         // lab is open
+        // create submission if it does not exist
+        if (!$submission) {
+            $submission_id = $this->submissionDao->getOrCreate(
+                $lab_id,
+                $user_id,
+                $group
+            );
+            $submission = $this->submissionDao->byId($submission_id);
+            $VIEW_DATA['submission'] = $submission;
+        }
         $checks = [];
         foreach ($zips as $zip) {
             $checks[$zip] = $this->zipUlCheckDao->forDeliverable($zip);
