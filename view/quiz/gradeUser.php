@@ -39,7 +39,7 @@
                     <div class="about">
                         <div class="seq"><?= $question['seq'] ?></div>
                         Points Possible: <?= $question['points'] ?> <br />
-                        <input class="points" autofocus type="number" value="<?= $answers[$question['id']]['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
+                        <input class="points" autofocus type="number" value="<?= $answers[$question['id']]['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" min="0" name="points" class="points" />
                     </div>
                     <div class="question textContainer" data-id="<?= $question['id'] ?>">
                         <div>Question Text:</div>

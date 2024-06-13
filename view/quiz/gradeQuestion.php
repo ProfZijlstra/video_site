@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="points">
-                        <input type="number" value="<?= $answer['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" name="points" class="points" />
+                        <input type="number" value="<?= $answer['points'] ?? '' ?>" step="0.01" max="<?= $question['points'] ?>" min="0" name="points" class="points" />
                     </div>
                 <?php endfor; ?>
             </div>

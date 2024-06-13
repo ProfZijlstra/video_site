@@ -45,12 +45,10 @@ window.addEventListener("load", () => {
         if (!input.checkValidity()) {
             alert("Points have an invalid value (beyond max or below zero).");
             input.value = input.dataset.value;
+            setTimeout(() => input.focus(), 100);
             return;
         }
-        let points = input.value;
-        if (!points) {
-            points = 0;
-        }
+        const points = input.value ? input.value : 0;
         const hasMarkDown = container.querySelector("i.fa-markdown").classList.contains("active") ? 1 : 0;
         const comment = container.querySelector("textarea").value;
         const shifted = encodeURIComponent(MARKDOWN.ceasarShift(comment));

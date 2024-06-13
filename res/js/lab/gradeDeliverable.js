@@ -19,12 +19,10 @@ window.addEventListener("load", () => {
         if (!input.checkValidity()) {
             alert("Points have an invalid value (beyond max or below zero).");
             input.value = input.dataset.value;
-            return;
+            setTimeout(() => input.focus(), 100);
+            return false;
         }
-        let points = input.value;
-        if (!points) {
-            points = 0;
-        }
+        const points = input.value ? input.value : 0;
         const mdBtn = commentDiv.querySelector("i.fa-markdown");
         const hasMarkDown = mdBtn.classList.contains("active") ? 1 : 0;
         const comment = commentDiv.querySelector("textarea").value;

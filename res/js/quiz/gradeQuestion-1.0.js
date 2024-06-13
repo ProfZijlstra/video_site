@@ -19,8 +19,14 @@ window.addEventListener("load", () => {
         const usersDiv = commentDiv.previousElementSibling.previousElementSibling;
         const answer_ids = usersDiv.querySelector('input.answer_ids').value;
         const text = commentDiv.querySelector('textarea.comment').value;
-        let points = pointsDiv.querySelector('input.points').value;;
-        points = points ? points : 0;
+        const input = pointsDiv.querySelector('input.points');
+        if (!input.checkValidity()) {
+            alert("Points have an invalid value (beyond max or below zero).");
+            input.value = input.dataset.value;
+            setTimeout(() => input.focus(), 100);
+            return;
+        }
+        const points = input.value ? input.value : 0;
         const shifted = MARKDOWN.ceasarShift(text);
         const cmntHasMd = commentDiv.querySelector('i.fa-markdown').classList.contains('active') ? 1 : 0;
 
