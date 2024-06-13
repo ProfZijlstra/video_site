@@ -16,7 +16,7 @@ class LabDao
     public function allForOffering(int $offering_id): array
     {
         $stmt = $this->db->prepare(
-            "SELECT a.id, a.name, a.visible, d.abbr 
+            "SELECT a.id, a.name, a.visible, d.abbr, a.type
             FROM lab AS a
             JOIN day AS d ON a.day_id = d.id
             JOIN offering AS o ON d.offering_id = o.id
@@ -213,5 +213,41 @@ class LabDao
             // also clone the deliverables for each lab
             $this->deliverableDao->clone($lab['id'], $new_lab_id);
         }
+    }
+
+    public function getIndividualLabTotals($lab_id, $offering_id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT e.user_id, sum(d.points) AS points
+            FROM enrollment AS e 
+            LEFT JOIN submission AS s ON e.user_id = s.user_id 
+            LEFT JOIN delivery AS d ON d.submission_id = s.id
+            WHERE e.offering_id = :offering_id
+            AND s.lab_id = :lab_id 
+            GROUP BY e.user_id "
+        );
+        $stmt->execute(array(
+            "lab_id" => $lab_id,
+            "offering_id" => $offering_id
+        ));
+        return $stmt->fetchAll();
+    }
+
+    public function getGroupLabTotals($lab_id, $offering_id) 
+    {
+        $stmt = $this->db->prepare(
+            "SELECT e.user_id, sum(d.points) AS points
+            FROM enrollment AS e 
+            LEFT JOIN submission AS s ON e.group = s.group 
+            LEFT JOIN delivery AS d ON d.submission_id = s.id
+            WHERE e.offering_id = :offering_id
+            AND s.lab_id = :lab_id 
+            GROUP BY e.user_id "
+        );
+        $stmt->execute(array(
+            "lab_id" => $lab_id,
+            "offering_id" => $offering_id
+        ));
+        return $stmt->fetchAll();
     }
 }

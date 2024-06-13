@@ -303,6 +303,9 @@ class QuizAdminCtrl
         // create data two dimensional array and initialize first 3 columns
         $data = [];
         foreach ($enrolled as $user) {
+            if ($user['auth'] == 'instructor' || $user['auth'] == 'observer') {
+                continue;
+            }
             $data[$user['id']] = [];
             $data[$user['id']][] = $user['studentID'];
             $data[$user['id']][] = $user['firstname'];
@@ -321,7 +324,9 @@ class QuizAdminCtrl
             // build data column for this quiz
             $pts = $this->quizDao->getQuizTotalsForEnrolled($quiz['id'], $offering['id']);
             foreach ($pts as $pt) {
-                $data[$pt['user_id']][] = $pt['points'];
+                if (isset($data[$pt['user_id']])) {
+                    $data[$pt['user_id']][] = $pt['points'];
+                }
             }
             $count++;
         }
@@ -330,6 +335,6 @@ class QuizAdminCtrl
         $VIEW_DATA['header'] = $header;
         $VIEW_DATA['data'] = $data;
 
-        return "quiz/csv.php";
+        return "csv.php";
     }
 }

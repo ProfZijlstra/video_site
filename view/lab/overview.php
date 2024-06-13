@@ -40,6 +40,12 @@
             </div>
         </nav>
 
+        <nav class="tools">
+            <a href="lab/report">
+                <i title="Download Lab Totals Report" class="fa-solid fa-square-poll-vertical"></i>
+            </a>
+        </nav>
+
         <div id="days" class="lab">
             <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']): ?>
                 <div class="dayHeader">Monday</div>

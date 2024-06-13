@@ -47,6 +47,9 @@ class LabAdminCtrl
     #[Inject('ZipUlCheckDao')]
     public $zipUlCheckDao;
 
+    #[Inject('EnrollmentDao')]
+    public $enrollmentDao;
+
     #[Get(uri: "$", sec: "observer")]
     public function courseOverview()
     {
@@ -495,5 +498,60 @@ class LabAdminCtrl
 
         $id = $URI_PARAMS[4];
         $this->zipUlCheckDao->delete($id);
+    }
+    
+    #[Get(uri: "/report$", sec: "instructor")]
+    public function resultsReport()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
+        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
+
+        // create data two dimensional array and initialize first 3 columns
+        $data = [];
+        foreach ($enrolled as $user) {
+            if ($user['auth'] == 'instructor' || $user['auth'] == 'observer') {
+                continue;
+            }
+            $data[$user['id']] = [];
+            $data[$user['id']][] = $user['studentID'];
+            $data[$user['id']][] = $user['firstname'];
+            $data[$user['id']][] = $user['lastname'];
+        }
+
+        $labs = $this->labDao->allForOffering($offering['id']);
+
+        // build CSV header and query for data fetching 
+        $count = 1;
+        $header = '"studentId","firstName","lastName",';
+        foreach ($labs as $lab) {
+            // build CSV header line
+            $header .= '"' . $lab['abbr'] . '",';
+
+            if ($lab['type'] == 'individual') {
+                $pts = $this->labDao->getIndividuallabTotals($lab['id'], $offering['id']);
+            } else if ($lab['type'] == 'group') {
+                $pts = $this->labDao->getGroupLabTotals($lab['id'], $offering['id']);
+            }
+            
+            // build data column for this lab
+            foreach ($pts as $pt) {
+                if (isset($data[$pt['user_id']])) {
+                    $data[$pt['user_id']][] = $pt['points'];
+                }
+            }
+            $count++;
+        }
+
+        $VIEW_DATA['colCount'] = $count + 3; // 3 are sid, first, last
+        $VIEW_DATA['header'] = $header;
+        $VIEW_DATA['data'] = $data;
+
+        return "csv.php";
     }
 }
