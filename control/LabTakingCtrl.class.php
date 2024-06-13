@@ -134,8 +134,10 @@ class LabTakingCtrl
         $VIEW_DATA['submission'] = $submission;
         $VIEW_DATA['deliveries'] = $deliveries;
 
+        $auth = $this->enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
+
         // lab is done / over
-        if ($stopDiff->invert === 1) { // stop is in the past
+        if ($auth == "observer" || $stopDiff->invert === 1) { // stop is in the past
             $received = 0;
             foreach ($deliveries as $delivery) {
                 $received += $delivery['points'];

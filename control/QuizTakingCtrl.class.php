@@ -26,6 +26,9 @@ class QuizTakingCtrl
     #[Inject('ImageHlpr')]
     public $imageHlpr;
 
+    #[Inject('EnrollmentDao')]
+    public $enrollmentDao;
+
 
     /**
      * This function is really a 3 in one. 
@@ -70,7 +73,9 @@ class QuizTakingCtrl
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
 
-        if ($stopDiff->invert === 1) { // stop is in the past
+        $auth = $this->enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
+
+        if ($auth == "observer" || $stopDiff->invert === 1) { // stop is in the past
             // show quiz taken / results page
             $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
             $VIEW_DATA['possible'] = $this->sumPoints($VIEW_DATA['questions']);
