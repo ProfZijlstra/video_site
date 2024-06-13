@@ -43,8 +43,8 @@ class MeetingCtrl
 
         $course_number = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-
         $meeting_id = $URI_PARAMS[3];
+
         $meeting = $this->meetingDao->get($meeting_id);
         $attendance = $this->attendanceDao->forMeeting($meeting_id);
         $session = $this->classSessionDao->getSessionById($meeting['session_id']);
@@ -281,7 +281,7 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
         $attendance = [];
         foreach ($enrolled as $attendant) {
-            if ($attendant['auth'] == 'instructor') {
+            if ($attendant['auth'] == 'instructor' || $attendant['auth'] == 'observer') {
                 continue;
             }
             $attendance[$attendant["teamsName"]] = [
