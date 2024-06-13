@@ -217,15 +217,18 @@ class QuizDao
 
     public function getQuizTotalsForEnrolled($quiz_id, $offering_id)
     {
-        // TODO: go through quiz so that quizzes that had no answers are included
         $stmt = $this->db->prepare(
             "SELECT e.user_id, ifnull(sum(a.points), 0) AS points
             FROM enrollment AS e 
-            LEFT JOIN answer AS a ON a.user_id = e.user_id 
-            LEFT JOIN question AS q ON a.question_id = q.id
+            JOIN offering AS o ON e.offering_id = o.id
+            JOIN `day` AS d ON o.id = d.offering_id
+            JOIN quiz AS q ON d.id = q.day_id 
+                AND q.id = :quiz_id
+            JOIN question AS qu ON q.id = qu.quiz_id
+            LEFT JOIN answer AS a ON qu.id = a.question_id
+                AND a.user_id = e.user_id
             WHERE e.offering_id = :offering_id
-            AND q.quiz_id = :quiz_id 
-            GROUP BY a.user_id "
+            GROUP BY e.user_id "
         );
         $stmt->execute(array(
             "quiz_id" => $quiz_id,

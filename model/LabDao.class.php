@@ -217,14 +217,17 @@ class LabDao
 
     public function getIndividualLabTotals($lab_id, $offering_id)
     {
-        // TODO: go through lab so that quizzes that had no answers are included
         $stmt = $this->db->prepare(
-            "SELECT e.user_id, ifnull(sum(d.points), 0) AS points
+            "SELECT e.user_id, ifnull(sum(de.points), 0) AS points
             FROM enrollment AS e 
-            LEFT JOIN submission AS s ON e.user_id = s.user_id 
-            LEFT JOIN delivery AS d ON d.submission_id = s.id
+            JOIN offering AS o ON e.offering_id = o.id
+            JOIN `day` AS d ON o.id = d.offering_id
+            JOIN lab AS l ON d.id = l.day_id 
+                AND l.id = :lab_id
+            LEFT JOIN submission AS s ON l.id = s.lab_id
+                AND e.user_id = s.user_id 
+            LEFT JOIN delivery AS de ON de.submission_id = s.id
             WHERE e.offering_id = :offering_id
-            AND s.lab_id = :lab_id 
             GROUP BY e.user_id "
         );
         $stmt->execute(array(
@@ -236,14 +239,17 @@ class LabDao
 
     public function getGroupLabTotals($lab_id, $offering_id) 
     {
-        // TODO: go through lab so that quizzes that had no answers are included
         $stmt = $this->db->prepare(
-            "SELECT e.user_id, ifnull(sum(d.points), 0) AS points
+            "SELECT e.user_id, ifnull(sum(de.points), 0) AS points
             FROM enrollment AS e 
-            LEFT JOIN submission AS s ON e.group = s.group 
-            LEFT JOIN delivery AS d ON d.submission_id = s.id
+            JOIN offering AS o ON e.offering_id = o.id
+            JOIN `day` AS d ON o.id = d.offering_id
+            JOIN lab AS l ON d.id = l.day_id 
+                AND l.id = :lab_id
+            LEFT JOIN submission AS s ON l.id = s.lab_id
+                AND e.group = s.group 
+            LEFT JOIN delivery AS de ON de.submission_id = s.id
             WHERE e.offering_id = :offering_id
-            AND s.lab_id = :lab_id 
             GROUP BY e.user_id "
         );
         $stmt->execute(array(
