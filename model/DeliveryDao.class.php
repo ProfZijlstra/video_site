@@ -83,9 +83,10 @@ class DeliveryDao
             "user_id" => $user_id
         ]);
         // update if exists
-        if ($stmt->fetch()) {
+        $row = $stmt->fetch();
+        if ($row) {
             $this->updateTxt(
-                $stmt->fetch()['id'],
+                $row['id'],
                 $user_id,
                 $completion,
                 $duration,
@@ -165,6 +166,31 @@ class DeliveryDao
         $stuCmntHasMD
     ) {
         $stmt = $this->db->prepare(
+            "SELECT * FROM delivery 
+                WHERE submission_id = :submission_id 
+                AND deliverable_id = :deliverable_id 
+                AND user_id = :user_id"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id
+        ]);
+        // update if exists
+        $row = $stmt->fetch();
+        if ($row) {
+            $this->updateUrl(
+                $row['id'],
+                $user_id,
+                $completion,
+                $duration,
+                $url,
+                $stuComment,
+                $stuCmntHasMD
+            );
+            return;
+        }
+        $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
@@ -230,6 +256,34 @@ class DeliveryDao
         $stuComment,
         $stuCmntHasMD
     ) {
+        // to prevent duplicate entries, check if it's already been made
+        $stmt = $this->db->prepare(
+            "SELECT * FROM delivery 
+                WHERE submission_id = :submission_id 
+                AND deliverable_id = :deliverable_id 
+                AND user_id = :user_id"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id
+        ]);
+        // update if exists
+        $row = $stmt->fetch();
+        if ($row) {
+            $this->updateFile(
+                $row['id'],
+                $user_id,
+                $completion,
+                $duration,
+                $text,
+                $file,
+                $name,
+                $stuComment,
+                $stuCmntHasMD
+            );
+            return;
+        }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
@@ -325,6 +379,27 @@ class DeliveryDao
         $name,
     ) {
         $stmt = $this->db->prepare(
+            "SELECT * FROM delivery 
+                WHERE submission_id = :submission_id 
+                AND deliverable_id = :deliverable_id 
+                AND user_id = :user_id"
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+            "user_id" => $user_id
+        ]);
+        // update if exists
+        $row = $stmt->fetch();
+        if ($row) {
+            $this->updatePicture(
+                $row['id'],
+                $file,
+                $name
+            );
+            return;
+        }
+        $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
@@ -385,6 +460,26 @@ class DeliveryDao
         $comment,
         $hasMarkDown
     ) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM delivery 
+                WHERE submission_id = :submission_id 
+                AND deliverable_id = :deliverable_id "
+        );
+        $stmt->execute([
+            "submission_id" => $submission_id,
+            "deliverable_id" => $deliverable_id,
+        ]);
+        // update if exists
+        $row = $stmt->fetch();
+        if ($row) {
+            $this->grade(
+                $row['id'],
+                $points,
+                $comment,
+                $hasMarkDown
+            );
+            return;
+        }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, NULL,
