@@ -374,6 +374,20 @@ body#doLab{
             i {
                 margin-right: 5px;
             }
+
+            .errorMsg {
+                display: none;
+            }
+        }
+        div.zipCheck.error {
+            position: relative;
+
+            div.errorMsg {
+                display: block;
+                position: absolute;
+                top: 5px;
+                right: 5px;
+            }
         }
     }
 }

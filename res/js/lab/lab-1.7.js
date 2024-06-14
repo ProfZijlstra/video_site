@@ -175,9 +175,16 @@ window.addEventListener("load", () => {
             if (data.error) {
                 if (data.failed) {
                     alert(data.error);
-                    // TODO: reset failure highlights
+                    // reset failure highlights
+                    deliv.querySelectorAll('zipCheck').forEach(check => {
+                        check.classList.remove("error");
+                    });
 
-                    // TODO: set failure highlights
+                    // set failure highlights
+                    data.failed.forEach(fail => {
+                        const failDiv = deliv.querySelector(`#c${fail}`);
+                        failDiv.classList.add("error");
+                    });
                 } else {
                     throw new Error(data.error);
                 }

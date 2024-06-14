@@ -757,9 +757,10 @@ class LabTakingCtrl
         
         $zipChecks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
         // initialize present checks
+        $results = [];
         foreach ($zipChecks as $zipCheck) {
             if ($zipCheck['type'] == 'present') {
-                $zipCheck['success'] = false;
+                $results[$zipCheck['id']] = false;
             }
         }
 
@@ -778,12 +779,12 @@ class LabTakingCtrl
             }
             foreach ($zipChecks as $zipCheck) {
                 if ($zipCheck['type'] == 'present' && $zipCheck['file'] == $name) {
-                    $zipCheck['success'] = true;
+                    $results[$zipCheck['id']] = true;
                     continue;
                 }
 
                 if ($zipCheck['type'] == 'not_present' && $zipCheck['file'] == $name) {
-                    $zipCheck['success'] = false;
+                    $results[$zipCheck['id']] = false;
                     continue;
                 }
 
@@ -813,19 +814,19 @@ class LabTakingCtrl
 
         // finalize not_present checks
         foreach ($zipChecks as $zipCheck) {
-            if ($zipCheck['type'] == 'not_present' && !isset($zipCheck['success'])) {
-                $zipCheck['success'] = true;
+            if ($zipCheck['type'] == 'not_present' 
+                && $results[$zipCheck['id']] !== false) {
+                    $results[$zipCheck['id']] = true;
             }
         }
 
         // collect failed checks
         $failed = [];
-        foreach ($zipChecks as $zipCheck) {
-            if (!$zipCheck['success']) {
-                $failed[] = $zipCheck;
+        foreach ($results as $id => $result) {
+            if (!$result) {
+                $failed[] = $id;
             }
         }
-
         return [ "listing" => $listing, "failed" => $failed ];
     }
 }
