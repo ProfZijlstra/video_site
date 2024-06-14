@@ -548,6 +548,7 @@ class LabTakingCtrl
             return ["error" => "File too large, 50MB is the maximum"];
         }
 
+        // gather all the input data
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -587,6 +588,7 @@ class LabTakingCtrl
             );
         }
 
+        // process the file
         $listing = null;
         if ($type == 'img') {
             $name = $_FILES["file"]['name'];
@@ -598,35 +600,16 @@ class LabTakingCtrl
             $dst = $res['dst'];
         } else { // pdf and zip
             if ($type == 'zip') {
-                $lab = $this->labDao->byId($lab_id);
-                $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start']);
-                $ts = $date->getTimestamp();
-                $zip = new ZipArchive();
-                if ($zip->open($_FILES["file"]['tmp_name']) !== TRUE) {
-                    return ["error" => "Zip file could not be opened"];
+                $result = $this->processUlZip($lab_id, $deliverable_id);
+                $listing = $result['listing'];
+                $failed = $result['failed'];
+                if ($failed) {
+                    $error = 
+                        "The zip file does not meet the requirements."
+                        . "\n\nPlease make sure that the file requirements "
+                        . "(present / not present) are met in your zip file "
+                        . "and upload again.";
                 }
-                $listing = "";
-                for ($i = 0; $i < $zip->numFiles; $i++) {
-                    $name = htmlspecialchars($zip->getNameIndex($i));
-                    if (
-                        str_starts_with($name, "__MACOSX")
-                        || str_starts_with($name, ".DS_Store")
-                        || str_starts_with($name, "._")
-                    ) {
-                        continue;
-                    }
-                    $mtime = $zip->statIndex($i)['mtime'];
-                    $class = 'time';
-                    if ($mtime < $ts) {
-                        $class .= " old";
-                    }
-                    $listing .= '<div class="zFile">';
-                    $listing .= "<span class='name'>{$name}</span>";
-                    $listing .= "<span class='{$class}'>";
-                    $listing .= date("Y-m-d H:i:s", $mtime) . "</span>";
-                    $listing .= "</div>";
-                }
-                $zip->close();
             }
             $curr = $_FILES["file"]['tmp_name'];
             $name = $_FILES["file"]['name'];
@@ -641,6 +624,7 @@ class LabTakingCtrl
             move_uploaded_file($curr, $dst);
         }
 
+        // create / update delivery in the db
         if (!$delivery_id) {
             $delivery_id = $this->deliveryDao->createFile(
                 $submission_id,
@@ -673,7 +657,12 @@ class LabTakingCtrl
             );
         }
 
-        return $this->deliveryDao->byId($delivery_id);
+        $result = $this->deliveryDao->byId($delivery_id);
+        if ($error) {
+            $result['error'] = $error;
+            $result['failed'] = $failed;
+        }
+        return $result;
     }
 
     /**
@@ -758,5 +747,85 @@ class LabTakingCtrl
         $stop = $stop->add(new DateInterval("PT{$leewaySecs}S"));
         $stopDiff = $now->diff($stop);
         return $stopDiff->invert == 1; // is it in the past?
+    }
+
+    private function processUlZip($lab_id, $deliverable_id) {
+        $lab = $this->labDao->byId($lab_id);
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start']);
+        $ts = $date->getTimestamp();
+        $listing = "";
+        
+        $zipChecks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
+        // initialize present checks
+        foreach ($zipChecks as $zipCheck) {
+            if ($zipCheck['type'] == 'present') {
+                $zipCheck['success'] = false;
+            }
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($_FILES["file"]['tmp_name']) !== TRUE) {
+            return ["error" => "Zip file could not be opened"];
+        }
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $name = $zip->getNameIndex($i);
+            if ( // do these checks need to be on the basename?
+                str_starts_with($name, "__MACOSX")
+                || str_starts_with($name, ".DS_Store")
+                || str_starts_with($name, "._")
+            ) {
+                continue;
+            }
+            foreach ($zipChecks as $zipCheck) {
+                if ($zipCheck['type'] == 'present' && $zipCheck['file'] == $name) {
+                    $zipCheck['success'] = true;
+                    continue;
+                }
+
+                if ($zipCheck['type'] == 'not_present' && $zipCheck['file'] == $name) {
+                    $zipCheck['success'] = false;
+                    continue;
+                }
+
+                if ($zipCheck['type'] == 'txt_wm' && $zipCheck['file'] == $name) {
+                    // TODO: check WM
+                    continue;
+                }
+
+                if ($zipCheck['type'] == 'png_wm' && $zipCheck['file'] == $name) {
+                    // TODO: check WM
+                    continue;
+                }
+            }
+            $mtime = $zip->statIndex($i)['mtime'];
+            $class = 'time';
+            if ($mtime < $ts) {
+                $class .= " old";
+            }
+            $name = htmlspecialchars($name);
+            $listing .= '<div class="zFile">';
+            $listing .= "<span class='name'>{$name}</span>";
+            $listing .= "<span class='{$class}'>";
+            $listing .= date("Y-m-d H:i:s", $mtime) . "</span>";
+            $listing .= "</div>";
+        }
+        $zip->close();
+
+        // finalize not_present checks
+        foreach ($zipChecks as $zipCheck) {
+            if ($zipCheck['type'] == 'not_present' && !isset($zipCheck['success'])) {
+                $zipCheck['success'] = true;
+            }
+        }
+
+        // collect failed checks
+        $failed = [];
+        foreach ($zipChecks as $zipCheck) {
+            if (!$zipCheck['success']) {
+                $failed[] = $zipCheck;
+            }
+        }
+
+        return [ "listing" => $listing, "failed" => $failed ];
     }
 }

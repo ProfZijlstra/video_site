@@ -173,7 +173,14 @@ window.addEventListener("load", () => {
         })
         .then(data => {
             if (data.error) {
-                throw new Error(data.error);
+                if (data.failed) {
+                    alert(data.error);
+                    // TODO: reset failure highlights
+
+                    // TODO: set failure highlights
+                } else {
+                    throw new Error(data.error);
+                }
             }
             submission_id = data.submission_id;
             deliv.dataset.id = data.id;

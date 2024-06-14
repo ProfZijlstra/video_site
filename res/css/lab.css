@@ -87,6 +87,7 @@ body.lab {
     div.listing {
         font-family: monospace;
         position: relative;
+        margin-bottom: 20px;
 
         span.time {
             position: absolute;
