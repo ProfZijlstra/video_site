@@ -229,12 +229,21 @@ body.labDeliverables {
         margin-bottom: 0px;
     }
 
+    div.description {
+        position: relative;
+    }
     div.description, div.txtDelivery, div.comment {
         border: 1px solid var(--border);
         padding: 5px 10px;
         background-color: var(--light-gray);
         pre {
             white-space: pre-wrap;
+            code {
+                white-space: pre-wrap;
+            }
+        }
+        img {
+            width: 100%;
         }
     }
     div.txtDelivery {

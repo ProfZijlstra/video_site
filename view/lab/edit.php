@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/lab.css">
+    <link rel="stylesheet" href="res/css/lab-1.0.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.6.js"></script>
     <script src="res/js/lab/edit.js"></script>
