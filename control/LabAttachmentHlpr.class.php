@@ -108,6 +108,37 @@ class LabAttachmentHlpr
         }
     }
 
+    public function readTxtWm($data, $byte) {
+        $watermark = substr($data, $byte, 32 * 3);
+        $watermark = str_replace(self::$zero, '0', $watermark);
+        $watermark = str_replace(self::$one, '1', $watermark);
+        return bindec($watermark);
+    }
+
+    public function readPngWm($data, $byte) {
+        $png = imagecreatefromstring($data);
+        $info = getimagesizefromstring($data);
+        if (!$png || !$info) {
+            return false;
+        }
+        $width = $info[0];
+        $y = floor($byte / $width);
+        $x = $byte - $y * $width;
+
+        $out = 0;
+        for ($i = 0; $i < 32; $i++) {
+            $color = imagecolorat($png, $x, $y);
+            $r = ($color >> 16) & 0xFF;
+            $out = ($out << 1) | ($r & 1);
+            $x++;
+            if ($x >= $width) {
+                $x = 0;
+                $y++;
+            }
+        }
+        return $out;
+    }
+
     public function wmTxt($path, $inzip, $bytepos, $num) 
     {
         $wm = $this->makeTxtWm($num);

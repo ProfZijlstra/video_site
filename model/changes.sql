@@ -618,3 +618,11 @@ ALTER TABLE `zip_ul_check` DROP COLUMN `public`;
 
 -- 13th of June 2024
 ALTER TABLE `submission` ADD COLUMN `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- 14th of June 2024
+ALTER TABLE `zip_ul_stat` ADD COLUMN `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `zip_ul_stat` ADD COLUMN `type` VARCHAR(45) NOT NULL;
+ALTER TABLE `zip_ul_stat` ADD COLUMN `file` VARCHAR(255) NOT NULL;
+ALTER TABLE `zip_ul_stat` DROP COLUMN `pass`;
+ALTER TABLE `zip_ul_stat` DROP FOREIGN KEY `fk_checks_zip_check1`;
+ALTER TABLE `zip_ul_stat` DROP COLUMN `zip_check_id`;

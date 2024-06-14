@@ -47,6 +47,9 @@ class LabTakingCtrl
     #[Inject('ZipUlCheckDao')]
     public $zipUlCheckDao;
 
+    #[Inject('ZipUlStatDao')]
+    public $zipUlStatDao;
+
     /**
      * This function is really a 3 in one. 
      * 1. If it is used before the start time it shows a countdown timer
@@ -600,7 +603,10 @@ class LabTakingCtrl
             $dst = $res['dst'];
         } else { // pdf and zip
             if ($type == 'zip') {
-                $result = $this->processUlZip($lab_id, $deliverable_id);
+                $result = $this->processUlZip($lab_id, $deliverable_id, $delivery_id);
+                if ($result['error']) {
+                    return ["error" => $result['error']];
+                }
                 $listing = $result['listing'];
                 $failed = $result['failed'];
                 if ($failed) {
@@ -749,13 +755,16 @@ class LabTakingCtrl
         return $stopDiff->invert == 1; // is it in the past?
     }
 
-    private function processUlZip($lab_id, $deliverable_id) {
+    private function processUlZip($lab_id, $deliverable_id, $delivery_id) {
+        $zipChecks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
         $lab = $this->labDao->byId($lab_id);
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start']);
-        $ts = $date->getTimestamp();
+        $tz = new DateTimeZone(TIMEZONE);
+        $now_date = new DateTimeImmutable("now", $tz);
+        $now = $now_date->format("Y-m-d H:i:s");
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start'], $tz);
+        $ts_lab = $date->getTimestamp();
         $listing = "";
         
-        $zipChecks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
         // initialize present checks
         $results = [];
         foreach ($zipChecks as $zipCheck) {
@@ -764,6 +773,7 @@ class LabTakingCtrl
             }
         }
 
+        // look through the files in the zip
         $zip = new ZipArchive();
         if ($zip->open($_FILES["file"]['tmp_name']) !== TRUE) {
             return ["error" => "Zip file could not be opened"];
@@ -778,30 +788,45 @@ class LabTakingCtrl
                 continue;
             }
             foreach ($zipChecks as $zipCheck) {
-                if ($zipCheck['type'] == 'present' && $zipCheck['file'] == $name) {
-                    $results[$zipCheck['id']] = true;
+                $id = $zipCheck['id'];
+                $type = $zipCheck['type'];
+                $file = $zipCheck['file'];
+                $byte = $zipCheck['byte'];
+
+                if ($type == 'present' && $file == $name) {
+                    $results[$id] = true;
                     continue;
                 }
 
-                if ($zipCheck['type'] == 'not_present' && $zipCheck['file'] == $name) {
-                    $results[$zipCheck['id']] = false;
+                if ($type == 'not_present' && $file == $name) {
+                    $results[$id] = false;
+                    $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
                     continue;
                 }
 
-                if ($zipCheck['type'] == 'txt_wm' && $zipCheck['file'] == $name) {
-                    // TODO: check WM
+                if ($type == 'txt_wm' && $file == $name) {
+                    $data = $zip->getFromIndex($i);
+                    $wm = $this->labAttachmentHlpr->readTxtWm($data, $byte);
+                    if ($wm === '' || $wm != $_SESSION['user']['id']) {
+                        $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
+                    }
                     continue;
                 }
 
-                if ($zipCheck['type'] == 'png_wm' && $zipCheck['file'] == $name) {
-                    // TODO: check WM
+                if ($type == 'png_wm' && $file == $name) {
+                    $data = $zip->getFromIndex($i);
+                    $wm = $this->labAttachmentHlpr->readPngWm($data, $byte);
+                    if ($wm === false || $wm != $_SESSION['user']['id']) {
+                        $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
+                    }
                     continue;
                 }
             }
             $mtime = $zip->statIndex($i)['mtime'];
             $class = 'time';
-            if ($mtime < $ts) {
+            if ($mtime < $ts_lab) {
                 $class .= " old";
+                $this->zipUlStatDao->add($delivery_id, $now, 'timestamp', $file);
             }
             $name = htmlspecialchars($name);
             $listing .= '<div class="zFile">';
@@ -812,11 +837,15 @@ class LabTakingCtrl
         }
         $zip->close();
 
-        // finalize not_present checks
+        // finalize present / not_present checks
         foreach ($zipChecks as $zipCheck) {
-            if ($zipCheck['type'] == 'not_present' 
-                && $results[$zipCheck['id']] !== false) {
-                    $results[$zipCheck['id']] = true;
+            $id = $zipCheck['id'];
+            if ($zipCheck['type'] == 'not_present' && $results[$id] !== false) {
+                $results[$zipCheck['id']] = true;
+            }
+            if ($zipCheck['type'] == 'present' && $results[$id] === false) {
+                $file = $zipCheck['file'];
+                $this->zipUlStatDao->add($delivery_id, $now, 'not_present', $file);
             }
         }
 
