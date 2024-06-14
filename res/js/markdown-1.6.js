@@ -40,8 +40,10 @@ const MARKDOWN = (function() {
                     data = close + data;
                 }
                 container.innerHTML = data;
-                container.querySelector('i.fa-times-circle').onclick = function() {
-                    container.replaceChildren();
+                if (closePreview) {
+                    container.querySelector('i.fa-times-circle').onclick = function() {
+                        container.replaceChildren();
+                    }
                 }
                 container.querySelectorAll('pre').forEach(addCopyButton);
                 Prism.highlightAllUnder(container);
