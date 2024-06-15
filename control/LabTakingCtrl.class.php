@@ -765,6 +765,9 @@ class LabTakingCtrl
         $ts_lab = $date->getTimestamp();
         $listing = "";
         
+        // indicate that we're starting to check the zip
+        $this->zipUlStatDao->add($delivery_id, $now, 'checking', '');
+
         // initialize present checks
         $results = [];
         foreach ($zipChecks as $zipCheck) {
