@@ -231,27 +231,6 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         }
     }
 
-
-
-    #[Post(uri: "/attendance$", sec: "assistant")]
-    public function addMeeting()
-    {
-        $session_id = filter_input(INPUT_POST, "session_id", FILTER_SANITIZE_NUMBER_INT);
-        $start = filter_input(INPUT_POST, "start");
-        if ($session_id && $_FILES["list"]) {
-            $meeting_id = $this->parseMeetingFile(
-                $_FILES["list"]["tmp_name"],
-                $_FILES["list"]["name"],
-                $session_id,
-                $start
-            );
-            return "Location: meeting/{$meeting_id}";
-        }
-
-        return "Location: attendance";
-    }
-
-
     #[Post(uri: "/meeting$", sec: "assistant")]
     public function createMeeting()
     {
@@ -313,44 +292,6 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         $this->meetingDao->delete($meeting_id);
 
         return "Location: ../../attendance";
-    }
-
-    private function parseMeetingFile($file, $filename, $session_id, $meeting_start)
-    {
-        // prepare file contents
-        $text = mb_convert_encoding(file_get_contents($file), "UTF-8", "UTF-16LE");
-        $lines = explode("\n", $text);
-
-        // gather meeting data 
-        $title = substr($filename, 0, strlen($filename) - 4);
-        $fields = str_getcsv($lines[3], "\t");
-        $date = $this->toIsoDate($fields[1]);
-        $fields = str_getcsv($lines[4], "\t");
-        $meeting_stop = $this->to24hour($fields[1]);
-
-        // insert meeting into DB 
-        $meeting_id = $this->meetingDao->add(
-            $session_id,
-            $title,
-            $date,
-            $meeting_start,
-            $meeting_stop
-        );
-
-        // insert attendance lines
-        for ($i = 8; $i < count($lines) - 1; $i++) {
-            list($name, $start, $stop, $duration, $email, $role) =
-                str_getcsv($lines[$i], "\t");
-            $start = $this->to24hour($start);
-            $stop = $this->to24hour($stop);
-
-            $this->attendanceImportDao->add($meeting_id, $name, $start, $stop);
-        }
-
-        // generate report
-        $this->generateReport($session_id, $meeting_id, $meeting_start, $meeting_stop);
-
-        return $meeting_id;
     }
 
     private function generateReport($session_id, $meeting_id, $start, $stop)

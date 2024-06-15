@@ -128,22 +128,6 @@
                     <button type="submit">Create Meeting</button>
                 </div>
             </form>
-
-            <h4>Or Upload a Teams Meeting</h4>
-            <form name="import" action="" method="post" enctype="multipart/form-data" id="upload_form">
-                <input type="hidden" id="session_id" name="session_id" />
-                <div>
-                    <label>Start</label>
-                    <input type="text" name="start" id="start" required pattern="([0-1]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37" />
-                </div>
-                <div>
-                    <label>File*</label>
-                    <input type="file" id="list_file" name="list" required />
-                </div>
-                <div class="btn"><button>Upload Meeting</button></div>
-                <p class="right">*Filename will be used as meeting title</p>
-            </form>
-
         </div>
 
         <div id="add_excused" class="modal hide">

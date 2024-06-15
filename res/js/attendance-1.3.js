@@ -34,9 +34,6 @@ window.addEventListener("load", () => {
             start = PM_start;
             stop = PM_stop;
         }
-        document.getElementById("session_id").value = session_id;
-        document.getElementById("start").value = start;
-
         document.getElementById("manual_session_id").value = session_id;
         document.getElementById("manual_title").value = day + day_part;
         document.getElementById("manual_date").value = date;
@@ -52,7 +49,6 @@ window.addEventListener("load", () => {
     }
 
     const timeValidationMsg = "Ivalid 24 hour colon separated time format";
-    document.getElementById("start").validationMessage = timeValidationMsg;
     document.getElementById("manual_start").validationMessage = timeValidationMsg;
     document.getElementById("manual_stop").validationMessage = timeValidationMsg;
 
