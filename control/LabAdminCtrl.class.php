@@ -169,8 +169,12 @@ class LabAdminCtrl
 
         $deliverables = $this->deliverableDao->forLab($lab_id);
         $labPoints = 0;
+        $zips = [];
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
+            if ($deliv['type'] == "zip") {
+                $zips[] = $deliv['id'];
+            }
         }
         $VIEW_DATA['labPoints'] = $labPoints;
         $VIEW_DATA['deliverables'] = $deliverables;
@@ -178,6 +182,12 @@ class LabAdminCtrl
 
         $submission = $this->submissionDao->forUser($user_id, $lab_id);
         $deliveries = $this->deliveryDao->forSubmission($submission['id']);
+
+        $checks = [];
+        foreach ($zips as $zip) {
+            $checks[$zip] = $this->zipUlCheckDao->forDeliverable($zip);
+        }
+        $VIEW_DATA['checks'] = $checks;
         $VIEW_DATA['submission'] = $submission;
         $VIEW_DATA['deliveries'] = $deliveries;
         return "lab/doLab.php";
