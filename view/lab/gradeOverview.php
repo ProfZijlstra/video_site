@@ -41,17 +41,27 @@
                 <?php endforeach; ?>
             </div>
 
-            <?php if ($absent): ?>
+            <?php if ($absent) : ?>
                 <h3 title="Students that have not started yet">Not Started</h3>
                 <table>
                     <tr>
                         <th>Name</th>
                     </tr>
-                <?php foreach ($absent as $student) : ?>
-                    <tr>
-                        <td><?= $student['knownAs'] ?> <?= $student['lastname'] ?></td>
-                    </t>
-                <?php endforeach; ?>
+                    <?php foreach ($absent as $student) : ?>
+                        <tr>
+                            <td>
+                                <?php if ($lab['type'] == "individual"): ?>
+                                <a href="user/<?= $student['id'] ?>">
+                                    <?= $student['knownAs'] ?> <?= $student['lastname'] ?>
+                                </a>
+                                <?php else: ?>
+                                    <a href="group/<?= $student ?>">
+                                        Group <?= $student ?>
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                        </t>
+                    <?php endforeach; ?>
                 </table>
             <?php endif; ?>
 

@@ -211,6 +211,29 @@ class LabGradingCtrl
         return "lab/gradeSubmission.php";
     }
 
+    #[Get(uri: "/(\d+)/user/(\d+)$", sec: "assistant")]
+    public function gradeUser() {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $user_id = $URI_PARAMS[4];
+        $sid = $this->submissionDao->getOrCreate($lab_id, $user_id, null);
+
+        return "Location: ../submission/$sid";
+    }
+
+    #[Get(uri: "/(\d+)/group/(\.+)$", sec: "assistant")]
+    public function gradeGroup() {
+        global $URI_PARAMS;
+
+        $lab_id = $URI_PARAMS[3];
+        $group = $URI_PARAMS[4];
+        $submission = $this->submissionDao->getOrCreate($lab_id, null, $group);
+        $sid = $submission['id'];
+
+        return "Location: ../submission/$sid";
+    }
+
     #[Put(uri: "/(\d+)/delivery/(\d+)$", sec: "assistant")]
     public function gradeDelivery()
     {
