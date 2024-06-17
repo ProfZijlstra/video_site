@@ -16,7 +16,7 @@
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/back.js"></script>
     <script src="res/js/camera-1.1.js"></script>
-    <script src="res/js/lab/lab-1.7.js"></script>
+    <script src="res/js/lab/lab-1.8.js"></script>
     <script src="res/js/ensureSaved.js"></script>
 </head>
 
