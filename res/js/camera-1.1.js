@@ -146,6 +146,10 @@ const CAMERA = (function() {
             } else {
                 img.src = data.dst;
                 img.dataset.id = data.answer_id;
+                const deliv = this.closest("div.deliv");
+                if (deliv) {
+                    deliv.dataset.id = data.answer_id;
+                }
                 img.classList.remove('hide');
                 img.classList.add('show');
                 anchor.href = data.dst;
