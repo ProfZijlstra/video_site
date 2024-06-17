@@ -847,10 +847,11 @@ class LabTakingCtrl
         }
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $name = $zip->getNameIndex($i);
-            if ( // do these checks need to be on the basename?
-                str_starts_with($name, "__MACOSX")
-                || str_starts_with($name, ".DS_Store")
-                || str_starts_with($name, "._")
+            $bn = basename($name);
+            if ( 
+                str_starts_with($bn, "__MACOSX")
+                || str_starts_with($bn, ".DS_Store")
+                || str_starts_with($bn, "._")
             ) {
                 continue;
             }
