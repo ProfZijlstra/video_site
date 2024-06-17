@@ -83,7 +83,7 @@ window.addEventListener("load", () => {
             action = "Updating";
         }         
         if (user_id) {
-            url += `?student=${user_id}`;
+            url += `?user_id=${user_id}`;
         }
 
         fetch(url, {
@@ -148,7 +148,7 @@ window.addEventListener("load", () => {
         }
 
         if (stuComment) {
-            const stuShifted = encodeURIComponent(MARKDOWN.ceasarShift(stuComment));
+            const stuShifted = MARKDOWN.ceasarShift(stuComment);
             data.append("stuComment", stuShifted);
             const stuMD = deliv.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
             data.append("stuCmntHasMD", stuMD);
