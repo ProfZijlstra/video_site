@@ -52,6 +52,7 @@
                         <td><?= $student['knownAs'] ?> <?= $student['lastname'] ?></td>
                     </t>
                 <?php endforeach; ?>
+                </table>
             <?php endif; ?>
 
             <?php function shortDate($date)
