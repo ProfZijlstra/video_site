@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/courses.css">
+    <?php if (hasMinAuth('admin')) : ?>
     <script>
         window.addEventListener('load', () => {
             const overlay = document.getElementById("overlay");
@@ -25,6 +26,7 @@
             });
         });
     </script>
+    <?php endif; ?>
 </head>
 
 <body>
