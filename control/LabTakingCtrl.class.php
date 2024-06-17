@@ -57,12 +57,20 @@ class LabTakingCtrl
      * 3. If between start and stop the user can upload deliverables
      * 
      */
-    #[Get(uri: "/(\d+)$", sec: "student")]
+    #[Get(uri: "/(\d+)$", sec: "observer")]
     public function viewLab()
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
+        $fac_upd = false;
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+            $fac_upd = true;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
@@ -78,7 +86,6 @@ class LabTakingCtrl
         $startDiff = $now->diff($start);
         $stopDiff = $now->diff($stop);
 
-        $user_id = $_SESSION['user']['id'];
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['lab'] = $lab;
@@ -140,7 +147,8 @@ class LabTakingCtrl
         $auth = $this->enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
 
         // lab is done / over
-        if ($auth == "observer" || $stopDiff->invert === 1) { // stop is in the past
+        // stop is in the past
+        if (!$fac_upd && ($auth == "observer" || $stopDiff->invert === 1)) { 
             $received = 0;
             foreach ($deliveries as $delivery) {
                 $received += $delivery['points'];
@@ -164,6 +172,9 @@ class LabTakingCtrl
         $checks = [];
         foreach ($zips as $zip) {
             $checks[$zip] = $this->zipUlCheckDao->forDeliverable($zip);
+        }
+        if ($fac_upd) {
+            $VIEW_DATA['user_id'] = $user_id;
         }
         $VIEW_DATA['checks'] = $checks;
         $VIEW_DATA['title'] = "Lab: " . $lab['name'];
@@ -274,6 +285,13 @@ class LabTakingCtrl
             return ["error" => "Lab is closed"];
         }
 
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
+
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $group = filter_input(INPUT_POST, "group");
@@ -295,7 +313,7 @@ class LabTakingCtrl
         if (!$submission_id) {
             $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
-                $_SESSION['user']['id'],
+                $user_id,
                 $group
             );
         }
@@ -303,7 +321,7 @@ class LabTakingCtrl
         $delivery_id = $this->deliveryDao->createTxt(
             $submission_id,
             $deliverable_id,
-            $_SESSION['user']['id'],
+            $user_id,
             $completion,
             $duration,
             $text,
@@ -329,6 +347,13 @@ class LabTakingCtrl
             return ["error" => "Lab is closed"];
         }
 
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
+
         $delivery_id = $URI_PARAMS[4];
         $completion = $_PUT["completion"];
         $duration =   $_PUT["duration"];
@@ -347,7 +372,7 @@ class LabTakingCtrl
 
         $this->deliveryDao->updateTxt(
             $delivery_id,
-            $_SESSION['user']['id'],
+            $user_id,
             $completion,
             $duration,
             $text,
@@ -372,6 +397,13 @@ class LabTakingCtrl
             return ["error" => "Lab is closed"];
         }
 
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
+
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
         $group = filter_input(INPUT_POST, "group");
@@ -390,7 +422,7 @@ class LabTakingCtrl
         if (!$submission_id) {
             $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
-                $_SESSION['user']['id'],
+                $user_id,
                 $group
             );
         }
@@ -398,7 +430,7 @@ class LabTakingCtrl
         $delivery_id = $this->deliveryDao->createUrl(
             $submission_id,
             $deliverable_id,
-            $_SESSION['user']['id'],
+            $user_id,
             $completion,
             $duration,
             $url,
@@ -422,6 +454,12 @@ class LabTakingCtrl
         if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
 
         $delivery_id = $URI_PARAMS[4];
         $completion = $_PUT["completion"];
@@ -438,7 +476,7 @@ class LabTakingCtrl
 
         $this->deliveryDao->updateUrl(
             $delivery_id,
-            $_SESSION['user']['id'],
+            $user_id,
             $completion,
             $duration,
             $url,
@@ -461,6 +499,12 @@ class LabTakingCtrl
         if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
 
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
         $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_VALIDATE_INT);
@@ -479,7 +523,7 @@ class LabTakingCtrl
         if (!$submission_id) {
             $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
-                $_SESSION['user']['id'],
+                $user_id,
                 $group
             );
         }
@@ -487,7 +531,7 @@ class LabTakingCtrl
         $delivery_id = $this->deliveryDao->createFile(
             $submission_id,
             $deliverable_id,
-            $_SESSION['user']['id'],
+            $user_id,
             $completion,
             $duration,
             '',
@@ -560,6 +604,12 @@ class LabTakingCtrl
         if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id)) {
             return ["error" => "Lab is closed"];
         }
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
         if ($type == 'pdf' && !$this->labAttachmentHlpr->isPdfFile($_FILES["file"]['tmp_name'])) {
             return ["error" => "File does not seem to be a .pdf file"];
         }
@@ -575,7 +625,6 @@ class LabTakingCtrl
         $duration = filter_input(INPUT_POST, "duration");
         $stuShifted = filter_input(INPUT_POST, "stuComment");
         $stuCmntHasMD = filter_input(INPUT_POST, "stuCmntHasMD", FILTER_VALIDATE_BOOLEAN);
-        $user_id = $_SESSION['user']['id'];
 
         $stuComment = NULL;
         if ($stuShifted) {
@@ -586,7 +635,7 @@ class LabTakingCtrl
         if (!$submission_id) {
             $submission_id = $this->submissionDao->getOrCreate(
                 $lab_id,
-                $_SESSION['user']['id'],
+                $user_id,
                 $group
             );
         }
@@ -603,7 +652,12 @@ class LabTakingCtrl
             $dst = $res['dst'];
         } else { // pdf and zip
             if ($type == 'zip') {
-                $result = $this->processUlZip($lab_id, $deliverable_id, $delivery_id);
+                $result = $this->processUlZip(
+                    $lab_id, 
+                    $deliverable_id, 
+                    $delivery_id, 
+                    $user_id
+                );
                 if ($result['error']) {
                     return ["error" => $result['error']];
                 }
@@ -688,8 +742,13 @@ class LabTakingCtrl
         if (!$_SESSION['user']['isFaculty'] && $this->labEnded($lab_id, 30)) {
             return "error/403.php";
         }
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        } else {
+            $user_id = $_SESSION['user']['id'];
+        }
 
-        $user_id = $_SESSION['user']['id'];
         $delivery_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
         $img = filter_input(INPUT_POST, "image");
 
@@ -755,7 +814,12 @@ class LabTakingCtrl
         return $stopDiff->invert == 1; // is it in the past?
     }
 
-    private function processUlZip($lab_id, $deliverable_id, $delivery_id) {
+    private function processUlZip(
+        $lab_id, 
+        $deliverable_id, 
+        $delivery_id, 
+        $user_id) 
+    {
         $zipChecks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
         $lab = $this->labDao->byId($lab_id);
         $tz = new DateTimeZone(TIMEZONE);
@@ -810,7 +874,7 @@ class LabTakingCtrl
                 if ($type == 'txt_wm' && $file == $name) {
                     $data = $zip->getFromIndex($i);
                     $wm = $this->labAttachmentHlpr->readTxtWm($data, $byte);
-                    if ($wm === '' || $wm != $_SESSION['user']['id']) {
+                    if ($wm === '' || $wm != $user_id) {
                         $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
                     }
                     continue;
@@ -819,7 +883,7 @@ class LabTakingCtrl
                 if ($type == 'png_wm' && $file == $name) {
                     $data = $zip->getFromIndex($i);
                     $wm = $this->labAttachmentHlpr->readPngWm($data, $byte);
-                    if ($wm === false || $wm != $_SESSION['user']['id']) {
+                    if ($wm === false || $wm != $user_id) {
                         $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
                     }
                     continue;

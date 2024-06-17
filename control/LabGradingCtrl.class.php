@@ -201,6 +201,7 @@ class LabGradingCtrl
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Submission";
+        $VIEW_DATA['lab_id'] = $lab_id;
         $VIEW_DATA['members'] = $members;
         $VIEW_DATA['submission'] = $submission;
         $VIEW_DATA['ids'] = $ids;
