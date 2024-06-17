@@ -34,6 +34,9 @@
         </nav>
         <div id="content">
             <div class="about">
+                <?php if ($user_id): ?>
+                    <input type="hidden" id="user_id" value="<?= $user_id ?>">
+                <?php endif; ?>
                 <div><label>Start:</label> <?= $lab['start'] ?></div>
                 <div><label>Stop:</label> <?= $lab['stop'] ?></div>
                 <?php if ($lab['type'] == "group") : ?>

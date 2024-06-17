@@ -8,6 +8,9 @@ window.addEventListener("load", () => {
     MARKDOWN.enablePreview("../markdown");
     MARKDOWN.activateButtons(mdToggle);
 
+    // user_id if present
+    const user_id = document.getElementById("user_id")?.value;
+
     // automatically save changes to deliverables
     document.querySelectorAll("input, select, textarea").forEach(input => {
         input.addEventListener("change", sendDeliverable);
@@ -79,6 +82,9 @@ window.addEventListener("load", () => {
             method = "PUT";
             action = "Updating";
         }         
+        if (user_id) {
+            url += `?student=${user_id}`;
+        }
 
         fetch(url, {
             method: method,
@@ -161,7 +167,11 @@ window.addEventListener("load", () => {
         }
 
         spinner.classList.add("rotate");
-        fetch(`${lab_id}/${type}/file`, {
+        let url = `${lab_id}/${type}/file`;
+        if (user_id) {
+            url += `?student=${user_id}`;
+        }
+        fetch(url, {
             method: "POST",
             body: data,
         })

@@ -24,6 +24,13 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+
+        <nav class="tools">
+            <a href="../../<?= $lab_id ?>?student=<?= $members[0]['id'] ?>">
+                <i title="Edit submission" class="fa-regular fa-pen-to-square"></i>
+            </a>
+        </nav>
+
         <div id="content">
             <!-- Submission Being Graded -->
             <?php if ($submission['group']) : ?>
