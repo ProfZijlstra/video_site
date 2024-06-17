@@ -389,16 +389,4 @@ We noticed you were tardy for the " . $tardy["title"] . " meeting that started a
         // insert attendance report into DB
         $this->attendanceDao->addReport($meeting_id, $attendance);
     }
-
-    private function to24hour($str)
-    {
-        $parts = date_parse($str);
-        return $parts["hour"] . ":" . $parts["minute"] . ":" . $parts["second"];
-    }
-
-    private function toIsoDate($str)
-    {
-        $parts = date_parse($str);
-        return $parts["year"] . "-" . $parts["month"] . "-" . $parts["day"];
-    }
 }

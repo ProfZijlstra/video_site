@@ -337,8 +337,7 @@ Manalabs Attendance System.
 
         if (
             $session['generated'] != $status['meetings'] ||
-            ($session["status"] != "GENERATED" &&
-                $session["status"] != "EXPORTED")
+            $session["status"] != "EXPORTED"
         ) {
             $this->generateExportReport($session["id"]);
             $session = $this->classSessionDao->getSessionById($session["id"]);
