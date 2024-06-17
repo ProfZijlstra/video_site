@@ -204,7 +204,8 @@ class LabAdminCtrl
 
         $id = $URI_PARAMS[3];
         $visible = $_PUT["visible"];
-        $name = $_PUT["name"];
+        $shifted = $_PUT["name"];
+        $name = $this->markdownCtrl->ceasarShift($shifted);
         $day_id = $_PUT["day_id"];
         $startdate = $_PUT["startdate"];
         $stopdate = $_PUT["stopdate"];
