@@ -186,7 +186,7 @@ window.addEventListener("load", () => {
                 if (data.failed) {
                     alert(data.error);
                     // reset failure highlights
-                    deliv.querySelectorAll('zipCheck').forEach(check => {
+                    deliv.querySelectorAll('.zipCheck').forEach(check => {
                         check.classList.remove("error");
                     });
 
