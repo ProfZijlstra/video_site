@@ -874,8 +874,16 @@ class LabTakingCtrl
 
                 if ($type == 'txt_wm' && $file == $name) {
                     $data = $zip->getFromIndex($i);
-                    $wm = $this->labAttachmentHlpr->readTxtWm($data, $byte);
-                    if ($wm === '' || $wm != $user_id) {
+                    $wm = intval($this->labAttachmentHlpr->readTxtWm($data, $byte));
+                    $download = $this->downloadDao->getById($wm);
+                    if (!$download) {
+                        $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
+                        continue;
+                    }
+                    $uid = $download['user_id'];
+                    $date = DateTime::createFromFormat('Y-m-d H:i:s', $download['created'], $tz);
+                    $ts_lab = $date->getTimestamp();
+                    if ($uid != $user_id) {
                         $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
                     }
                     continue;

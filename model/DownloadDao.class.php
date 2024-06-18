@@ -32,4 +32,14 @@ class DownloadDao
         );
         $stmt->execute(array("attachment_id" => $attachment_id));
     }
+
+    public function getById($id) 
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM download
+            WHERE id = :id"
+        );
+        $stmt->execute(array("id" => $id));
+        return $stmt->fetch();
+    }
 }
