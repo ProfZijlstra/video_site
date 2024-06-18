@@ -828,6 +828,8 @@ class LabTakingCtrl
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start'], $tz);
         $ts_lab = $date->getTimestamp();
         $listing = "";
+        $listing_limit = 30;
+        $listing_count = 0;
         
         // indicate that we're starting to check the zip
         $this->zipUlStatDao->add($delivery_id, $now, 'checking', '');
@@ -904,12 +906,19 @@ class LabTakingCtrl
                 $class .= " old";
                 $this->zipUlStatDao->add($delivery_id, $now, 'timestamp', $file);
             }
-            $name = htmlspecialchars($name);
-            $listing .= '<div class="zFile">';
-            $listing .= "<span class='name'>{$name}</span>";
-            $listing .= "<span class='{$class}'>";
-            $listing .= date("Y-m-d H:i:s", $mtime) . "</span>";
-            $listing .= "</div>";
+
+            if ($listing_count < $listing_limit) {
+                $name = htmlspecialchars($name);
+                $listing .= '<div class="zFile">';
+                $listing .= "<span class='name'>{$name}</span>";
+                $listing .= "<span class='{$class}'>";
+                $listing .= date("Y-m-d H:i:s", $mtime) . "</span>";
+                $listing .= "</div>";
+                $listing_count++;
+            } else if ($listing_count == $listing_limit) {
+                $listing .= "<div class='zFile'>... [Listing Truncated]</div>";
+                $listing_count++;
+            }            
         }
         $zip->close();
 
