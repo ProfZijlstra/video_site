@@ -652,6 +652,17 @@ class LabTakingCtrl
             $dst = $res['dst'];
         } else { // pdf and zip
             if ($type == 'zip') {
+                if (!$delivery_id) {
+                    $delivery_id = $this->deliveryDao->createFileStats(
+                        $submission_id,
+                        $deliverable_id,
+                        $user_id,
+                        $completion,
+                        $duration,
+                        $stuComment,
+                        $stuCmntHasMD
+                    );
+                }
                 $result = $this->processUlZip(
                     $lab_id, 
                     $deliverable_id, 
