@@ -56,7 +56,6 @@ class LabAttachmentHlpr
         $dir = sys_get_temp_dir();
         $dir .= "/lmz/unzip/{$aid}/";
         if (file_exists($dir) && is_dir($dir)) {
-            print("No need to unzip\n");
             return; // already extracted
         }
 

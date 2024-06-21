@@ -193,7 +193,7 @@ class LabTakingCtrl
 
         $lab = $this->labDao->byId($lab_id);
         $attachment = $this->attachmentDao->byId($attachment_id);
-        $file = "res/{$course}/{$block}/lab/{$lab_id}/download/{$attachment_id}/";
+        $zfile = "res/{$course}/{$block}/lab/{$lab_id}/download/{$attachment_id}/";
 
         // determine the donwload_id
         $user_id = $_SESSION['user']['id'];
@@ -204,8 +204,8 @@ class LabTakingCtrl
             $download_id = $group;
         }
 
-        $file .= "{$download_id}/{$attachment['name']}";
-        if (!file_exists($file)) {
+        $zfile .= "{$download_id}/{$attachment['name']}";
+        if (!file_exists($zfile)) {
             // copy the unzipped files into a tmp dir
             $aid = $attachment['id'];
             $src = sys_get_temp_dir();
@@ -237,9 +237,9 @@ class LabTakingCtrl
             }
 
             // based on: https://stackoverflow.com/a/4914807/6933102
-            $this->labAttachmentHlpr->ensureDirCreated(dirname($file));
+            $this->labAttachmentHlpr->ensureDirCreated(dirname($zfile));
             $zip = new ZipArchive();
-            $zip->open($file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+            $zip->open($zfile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $files = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($dst),
                 RecursiveIteratorIterator::LEAVES_ONLY
@@ -265,11 +265,11 @@ class LabTakingCtrl
 
         // based on: https://stackoverflow.com/a/2882523/6933102
         header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename=' . basename($file));
-        header('Content-Length: ' . filesize($file));
+        header('Content-Disposition: attachment; filename=' . basename($zfile));
+        header('Content-Length: ' . filesize($zfile));
         ob_clean();
         flush();
-        readfile($file);
+        readfile($zfile);
     }
 
     /**
