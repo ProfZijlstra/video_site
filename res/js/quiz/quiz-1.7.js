@@ -9,6 +9,9 @@ window.addEventListener("load", () => {
     MARKDOWN.enablePreview("../markdown");
     MARKDOWN.activateButtons(saveQuestionChange)
 
+    // user_id if present
+    const user_id = document.getElementById("user_id")?.value;
+
     // automatically save changes to answers
     function saveQuestionChange() {
         let parent = this.parentNode;
@@ -24,7 +27,11 @@ window.addEventListener("load", () => {
         const hasMD = text.parentNode.querySelector("i")
                 .classList.contains("active") ? 1 : 0;
 
-        fetch(`${quiz_id}/question/${qid}/text`, {
+        let url = `${quiz_id}/question/${qid}/text`;
+        if (user_id) {
+            url += `?student=${user_id}`;
+        }
+        fetch(url, {
             method : "POST",
             body : `answer=${answer}&answer_id=${aid}&hasMarkDown=${hasMD}`,
             headers :
@@ -56,7 +63,11 @@ window.addEventListener("load", () => {
         data.append("answer_id", aid);
         data.append("image", this.files[0]);
 
-        fetch(`${quiz_id}/question/${qid}/image`, {
+        let url = `${quiz_id}/question/${qid}/image`;
+        if (user_id) {
+            url += `?student=${user_id}`;
+        }
+        fetch(url, {
             method: "POST",
             body: data
         })

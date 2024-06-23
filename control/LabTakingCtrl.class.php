@@ -65,11 +65,10 @@ class LabTakingCtrl
 
         $fac_upd = false;
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
             $fac_upd = true;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $course = $URI_PARAMS[1];
@@ -174,7 +173,7 @@ class LabTakingCtrl
             $checks[$zip] = $this->zipUlCheckDao->forDeliverable($zip);
         }
         if ($fac_upd) {
-            $VIEW_DATA['user_id'] = $user_id;
+            $VIEW_DATA['user_id'] = $student_user_id;
         }
         $VIEW_DATA['checks'] = $checks;
         $VIEW_DATA['title'] = "Lab: " . $lab['name'];
@@ -286,10 +285,9 @@ class LabTakingCtrl
         }
 
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
@@ -348,10 +346,9 @@ class LabTakingCtrl
         }
 
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $delivery_id = $URI_PARAMS[4];
@@ -398,10 +395,9 @@ class LabTakingCtrl
         }
 
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
@@ -455,10 +451,9 @@ class LabTakingCtrl
             return ["error" => "Lab is closed"];
         }
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $delivery_id = $URI_PARAMS[4];
@@ -500,10 +495,9 @@ class LabTakingCtrl
             return ["error" => "Lab is closed"];
         }
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $submission_id = filter_input(INPUT_POST, "submission_id", FILTER_VALIDATE_INT);
@@ -605,10 +599,9 @@ class LabTakingCtrl
             return ["error" => "Lab is closed"];
         }
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
         if ($type == 'pdf' && !$this->labAttachmentHlpr->isPdfFile($_FILES["file"]['tmp_name'])) {
             return ["error" => "File does not seem to be a .pdf file"];
@@ -754,10 +747,9 @@ class LabTakingCtrl
             return "error/403.php";
         }
         $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
+        $user_id = $_SESSION['user']['id'];
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
-        } else {
-            $user_id = $_SESSION['user']['id'];
         }
 
         $delivery_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);

@@ -31,6 +31,9 @@
             <div class="quiz">
                 <div id="quiz_id" class="status" data-id="<?= $quiz['id'] ?>">
                     <h1><?= $quiz['name'] ?></h1>
+                    <?php if ($user_id): ?>
+                        <input type="hidden" id="user_id" value="<?= $user_id ?>">
+                    <?php endif; ?>
                 </div>
             </div>
 

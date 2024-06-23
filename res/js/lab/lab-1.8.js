@@ -83,7 +83,7 @@ window.addEventListener("load", () => {
             action = "Updating";
         }         
         if (user_id) {
-            url += `?user_id=${user_id}`;
+            url += `?student=${user_id}`;
         }
 
         fetch(url, {

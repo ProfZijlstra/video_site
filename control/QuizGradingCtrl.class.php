@@ -142,6 +142,7 @@ class QuizGradingCtrl
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Quiz by Student";
+        $VIEW_DATA['quiz_id'] = $quiz_id;
         $VIEW_DATA['user'] = $this->userDao->retrieve($user_id);
         $VIEW_DATA['events'] = $this->quizEventDao->forUser($quiz_id, $user_id);
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);

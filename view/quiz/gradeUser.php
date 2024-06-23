@@ -24,6 +24,12 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <nav class="tools">
+            <a href="../../<?= $quiz_id ?>?student=<?= $user['id'] ?>">
+                <i title="Edit submission" class="fa-regular fa-pen-to-square"></i>
+            </a>
+        </nav>
+
         <div id="content">
             <!-- Student Being Graded -->
             <h3 id="user" data-user_id="<?= $user['id'] ?>">

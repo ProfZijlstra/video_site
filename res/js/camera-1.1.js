@@ -135,7 +135,12 @@ const CAMERA = (function() {
         data.append("answer_id", aid);
         data.append("image", picture);
 
-        fetch(`${urlBase}/${qid}/picture`, {
+        const user_id = document.getElementById('user_id')?.value;
+        let url = `${urlBase}/${qid}/picture`;
+        if (user_id) {
+            url += `?user_id=${user_id}`;
+        }
+        fetch(url, {
             method: "POST",
             body: data
         })

@@ -55,7 +55,13 @@ class QuizTakingCtrl
         $startDiff = $now->diff($start);
         $stopDiff = $now->diff($stop);
 
+        $fac_upd = false;
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
         $user_id = $_SESSION['user']['id'];
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+            $fac_upd = true;
+        }
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['quiz'] = $quiz;
@@ -75,7 +81,8 @@ class QuizTakingCtrl
 
         $auth = $this->enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
 
-        if ($auth == "observer" || $stopDiff->invert === 1) { // stop is in the past
+        // quiz is done / over, stop is in the past
+        if (!$fac_upd && ($auth == "observer" || $stopDiff->invert === 1)) { 
             // show quiz taken / results page
             $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
             $VIEW_DATA['possible'] = $this->sumPoints($VIEW_DATA['questions']);
@@ -84,6 +91,9 @@ class QuizTakingCtrl
         }
 
         // show the actual quiz page
+        if ($fac_upd) {
+            $VIEW_DATA['user_id'] = $student_user_id;
+        }
         $this->quizEventDao->add($quiz_id, $user_id, "start");
         $VIEW_DATA['title'] = "Quiz: " . $quiz['name'];
         $VIEW_DATA['stop'] = $stopDiff;
@@ -93,7 +103,7 @@ class QuizTakingCtrl
     /**
      * Expects AJAX
      */
-    #[Post(uri: "/(\d+)/question/(\d+)/text$", sec: "observer")]
+    #[Post(uri: "/(\d+)/question/(\d+)/text$", sec: "student")]
     public function answerTextQuestion()
     {
         global $URI_PARAMS;
@@ -105,7 +115,11 @@ class QuizTakingCtrl
         }
 
         $question_id = $URI_PARAMS[4];
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
         $user_id = $_SESSION['user']['id'];
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        }
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
         $hasMarkdown = filter_input(INPUT_POST, "hasMarkDown", FILTER_VALIDATE_INT);
         $shifted = filter_input(INPUT_POST, "answer");
@@ -123,7 +137,7 @@ class QuizTakingCtrl
     /**
      * Expects AJAX
      **/
-    #[Post(uri: "/(\d+)/question/(\d+)/image$", sec: "observer")]
+    #[Post(uri: "/(\d+)/question/(\d+)/image$", sec: "student")]
     public function answerImageQuestion()
     {
         global $URI_PARAMS;
@@ -138,7 +152,11 @@ class QuizTakingCtrl
             return "error/403.php";
         }
 
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
         $user_id = $_SESSION['user']['id'];
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        }
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
         $path = "res/{$course}/{$block}/quiz/{$question_id}";
         $res = $this->imageHlpr->process("image", $path);
@@ -164,7 +182,7 @@ class QuizTakingCtrl
     /**
      * Expects AJAX
      **/
-    #[Post(uri: "/(\d+)/question/(\d+)/picture$", sec: "observer")]
+    #[Post(uri: "/(\d+)/question/(\d+)/picture$", sec: "student")]
     public function takePicture()
     {
         global $URI_PARAMS;
@@ -179,7 +197,11 @@ class QuizTakingCtrl
             return "error/403.php";
         }
 
+        $student_user_id = filter_input(INPUT_GET, "student", FILTER_VALIDATE_INT);
         $user_id = $_SESSION['user']['id'];
+        if ($student_user_id && $_SESSION['user']['isFaculty']) {
+            $user_id = $student_user_id;
+        }
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
         $path = "res/{$course}/{$block}/quiz/{$question_id}";
         $img = filter_input(INPUT_POST, "image");
@@ -197,7 +219,7 @@ class QuizTakingCtrl
         return ["dst" => $dst, "answer_id" => $answer_id];
     }
 
-    #[Post(uri: "/(\d+)/finish$", sec: "observer")]
+    #[Post(uri: "/(\d+)/finish$", sec: "student")]
     public function finishQuiz()
     {
         global $URI_PARAMS;
