@@ -337,7 +337,7 @@ class QuizAdminCtrl
             $pts = $this->quizDao->getQuizTotalsForEnrolled($quiz['id'], $offering['id']);
             foreach ($pts as $pt) {
                 if (isset($data[$pt['user_id']])) {
-                    $data[$pt['user_id']][] = $pt['points'];
+                    $data[$pt['user_id']][] = number_Format($pt['points'], 2);
                 }
             }
             $count++;

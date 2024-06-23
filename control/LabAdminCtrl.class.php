@@ -566,7 +566,7 @@ class LabAdminCtrl
             // build data column for this lab
             foreach ($pts as $pt) {
                 if (isset($data[$pt['user_id']])) {
-                    $data[$pt['user_id']][] = $pt['points'];
+                    $data[$pt['user_id']][] = number_format($pt['points'], 2);
                 }
             }
             $count++;
