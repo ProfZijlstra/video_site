@@ -10,7 +10,7 @@ class VideoCtrl
 {
     #[Inject('CourseDao')]
     public $courseDao;
-    #
+
     #[Inject('OfferingDao')]
     public $offeringDao;
 
