@@ -21,24 +21,8 @@
 <body>
     <?php include("header.php"); ?>
     <main>
-        <nav class="areas">
-            <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
-            <div title="Quizzes" class="active"><i class="fas fa-vial"></i></div>
-            <?php if ($offering['hasLab']) : ?>
-                <div title="Labs"><a href="lab"><i class="fas fa-flask"></i></a></div>
-            <?php endif; ?>
-            <?php if (hasMinAuth('assistant')) : ?>
-                <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
-            <?php endif; ?>
-            <?php if (hasMinAuth('instructor')) : ?>
-                <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
-            <?php endif; ?>
-            <div title="Back to My Courses">
-                <a href="../../">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </a>
-            </div>
-        </nav>
+
+        <?php include("areas.php"); ?>
 
         <?php if (hasMinAuth('student')) : ?>
             <nav class="tools">

@@ -169,7 +169,7 @@ nav.areas > div {
 nav.areas > div > a {
     display: block;
 }
-nav.areas > div.active {
+nav.areas > div.active > a {
     color: #CCC;
 }
 nav.back {

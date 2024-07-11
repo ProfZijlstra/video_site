@@ -53,22 +53,8 @@
             <i id="addUser" title="Add Existing User" class="fa-solid fa-user-plus"></i>
             <i id="upload" title="Uplad Replacement List" class="fas fa-upload"></i>
         </nav>
-        <nav class="areas">
-            <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
-            <?php if ($offering['hasQuiz']) : ?>
-                <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
-            <?php endif; ?>
-            <?php if ($offering['hasLab']) : ?>
-                <div title="Labs"><a href="lab"><i class="fas fa-flask"></i></a></div>
-            <?php endif; ?>
-            <div title="Attendance"><a href="attendance"><i class="fas fa-user-check"></i></a></div>
-            <div title="Enrollment" class="active"><i class="fas fa-user-friends"></i></div>
-            <div title="Back to My Courses">
-                <a href="../../">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </a>
-            </div>
-        </nav>
+
+        <?php include("areas.php"); ?>
         <div id="content">
             <?php if ($msg) : ?>
                 <p class="error"><?= $msg ?></p>

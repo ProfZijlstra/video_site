@@ -93,6 +93,7 @@ class VideoCtrl
 
         $VIEW_DATA["course"] = strtoupper($course_num);
         $VIEW_DATA["title"] = $course_detail["name"];
+        $VIEW_DATA["area"] = "course";  
         $VIEW_DATA["faculty"] = $this->userDao->faculty();
         $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
 

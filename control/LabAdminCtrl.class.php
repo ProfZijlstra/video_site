@@ -87,6 +87,7 @@ class LabAdminCtrl
         }
 
         $VIEW_DATA['title'] = 'Labs';
+        $VIEW_DATA['area'] = 'lab';
         $VIEW_DATA['graded'] = $graded;
         $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
         return "lab/overview.php";

@@ -40,22 +40,7 @@
             </a>
             <i id="physical_icon" title="Physical Classroom Attendance" class="fas fa-chalkboard-teacher"></i>
         </nav>
-        <nav class="areas">
-            <div title="Videos"><a href="../<?= $block ?>/"><i class="fas fa-film"></a></i></div>
-            <?php if ($offering['hasQuiz']) : ?>
-                <div title="Quizzes"><a href="quiz"><i class="fas fa-vial"></i></a></div>
-            <?php endif; ?>
-            <?php if ($offering['hasLab']) : ?>
-                <div title="Labs"><a href="lab"><i class="fas fa-flask"></i></a></div>
-            <?php endif; ?>
-            <div title="Attendance" class="active"><i class="fas fa-user-check"></i></div>
-            <div title="Enrolled"><a href="enrolled"><i class="fas fa-user-friends"></i></a></div>
-            <div title="Back to My Courses">
-                <a href="../../">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </a>
-            </div>
-        </nav>
+        <?php include("areas.php"); ?>
 
 
         <div id="days" data-amstart="<?= $defaults['AM_start'] ?>" data-amstop="<?= $defaults['AM_stop'] ?>" data-pmstart="<?= $defaults['PM_start'] ?>" data-pmstop="<?= $defaults['PM_stop'] ?>">

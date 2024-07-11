@@ -56,6 +56,7 @@ class EnrollmentCtrl
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["offering_id"] = $offering["id"];
         $VIEW_DATA["title"] = "Enrollment";
+        $VIEW_DATA['area'] = "enrollment";
         return "course/enrollment.php";
     }
 

@@ -70,6 +70,7 @@ class AttendanceCtrl
 
         $VIEW_DATA["days"] = $days;
         $VIEW_DATA["title"] = "Attendance";
+        $VIEW_DATA['area'] = "attendance";
         $VIEW_DATA['enrollment'] = $enrollment;
         $VIEW_DATA['excused'] = $excused;
         $VIEW_DATA['defaults'] = $defaults;
