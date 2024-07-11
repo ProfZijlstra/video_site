@@ -144,7 +144,7 @@ class UserCtrl
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
         $VIEW_DATA['title'] = "Users";
-        return "users.php";
+        return "user/users.php";
     }
 
     /**
@@ -155,7 +155,7 @@ class UserCtrl
     {
         global $VIEW_DATA;
         $VIEW_DATA["title"] = "Add User";
-        return "userAdd.php";
+        return "user/userAdd.php";
     }
 
     /**
@@ -187,7 +187,7 @@ class UserCtrl
         $VIEW_DATA['user'] = $user;
         $VIEW_DATA["title"] = "User Details";
 
-        return "userDetails.php";
+        return "user/userDetails.php";
     }
 
     #[Get(uri: "^/user/(\D.*)$", sec: "admin")]
