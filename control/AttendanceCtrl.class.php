@@ -208,50 +208,6 @@ class AttendanceCtrl
         $this->excusedDao->delete($session_id, $teamsName);
     }
 
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$", sec: "assistant")]
-    public function professionalismReport()
-    {
-        global $URI_PARAMS;
-        global $VIEW_DATA;
-
-        $course_number = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
-
-        $offering = $this->offeringDao->getOfferingByCourse($course_number, $block);
-        $prof_data = $this->attendanceDao->professionalism($offering['id']);
-
-        $professionals = [];
-        foreach ($prof_data as $student) {
-            $professional = [];
-            $professional["id"] = $student["studentID"];
-            $professional["name"] = $student['knownAs'] . " " . $student['lastname'];
-            $professional["inClass"] = $student["inClass"];
-            $professional["absent"] = $student["absent"];
-            $professional["middleMissing"] = $student["middleMissing"];
-            $professional["late"] = $student["late"];
-            $professional["minsLate"] = $student["minsLate"];
-            $professional["leaveEarly"] = $student["leaveEarly"];
-            $professional["minsLeave"] = $student["minsLeave"];
-
-            $late_secs = strtotime('1970-01-01 ' . $student["minsLate"] . 'GMT');
-            $leave_secs = strtotime('1970-01-01 ' . $student["minsLeave"] . 'GMT');
-            $absent_secs = $student["absent"] * 1800; // half hour per absent
-            $midmis_secs = $student["middleMissing"] * 300; // 5 mins per mid miss
-            $total_secs = $late_secs + $leave_secs + $absent_secs + $midmis_secs;
-            $professional["totalSecs"] = $total_secs;
-            $professional["total"] = gmdate("H:i:s", $total_secs);
-            $professionals[] = $professional;
-        }
-        usort($professionals, "AttendanceCtrl::byTotal");
-
-        $VIEW_DATA["course"] = $course_number;
-        $VIEW_DATA["block"] = $block;
-        $VIEW_DATA["professionals"] = $professionals;
-        $VIEW_DATA["title"] = "Professionalism";
-
-        return "attendance/professionalism.php";
-    }
-
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$", sec: "assistant")]
     public function physicalAttendanceReport()
     {
