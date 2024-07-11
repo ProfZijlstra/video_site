@@ -56,7 +56,7 @@ class EnrollmentCtrl
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["offering_id"] = $offering["id"];
         $VIEW_DATA["title"] = "Enrollment";
-        return "enrollment.php";
+        return "course/enrollment.php";
     }
 
 
@@ -113,7 +113,7 @@ EOD;
         $to = [$email, $name];
         $this->mailHlpr->mail($to, "Observer Request", $msg);
 
-        return "msgSent.php";
+        return "course/msgSent.php";
     }
 
     #[Get(uri: "/observeReq$", sec: "instructor")]
@@ -134,7 +134,7 @@ EOD;
         $VIEW_DATA['offering_id'] = $offering_id;
         $VIEW_DATA['user_id'] = $user_id;
         $VIEW_DATA['title'] = "Review Request";
-        return "reviewRequest.php";
+        return "course/reviewRequest.php";
     }
 
 

@@ -96,7 +96,7 @@ class VideoCtrl
         $VIEW_DATA["faculty"] = $this->userDao->faculty();
         $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
 
-        return "offering.php";
+        return "course/offering.php";
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$", sec: "observer")]
@@ -209,7 +209,7 @@ class VideoCtrl
         $VIEW_DATA["comments"] = $comments;
         $VIEW_DATA["replies"] = $replies;
 
-        return "video.php";
+        return "course/video.php";
     }
 
 

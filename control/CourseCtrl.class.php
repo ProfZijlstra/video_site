@@ -48,7 +48,7 @@ class CourseCtrl
         $VIEW_DATA["title"] = "My Course Offerings";
         $VIEW_DATA["offerings"] = $offerings;
         $VIEW_DATA['type'] = "my";
-        return "courses.php";
+        return "course/courses.php";
     }
 
     #[Get(uri: "^/all$", sec: "login")]
@@ -68,7 +68,7 @@ class CourseCtrl
         $VIEW_DATA["offerings"] = $offerings;
         $VIEW_DATA['names'] = $names;
         $VIEW_DATA['type'] = "all";
-        return "courses.php";
+        return "course/courses.php";
     }
 
 
@@ -215,7 +215,7 @@ class CourseCtrl
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['offering'] = $offering;
 
-        return "offeringSettings.php";
+        return "course/offeringSettings.php";
     }
 
     /**

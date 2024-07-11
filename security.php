@@ -85,7 +85,7 @@ function hasMinAuth($req_auth) {
         $enroll = $enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
         $_SESSION[$course][$block] = $enroll;
         if (!$enroll) {
-            include("view/notEnrolled.php");
+            include("view/course/notEnrolled.php");
             return false;
         }
     }

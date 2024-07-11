@@ -102,7 +102,7 @@ class ViewCtrl
         $VIEW_DATA["offering"] = $offering_detail;
         $VIEW_DATA["days"] = $days;
 
-        return "views.php";
+        return "course/views.php";
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/info/?$", sec: "instructor")]
