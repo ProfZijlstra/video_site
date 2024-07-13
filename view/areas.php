@@ -1,6 +1,6 @@
         <nav class="areas">
-            <div title="Videos" class="<?= $area == "course" ? "active" : ""?>">
-                <a href="../<?= $block ?>/"><i class="fas fa-film"></i></a>
+            <div title="Lessons" class="<?= $area == "course" ? "active" : ""?>">
+                <a href="../<?= $block ?>/"><i class="fa-solid fa-graduation-cap"></i></a>
             </div>
             <?php if ($offering['hasQuiz']) : ?>
             <div title="Quizzes" class="<?= $area == "quiz" ? "active" : ""?>">
