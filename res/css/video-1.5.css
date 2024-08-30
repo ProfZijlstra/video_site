@@ -50,9 +50,8 @@ p.solution {
 }
 div#container {
     display: flex;
-    background-color: var(--bg-color);
+    background-color: var(--white);
     position: relative;
-    background-color: #fff;
     z-index: 10;
 }
 #bars {
@@ -200,6 +199,10 @@ video:focus {
 main article video {
     width: 80%;
     min-height: 37.5vw;
+}
+main article div.noVid {
+    min-height: 20vw;
+    font-size: 30pt;
 }
 main article .progress {
     position: relative;

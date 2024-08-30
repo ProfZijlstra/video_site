@@ -23,7 +23,7 @@ class VideoDao
         return $result;
     }
 
-    public function forDay($course_num, $block, $day, $named = false)
+    public function forDay($course_num, $block, $day, $named = true)
     {
         chdir("res/{$course_num}/{$block}/{$day}/vid/");
         $files = glob("*.mp4");
@@ -41,6 +41,7 @@ class VideoDao
             $totalDuration += $duration;
             $parts = explode("_", $file);
             $data = array();
+            $data["type"] = "vid";
             $data["file"] = $file;
             $data["duration"] = $duration;
             $data["parts"] = $parts;

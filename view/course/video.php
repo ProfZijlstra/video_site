@@ -61,7 +61,7 @@
                 $video_count = 0;
                 ?>
                 <?php foreach ($files as $file => $info) : ?>
-                    <div class='video_link <?= $info["parts"][0] == $video ? "selected" : "" ?>' data-show="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" id="<?= $info["parts"][0] ?>">
+                    <div class='video_link <?= $info["parts"][0] == $video_idx ? "selected" : "" ?>' data-show="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" id="<?= $info["parts"][0] ?>">
                         <div>
                             <a href="<?= $info["parts"][0] ?>"><?= $info["parts"][1] ?></a>
                             <?php if (hasMinAuth('instructor')) : ?>
@@ -113,7 +113,7 @@
             foreach ($files as $info) :
                 $passedPercent = ($passed / $totalDuration) * 100;
                 $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration) * 100);
-                if ($info["parts"][0] == $video) :
+                if ($info["parts"][0] == $video_idx) :
             ?>
                     <article id="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" class="selected">
                         <h2><?= $info["parts"][1] ?></h2>
@@ -122,9 +122,17 @@
                                 <i class="far fa-file-pdf"></i>
                             </a>
                         <?php endif; ?>
+                        <?php if($info['type'] == "vid"): ?>
                         <video controls controlslist="nodownload">
                             <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4" />
                         </video>
+                        <?php else: ?>
+                            <div class="noVid">
+                                <i class="fa-solid fa-video" title="Video"></i>
+                                <div>Video not Available [yet]</div>
+                                <p>Please click on the PDF icon to view the slides</p>
+                            </div>
+                        <?php endif; ?>
                         <div class="progress">
                             <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
                             <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
@@ -223,7 +231,7 @@
                                     <?php if (hasMinAuth('instructor') || $_user_id == $comment["user_id"]) : ?>
                                         <form method="post" action="delComment">
                                             <input type="hidden" name="id" value="<?= $comment['id'] ?>" />
-                                            <input type="hidden" name="tab" value="<?= $video ?>" />
+                                            <input type="hidden" name="tab" value="<?= $video_idx ?>" />
                                             <i title="Delete" class="far fa-trash-alt" data-id=""></i>
                                         </form>
                                         <i title="Edit" class="far fa-edit" data-id="<?= $comment['id'] ?>"></i>
@@ -245,7 +253,7 @@
                                             <?php if (hasMinAuth('instructor') || $_user_id == $reply["user_id"]) : ?>
                                                 <form method="post" action="delReply">
                                                     <input type="hidden" name="id" value="<?= $reply['id'] ?>" />
-                                                    <input type="hidden" name="tab" value="<?= $video ?>" />
+                                                    <input type="hidden" name="tab" value="<?= $video_idx ?>" />
                                                     <i title="Delete" class="far fa-trash-alt" data-id=""></i>
                                                 </form>
                                                 <i title="Edit" class="far fa-edit" data-id="<?= $reply['id'] ?>"></i>

@@ -35,6 +35,9 @@ class VideoCtrl
     #[Inject('UserDao')]
     public $userDao;
 
+    #[Inject('PdfDao')]
+    public $pdfDao;
+
     /**
      * Redirects to latest offering for a course
      */
@@ -108,7 +111,7 @@ class VideoCtrl
         $course_num = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $day = $URI_PARAMS[3];
-        $video = $URI_PARAMS[4];
+        $video_idx = $URI_PARAMS[4];
         $user_id = $_SESSION['user']['id'];
 
         // retrieve course and offering data from db
@@ -130,19 +133,34 @@ class VideoCtrl
         $now = time();
         $days_passed = floor(($now - $start) / (60 * 60 * 24));
 
-        // get video related data
-        $video_file = array();
+        // get pdf and video related data
+        $pdfs = $this->pdfDao->forDay($course_num, $block, $day);
         $videos = $this->videoDao->forDay($course_num, $block, $day);
-        $file_info = $videos["file_info"];
-        foreach ($file_info as $file) {
-            if ($file["parts"][0] == $video) {
-                $video_file = $file;
-                break;
+        $pdf_file = "";
+        $video_file_parts = array();
+        $videos_info = $videos["file_info"];
+        $files = $pdfs;
+        foreach ($videos_info as $name => $file) {
+            $files[$name] = $file;
+            if ($file["parts"][0] == $video_idx) {
+                $video_file_parts = $file["parts"];
+                if ($pdfs[$name]) {
+                    $pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
+                        $pdfs[$name];
+                }
+            }
+        }
+        if (!$pdf_file) {
+            foreach ($pdfs as $name => $file) {
+                if ($file["parts"][0] == $video_idx) {
+                    $pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
+                        $file["file"];
+                }
             }
         }
 
         // get comments for selected video
-        $comments = $this->commentDao->getAllFor($video_file["parts"][2], $user_id);
+        $comments = $this->commentDao->getAllFor($video_file_parts[2], $user_id);
         // get the replies for those comments
         $replies = array();
         if ($comments) {
@@ -156,10 +174,6 @@ class VideoCtrl
                 $replies[$reply["comment_id"]][] = $reply;
             }
         }
-
-        // construct PDF file name for this video
-        $pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
-            $video_file["parts"][0] . "_" . $video_file["parts"][1] . ".pdf";
 
         // fix video play speed if broken
         if ($_COOKIE['viewspeed']) {
@@ -195,8 +209,8 @@ class VideoCtrl
         $VIEW_DATA["offering"] = $offering_detail;
 
         // videos related
-        $VIEW_DATA["video"] = $video;
-        $VIEW_DATA["files"] = $file_info;
+        $VIEW_DATA["video_idx"] = $video_idx;
+        $VIEW_DATA["files"] = $files;
         $VIEW_DATA["totalDuration"] = $videos["totalDuration"];
         $VIEW_DATA["totalTime"] = $videos["totalTime"];
         $VIEW_DATA["pdf"] = file_exists($pdf_file);
