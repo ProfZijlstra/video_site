@@ -59,7 +59,7 @@ class ViewCtrl
         return intval($this->viewDao->pdf($user_id, $day_id, $file));
     }
 
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/W\dD\d/views/(\d+)?$", sec: "instructor")]
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/views/(\d+)?$", sec: "instructor")]
     public function views()
     {
         global $URI_PARAMS;
@@ -102,7 +102,7 @@ class ViewCtrl
         $VIEW_DATA["offering"] = $offering_detail;
         $VIEW_DATA["days"] = $days;
 
-        return "course/views.php";
+        return "course/view/person_offering.php";
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/info/?$", sec: "instructor")]

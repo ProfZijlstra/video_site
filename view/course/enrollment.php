@@ -107,7 +107,7 @@
                                     <i class="fa-solid fa-gear config" title="Configure Enrollment" data-uid="<?= $person['id'] ?>" data-auth="<?= $person['auth'] ?>" data-eid="<?= $person['eid'] ?>"></i>
                                 </td>
                                 <td class="center" title="Video Views">
-                                    <a href="W1D1/views/<?= $person['id'] ?>">
+                                    <a href="views/<?= $person['id'] ?>">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                 </td>
