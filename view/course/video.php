@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="res/css/video-1.5.css" />
     <link rel="stylesheet" href="res/css/lib/prism.css" />
     <script src="res/js/markdown-1.6.js"></script>
-    <script src="res/js/video-1.9.js"></script>
+    <script src="res/js/video-1.10.js"></script>
     <script src="res/js/lib/prism.js"></script>
     <?php if (hasMinAuth('instructor')) : ?>
         <link rel="stylesheet" href="res/css/adm.css">
@@ -111,8 +111,13 @@
             <?php
             $passed = 0;
             foreach ($files as $info) :
-                $passedPercent = ($passed / $totalDuration) * 100;
-                $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration) * 100);
+                if ($totalDuration == 0) {
+                    $passedPercent = 0;
+                    $currentPrecent = 0;
+                } else {
+                    $passedPercent = ($passed / $totalDuration) * 100;
+                    $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration) * 100);
+                }
                 if ($info["parts"][0] == $video_idx) :
             ?>
                     <article id="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" class="selected">
@@ -133,13 +138,15 @@
                                 <p>Please click on the PDF icon to view the slides</p>
                             </div>
                         <?php endif; ?>
-                        <div class="progress">
-                            <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
-                            <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
-                            <div class="time"><?= $totalTime ?></div>
-                            <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
-                            <div id="shortcuts" title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard"></i></div>
-                        </div>
+                        <?php if($totalDuration): ?>
+                            <div class="progress">
+                                <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
+                                <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
+                                <div class="time"><?= $totalTime ?></div>
+                                <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
+                                <div id="shortcuts" title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard"></i></div>
+                            </div>
+                        <?php endif; ?>
 
                         <div id="keyboard" class="hidden">
                             <section>

@@ -4,8 +4,10 @@ window.addEventListener('load', () => {
     const video = document.querySelector("video");
 
     // disable right clicking
-    video.oncontextmenu = function() {
-        return false;
+    if (video) {
+        video.oncontextmenu = function() {
+            return false;
+        }
     }
 
 
@@ -129,10 +131,10 @@ window.addEventListener('load', () => {
                 break;
             }
         case "KeyK":
-            if (video.paused) {
-                video.play()
+            if (video?.paused) {
+                video?.play()
             } else {
-                video.pause();
+                video?.pause();
             }
             break;
         case "ArrowLeft":
@@ -163,7 +165,7 @@ window.addEventListener('load', () => {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             } else {
-                video.requestFullscreen();
+                video?.requestFullscreen();
             }
             break;
         case "KeyT":
@@ -228,13 +230,13 @@ window.addEventListener('load', () => {
 
     // clicking on another video (or pdf) first sends a 'pause' to current video
     function stopBeforeClick(evt) {
-        if (!video.paused) {
+        if (video && !video.paused) {
             evt.preventDefault();
             evt.stopImmediatePropagation();
             pauseAction = function() {
                 evt.target.click();
             };
-            video.pause();
+            video?.pause();
         }
     }
     const anchors = document.getElementsByTagName('a');
