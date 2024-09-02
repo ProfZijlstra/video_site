@@ -146,7 +146,7 @@ class VideoCtrl
                 $video_file_parts = $file["parts"];
                 if ($pdfs[$name]) {
                     $pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
-                        $pdfs[$name];
+                        $pdfs[$name]["file"];
                 }
             }
         }
