@@ -224,6 +224,15 @@ const MARKDOWN = (function() {
         }
     }
 
+    function autoExpand(evt) {
+        const t = evt.target;
+        const height = t.dataset.initialHeight;
+        if (t.scrollHeight > height) {
+            t.style.height = 'auto';
+            t.style.height = (t.scrollHeight) + 'px';
+        }
+    }
+
     return { 
         getHtmlForMarkdown, 
         enablePreview, 
@@ -232,12 +241,15 @@ const MARKDOWN = (function() {
         toggleMarkDown,
         addCopyButton,
         keyEventHandler,
+        autoExpand,
     };
 })()
 
 window.addEventListener("load", () => {
     document.querySelectorAll('textarea').forEach((area) => {
-        area.onkeydown = MARKDOWN.keyEventHandler;
+        area.dataset.initialHeight = area.offsetHeight;
+        area.addEventListener("keydown", MARKDOWN.autoExpand);
+        area.addEventListener("keydown", MARKDOWN.keyEventHandler);
     });
 
     // hook up copy buttons inside already rendered markdown
