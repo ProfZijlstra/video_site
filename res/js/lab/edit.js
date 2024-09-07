@@ -170,8 +170,12 @@ window.addEventListener("load", () => {
                 const div = document.createElement("div");
                 div.innerHTML = html;
                 const txt = div.querySelector("textarea");
-                txt?.addEventListener("change", updateDeliv);
-                txt?.addEventListener("keydown", MARKDOWN.keyEventHandler);
+                if (txt) {
+                    txt.addEventListener("change", updateDeliv);
+                    txt.addEventListener("keydown", MARKDOWN.keyEventHandler);
+                    txt.dataset.initialHeight = "108"; // bad hardcoding
+                    txt.addEventListener("keydown", MARKDOWN.autoExpand);    
+                }
                 div.querySelector("i.delDeliv").addEventListener("click", delDeliv);
                 div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
                 div.querySelector(".points").addEventListener("change", updatePoints);
@@ -182,6 +186,8 @@ window.addEventListener("load", () => {
                 const delivs = document.getElementById("deliverables");
                 delivs.appendChild(div);
                 document.getElementById("addDelivDialog").close();
+                window.scrollTo(0, document.body.scrollHeight);
+                txt?.focus();
             })
             .catch((error) => {
                 document.getElementById("addDelivDialog").close();
