@@ -124,17 +124,6 @@ const MARKDOWN = (function() {
         elem.before(button);
     }
 
-    return { 
-        getHtmlForMarkdown, 
-        enablePreview, 
-        ceasarShift, 
-        activateButtons, 
-        toggleMarkDown,
-        addCopyButton,
-    };
-})()
-
-window.addEventListener("load", () => {
     // make tab insert 4 spaces when in a textarea with markdown enabled
     function keyEventHandler(evt) {
         // make CTRL-M toggle markdown
@@ -234,8 +223,21 @@ window.addEventListener("load", () => {
             this.selectionEnd = selStop - (newLines.length - 1) * 4;
         }
     }
+
+    return { 
+        getHtmlForMarkdown, 
+        enablePreview, 
+        ceasarShift, 
+        activateButtons, 
+        toggleMarkDown,
+        addCopyButton,
+        keyEventHandler,
+    };
+})()
+
+window.addEventListener("load", () => {
     document.querySelectorAll('textarea').forEach((area) => {
-        area.onkeydown = keyEventHandler;
+        area.onkeydown = MARKDOWN.keyEventHandler;
     });
 
     // hook up copy buttons inside already rendered markdown

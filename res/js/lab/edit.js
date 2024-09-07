@@ -169,7 +169,9 @@ window.addEventListener("load", () => {
                 document.getElementById("noDelivs")?.classList.add("hide");
                 const div = document.createElement("div");
                 div.innerHTML = html;
-                div.querySelector("textarea")?.addEventListener("change", updateDeliv);
+                const txt = div.querySelector("textarea");
+                txt?.addEventListener("change", updateDeliv);
+                txt?.addEventListener("keydown", MARKDOWN.keyEventHandler);
                 div.querySelector("i.delDeliv").addEventListener("click", delDeliv);
                 div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
                 div.querySelector(".points").addEventListener("change", updatePoints);
