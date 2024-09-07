@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="res/css/lib/prism.css">
         <link rel="stylesheet" href="res/css/quiz-1.4.css">
         <script src="res/js/lib/prism.js"></script>
-        <script src="res/js/markdown-1.6.js"></script>
+        <script src="res/js/markdown-1.7.js"></script>
         <script src="res/js/quiz/edit-1.5.js"></script>
     </head>
     <body id="editQuiz">

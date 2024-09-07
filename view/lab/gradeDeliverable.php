@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="res/css/lab-1.1.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/lab/gradeDeliverable.js"></script>
-    <script src="res/js/markdown-1.6.js"></script>
+    <script src="res/js/markdown-1.7.js"></script>
     <script src="res/js/ensureSaved.js"></script>
 </head>
 
