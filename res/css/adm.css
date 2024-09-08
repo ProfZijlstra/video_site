@@ -68,6 +68,12 @@ div.modal.hide {
 #content a:hover {
     text-decoration: underline;
 }
+#content footer {
+    text-align: center;
+    margin-top: 25px;
+    margin-left: 100px;
+    font-size: 10pt;
+}
 div.modal {
     background-color: #DDD;
     border: 1px solid var(--border);

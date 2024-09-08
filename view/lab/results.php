@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="res/css/lab-1.1.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/back.js"></script>
-    <script src="res/js/markdown-1.7.js"></script>
+    <script src="res/js/markdown-1.8.js"></script>
     <script>
 window.addEventListener("load", () => {    
     document.getElementById("total2").innerHTML = document.getElementById("total").innerHTML;

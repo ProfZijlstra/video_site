@@ -393,9 +393,6 @@ body#doLab{
 }
 
 body.grade {
-    div#content {
-        padding-bottom: 90px;
-    }
     div.timestamp {
         font-size: 10pt;
         color: gray;

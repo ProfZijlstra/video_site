@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/quiz-1.4.css">
     <script src="res/js/lib/prism.js"></script>
-    <script src="res/js/markdown-1.7.js"></script>
+    <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/quiz/gradeUser.js"></script>
     <script src="res/js/ensureSaved.js"></script>
 </head>
@@ -132,6 +132,9 @@
                 <a href="../grade">
                     <i title="Finish Grading" class="fa-solid fa-check"></i>
                 </a>
+            <footer>
+                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
+            </footer>
             </div>
         </div>
     </main>

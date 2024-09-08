@@ -226,10 +226,12 @@ const MARKDOWN = (function() {
 
     function autoExpand(evt) {
         const t = evt.target;
-        const height = t.dataset.initialHeight;
-        if (t.scrollHeight > height) {
-            t.style.height = 'auto';
-            t.style.height = (t.scrollHeight) + 'px';
+        const initialHeight = t.dataset.initialHeight;
+        const scrollHeight = t.scrollHeight - 5;
+        if (scrollHeight > initialHeight) {
+            t.style.height = (scrollHeight) + 'px';
+        } else {
+            t.style.height = initialHeight + 'px';
         }
     }
 

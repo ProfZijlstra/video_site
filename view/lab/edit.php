@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="res/css/lib/prism.css">
     <link rel="stylesheet" href="res/css/lab-1.1.css">
     <script src="res/js/lib/prism.js"></script>
-    <script src="res/js/markdown-1.7.js"></script>
+    <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/lab/edit.js"></script>
 </head>
 
