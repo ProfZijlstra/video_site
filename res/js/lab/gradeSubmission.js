@@ -88,4 +88,22 @@ window.addEventListener("load", () => {
     }
     MARKDOWN.enablePreview("../markdown");
     MARKDOWN.activateButtons(mdToggle);
+
+    // have n / p keys move focus to next / previous points input
+    function nextPrevPoints(evt) {
+        let t = evt.target.parentElement.parentElement;
+        if (evt.key == "n" || evt.key == "N") {
+            evt.preventDefault();
+            t = t.nextElementSibling;
+            t?.querySelector("input.points")?.focus();
+        } else if (evt.key == "p" || evt.key == "P") {
+            evt.preventDefault();
+            t = t.previousElementSibling;
+            t?.querySelector("input.points")?.focus();
+        }
+    }
+    const inputs = document.querySelectorAll('div.dcontainer input.points');
+    for (const input of inputs) {
+        input.addEventListener("keydown", nextPrevPoints);
+    }
 });

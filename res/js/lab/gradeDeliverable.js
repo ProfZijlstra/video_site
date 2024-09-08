@@ -54,4 +54,26 @@ window.addEventListener("load", () => {
     document.querySelectorAll("textarea, input").forEach(input => {
         input.addEventListener("change", gradeDeliverable);
     });
+
+    // have n / p keys move focus to next / previous points input
+    function nextPrevPoints(evt) {
+        let t = evt.target.parentElement;
+        if (evt.key == "n" || evt.key == "N") {
+            evt.preventDefault();
+            for (let i = 0; i < 4; i++) {
+                t = t?.nextElementSibling;
+            }
+            t?.querySelector("input.points")?.focus();
+        }
+        else if (evt.key == "p" || evt.key == "P") {
+            evt.preventDefault();
+            for (let i = 0; i < 4; i++) {
+                t = t?.previousElementSibling;
+            }
+            t?.querySelector("input.points")?.focus();
+        }
+    }
+    document.querySelectorAll('input.points').forEach(input => {
+        input.addEventListener("keydown", nextPrevPoints);
+    });
 });

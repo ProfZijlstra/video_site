@@ -41,6 +41,24 @@ window.addEventListener("load", () => {
             body : data
         });
     }
+    function nextPrevPoints(evt) {
+        let t = evt.target.parentElement;
+        if (evt.key == "n" || evt.key == "N") {
+            evt.preventDefault();
+            for (let i = 0; i < 4; i++) {
+                t = t?.nextElementSibling;
+            }
+            t?.querySelector("input.points")?.focus();
+        }
+        else if (evt.key == "p" || evt.key == "P") {
+            evt.preventDefault();
+            for (let i = 0; i < 4; i++) {
+                t = t?.previousElementSibling;
+            }
+            t?.querySelector("input.points")?.focus();
+        }
+    }
+
     const areas = document.querySelectorAll('textarea.comment');
     for (const area of areas) {
         area.onchange = saveGrading;
@@ -48,5 +66,6 @@ window.addEventListener("load", () => {
     const inputs = document.querySelectorAll('input.points');
     for (const input of inputs) {
         input.onchange = saveGrading;
+        input.addEventListener("keydown", nextPrevPoints);
     }
 });            
