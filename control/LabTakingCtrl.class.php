@@ -907,7 +907,7 @@ class LabTakingCtrl
             $class = 'time';
             if ($mtime < $ts_lab) {
                 $class .= " old";
-                $this->zipUlStatDao->add($delivery_id, $now, 'timestamp', $file);
+                $this->zipUlStatDao->add($delivery_id, $now, 'timestamp', $name);
             }
 
             if ($listing_count < $listing_limit) {
