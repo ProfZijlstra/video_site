@@ -110,12 +110,12 @@ try {
         $db->commit();
     } catch (PDOException $e) {
         $db->rollBack();
-        throw $e;
+        error_log($e); // log the whole trace
     }
     view($output);
 } catch (Exception $e) {
     // Perhaps have some user setting for debug mode
-    error_log($e->getMessage());
+    error_log($e->getMessage()); // log only the message
     require "view/error/500.php";
 }
 
