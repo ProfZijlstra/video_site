@@ -110,7 +110,6 @@ function hasMinAuth($req_auth) {
 function isAuthorized($lvl) {
     global $MY_MAPPING;
     if (!hasMinAuth($lvl)) {
-        var_dump($MY_MAPPING);
         require "view/error/403.php";
         exit();
     }
