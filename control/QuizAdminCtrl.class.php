@@ -35,7 +35,7 @@ class QuizAdminCtrl
     #[Inject('AnswerDao')]
     public $answerDao;
 
-    #[Get(uri: "$", sec: "observer")]
+    #[Get(uri: "$", sec: "student")]
     public function courseOverview()
     {
         // We're building on top of  overview -- run it first

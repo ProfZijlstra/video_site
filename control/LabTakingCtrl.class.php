@@ -57,7 +57,7 @@ class LabTakingCtrl
      * 3. If between start and stop the user can upload deliverables
      * 
      */
-    #[Get(uri: "/(\d+)$", sec: "observer")]
+    #[Get(uri: "/(\d+)$", sec: "student")]
     public function viewLab()
     {
         global $URI_PARAMS;

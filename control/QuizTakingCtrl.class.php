@@ -37,7 +37,7 @@ class QuizTakingCtrl
      * 3. If between start and stop the user can give answers
      * 
      */
-    #[Get(uri: "/(\d+)$", sec: "observer")]
+    #[Get(uri: "/(\d+)$", sec: "student")]
     public function viewQuiz()
     {
         global $URI_PARAMS;

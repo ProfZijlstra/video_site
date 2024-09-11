@@ -2,12 +2,12 @@
             <div title="Lessons" class="<?= $area == "course" ? "active" : ""?>">
                 <a href="../<?= $block ?>/"><i class="fa-solid fa-graduation-cap"></i></a>
             </div>
-            <?php if ($offering['hasQuiz']) : ?>
+            <?php if (hasMinAuth('student') && $offering['hasQuiz']) : ?>
             <div title="Quizzes" class="<?= $area == "quiz" ? "active" : ""?>">
                 <a href="quiz"><i class="fas fa-vial"></i></a>
             </div>
             <?php endif; ?>
-            <?php if ($offering['hasLab']) : ?>
+            <?php if (hasMinAuth('student') && $offering['hasLab']) : ?>
             <div title="Labs" class="<?= $area == "lab" ? "active" : ""?>">
                 <a href="lab"><i class="fas fa-flask"></i></a>
             </div>

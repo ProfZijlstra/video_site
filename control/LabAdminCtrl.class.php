@@ -50,7 +50,7 @@ class LabAdminCtrl
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
-    #[Get(uri: "$", sec: "observer")]
+    #[Get(uri: "$", sec: "student")]
     public function courseOverview()
     {
         // We're building on top of  overview -- run it first
