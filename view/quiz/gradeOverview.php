@@ -118,7 +118,7 @@
                 <?php endif; ?>
             <?php }  ?>
 
-            <?php answerTable($absent, false, "Nu Submission", "", $starts, $stops); ?>
+            <?php answerTable($absent, false, "No Submission", "", $starts, $stops); ?>
             <?php answerTable($taken, true, "Results", "Submissions from enrolled students", $starts, $stops); ?>
             <?php answerTable($extra, true, "Extra", "Submissions from unenrolled students", $starts, $stops); ?>
 
