@@ -23,7 +23,7 @@ class VideoDao
         return $result;
     }
 
-    public function forDay($course_num, $block, $day, $named = true)
+    public function forDay($course_num, $block, $day)
     {
         chdir("res/{$course_num}/{$block}/{$day}/vid/");
         $files = glob("*.mp4");
@@ -45,12 +45,7 @@ class VideoDao
             $data["file"] = $file;
             $data["duration"] = $duration;
             $data["parts"] = $parts;
-            if ($named) {
-                $file_info["{$parts[0]}_{$parts[1]}"] = $data;
-            } else {
-                $data["name"] = "{$parts[0]}_{$parts[1]}";
-                $file_info[] = $data;
-            }
+            $file_info[$parts[0]] = $data;
         }
         $totalHours = floor($totalDuration / (60 * 60 * 100));
         $totalMinutes = intval($totalDuration / (60 * 100)) % 60;

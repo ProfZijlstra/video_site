@@ -12,22 +12,30 @@ class CommentDao
     #[Inject('DB')]
     public $db;
 
-    public function getAllFor($video, $user_id)
+    public function getAllForDay($day_id, $user_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT q.id, q.text, q.user_id, q.created, q.edited, 
+            "SELECT q.id, q.text, q.user_id, q.created, q.edited, q.vid_pdf,
                         u.knownAs, u.lastname, v.id AS vote_id, v.vote AS vote, 
                         SUM(v2.vote) AS vote_total
             FROM comment q 
                         JOIN user u ON q.user_id = u.id
                         LEFT JOIN comment_vote v ON q.id = v.comment_id AND v.user_id = :user_id 
                         LEFT JOIN comment_vote v2 ON q.id = v2.comment_id
-            WHERE q.video = :video
+            WHERE q.day_id = :day_id
                         GROUP BY q.id
                         ORDER BY vote_total DESC"
         );
-        $stmt->execute(array("video" =>  $video, "user_id" => $user_id));
-        return $stmt->fetchAll();
+        $stmt->execute(array("day_id" =>  $day_id, "user_id" => $user_id));
+        $result = $stmt->fetchAll();
+        $out = [];
+        foreach ($result as $row) {
+            if (!isset($out[$row['vid_pdf']])) {
+                $out[$row['vid_pdf']] = [];
+            }
+            $out[$row['vid_pdf']][] = $row;
+        }
+        return $out;
     }
 
     public function get($id)
@@ -54,13 +62,13 @@ class CommentDao
         return [$result["email"], $result['teamsName']];
     }
 
-    public function add($comment, $user_id, $video)
+    public function add($comment, $user_id, $day_id, $vid_pdf)
     {
         $stmt = $this->db->prepare("INSERT INTO comment 
-                        VALUES(NULL, :comment, :user_id, :video, NOW(), NULL)");
+                        VALUES(NULL, :comment, :user_id, :day_id, :vid_pdf, NOW(), NULL)");
         $stmt->execute(array(
-            "comment" => $comment, "user_id" => $user_id,
-            "video" => $video
+            "comment" => $comment, "user_id" => $user_id, "day_id" => $day_id,
+            "vid_pdf" => $vid_pdf
         ));
         return $this->db->lastInsertId();
     }

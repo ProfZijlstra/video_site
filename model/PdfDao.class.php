@@ -15,7 +15,8 @@ class PdfDao {
         $result = array();
         foreach ($files as $file) {
             $info = pathinfo($file);
-            $result[$info['filename']] = [
+            $parts = explode("_", $info['filename']);
+            $result[$parts[0]] = [
                 "type" => "pdf",
                 "file" => $file,
                 "duration" => 0,

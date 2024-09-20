@@ -139,6 +139,9 @@ div#total {
 div#back {
     position: relative;
 }
+div#back a i {
+    font-size: 24px;
+}
 div#back span.config {
     display: none;
     position: absolute;
@@ -147,6 +150,10 @@ div#back span.config {
 }
 div#back.config span.config {
     display: inline;
+}
+div#back div.otherAreas {
+    letter-spacing: 5px;
+    margin-top: 15px;
 }
 
 nav nav {
@@ -191,10 +198,16 @@ main {
 video:focus {
     outline: none;
 }
-#pdf {
+.pdf {
     position: absolute;
     right: 50px;
     font-size: 50px;
+}
+main article {
+    display: none;
+}
+main article.selected {
+    display: block;
 }
 main article video {
     width: 80%;
@@ -230,7 +243,7 @@ main article .progress .time {
 	position: absolute;
 	right: 10px;
 }
-.progress #autoplay {
+.progress .autoplay {
     position: absolute;
     color: grey;
     font-size: 10pt;
@@ -238,45 +251,46 @@ main article .progress .time {
     bottom: -25px;
     right: 5px;
 }
-#autoplay .fa-toggle-off, #autoplay .fa-toggle-on {
+.autoplay .fa-toggle-off, .autoplay .fa-toggle-on {
     color: #555;
     cursor: pointer;
     font-size: 12pt;
     position: relative;
     top: 2px;
 }
-.progress #shortcuts {
+.progress i.shortcuts {
     position: absolute;
     bottom: -30px;
     right: 100px;
     font-size: 20px;
     cursor: pointer;
 }
-#keyboard {
+div.keyboard {
     margin: auto;
     width: 80%;
     text-align: left;
     display: flex;
     flex-wrap: wrap;
+    h5 {
+        margin-bottom: 3px;
+    }
+    section {
+        flex-grow: 1;
+    }
+    section span.key {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        background-color: var(--bg-color);
+        width: 60px;
+        text-align: center;
+        margin: 3px;
+    }
 }
-#keyboard.hidden {
+div.keyboard.hidden {
     display: none;
 }
-#keyboard h5 {
-    margin-bottom: 3px;
-}
-#keyboard section {
-    flex-grow: 1;
-}
-#keyboard section span.key {
-    display: inline-block;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background-color: var(--bg-color);
-    width: 60px;
-    text-align: center;
-    margin: 3px;
-}
+
 #comments {
     width: 80%;
     margin-left: 10%;
@@ -424,7 +438,7 @@ textarea.commentText {
         top: 15px;
         right: 70px;
     }
-    main #pdf {
+    main .pdf {
         top: 0px;
         right: 15px;
     }

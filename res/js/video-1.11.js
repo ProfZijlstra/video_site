@@ -1,15 +1,16 @@
 window.addEventListener('load', () => {
     // 'global' variables needed by a couple of functions
     const day_id = document.getElementById('day').dataset.id;
-    const video = document.querySelector("video");
+    const videos = document.querySelectorAll('video');
+    let video = document.querySelector("article.selected video");
+    let video_id = document.querySelector(".video_link.selected").id;
 
     // disable right clicking
-    if (video) {
-        video.oncontextmenu = function() {
+    for (const vid of videos) {
+        vid.oncontextmenu = function() {
             return false;
         }
     }
-
 
     // highlight url selected comment
     const hash = window.location.hash;
@@ -23,12 +24,6 @@ window.addEventListener('load', () => {
             }, 2500)
             setTimeout(() => elm.classList.remove('selectDone'), 5000);
         }
-    }
-
-    // start video if autoplay is on
-    if (document.getElementById("auto_toggle")
-            ?.classList.contains("fa-toggle-on")) {
-        video.play();
     }
 
     // hide / show video list (theater mode)
@@ -70,7 +65,9 @@ window.addEventListener('load', () => {
             speed = 4;
         }
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
-        video.playbackRate = speed;
+        for (const vid of videos) {
+            vid.playbackRate = speed;
+        }
         postSpeed(speed);
     };
     function slower(e) {
@@ -80,13 +77,17 @@ window.addEventListener('load', () => {
             speed = 0.3;
         }
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
-        video.playbackRate = speed;
+        for (const vid of videos) {
+            vid.playbackRate = speed;
+        }
         postSpeed(speed);
     };
     function normalSpeed() {
         const speed = 1.0;
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
-        video.playbackRate = speed;
+        for (const vid of videos) {
+            vid.playbackRate = speed;
+        }
         postSpeed(speed);
     }
     function postSpeed(speed) {
@@ -99,9 +100,13 @@ window.addEventListener('load', () => {
     curSpeed.onclick = normalSpeed;
     document.getElementById('faster').onclick = faster;
     document.getElementById('slower').onclick = slower;
+
     // set speed when page is loaded
     if (video) {
-        video.playbackRate = parseFloat(curSpeed.innerHTML);        
+        const speed = parseFloat(curSpeed.innerHTML);
+        for (const vid of videos) {
+            vid.playbackRate = speed;
+        }
     }
 
     function nextVideo() {
@@ -122,14 +127,13 @@ window.addEventListener('load', () => {
     // keyboard controls
     video?.focus();
     document.addEventListener('keydown', (e) => {
+        // don't event handle for text input fields
         if (e.target.tagName == "TEXTAREA" || e.target.tagName == "INPUT") {
             return;
         }
+        video = document.querySelector("article.selected video");
         switch (e.code) {
         case "Space":
-            if (document.activeElement == video) {
-                break;
-            }
         case "KeyK":
             if (video?.paused) {
                 video?.play()
@@ -159,7 +163,7 @@ window.addEventListener('load', () => {
             normalSpeed();
             break;
         case "KeyA":
-            document.getElementById('autoplay').click();
+            clickAutoplay();
             break;
         case "KeyF":
             if (document.fullscreenElement) {
@@ -181,8 +185,14 @@ window.addEventListener('load', () => {
             document.getElementById("pdf").click();
         }
     });
-    document.getElementById("shortcuts")?.addEventListener("click", function() {
-        document.getElementById("keyboard").classList.toggle("hidden");
+    // show keyboard shortcuts
+    function showHideShortcuts() {
+        document.querySelectorAll("div.keyboard").forEach(
+            elm => elm.classList.toggle("hidden")
+        );
+    }
+    document.querySelectorAll("i.shortcuts").forEach(elm => {
+        elm.addEventListener("mousedown", showHideShortcuts);
     });
 
     // play and pause events are communicated to the server
@@ -216,7 +226,7 @@ window.addEventListener('load', () => {
         }
     }
     function endedHandler() {
-        const toggle = document.getElementById("auto_toggle");
+        const toggle = document.querySelector("i.auto_toggle");
         if (toggle.classList.contains("fa-toggle-on")) {
             const tab = document.querySelector(".video_link.selected");
             const nextTab = tab.nextElementSibling.querySelector('a');
@@ -224,15 +234,16 @@ window.addEventListener('load', () => {
             setTimeout(() => nextTab.click(), 500);
         }
     }
-    video?.addEventListener('play', playHandler);
-    video?.addEventListener('pause', pauseHandler);
-    video?.addEventListener('ended', endedHandler);
+    for (const vid of videos) {
+        vid.addEventListener('play', playHandler);
+        vid.addEventListener('pause', pauseHandler);
+        vid.addEventListener('ended', endedHandler);
+    }
 
     // clicking on another video (or pdf) first sends a 'pause' to current video
     function stopBeforeClick(evt) {
         if (video && !video.paused) {
             evt.preventDefault();
-            evt.stopImmediatePropagation();
             pauseAction = function() {
                 evt.target.click();
             };
@@ -244,8 +255,65 @@ window.addEventListener('load', () => {
         a.addEventListener('click', stopBeforeClick);
     }
 
+    // clicking on a video link switches the browser URL
+    function switchVideo(video_id) {
+        video?.pause();
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+
+        // siwtch tab
+        const tab = document.querySelector(".video_link.selected");
+        if (tab) {
+            tab.classList.remove('selected');
+        }
+
+        const parent = document.getElementById(video_id);
+        parent.classList.add('selected');
+        const video_name = parent.dataset.show;
+
+        // show the video
+        document.querySelector("main article.selected").classList.remove('selected');
+        document.getElementById(video_name).classList.add('selected');
+
+        const auto = document.querySelector('i.auto_toggle');
+        if (auto.classList.contains('fa-toggle-on')) {
+            video = document.querySelector("article.selected video");
+            video?.play();
+        }
+    }
+    function clickTab(evt) {
+        evt.preventDefault();
+
+        // update the module wide video_id variable
+        video_id = this.parentElement.parentElement.id;
+        const video_seq = encodeURIComponent(video_id);
+
+        // switch video
+        switchVideo(video_id);
+
+        // update history
+        window.history.pushState({"id": video_id}, '', `./${video_seq}`);
+    }
+    const video_links = document.querySelectorAll('#tabs div.video_link a');
+    for (const link of video_links) {
+        link.addEventListener('click', clickTab);
+    }
+
+    // using the browser's back button will pop the history
+    const initial_id = document.querySelector(".video_link.selected").id;
+    window.addEventListener('popstate', (e) => {
+            const state = e.state;
+            if (state && state.id) {
+                switchVideo(state.id);
+            } else {
+                switchVideo(initial_id);
+            }
+    });
+
+
      // make clicking on the PDF icon work while communicating with server
-     document.getElementById('pdf')?.addEventListener("click", function(evt) {
+    function openPDF(evt) {
         const file = this.dataset.file;
         const href = this.href;
         const url = `./pdf?day_id=${day_id}&file=${file}`;
@@ -253,20 +321,27 @@ window.addEventListener('load', () => {
             cache : 'no-cache'
         }).then(() => {window.open(href, '_blank')});
         evt.preventDefault();
-    });
-    // disable right-clicking on PDF (no download without view)
-    const pdf = document.getElementById('pdf');
-    if (pdf) {
-        pdf.oncontextmenu = function(evt) { evt.preventDefault(); };
     }
+    function disableRightClick(evt) {
+        evt.preventDefault();
+    }
+    const pdfs = document.querySelectorAll('pdf');
+    pdfs.forEach(
+        elm => {
+            elm.addEventListener("mousedown", openPDF)
+            elm.addEventListener("contextmenu", disableRightClick);
+        }
+    );
 
     // make clicking on autoplay work
-    document.getElementById("autoplay")?.addEventListener("click", function() {
-        const toggle = document.getElementById("auto_toggle");
-        toggle.classList.toggle("fa-toggle-off");
-        toggle.classList.toggle("fa-toggle-on");
+    function clickAutoplay() {
+        const toggles = document.querySelectorAll("i.auto_toggle");
+        for (const t of toggles) {
+            t.classList.toggle("fa-toggle-off");
+            t.classList.toggle("fa-toggle-on");
+        }
         let state = 'off';
-        if (toggle.classList.contains('fa-toggle-on')) {
+        if (toggles[0].classList.contains('fa-toggle-on')) {
             state = 'on';
         }
         fetch('./autoplay', {
@@ -274,6 +349,9 @@ window.addEventListener('load', () => {
             body : `toggle=${state}`,
             headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
         });
+    }
+    document.querySelectorAll("i.auto_toggle").forEach(elm => {
+        elm.addEventListener("click", clickAutoplay);
     });
 
     // used for both creating and updating comments and replies
@@ -285,8 +363,9 @@ window.addEventListener('load', () => {
     }
 
     // connect ceasar shift to new comment submit
-    document.getElementById('commentForm')
-        ?.addEventListener("submit", ceaseShiftText);    
+    document.querySelectorAll('.commentForm').forEach(
+        elm => elm.addEventListener("submit", ceaseShiftText)
+    );    
 
     // make clicking on delete comment and delete reply work
     function delHandler() {
@@ -313,7 +392,7 @@ window.addEventListener('load', () => {
         const tab = document.createElement('input');
         tab.setAttribute('type', 'hidden');
         tab.setAttribute('name', 'tab');
-        tab.setAttribute('value', document.getElementById('tab').value);
+        tab.setAttribute('value', video_id);
         form.append(tab);
         const text = document.createElement('textarea');
         text.setAttribute('name', 'text');

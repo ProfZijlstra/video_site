@@ -33,6 +33,8 @@ class CommentCtrl
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
+    #[Inject('DayDao')]
+    public $dayDao;
 
     #[Post(uri: "/comment$", sec: "observer")]
     public function add()
@@ -43,7 +45,7 @@ class CommentCtrl
         $day = $URI_PARAMS[3];
 
         $user_id = $_SESSION['user']['id'];
-        $video = filter_input(INPUT_POST, "video");
+        $vid_pdf = filter_input(INPUT_POST, "vid_pdf");
         $shifted = filter_input(INPUT_POST, "text");
         $tab = filter_input(INPUT_POST, "tab");
 
@@ -55,9 +57,10 @@ class CommentCtrl
             return "Location: {$tab}#commentForm";
         }
 
+        $day_id = $this->dayDao->getDayId($course, $block, $day)[0];
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
         $to = [$ins['email'], $ins['teamsName']];
-        $id = $this->commentDao->add($comment, $user_id, $video);
+        $id = $this->commentDao->add($comment, $user_id, $day_id, $vid_pdf);
         $user = $this->userDao->retrieve($user_id);
 
         $message = $user["knownAs"] . " " . $user["lastname"] .

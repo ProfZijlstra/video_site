@@ -7,10 +7,10 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
     <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" type="text/css" href="res/css/video-1.5.css" />
+    <link rel="stylesheet" type="text/css" href="res/css/video-1.6.css" />
     <link rel="stylesheet" href="res/css/lib/prism.css" />
     <script src="res/js/markdown-1.8.js"></script>
-    <script src="res/js/video-1.10.js"></script>
+    <script src="res/js/video-1.11.js"></script>
     <script src="res/js/lib/prism.js"></script>
     <?php if (hasMinAuth('instructor')) : ?>
         <link rel="stylesheet" href="res/css/adm.css">
@@ -41,7 +41,6 @@
                     <?php endif; ?>
                 <?php endif; ?>
                 <table id="days">
-                    <!-- <tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr> -->
                     <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
                         <tr>
                             <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
@@ -58,27 +57,34 @@
             </nav>
             <div id="tabs">
                 <?php
-                $video_count = 0;
+                $file_count = 0;
                 ?>
-                <?php foreach ($files as $file => $info) : ?>
-                    <div class='video_link <?= $info["parts"][0] == $video_idx ? "selected" : "" ?>' data-show="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" id="<?= $info["parts"][0] ?>">
+                <?php foreach ($files as $idx => $pdf_vid) : 
+                        if (isset($pdf_vid['vid'])) {
+                            $info = $pdf_vid['vid'];
+                        } else {
+                            $info = $pdf_vid['pdf'];
+                        }
+                    ?>
+
+                    <div class='video_link <?= $idx == $file_idx ? "selected" : "" ?>' data-show="<?= $idx ?>_<?= $info["parts"][1] ?>" id="<?= $idx ?>">
                         <div>
-                            <a href="<?= $info["parts"][0] ?>"><?= $info["parts"][1] ?></a>
+                            <a href="<?= $idx ?>"><?= $info["parts"][1] ?></a>
                             <?php if (hasMinAuth('instructor')) : ?>
                                 <span class="config">
                                     <?php
                                     $decrease = true;
                                     $increase = true;
-                                    if ($video_count == 0) {
+                                    if ($file_count == 0) {
                                         $decrease = false;
                                     }
-                                    if ($video_count == (count($files) - 1)) {
+                                    if ($file_count == (count($files) - 1)) {
                                         $increase = false;
                                     }
                                     ?>
-                                    <i title="Move video up" class="fa-solid fa-arrow-up <?= !$decrease ? "disabled" : "" ?>" <?php if ($increase) : ?> data-file="<?= $info["file"] ?>" data-prev_file="<?= $files[$video_count - 1]["file"] ?>" <?php endif; ?>>
+                                    <i title="Move video up" class="fa-solid fa-arrow-up <?= !$decrease ? "disabled" : "" ?>" <?php if ($increase) : ?> data-file="<?= $info["file"] ?>" data-prev_file="<?= $files[$file_count - 1]["file"] ?>" <?php endif; ?>>
                                     </i>
-                                    <i title="Move video down" class="fa-solid fa-arrow-down <?= !$increase ? "disabled" : "" ?>" <?php if ($decrease) : ?> data-file="<?= $info["file"] ?>" data-next_file="<?= $files[$video_count + 1]["file"] ?>" <?php endif; ?>>
+                                    <i title="Move video down" class="fa-solid fa-arrow-down <?= !$increase ? "disabled" : "" ?>" <?php if ($decrease) : ?> data-file="<?= $info["file"] ?>" data-next_file="<?= $files[$file_count + 1]["file"] ?>" <?php endif; ?>>
                                     </i>
                                     <i title="Edit title" class="fa-regular fa-pen-to-square" data-title="<?= $info["parts"][1] ?>" data-file="<?= $info["file"] ?>"></i>
                                 </span>
@@ -86,20 +92,43 @@
                         </div>
                         <div class="info"></div>
                     </div>
-                    <?php $video_count++ ?>
+                    <?php $file_count++ ?>
                 <?php endforeach; ?>
             </div>
             <div id="total" data-day="<?= $day ?>" data-day_id="<?= $days[$day]["id"] ?>" data-text="<?= $days[$day]["desc"] ?>"></div>
             <div id="back">
-                <a href="../">
+                <a href="../" title="Back to overview">
                     <i class="fa-solid fa-arrow-left"></i>
-                    Back to Overview
                 </a>
                 <?php if (hasMinAuth('instructor')) : ?>
                     <span class="config">
                         <i title="Add Video" class="fa-solid fa-plus" id="add_video"></i>
                     </span>
                 <?php endif; ?>
+
+                <div class="otherAreas">
+                    <?php if (hasMinAuth('student') && $offering['hasQuiz']) : ?>
+                    <span title="Quizzes">
+                        <a href="../quiz"><i class="fas fa-vial"></i></a>
+                    </span>
+                    <?php endif; ?>
+                    <?php if (hasMinAuth('student') && $offering['hasLab']) : ?>
+                    <span title="Labs">
+                        <a href="../lab"><i class="fas fa-flask"></i></a>
+                    </span>
+                    <?php endif; ?>
+                    <?php if (hasMinAuth('assistant')) : ?>
+                    <span title="Attendance">
+                        <a href="../attendance"><i class="fas fa-user-check"></i></a>
+                    </span>
+                    <?php endif; ?>
+                    <?php if (hasMinAuth('instructor')) : ?>
+                    <span title="Enrolled">
+                        <a href="../enrolled"><i class="fas fa-user-friends"></i></a>
+                    </span>
+                    <?php endif; ?>
+                </div>
+
             </div>
         </nav>
         <main id="day" data-id="<?= $days[$day]["id"] ?>">
@@ -110,24 +139,32 @@
             </div>
             <?php
             $passed = 0;
-            foreach ($files as $info) :
+            foreach ($files as $idx => $pdf_vid) :
+                if (isset($pdf_vid['vid'])) {
+                    $info = $pdf_vid['vid'];
+                } else {
+                    $info = $pdf_vid['pdf'];
+                }
+
                 if ($totalDuration == 0) {
                     $passedPercent = 0;
                     $currentPrecent = 0;
                 } else {
                     $passedPercent = ($passed / $totalDuration) * 100;
                     $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration) * 100);
-                }
-                if ($info["parts"][0] == $video_idx) :
-            ?>
-                    <article id="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" class="selected">
+                } ?>
+                    <article id="<?= $idx ?>_<?= $info["parts"][1] ?>" class="<?= $idx == $file_idx ? "selected" : "" ?>">
                         <h2><?= $info["parts"][1] ?></h2>
-                        <?php if ($pdf) : ?>
-                            <a id="pdf" target="_blank" data-file="<?= $info["parts"][0] ?>_<?= $info["parts"][1] ?>" href='<?= $pdf_file ?>'>
+                        <?php if (isset($pdf_vid['pdf'])) : 
+                            $pdf_info = $pdf_vid['pdf'];
+                            ?>
+                            
+                            <a class="pdf" target="_blank" data-file="<?= $idx ?>_<?= $pdf_info["parts"][1] ?>" href='res/<?=$course?>/<?=$block?>/<?=$day?>/pdf/<?= $pdf_info['file'] ?>'>
                                 <i class="far fa-file-pdf"></i>
                             </a>
                         <?php endif; ?>
-                        <?php if($info['type'] == "vid"): ?>
+
+                        <?php if(isset($pdf_vid["vid"])): ?>
                         <video controls controlslist="nodownload">
                             <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4" />
                         </video>
@@ -143,12 +180,12 @@
                                 <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
                                 <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
                                 <div class="time"><?= $totalTime ?></div>
-                                <div id="autoplay">autoplay <i id="auto_toggle" class="fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
-                                <div id="shortcuts" title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard"></i></div>
+                                <div class="autoplay">autoplay <i class="auto_toggle fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
+                                <div title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard shortcuts"></i></div>
                             </div>
                         <?php endif; ?>
 
-                        <div id="keyboard" class="hidden">
+                        <div class="keyboard hidden">
                             <section>
                                 <h5>Playback</h5>
                                 <div>
@@ -228,7 +265,13 @@
 
                         <div id="comments">
                             <h2>Questions & Comments</h2>
-                            <?php foreach ($comments as $comment) : ?>
+                            <?php 
+                                $comment_count = 0;
+                                foreach ($comments as $vid_pdf => $vid_comments) : 
+                                    if($vid_pdf == $info["parts"][1]): 
+                                        foreach ($vid_comments as $comment) : 
+                                            $comment_count++;
+                                ?>
                                 <div class="author">
                                     <?= $comment["knownAs"] ?> <?= $comment["lastname"] ?>
                                     <span class="date">created: <?= $comment["created"] ?></span>
@@ -238,7 +281,7 @@
                                     <?php if (hasMinAuth('instructor') || $_user_id == $comment["user_id"]) : ?>
                                         <form method="post" action="delComment">
                                             <input type="hidden" name="id" value="<?= $comment['id'] ?>" />
-                                            <input type="hidden" name="tab" value="<?= $video_idx ?>" />
+                                            <input type="hidden" name="tab" value="<?= $file_idx ?>" />
                                             <i title="Delete" class="far fa-trash-alt" data-id=""></i>
                                         </form>
                                         <i title="Edit" class="far fa-edit" data-id="<?= $comment['id'] ?>"></i>
@@ -260,7 +303,7 @@
                                             <?php if (hasMinAuth('instructor') || $_user_id == $reply["user_id"]) : ?>
                                                 <form method="post" action="delReply">
                                                     <input type="hidden" name="id" value="<?= $reply['id'] ?>" />
-                                                    <input type="hidden" name="tab" value="<?= $video_idx ?>" />
+                                                    <input type="hidden" name="tab" value="<?= $file_idx ?>" />
                                                     <i title="Delete" class="far fa-trash-alt" data-id=""></i>
                                                 </form>
                                                 <i title="Edit" class="far fa-edit" data-id="<?= $reply['id'] ?>"></i>
@@ -274,15 +317,16 @@
                                     <?php endforeach; ?>
                                     <div class="addReply">add reply</div>
                                 </div>
-                            <?php endforeach; // comment 
-                            ?>
-                            <?php if (count($comments) == 0) : ?>
+                                    <?php endforeach; // end of comments loop ?>
+                                <?php endif; // if the comment is for the current vid_pdf ?> 
+                            <?php endforeach; // end of vid_pdfs loop ?>
+                            <?php if ($comment_count == 0) : ?>
                                 <div>No questions or comments yet</div>
                             <?php endif; ?>
                             <h3>Add a question or comment:</h3>
-                            <form method="post" action="comment" id="commentForm">
-                                <input type="hidden" name="video" value="<?= $info["parts"][2] ?>" />
-                                <input type="hidden" name="tab" id="tab" value="<?= $info["parts"][0] ?>" />
+                            <form method="post" action="comment" class="commentForm">
+                                <input type="hidden" name="vid_pdf" value="<?= $info["parts"][1] ?>" />
+                                <input type="hidden" name="tab" value="<?= $idx ?>" />
                                 <textarea name="text" class="commentText" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"></textarea>
                                 <div>
                                     <div class="commentActions">
@@ -295,8 +339,6 @@
                         </div>
                     </article>
             <?php
-                    break; // no need to continue after the requested video
-                endif;
                 $passed += $info["duration"];
             endforeach;
             ?>

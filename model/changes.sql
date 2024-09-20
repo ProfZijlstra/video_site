@@ -626,3 +626,10 @@ ALTER TABLE `zip_ul_stat` ADD COLUMN `file` VARCHAR(255) NOT NULL;
 ALTER TABLE `zip_ul_stat` DROP COLUMN `pass`;
 ALTER TABLE `zip_ul_stat` DROP FOREIGN KEY `fk_checks_zip_check1`;
 ALTER TABLE `zip_ul_stat` DROP COLUMN `zip_check_id`;
+
+-- 18 sep 2024
+ALTER TABLE `comment` ADD COLUMN `vid_pdf` VARCHAR(255) NOT NULL AFTER `user_id`;
+CREATE INDEX `comment_vid_pdf` ON `comment`(`vid_pdf`);
+ALTER TABLE `comment` ADD COLUMN `day_id` INT NOT NULL DEFAULT 0 AFTER `user_id`;
+ALTER TABLE `comment` ADD CONSTRAINT `fk_day_id` FOREIGN KEY (`day_id`) REFERENCES day(id);
+ALTER TABLE `comment` DROP COLUMN `video`;

@@ -111,7 +111,7 @@ class VideoCtrl
         $course_num = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $day = $URI_PARAMS[3];
-        $video_idx = $URI_PARAMS[4];
+        $file_idx = $URI_PARAMS[4];
         $user_id = $_SESSION['user']['id'];
 
         // retrieve course and offering data from db
@@ -136,40 +136,36 @@ class VideoCtrl
         // get pdf and video related data
         $pdfs = $this->pdfDao->forDay($course_num, $block, $day);
         $videos = $this->videoDao->forDay($course_num, $block, $day);
-        $pdf_file = "";
-        $video_file_parts = array();
-        $videos_info = $videos["file_info"];
-        $files = $pdfs;
-        foreach ($videos_info as $name => $file) {
-            $files[$name] = $file;
-            if ($file["parts"][0] == $video_idx) {
-                $video_file_parts = $file["parts"];
-                if ($pdfs[$name]) {
-                    $pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
-                        $pdfs[$name]["file"];
-                }
+        $files = [];
+        foreach ($videos["file_info"] as $idx => $file) {
+            if (!$idx) {
+                $files[$idx] = [];
             }
+            $files[$idx]['vid'] = $file;
         }
-        if (!$pdf_file) {
-            foreach ($pdfs as $name => $file) {
-                if ($file["parts"][0] == $video_idx) {
-                    $pdf_file = "res/{$course_num}/{$block}/{$day}/pdf/" .
-                        $file["file"];
-                }
+        foreach ($pdfs as $idx => $file) {
+            if (!$idx) {
+                $files[$idx] = [];
             }
+            $files[$idx]['pdf'] = $file;
         }
 
-        // get comments for selected video
-        $comments = $this->commentDao->getAllFor($video_file_parts[2], $user_id);
+        // get comments for all videos on this day
+        $comments = [];
+        $day_id = $this->dayDao->getDayId($course_num, $block, $day)[0];
+        $comments = $this->commentDao->getAllForDay($day_id, $user_id);
+
         // get the replies for those comments
         $replies = array();
         if ($comments) {
-            $qids = array();
-            foreach ($comments as $comment) {
-                $qids[] = $comment["id"];
-                $replies[$comment["id"]] = array();
+            $cids = array();
+            foreach ($comments as $vid_pdf) {
+                foreach ($vid_pdf as $comment) {
+                    $cids[] = $comment["id"];
+                    $replies[$comment["id"]] = array();
+                }
             }
-            $replies_data = $this->replyDao->getAllFor($qids, $user_id);
+            $replies_data = $this->replyDao->getAllFor($cids, $user_id);
             foreach ($replies_data as $reply) {
                 $replies[$reply["comment_id"]][] = $reply;
             }
@@ -192,7 +188,6 @@ class VideoCtrl
 
         // general course related
         $VIEW_DATA["course"] = $course_num;
-        $VIEW_DATA["title"] = $course_detail['name'];
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["day"] = $day;
         $VIEW_DATA["offering_id"] = $offering_detail['id'];
@@ -209,12 +204,10 @@ class VideoCtrl
         $VIEW_DATA["offering"] = $offering_detail;
 
         // videos related
-        $VIEW_DATA["video_idx"] = $video_idx;
+        $VIEW_DATA["file_idx"] = $file_idx;
         $VIEW_DATA["files"] = $files;
         $VIEW_DATA["totalDuration"] = $videos["totalDuration"];
         $VIEW_DATA["totalTime"] = $videos["totalTime"];
-        $VIEW_DATA["pdf"] = file_exists($pdf_file);
-        $VIEW_DATA["pdf_file"] = $pdf_file;
 
         // comments related
         require_once("lib/Parsedown.php");
