@@ -217,31 +217,43 @@ main article div.noVid {
     min-height: 20vw;
     font-size: 30pt;
 }
+/* TODO: make progress use flexbox to show sections for each video */
 main article .progress {
     position: relative;
     width: 80%;
     height: 13px;
-    background-color: var(--bg-color);
+    background-color: var(--light-gray);
     margin-left: auto;
     margin-right: auto;
     font-family: "Courier New", Courier, monospace;
     font-size: 8pt;
     border: 1px solid var(--border);
-}
-main article .progress .passed, main article .progress .current {
-    position: absolute;
-    left: 0px;
-    height: 13px;
+    display: flex;
+    div {
+        box-sizing: content-box;
+        border: 1px solid var(--white);
+        cursor: pointer;
+    }
+    div:hover {
+        transform: translate(0px, -2px) scale(1.03);
+        transition-duration: 1s;
+        border: 1px solid var(--border);
+    }
 }
 main article .progress .passed {
-    background: linear-gradient(90deg, rgba(34,29,122,1) 0%, rgba(60,60,172,1) 52%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(to bottom, #ccc 0%,#ddd 100%);
 }
 main article .progress .current {
-    background-color: yellow;
+    background: linear-gradient(to bottom, #ffc 0%,#ddd 100%);
+}
+main article .progress .future {
+    background: linear-gradient(to bottom, #fff 0%,#eee 100%);
+    border: 1px solid #ddd;
 }
 main article .progress .time {
+    bottom: -25px;
 	position: absolute;
-	right: 10px;
+	left: 0px;
 }
 .progress .autoplay {
     position: absolute;
@@ -260,7 +272,7 @@ main article .progress .time {
 }
 .progress i.shortcuts {
     position: absolute;
-    bottom: -30px;
+    bottom: -25px;
     right: 100px;
     font-size: 20px;
     cursor: pointer;

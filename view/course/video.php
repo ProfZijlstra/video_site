@@ -7,10 +7,10 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
     <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" type="text/css" href="res/css/video-1.6.css" />
+    <link rel="stylesheet" type="text/css" href="res/css/video-1.7.css" />
     <link rel="stylesheet" href="res/css/lib/prism.css" />
     <script src="res/js/markdown-1.8.js"></script>
-    <script src="res/js/video-1.11.js"></script>
+    <script src="res/js/video-1.12.js"></script>
     <script src="res/js/lib/prism.js"></script>
     <?php if (hasMinAuth('instructor')) : ?>
         <link rel="stylesheet" href="res/css/adm.css">
@@ -165,8 +165,10 @@
                         <?php endif; ?>
 
                         <?php if(isset($pdf_vid["vid"])): ?>
-                        <video controls controlslist="nodownload">
-                            <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4" />
+                        <video controls controlslist="nodownload" data-src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>">
+                            <?php if ($idx == $file_idx): ?>
+                                <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4" />
+                            <?php endif; ?>
                         </video>
                         <?php else: ?>
                             <div class="noVid">
@@ -176,10 +178,30 @@
                             </div>
                         <?php endif; ?>
                         <?php if($totalDuration): ?>
+                            <!-- TODO: foreach video show a div with its width relative to the video length-->
                             <div class="progress">
-                                <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
-                                <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div>
-                                <div class="time"><?= $totalTime ?></div>
+                                <?php 
+                                    $progClass = "passed";
+                                    foreach($files as $idxx => $content):
+                                        if ($progClass == "current") {
+                                            $progClass = "future";
+                                        } 
+                                        if ($idx == $idxx) {
+                                            $progClass = "current";
+                                        }
+                                ?>
+                                    <?php if(isset($content["vid"])): ?>
+                                        <?php $vid = $content["vid"]; ?>
+                                        <div title="<?= $content["vid"]["parts"][1] ?>"
+                                        data-vid="<?= $content["vid"]["parts"][0] ?>" 
+                                        class="tab <?= $progClass ?>" 
+                                        style="width: <?= number_format(($content['vid']['duration'] / $totalDuration) * 100, 2) ?>%"></div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+
+                                <!-- <div class="current" style="width: <?= number_format($currentPrecent, 2) ?>%;"></div>
+                                <div class="passed" style="width: <?= number_format($passedPercent, 2) ?>%;"></div> -->
+                                <div class="time">Total time: <?= $totalTime ?></div>
                                 <div class="autoplay">autoplay <i class="auto_toggle fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
                                 <div title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard shortcuts"></i></div>
                             </div>

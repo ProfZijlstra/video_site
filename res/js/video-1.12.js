@@ -45,7 +45,6 @@ window.addEventListener('load', () => {
     document.getElementById("bars").onclick = toggleTheater; 
 
     // auto toggle theater mode if the window.width is below 900
-    let winWidth = window.innerWidth;
     function checkToggle() {
         if (!nav.classList.contains('hidden') 
                 && window.innerWidth <= 900) {
@@ -276,17 +275,19 @@ window.addEventListener('load', () => {
         document.querySelector("main article.selected").classList.remove('selected');
         document.getElementById(video_name).classList.add('selected');
 
+        // load the video if it's not already loaded
+        const videoTag = document.querySelector(`article.selected video`);
+        if (!videoTag.src) {
+            videoTag.src = videoTag.dataset.src;
+        }
+
         const auto = document.querySelector('i.auto_toggle');
         if (auto.classList.contains('fa-toggle-on')) {
             video = document.querySelector("article.selected video");
             video?.play();
         }
     }
-    function clickTab(evt) {
-        evt.preventDefault();
-
-        // update the module wide video_id variable
-        video_id = this.parentElement.parentElement.id;
+    function genericClick(video_id) {
         const video_seq = encodeURIComponent(video_id);
 
         // switch video
@@ -295,9 +296,24 @@ window.addEventListener('load', () => {
         // update history
         window.history.pushState({"id": video_id}, '', `./${video_seq}`);
     }
+    function clickTab(evt) {
+        evt.preventDefault();
+
+        // update the module wide video_id variable
+        video_id = this.parentElement.parentElement.id;
+        genericClick(video_id);
+    }
     const video_links = document.querySelectorAll('#tabs div.video_link a');
     for (const link of video_links) {
         link.addEventListener('click', clickTab);
+    }
+    function clickProgress(evt) {
+        const video_id = this.dataset.vid;
+        genericClick(video_id);
+    }
+    const progressTabs = document.querySelectorAll('div.progress div.tab');
+    for (const tab of progressTabs) {
+        tab.addEventListener('click', clickProgress);
     }
 
     // using the browser's back button will pop the history
