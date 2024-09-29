@@ -165,10 +165,12 @@
                         <?php endif; ?>
 
                         <?php if(isset($pdf_vid["vid"])): ?>
-                        <video controls controlslist="nodownload" data-src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>">
+                            <?php $src = "res/{$course}/{$block}/{$day}/vid/{$info["file"]}"; ?>
+                        <video controls controlslist="nodownload" 
                             <?php if ($idx == $file_idx): ?>
-                                <source src="<?= "res/{$course}/{$block}/{$day}/vid/{$info["file"]}" ?>" type="video/mp4" />
+                                src="<?= $src ?>" 
                             <?php endif; ?>
+                            data-src="<?= $src ?>">
                         </video>
                         <?php else: ?>
                             <div class="noVid">
