@@ -7,10 +7,10 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
     <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" type="text/css" href="res/css/video-1.7.css" />
+    <link rel="stylesheet" type="text/css" href="res/css/video-1.8.css" />
     <link rel="stylesheet" href="res/css/lib/prism.css" />
     <script src="res/js/markdown-1.8.js"></script>
-    <script src="res/js/video-1.12.js"></script>
+    <script src="res/js/video-1.13.js"></script>
     <script src="res/js/lib/prism.js"></script>
     <?php if (hasMinAuth('instructor')) : ?>
         <link rel="stylesheet" href="res/css/adm.css">
@@ -132,10 +132,10 @@
             </div>
         </nav>
         <main id="day" data-id="<?= $days[$day]["id"] ?>">
-            <div id="playSpeed">
-                <span id="slower">-</span>
-                <span id="curSpeed"><?= number_format($speed, 1) ?></span>
-                <span id="faster">+</span>
+            <div class="playSpeed">
+                <span class="slower">-</span>
+                <span class="curSpeed"><?= number_format($speed, 1) ?></span>
+                <span class="faster">+</span>
             </div>
             <?php
             $passed = 0;

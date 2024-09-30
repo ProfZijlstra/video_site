@@ -22,7 +22,7 @@ i#bars.fa-bars {
     right: 30px;
 	font-size: 24px;
 }
-div#playSpeed {
+div.playSpeed {
     font-family: "monospace";
     font-size: 18px;
     font-weight: bold;
@@ -32,7 +32,7 @@ div#playSpeed {
     right: 20px;
     width: 110px;
 }
-#faster, #slower {
+.faster, .slower {
     cursor: default;
     border: 1px solid var(--border);
     display: inline-block;

@@ -55,7 +55,7 @@ window.addEventListener('load', () => {
     checkToggle();
 
     // video speed controls
-    const curSpeed = document.getElementById('curSpeed');
+    const curSpeed = document.querySelector('.curSpeed');
     const numOpts = {minimumFractionDigits : 1, minimumFractionDigits : 1};
     function faster(e) {
         let speed = parseFloat(curSpeed.innerHTML)
@@ -63,7 +63,10 @@ window.addEventListener('load', () => {
         if (speed > 4) {
             speed = 4;
         }
-        curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
+        const curSpeeds = document.querySelectorAll('.curSpeed');
+        for (const elm of curSpeeds) {
+            elm.innerHTML = speed.toLocaleString('en-US', numOpts);
+        }
         for (const vid of videos) {
             vid.playbackRate = speed;
         }
@@ -75,7 +78,10 @@ window.addEventListener('load', () => {
         if (speed < 0.3) {
             speed = 0.3;
         }
-        curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
+        const curSpeeds = document.querySelectorAll('.curSpeed');
+        for (const elm of curSpeeds) {
+            elm.innerHTML = speed.toLocaleString('en-US', numOpts);
+        }
         for (const vid of videos) {
             vid.playbackRate = speed;
         }
@@ -83,7 +89,10 @@ window.addEventListener('load', () => {
     };
     function normalSpeed() {
         const speed = 1.0;
-        curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
+        const curSpeeds = document.querySelectorAll('.curSpeed');
+        for (const elm of curSpeeds) {
+            elm.innerHTML = speed.toLocaleString('en-US', numOpts);
+        }
         for (const vid of videos) {
             vid.playbackRate = speed;
         }
@@ -97,8 +106,12 @@ window.addEventListener('load', () => {
         });
     }
     curSpeed.onclick = normalSpeed;
-    document.getElementById('faster').onclick = faster;
-    document.getElementById('slower').onclick = slower;
+    document.querySelectorAll('.faster').forEach(
+        elm => elm.onclick = faster
+    );
+    document.querySelectorAll('.slower').forEach(
+        elm => elm.onclick = slower
+    );
 
     // set speed when page is loaded
     if (video) {
@@ -198,6 +211,7 @@ window.addEventListener('load', () => {
     let view_id = false;
     function playHandler(evt) {
         window.scrollTo(0, 80);
+        this.playbackRate = parseFloat(curSpeed.innerHTML);;
         const video_name = encodeURIComponent(evt.target.parentNode.id);
         // invalidate any old id that may have still been in the system
         view_id = false;
