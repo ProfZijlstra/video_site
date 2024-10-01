@@ -136,6 +136,9 @@ div#add_modal input#name {
         display: block;
         width: 80vw;
         margin: auto;
+        div.dayHeader {
+            display: none;
+        }    
     }
     div#days div.header {
         display: none;
