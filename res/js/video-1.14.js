@@ -270,7 +270,7 @@ window.addEventListener('load', () => {
 
     // clicking on a video link switches the browser URL
     function switchVideo(video_id) {
-        video?.pause();
+        document.querySelectorAll('video').forEach(vid => vid.pause());
         if (document.fullscreenElement) {
             document.exitFullscreen();
         }
