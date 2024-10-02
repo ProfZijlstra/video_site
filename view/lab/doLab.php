@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/lab-1.1.css">
+    <link rel="stylesheet" href="res/css/lab-1.2.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
