@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/offering-1.3.css">
-    <link rel="stylesheet" href="res/css/adm.css">
+    <link rel="stylesheet" href="res/css/adm-1.0.css">
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) : ?>auto <?php endfor; ?>;

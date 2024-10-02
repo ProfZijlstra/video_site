@@ -71,8 +71,10 @@ body.lab {
                     text-align: right;
                 }
                 div.pcontainer {
+                    max-width: 630px;
                     padding: 5px;
                     border: 1px solid var(--border);
+                    overflow: auto;
                 }
             }
             div.mdContainer.active {
@@ -249,6 +251,9 @@ body.labDeliverables {
             width: 100%;
         }
     }
+    div.deliv div.description {
+        max-width: 620px;
+    }
     div.txtDelivery {
         position: relative;
         margin: 10px 0px;
@@ -286,7 +291,7 @@ body.labDeliverables {
         position: relative;
 
         textarea {
-            width: 580px;
+            max-width: 630px;
         }
         i.fa-markdown {
             right: 5px;

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="res/css/offering-1.3.css">
     <script src="res/js/offering.js"></script>
     <?php if (hasMinAuth('instructor')) : ?>
-        <link rel="stylesheet" href="res/css/adm.css">
+        <link rel="stylesheet" href="res/css/adm-1.0.css">
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
         <script src="res/js/info.js"></script>

@@ -6,6 +6,7 @@ div.questionText, div.answerText {
     border: 1px solid grey;
     padding: 5px;
     background-color: var(--light-gray);
+    max-width: 630px;
 }
 div.done {
     margin-top: 50px;
@@ -119,12 +120,10 @@ div.qcontainer div.preview {
 div.qcontainer div.pcontainer {
     padding: 5px;
     border: 1px solid var(--border);
-}
-div.question textarea {
-    max-width: 600px;
+    max-width: 630px;
+    overflow: auto;
 }
 div.question pre {
-    max-width: 585px;
     white-space: pre-wrap;
 }
 div.question img {

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/offering-1.3.css">
-    <link rel="stylesheet" href="res/css/adm.css">
+    <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/attendance-1.0.css">
     <script src="res/js/attendance-1.3.js"></script>
     <style>
