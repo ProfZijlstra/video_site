@@ -112,6 +112,7 @@ class QuizAdminCtrl
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['quiz'] = $this->quizDao->byId($quiz_id);
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['title'] = "Edit Quiz";

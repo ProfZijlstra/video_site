@@ -103,6 +103,7 @@ class LabGradingCtrl
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Overview";
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['lab'] = $lab;
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['absent'] = $absent;
@@ -128,8 +129,8 @@ class LabGradingCtrl
         $lab_id = $URI_PARAMS[3];
         $deliv_id = $URI_PARAMS[4];
 
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         // get the deliverable and the deliveries
-        // $deliverable = $this->deliverableDao->byId($deliv_id);
         $deliverables = $this->deliverableDao->forLab($lab_id);
         $deliveries = $this->deliveryDao->forDeliverable($deliv_id);
 
@@ -155,6 +156,7 @@ class LabGradingCtrl
         $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['title'] = "Grade Deliverable";
         $VIEW_DATA['deliv'] = $deliverable;
         $VIEW_DATA['deliveries'] = $deliveries;
@@ -200,6 +202,7 @@ class LabGradingCtrl
         $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['title'] = "Grade Submission";
         $VIEW_DATA['lab_id'] = $lab_id;
         $VIEW_DATA['members'] = $members;

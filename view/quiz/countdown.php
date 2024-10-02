@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <link rel="stylesheet" href="res/css/quiz-1.4.css">
+    <link rel="stylesheet" href="res/css/quiz-1.5.css">
     <style>
         div#content label {
             display: inline-block;
@@ -35,6 +35,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
         </nav>
         <div id="content">

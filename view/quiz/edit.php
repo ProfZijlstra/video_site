@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.4.css">
+        <link rel="stylesheet" href="res/css/quiz-1.5.css">
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown-1.8.js"></script>
         <script src="res/js/quiz/edit-1.5.js"></script>
@@ -21,6 +21,7 @@
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </nav>
+            <?php include("areas.php"); ?>
             <nav class="tools">
                 <a title="Preview" href="../preview?q=<?= $quiz['id'] ?>">
                     <i id="previewBtn" class="fa-solid fa-eye"></i>

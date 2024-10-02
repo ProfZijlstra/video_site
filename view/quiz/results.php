@@ -12,7 +12,7 @@ $not_graded = false;
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.4.css">
+    <link rel="stylesheet" href="res/css/quiz-1.5.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script>
@@ -30,6 +30,7 @@ window.addEventListener("load", () => {
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <div id="content">
             <div id="total2">
 

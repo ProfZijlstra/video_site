@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/lab-1.1.css">
+    <link rel="stylesheet" href="res/css/lab-1.2.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/lab/edit.js"></script>
@@ -23,6 +23,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
             <a title="Preview" href="../preview?l=<?= $lab['id'] ?>">
                 <i id="previewBtn" class="fa-solid fa-eye"></i>

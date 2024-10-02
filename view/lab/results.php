@@ -27,6 +27,7 @@ window.addEventListener("load", () => {
         <nav id="back" class="back" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
         </nav>
         <div id="content">

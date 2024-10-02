@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.4.css">
+    <link rel="stylesheet" href="res/css/quiz-1.5.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/quiz/gradeUser.js"></script>
@@ -24,6 +24,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
             <a href="../../<?= $quiz_id ?>?student=<?= $user['id'] ?>">
                 <i title="Edit submission" class="fa-regular fa-pen-to-square"></i>

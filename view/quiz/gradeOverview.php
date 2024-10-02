@@ -29,6 +29,9 @@
             text-align: right;
             padding-right: 5px !important;
         }
+        main nav.areas {
+            margin-top: 50px;
+        }
     </style>
     <script>
         window.addEventListener("load", () => {
@@ -54,6 +57,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <div id="content">
             <h2>Quiz: <?= $quiz['name'] ?></h2>
             <!-- Links to grade by question -->

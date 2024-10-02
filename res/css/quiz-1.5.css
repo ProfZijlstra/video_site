@@ -1,3 +1,6 @@
+main nav.areas {
+    margin-top: 50px;
+}
 div.questionText, div.answerText {
     position: relative;
     border: 1px solid grey;

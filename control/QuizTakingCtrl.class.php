@@ -29,6 +29,8 @@ class QuizTakingCtrl
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
+    #[Inject('OfferingDao')]
+    public $offeringDao;
 
     /**
      * This function is really a 3 in one. 
@@ -47,6 +49,7 @@ class QuizTakingCtrl
         $block = $URI_PARAMS[2];
         $quiz_id = $URI_PARAMS[3];
 
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $quiz = $this->quizDao->byId($quiz_id);
         $tz = new DateTimeZone(TIMEZONE);
         $now = new DateTimeImmutable("now", $tz);
@@ -64,6 +67,7 @@ class QuizTakingCtrl
         }
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['quiz'] = $quiz;
         if ($startDiff->invert === 0) { // start is in the future
             // show countdown page

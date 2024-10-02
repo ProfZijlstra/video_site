@@ -26,6 +26,7 @@
         <nav id="back" class="back" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
             <h3 title="Time Remaining">
                 <span id="days"><?= $stop->format("%a") ?></span> Day(s)

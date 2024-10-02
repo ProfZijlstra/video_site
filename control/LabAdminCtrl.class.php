@@ -132,6 +132,7 @@ class LabAdminCtrl
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['lab'] = $this->labDao->byId($lab_id);
         $VIEW_DATA['labPoints'] = $labPoints;
         $VIEW_DATA['deliverables'] = $deliverables;

@@ -70,6 +70,7 @@ class QuizGradingCtrl
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['title'] = "Grade Overview";
+        $VIEW_DATA['offering'] = $offering_detail;
         $VIEW_DATA['quiz'] = $this->quizDao->byId($quiz_id);
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['absent'] = $absent;
@@ -91,6 +92,7 @@ class QuizGradingCtrl
         $quiz_id = $URI_PARAMS[3];
         $question_id = $URI_PARAMS[4];
 
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $questions = $this->questionDao->forQuiz($quiz_id);
         $next_id = null;
         $prev_id = null;
@@ -108,6 +110,7 @@ class QuizGradingCtrl
         $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['title'] = "Grade Question";
         $VIEW_DATA['prev_id'] = $prev_id;
         $VIEW_DATA['next_id'] = $next_id;
@@ -131,6 +134,7 @@ class QuizGradingCtrl
 
         $idx = filter_input(INPUT_GET, "idx", FILTER_VALIDATE_INT);
         $ids = array_column($this->userDao->idsForQuiz($quiz_id), 'user_id');
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         if ($idx == "") {
             $idx = array_search($user_id, $ids);
         }
@@ -141,6 +145,7 @@ class QuizGradingCtrl
         $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['title'] = "Grade Quiz by Student";
         $VIEW_DATA['quiz_id'] = $quiz_id;
         $VIEW_DATA['user'] = $this->userDao->retrieve($user_id);

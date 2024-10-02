@@ -17,6 +17,9 @@
         div#countdown {
             font-size: 50px;
         }
+        main nav.areas {
+            margin-top: 50px;
+        }
     </style>
     <script src="res/js/countdown-1.1.js"></script>
     <script>
@@ -34,6 +37,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
         </nav>
         <div id="content">

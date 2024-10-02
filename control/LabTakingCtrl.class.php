@@ -75,6 +75,7 @@ class LabTakingCtrl
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
 
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);
 
         $tz = new DateTimeZone(TIMEZONE);
@@ -87,6 +88,7 @@ class LabTakingCtrl
 
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['lab'] = $lab;
 
         // lab is not open yet

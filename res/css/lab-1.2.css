@@ -1,4 +1,7 @@
 body.lab {
+    main nav.areas {
+        margin-top: 50px;
+    }
     div.dcontainer {
         text-align: left;
         border-top: none;

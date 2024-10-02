@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.4.css">
+    <link rel="stylesheet" href="res/css/quiz-1.5.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/camera-1.1.js"></script>
@@ -24,6 +24,7 @@
         <nav id="back" class="back" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
+        <?php include("areas.php"); ?>
         <nav class="tools">
             <h3><span id="hours"><?= $stop->format("%H") ?></span>:<span id="minutes"><?= $stop->format("%I") ?></span>:<span id="seconds"><?= $stop->format("%S") ?></span></h3>
         </nav>

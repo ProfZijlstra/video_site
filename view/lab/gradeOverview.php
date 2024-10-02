@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm.css">
-    <link rel="stylesheet" href="res/css/lab-1.1.css">
+    <link rel="stylesheet" href="res/css/lab-1.2.css">
 </head>
 
-<body id="gradeLab">
+<body id="gradeLab" class="lab">
     <?php include("header.php"); ?>
     <main>
         <nav class="back" title="Back">
@@ -19,6 +19,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
+        <?php include("areas.php"); ?>
         <div id="content">
             <h2>Lab: <?= $lab['name'] ?></h2>
             <!-- Links to grade by question -->
