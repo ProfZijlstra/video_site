@@ -16,7 +16,7 @@ const CAMERA = (function() {
             div.onclick = function() {
                 stopCamera.call(this); 
                 this.closest("div.question")
-                    .querySelector('img')
+                    .querySelector('img.answer')
                     .classList.remove('hide');
             } 
         });
@@ -39,7 +39,7 @@ const CAMERA = (function() {
         const close = parent.querySelector(".closeCamera");
         const camera = parent.querySelector('div.camera');
         const spinner = parent.querySelector('i.fa-circle-notch');
-        const img = parent.querySelector('img');
+        const img = parent.querySelector('img.answer');
         const pic = parent.querySelector('div.takePicture');
         pictureBtn = pic;
         spinner.classList.add('rotate');
@@ -110,7 +110,7 @@ const CAMERA = (function() {
         const parent = this.closest('div.camContainer');
         const video = parent.querySelector('video');
         const canvas = parent.querySelector('canvas');
-        const img = parent.querySelector('img');
+        const img = parent.querySelector('img.answer');
         const context = canvas.getContext("2d");
         canvas.width = 640;
         canvas.height = 480;
