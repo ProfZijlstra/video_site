@@ -17,10 +17,12 @@ window.addEventListener("load", () => {
 
         const input = pointsDiv.querySelector("input");
         if (!input.checkValidity()) {
-            alert("Points have an invalid value (beyond max or below zero).");
-            input.value = input.dataset.value;
-            setTimeout(() => input.focus(), 100);
-            return false;
+            const ans = confirm("Did you intend to go beyond max or below zero?");
+            if (!ans) {
+                input.value = input.dataset.value;
+                setTimeout(() => input.focus(), 100);
+                return false;
+            }
         }
         const points = input.value ? input.value : 0;
         const mdBtn = commentDiv.querySelector("i.fa-markdown");

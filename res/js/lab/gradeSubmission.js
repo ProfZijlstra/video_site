@@ -43,10 +43,12 @@ window.addEventListener("load", () => {
         const container = this.closest("div.dcontainer");
         const input = container.querySelector("input");
         if (!input.checkValidity()) {
-            alert("Points have an invalid value (beyond max or below zero).");
-            input.value = input.dataset.value;
-            setTimeout(() => input.focus(), 100);
-            return;
+            const ans = confirm("Did you intend to go beyond max or below zero?");
+            if (!ans) {
+                input.value = input.dataset.value;
+                setTimeout(() => input.focus(), 100);
+                return;
+            }
         }
         const points = input.value ? input.value : 0;
         const hasMarkDown = container.querySelector("i.fa-markdown").classList.contains("active") ? 1 : 0;

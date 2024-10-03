@@ -21,10 +21,12 @@ window.addEventListener("load", () => {
         const text = commentDiv.querySelector('textarea.comment').value;
         const input = pointsDiv.querySelector('input.points');
         if (!input.checkValidity()) {
-            alert("Points have an invalid value (beyond max or below zero).");
-            input.value = input.dataset.value;
-            setTimeout(() => input.focus(), 100);
-            return;
+            const ans = confirm("Did you intend to go beyond max or below zero?");
+            if (!ans) {
+                input.value = input.dataset.value;
+                setTimeout(() => input.focus(), 100);
+                return;
+            }
         }
         const points = input.value ? input.value : 0;
         const shifted = MARKDOWN.ceasarShift(text);

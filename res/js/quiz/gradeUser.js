@@ -11,10 +11,12 @@ window.addEventListener("load", () => {
         const shifted = MARKDOWN.ceasarShift(commentArea.value);
         const input = qc.querySelector('input.points');
         if (!input.checkValidity()) {
-            alert("Points have an invalid value (beyond max or below zero).");
-            input.value = input.dataset.value;
-            setTimeout(() => input.focus(), 100);
-            return;
+            const ans = confirm("Did you intend to go beyond max or below zero?");
+            if (!ans) {
+                input.value = input.dataset.value;
+                setTimeout(() => input.focus(), 100);
+                return false;
+            }
         }
         const points = input.value ? input.value : 0;
         const question_id = qc.querySelector('div.question').dataset.id
