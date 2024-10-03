@@ -149,11 +149,12 @@ class LabAdminCtrl
         global $URI_PARAMS;
         global $VIEW_DATA;
 
-        $course_num = $URI_PARAMS[1];
+        $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = filter_input(INPUT_GET, "l", FILTER_SANITIZE_NUMBER_INT);
         $user_id = $_SESSION['user']['id'];
         
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);
         $stopDiff = new DateInterval("PT1H"); // 1 hour
 
@@ -161,8 +162,9 @@ class LabAdminCtrl
         $parsedown = new Parsedown();
         $parsedown->setSafeMode(true);
 
-        $VIEW_DATA['course'] = $course_num;
+        $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['lab'] = $lab;
         $VIEW_DATA["parsedown"] = $parsedown;
         $VIEW_DATA['title'] = "Lab: " . $lab['name'];
