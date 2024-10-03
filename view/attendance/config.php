@@ -13,6 +13,9 @@
         #content h3 {
             margin-bottom: 10px;
         }
+        main nav.areas {
+            margin-top: 50px;
+        }
 
         .defaults {
             display: grid;
@@ -78,13 +81,14 @@
 <body>
     <?php include("header.php"); ?>
     <main>
-        <nav class="areas">
+        <nav class="back">
             <div title="Back">
                 <a href="../attendance">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </div>
         </nav>
+        <?php include("areas.php"); ?>
 
         <div id="content">
             <div class="error">

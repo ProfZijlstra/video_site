@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <style>
+        nav.areas {
+            margin-top: 50px;
+        }
         .session input[type=text] {
             width: 665px;
         }
@@ -45,6 +48,7 @@
         <nav class="back" title="Back">
             <a href="../../attendance"><i class="fa-solid fa-arrow-left"></i></a>
         </nav>
+        <?php include("areas.php"); ?>
         <div id="content">
             <div class="error">
                 <?= $error ?>

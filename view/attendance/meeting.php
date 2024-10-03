@@ -21,6 +21,7 @@
         <nav class="back" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
+        <?php include("areas.php"); ?>
 
         <nav class="tools">
             <span class="iconContainer" id="barcodeReader" title="Start/Stop Camera Reader">

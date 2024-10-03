@@ -3,7 +3,9 @@
     display: inline-block;
     margin-right: 10px;
 }
-
+main nav.areas {
+    margin-top: 50px;
+}
 nav.tools .stripe {
     position: absolute;
     top: 17px;

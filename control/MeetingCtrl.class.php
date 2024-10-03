@@ -41,10 +41,11 @@ class MeetingCtrl
         global $URI_PARAMS;
         global $VIEW_DATA;
 
-        $course_number = $URI_PARAMS[1];
+        $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $meeting_id = $URI_PARAMS[3];
 
+        $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $meeting = $this->meetingDao->get($meeting_id);
         $attendance = $this->attendanceDao->forMeeting($meeting_id);
         $session = $this->classSessionDao->getSessionById($meeting['session_id']);
@@ -64,8 +65,9 @@ class MeetingCtrl
             }
         }
 
-        $VIEW_DATA["course"] = $course_number;
+        $VIEW_DATA["course"] = $course;
         $VIEW_DATA["block"] = $block;
+        $VIEW_DATA["offering"] = $offering;
         $VIEW_DATA["meeting"] = $meeting;
         $VIEW_DATA["session"] = $session;
         $VIEW_DATA["day"] = $day;

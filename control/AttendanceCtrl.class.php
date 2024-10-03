@@ -102,6 +102,7 @@ class AttendanceCtrl
 
         $VIEW_DATA["course"] = $course_number;
         $VIEW_DATA["block"] = $block;
+        $VIEW_DATA["offering"] = $offering;
         $VIEW_DATA["CAMS"] = $cams;
         $VIEW_DATA["defaults"] = $defaults;
         $VIEW_DATA["title"] = "Attendance Configuration";
@@ -224,6 +225,7 @@ class AttendanceCtrl
 
         $VIEW_DATA["week"] = $week;
         $VIEW_DATA["course"] = $course_number;
+        $VIEW_DATA["offering"] = $offering;
         $VIEW_DATA["block"] = $block;
         $VIEW_DATA["attend"] = $attend;
         $VIEW_DATA["title"] = $week . " Physical Attendance";
@@ -304,6 +306,7 @@ Manalabs Attendance System.
         $VIEW_DATA['day_abbr'] = $day_abbr;
         $VIEW_DATA['date'] =  $date;
         $VIEW_DATA['course'] = $course_number;
+        $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['stype'] = $stype;
         $VIEW_DATA['session'] = $session;

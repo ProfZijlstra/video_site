@@ -8,6 +8,9 @@
         <link rel="stylesheet" href="res/css/common-1.3.css">
 		<link rel="stylesheet" href="res/css/adm-1.0.css">
         <style>
+            main nav.areas {
+                margin-top: 50px;
+            }
             #plane {
                 cursor: pointer;
             }
@@ -47,6 +50,7 @@ window.addEventListener("load", () => {
             <nav class="back" title="Back">
                 <i class="fa-solid fa-arrow-left"></i>
             </nav>
+            <?php include("areas.php"); ?>
             <div id="content">
                 <p><strong>Note:</strong> this report is based on attendance-export data. 
                     If the required export reports have not been generated yet 
