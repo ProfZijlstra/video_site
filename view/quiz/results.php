@@ -41,7 +41,7 @@ window.addEventListener("load", () => {
                     <div class="about">
                         <div class="seq"><?= $question['seq'] ?></div>
                         <div class="points">
-                            <?php if ($answers[$question['id']] && $answers[$question['id']]['points']) : ?>
+                            <?php if ($answers[$question['id']] && !is_null($answers[$question['id']]['points'])) : ?>
                                 Points Received: <br />
                                 <strong><?= $answers[$question['id']]['points'] ?></strong>
                                 of <?= $question['points'] ?>
