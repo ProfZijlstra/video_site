@@ -24,6 +24,22 @@ class QuizEventDao
         return $this->db->lastInsertId();
     }
 
+    public function checkStop($quiz_id, $user_id) {
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(*) AS `count`
+            FROM quiz_event 
+            WHERE quiz_id = :quiz_id
+            AND user_id = :user_id
+            AND type = 'stop'"
+        );
+        $stmt->execute(array(
+            "quiz_id" => $quiz_id,
+            "user_id" => $user_id
+        ));
+        $row = $stmt->fetch();
+        return $row['count'] > 0;
+    }
+
     public function getStartTimes($quiz_id)
     {
         $stmt = $this->db->prepare(
