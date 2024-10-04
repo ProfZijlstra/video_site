@@ -87,6 +87,12 @@ class QuizTakingCtrl
 
         // quiz is done / over, stop is in the past
         if (!$fac_upd && ($auth == "observer" || $stopDiff->invert === 1)) { 
+            // check if there is no 'stop' quiz event and add it
+            $hasStop = $this->quizEventDao->checkStop($quiz_id, $user_id);
+            if (!$hasStop) {
+                $this->quizEventDao->add($quiz_id, $user_id, "stop");
+            }
+
             // show quiz taken / results page
             $VIEW_DATA['title'] = "Quiz Results: " . $quiz['name'];
             $VIEW_DATA['possible'] = $this->sumPoints($VIEW_DATA['questions']);
