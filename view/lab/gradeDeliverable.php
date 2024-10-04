@@ -71,11 +71,13 @@
                     <?php $delivery = $deliveries[$i]; ?>
                     <div class="users">
                         <div>
-                            <?php if ($delivery['group']) : ?>
-                                Group: <?= $delivery['group'] ?>,
-                            <?php endif; ?>
-                            <?= $delivery['knownAs'] ?>
-                            <?= $delivery['lastname'] ?>
+                            <a href="../submission/<?= $delivery['submission_id']?>">
+                                <?php if ($delivery['group']) : ?>
+                                    Group: <?= $delivery['group'] ?>,
+                                <?php endif; ?>
+                                <?= $delivery['knownAs'] ?>
+                                <?= $delivery['lastname'] ?>
+                            </a>
                         </div>
                         <div class="timestamp">Created: <?= substr($delivery['created'], 11) ?></div>
                         <div class="timestamp">Updated: <?= substr($delivery['updated'], 11) ?></div>

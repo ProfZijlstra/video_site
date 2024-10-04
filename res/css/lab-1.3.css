@@ -257,6 +257,8 @@ body.labDeliverables {
     div.txtDelivery {
         position: relative;
         margin: 10px 0px;
+        max-width: 978px;
+        overflow: auto;
     }
     div.comment {
         position: relative;

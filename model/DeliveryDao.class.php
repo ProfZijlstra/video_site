@@ -34,7 +34,7 @@ class DeliveryDao
                 d.text, d.hasMarkDown, d.file, d.name, 
                 d.stuComment, d.stuCmntHasMD, 
                 d.points, d.gradeComment, d.gradeCmntHasMD, 
-                u.knownAs, u.lastname, s.group
+                u.knownAs, u.lastname, s.group, s.id as submission_id
             FROM delivery AS d
                 JOIN submission AS s ON d.submission_id = s.id
                 LEFT JOIN user AS u ON d.user_id = u.id

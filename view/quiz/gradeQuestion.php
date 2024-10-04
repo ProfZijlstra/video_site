@@ -74,7 +74,9 @@
                     <?php $answer = $answers[$i]; ?>
                     <div class="users">
                         <span class="timestamp"><?= substr($answer['created'], 11) ?></span>
-                        <?= $answer['knownAs'] . " " . $answer['lastname'] ?><br />
+                        <a href="../user/<?= $answer['user_id']?>">
+                            <?= $answer['knownAs'] . " " . $answer['lastname'] ?><br />
+                        </a>
                         <?php $ids = [];
                         $ids[] = $answer['id']; ?>
                         <?php while ($i < count($answers) - 1 && $answers[$i + 1]['text'] == $answer['text']) : ?>
