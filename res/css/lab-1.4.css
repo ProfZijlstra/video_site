@@ -313,6 +313,11 @@ body.labDeliverables {
             cursor: pointer;
         }
 
+        i.fa-trash-can {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
         input.file {
             display: none;
         }

@@ -553,4 +553,22 @@ class DeliveryDao
         ]);
         return $this->db->lastInsertId();
     }
+
+    function delete($id)
+    {
+        $stmt = $this->db->prepare(
+            "DELETE FROM zip_ul_stat 
+                WHERE delivery_id = :id"
+        );
+        $stmt->execute([
+            "id" => $id
+        ]);
+        $stmt = $this->db->prepare(
+            "DELETE FROM delivery 
+                WHERE id = :id"
+        );
+        $stmt->execute([
+            "id" => $id
+        ]);
+    }
 }

@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/lab-1.3.css">
+    <link rel="stylesheet" href="res/css/lab-1.4.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/back.js"></script>
-    <script src="res/js/camera-1.2.js"></script>
-    <script src="res/js/lab/lab-1.8.js"></script>
+    <script src="res/js/camera-1.3.js"></script>
+    <script src="res/js/lab/lab-1.9.js"></script>
     <script src="res/js/ensureSaved.js"></script>
 </head>
 
@@ -189,6 +189,7 @@
                                         <?php endif; ?>
                                         <input type="file" class="file fileUpload" />
                                         <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
+                                        <i title="delete" class="fa-solid fa-trash-can <?= $delivery['file'] ? '' : 'hide' ?>" data-id="<?= $delivery['id']?>"></i>
                                         <span class="check"><i class="fa-solid fa-check"></i></span>
                                         <?php if ($deliv['type'] == 'img') : ?>
                                             <div class="camera">
@@ -205,7 +206,7 @@
                                                 </div>
                                                 <canvas></canvas>
                                             </div>
-                                            <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>" data-id="<?= $delivery['id'] ?>">
+                                            <img src="<?= $delivery['file'] ?>" class="answer <?= $delivery['file'] ? 'show' : 'hide' ?>" data-id="<?= $delivery['id'] ?>">
                                         <?php elseif ($deliv['type'] == "zip") : ?>
                                             <div class="listing"><?= $delivery['text'] ?></div>
                                         <?php endif; ?>

@@ -706,7 +706,7 @@ class LabTakingCtrl
             );
         } else {
             $delivery = $this->deliveryDao->byId($delivery_id);
-            if ($delivery['file']) {
+            if (!is_null($delivery['file']) && $delivery['file']) {
                 unlink($delivery['file']);
             }
 
@@ -805,6 +805,28 @@ class LabTakingCtrl
         }
 
         return ["dst" => $dst, "answer_id" => $delivery_id];
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Delete(uri: "/(\d+)/delivery/(\d+)$", sec: "student")]
+    public function deleteFile() {
+        global $URI_PARAMS;
+
+        $id = $URI_PARAMS[4];
+        $user_id = $_SESSION['user']['id'];
+        $delivery = $this->deliveryDao->byId($id);
+        if ($user_id != $delivery['user_id']) {
+            return ["error" => "You are not the owner of this file"];
+        }
+        // remove the file from the filesystem
+        if (!is_null($delivery['file']) && $delivery['file']) {
+            unlink($delivery['file']);
+        }
+        // remove the delivery from the database
+        $this->deliveryDao->delete($id);
+        return ["success" => true];
     }
 
     private function labEnded($lab_id, $leewaySecs = 30)

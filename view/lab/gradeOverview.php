@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
-    <link rel="stylesheet" href="res/css/lab-1.3.css">
+    <link rel="stylesheet" href="res/css/lab-1.4.css">
 </head>
 
 <body id="gradeLab" class="lab">

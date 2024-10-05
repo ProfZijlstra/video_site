@@ -135,6 +135,7 @@ window.addEventListener("load", () => {
         const spinner = deliv.querySelector("i.spinner");
         const check = deliv.querySelector("span.check");
         const upload = deliv.querySelector("i.upload");
+        const trash = deliv.querySelector("i.fa-trash-can");
         check.classList.remove("show");
 
         data.append("submission_id", submission_id);
@@ -207,6 +208,8 @@ window.addEventListener("load", () => {
             link.setAttribute("href", data.file);
             link.textContent = data.name;
             check.classList.add("show");
+            trash.dataset.id = data.id;
+            trash.classList.remove("hide");
 
             if (type == "img") {
                 const img = deliv.querySelector("img");
@@ -225,4 +228,52 @@ window.addEventListener("load", () => {
 
     // Hook up the camera functions
     CAMERA.init(`${lab_id}`); 
+
+    // Hook up the delete functions
+    document.querySelectorAll("i.fa-trash-can").forEach(trash => {
+        trash.addEventListener("click", deleteFile);
+    });
+    function deleteFile() {
+        const id = this.dataset.id;
+        url = `${lab_id}/delivery/${id}`;
+        fetch(url, {
+            method: "DELETE",
+        })
+        .then(response =>  {
+            if (!response.ok) {
+                alert("Deleting file failed.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            // remove the file from the DOM
+            const parent = this.closest("div.fileContainer");
+            const link = parent.querySelector("a.fileLink");
+            link.removeAttribute("href");
+            link.textContent = "";
+            this.classList.add("hide");
+
+            // remove the previous delivery id
+            this.closest("div.deliv").dataset.id = "";
+
+            // for images, remove the image
+            const img = parent.querySelector("img.answer");
+            if (img) {
+                img.removeAttribute("src");
+                img.classList.remove("show");
+                img.classList.add("hide");
+                img.dataset.id = "";
+            }
+            // for zip files, remove the listing
+            const listing = parent.querySelector("div.listing");
+            if (listing) {
+                listing.innerHTML = "";
+            }
+        });
+
+    }
 });

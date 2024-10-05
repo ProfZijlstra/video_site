@@ -49,6 +49,7 @@ const CAMERA = (function() {
                 video.classList.add('show');
                 video.play();
                 img.classList.add('hide');
+                img.classList.remove('show');
                 camera.classList.remove('hide');
                 close.classList.remove('hide');
                 pic.classList.remove('hide');
@@ -57,7 +58,8 @@ const CAMERA = (function() {
                     switchCam.classList.remove('hide');
                 }
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e);
                 alert("Unable to open camera");
                 spinner.classList.remove('rotate');
             });
@@ -120,6 +122,7 @@ const CAMERA = (function() {
         video.classList.add('hide');
         stopCamera.call(this);
         img.classList.remove('hide');
+        img.classList.add('show');
 
         // upload the image
         // if there already is an image, get the answer_id from it
@@ -130,6 +133,7 @@ const CAMERA = (function() {
         const qid = parent.dataset.id;
         const spinner = parent.querySelector('i.fa-circle-notch');
         const anchor = parent.querySelector('a');
+        const trash = parent.querySelector('i.fa-trash-can');
         spinner.classList.add('rotate');
         const data = new FormData();
         data.append("answer_id", aid);
@@ -160,6 +164,10 @@ const CAMERA = (function() {
                 anchor.href = data.dst;
                 const name = data.dst.split('/').pop();
                 anchor.innerText = name;
+                if (trash) {
+                    trash.classList.remove('hide');
+                    trash.dataset.id = data.answer_id;    
+                }
             }
             spinner.classList.remove('rotate');    
         })
