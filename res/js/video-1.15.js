@@ -56,13 +56,8 @@ window.addEventListener('load', () => {
 
     // video speed controls
     const curSpeed = document.querySelector('.curSpeed');
-    const numOpts = {minimumFractionDigits : 1, minimumFractionDigits : 1};
-    function faster(e) {
-        let speed = parseFloat(curSpeed.innerHTML)
-        speed += 0.1
-        if (speed > 4) {
-            speed = 4;
-        }
+    const numOpts = {minimumFractionDigits : 1, maximumFractionDigits : 2};
+    function updateSpeed(speed) {
         const curSpeeds = document.querySelectorAll('.curSpeed');
         for (const elm of curSpeeds) {
             elm.innerHTML = speed.toLocaleString('en-US', numOpts);
@@ -70,7 +65,20 @@ window.addEventListener('load', () => {
         for (const vid of videos) {
             vid.playbackRate = speed;
         }
-        postSpeed(speed);
+        // post the speed to the server
+        fetch('./speed', {
+            method : 'POST',
+            body : `speed=${speed}`,
+            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+        });
+    }
+    function faster(e) {
+        let speed = parseFloat(curSpeed.innerHTML)
+        speed += 0.1
+        if (speed > 4) {
+            speed = 4;
+        }
+        updateSpeed(speed);
     };
     function slower(e) {
         let speed = parseFloat(curSpeed.innerHTML)
@@ -78,32 +86,11 @@ window.addEventListener('load', () => {
         if (speed < 0.3) {
             speed = 0.3;
         }
-        const curSpeeds = document.querySelectorAll('.curSpeed');
-        for (const elm of curSpeeds) {
-            elm.innerHTML = speed.toLocaleString('en-US', numOpts);
-        }
-        for (const vid of videos) {
-            vid.playbackRate = speed;
-        }
-        postSpeed(speed);
+        updateSpeed(speed);
     };
     function normalSpeed() {
         const speed = 1.0;
-        const curSpeeds = document.querySelectorAll('.curSpeed');
-        for (const elm of curSpeeds) {
-            elm.innerHTML = speed.toLocaleString('en-US', numOpts);
-        }
-        for (const vid of videos) {
-            vid.playbackRate = speed;
-        }
-        postSpeed(speed);
-    }
-    function postSpeed(speed) {
-        fetch('./speed', {
-            method : 'POST',
-            body : `speed=${speed}`,
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-        });
+        updateSpeed(speed);
     }
     curSpeed.onclick = normalSpeed;
     document.querySelectorAll('.faster').forEach(
@@ -247,10 +234,15 @@ window.addEventListener('load', () => {
             setTimeout(() => nextTab.click(), 500);
         }
     }
+    function ratechangeHandler(evt) {
+        const speed = evt.target.playbackRate;
+        updateSpeed(speed);
+    }
     for (const vid of videos) {
         vid.addEventListener('play', playHandler);
         vid.addEventListener('pause', pauseHandler);
         vid.addEventListener('ended', endedHandler);
+        vid.addEventListener('ratechange', ratechangeHandler);
     }
 
     // clicking on another video (or pdf) first sends a 'pause' to current video
