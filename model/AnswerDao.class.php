@@ -153,4 +153,11 @@ class AnswerDao
         ));
         return $stmt->fetchAll();
     }
+
+    public function delete($id) {
+        $stmt = $this->db->prepare(
+            "DELETE FROM answer WHERE id = :id"
+        );
+        $stmt->execute(array("id" => $id));
+    }
 }

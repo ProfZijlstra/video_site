@@ -49,7 +49,7 @@ window.addEventListener("load", () => {
 
     // enable image question image uploads
     function uploadImage() {
-        const img = this.parentNode.parentNode.querySelector('img');
+        const img = this.parentNode.parentNode.querySelector('img.answer');
         // if there already is an image, get the answer_id from it
         let aid = false;
         if (!img.classList.contains('hide')) {
@@ -82,6 +82,9 @@ window.addEventListener("load", () => {
                 anchor.href = data.dst;
                 const name = data.dst.split('/').pop();
                 anchor.innerText = name;
+                const trash = this.parentNode.querySelector("i.fa-trash-can");
+                trash.dataset.id = data.answer_id;
+                trash.classList.remove("hide");
             }
             spinner.classList.remove('rotate');    
         });
@@ -104,5 +107,44 @@ window.addEventListener("load", () => {
     // make back button also send 'finish' signal
     document.getElementById('back').onclick = function() {
         document.getElementById('finish').click();
+    }
+
+    // Hook up the delete functions
+    document.querySelectorAll("i.fa-trash-can").forEach(trash => {
+        trash.addEventListener("click", deleteFile);
+    });
+    function deleteFile() {
+        const id = this.dataset.id;
+        url = `${quiz_id}/delivery/${id}`;
+        fetch(url, {
+            method: "DELETE",
+        })
+        .then(response =>  {
+            if (!response.ok) {
+                alert("Deleting file failed.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            // remove the file from the DOM
+            const parent = this.closest("div.camContainer");
+            const link = parent.querySelector("a.fileLink");
+            link.removeAttribute("href");
+            link.textContent = "";
+            this.classList.add("hide");
+
+            // for images, remove the image
+            const img = parent.querySelector("img.answer");
+            if (img) {
+                img.removeAttribute("src");
+                img.classList.remove("show");
+                img.classList.add("hide");
+                img.dataset.id = "";
+            }
+        });
     }
 });            

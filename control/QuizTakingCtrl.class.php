@@ -241,6 +241,29 @@ class QuizTakingCtrl
         return "Location: ../../quiz";
     }
 
+    /**
+     * Expects AJAX
+     */
+    #[Delete(uri: "/(\d+)/delivery/(\d+)$", sec: "student")]
+    public function deletePicture()
+    {
+        global $URI_PARAMS;
+
+        $id = $URI_PARAMS[4];
+        $user_id = $_SESSION['user']['id'];
+        $answer = $this->answerDao->byId($id);
+        if ($user_id != $answer['user_id']) {
+            return ["error" => "You are not the owner of this file"];
+        }
+        // remove the file from the filesystem
+        if (str_starts_with($answer['text'], "res/")) {
+            unlink($answer['text']);
+        }
+        // remove the delivery from the database
+        $this->answerDao->delete($id);
+        return ["success" => true];   
+    }
+
     private function quizEnded($quiz_id, $leewaySecs = 0)
     {
         $quiz = $this->quizDao->byId($quiz_id);

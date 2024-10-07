@@ -71,12 +71,15 @@
                                 <i class="fa-solid fa-circle-notch"></i>
                                 <i title="Open camera" class="fa-solid fa-camera"></i>
                                 <?php if ($answers[$question['id']]) : ?>
-                                    <a href="<?= $answers[$question['id']]['text'] ?>" target="_blank">
+                                    <a class="fileLink" href="<?= $answers[$question['id']]['text'] ?>" target="_blank">
                                         <?= basename($answers[$question['id']]['text']) ?>
                                     </a>
                                 <?php else : ?>
-                                    <a href="" target="_blank"></a>
+                                    <a class="fileLink" href="" target="_blank"></a>
                                 <?php endif; ?>
+                                <i title="Delete" 
+                                    class="fa-solid fa-trash-can <?= $answers[$question['id']] ? '' : 'hide' ?>" 
+                                    data-id="<?= $answers[$question['id']]['id'] ?>"></i>
                             </span>
                             <div class="camera">
                                 <video></video>

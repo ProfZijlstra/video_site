@@ -156,7 +156,7 @@ div#back div.otherAreas {
     margin-top: 15px;
 }
 
-nav nav {
+nav#videos nav {
     cursor: default;
     position: relative;
     padding-top: 10px;
@@ -277,6 +277,10 @@ main article .progress .time {
     font-size: 20px;
     cursor: pointer;
 }
+article nav.mobileNav {
+    display: none;
+}
+
 div.keyboard {
     margin: auto;
     width: 80%;
@@ -446,7 +450,7 @@ textarea.commentText {
         right: 10px;
         top: 23px;
     }
-    main div#playSpeed {
+    main div.playSpeed {
         top: 15px;
         right: 70px;
     }
@@ -460,5 +464,29 @@ textarea.commentText {
     main article video {
         width: 100%;
         height: auto;
+    }
+    main article nav.mobileNav {
+        display: block;
+        height: 10px;
+        margin-top: 30px;
+        position: relative;
+        font-size: 40px;
+
+        div.prev {
+            position: absolute;
+            left: 30px;
+            top: 0px;
+            cursor: pointer;
+        }
+        div.next {
+            position: absolute;
+            right: 30px;
+            top: 0px;
+            cursor: pointer;
+        }
+        i.disabled {
+            color: lightgray;
+            cursor: default;
+        }
     }
 }

@@ -135,12 +135,15 @@ div.question span.block {
     margin: 10px 0px;
 }
 div.question span.block {
-    i.fa-upload, i.fa-camera {
+    i.fa-upload, i.fa-camera, i.fa-trash-can {
         cursor: pointer;
     }
     a {
         display: inline-block;
         margin-left: 20px;
+    }
+    i.fa-trash-can {
+        margin-left: 10px;
     }
 }
 div.question {

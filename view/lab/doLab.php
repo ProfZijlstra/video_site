@@ -189,7 +189,7 @@
                                         <?php endif; ?>
                                         <input type="file" class="file fileUpload" />
                                         <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
-                                        <i title="delete" class="fa-solid fa-trash-can <?= $delivery['file'] ? '' : 'hide' ?>" data-id="<?= $delivery['id']?>"></i>
+                                        <i title="Delete" class="fa-solid fa-trash-can <?= $delivery['file'] ? '' : 'hide' ?>" data-id="<?= $delivery['id']?>"></i>
                                         <span class="check"><i class="fa-solid fa-check"></i></span>
                                         <?php if ($deliv['type'] == 'img') : ?>
                                             <div class="camera">
