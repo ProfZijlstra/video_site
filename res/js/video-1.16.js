@@ -108,6 +108,10 @@ window.addEventListener('load', () => {
         }
     }
 
+    function clickMobileNav(e) {
+        e.preventDefault();
+        genericClick(this.dataset.video);
+    }
     function nextVideo() {
         const tab = document.querySelector(".video_link.selected");
         if (tab.nextElementSibling) {
@@ -115,6 +119,9 @@ window.addEventListener('load', () => {
             nextTab.click();    
         }
     }
+    document.querySelectorAll("nav.mobileNav .next a").forEach(
+        e => e.onclick = clickMobileNav
+    );
     function prevVideo() {
         const tab = document.querySelector(".video_link.selected");
         if (tab.previousElementSibling) {
@@ -122,6 +129,9 @@ window.addEventListener('load', () => {
             prevTab.click();    
         }
     }
+    document.querySelectorAll("nav.mobileNav .prev a").forEach(
+        e => e.onclick = clickMobileNav
+    );
 
     // keyboard controls
     video?.focus();
