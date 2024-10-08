@@ -16,6 +16,7 @@ window.addEventListener("load", () => {
 
         overlay.classList.add("visible");
         document.getElementById("configure_modal").classList.remove("hide");
+        document.getElementById("config_group").focus();
     }
     const configs = document.querySelectorAll("i.config");
     for (const config of configs) {
