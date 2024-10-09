@@ -143,6 +143,7 @@ window.addEventListener('load', () => {
         video = document.querySelector("article.selected video");
         switch (e.code) {
         case "Space":
+            e.preventDefault();
         case "KeyK":
             if (video?.paused) {
                 video?.play()
