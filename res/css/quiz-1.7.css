@@ -331,16 +331,29 @@ body#gradeQuestion {
         left: 20px;
     }
     nav.tools {
-        top: 0px;
-        right: 125px;
-        background-color: white;
+        top: 60px;
+        right: auto;
+        width: 100%;
+        text-align: center;
     }
     nav.tools h3 {
         margin: 0px;
         padding: 3px;
     }
+    main nav.areas {
+        margin-top: 0px;
+        position: absolute;
+        top: 10px;
+        left: 60px;
+        width: auto;
+        div {
+            display: inline-block;
+            min-width: 40px;
+        }
+    }
     #content {
         width: auto;
+        margin-top: 100px;
     }
     #content h1 {
         text-align: center;
@@ -356,5 +369,11 @@ body#gradeQuestion {
     }
     #content #countdown {
         font-size: 35px;
+    }
+    #content div.questionText {
+        max-width: 73vw;
+    }
+    #content div.textContainer {
+        max-width: 73vw;
     }
 }

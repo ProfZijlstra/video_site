@@ -621,8 +621,19 @@ body#gradeDeliverable {
     nav.back {
         left: 20px;
     }
+    body.lab main nav.areas {
+        margin-top: 0px;
+        position: absolute;
+        top: 10px;
+        left: 60px;
+        width: auto;
+        div {
+            display: inline-block;
+            min-width: 40px;
+        }
+    }
     nav.tools {
-        top: 0px;
+        top: 55px;
         right: 70px; /* not same as quiz */
         z-index: 100;
 
@@ -635,6 +646,8 @@ body#gradeDeliverable {
     /* custom for lab mobile view */
     #content {
         width: auto;
+        margin-top: 100px;
+
         div.about {
             margin-top: 70px;
             margin-left: 25px;
@@ -654,6 +667,9 @@ body#gradeDeliverable {
             }
         }
         div.deliv {
+            div.description {
+                max-width: 67vw;
+            }
             div.stats label {
                 display: block;
                 margin-left: 0px;
@@ -671,6 +687,9 @@ body#gradeDeliverable {
             div.listing {
                 max-width: 70vw;
                 overflow-x: scroll;
+            }
+            div.textContainer {
+                max-width: 70vw;
             }
         }
         div.done nav.back {
