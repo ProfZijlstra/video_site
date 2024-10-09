@@ -143,7 +143,10 @@ window.addEventListener('load', () => {
         video = document.querySelector("article.selected video");
         switch (e.code) {
         case "Space":
-            e.preventDefault();
+            if (video == document.activeElement) {
+                break;
+            } 
+            video.focus();
         case "KeyK":
             if (video?.paused) {
                 video?.play()
