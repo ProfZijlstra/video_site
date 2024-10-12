@@ -57,11 +57,10 @@ window.addEventListener('load', () => {
     // video speed controls
     const curSpeed = document.querySelector('.curSpeed');
     const numOpts = {minimumFractionDigits : 1, maximumFractionDigits : 2};
+    let ignoreRateChange = false;
     function updateSpeed(speed) {
-        const curSpeeds = document.querySelectorAll('.curSpeed');
-        for (const elm of curSpeeds) {
-            elm.innerHTML = speed.toLocaleString('en-US', numOpts);
-        }
+        ignoreRateChange = true;
+        curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
         for (const vid of videos) {
             vid.playbackRate = speed;
         }
@@ -149,7 +148,7 @@ window.addEventListener('load', () => {
             video.focus();
         case "KeyK":
             if (video?.paused) {
-                video?.play()
+                video?.play();
             } else {
                 video?.pause();
             }
@@ -249,6 +248,10 @@ window.addEventListener('load', () => {
         }
     }
     function ratechangeHandler(evt) {
+        if (ignoreRateChange) {
+            ignoreRateChange = false;
+            return;
+        }
         const speed = evt.target.playbackRate;
         updateSpeed(speed);
     }
@@ -276,7 +279,9 @@ window.addEventListener('load', () => {
 
     // clicking on a video link switches the browser URL
     function switchVideo(video_id) {
-        document.querySelectorAll('video').forEach(vid => vid.pause());
+        ignoreRateChange = true;
+
+        const vid = document.querySelector('article.selected video')?.pause();
         if (document.fullscreenElement) {
             document.exitFullscreen();
         }
