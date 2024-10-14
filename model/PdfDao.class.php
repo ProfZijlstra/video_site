@@ -10,7 +10,7 @@
 #[Repository]
 class PdfDao {
     public function forDay($course_num, $block ,$day) {
-        chdir("res/{$course_num}/{$block}/{$day}/pdf/");
+        chdir("res/{$course_num}/{$block}/lecture/{$day}/pdf/");
         $files = glob("*.[pP][dD][fF]"); // pdf files
         $result = array();
         foreach ($files as $file) {
@@ -23,7 +23,7 @@ class PdfDao {
                 "parts" => explode("_", $info['filename'])
             ];
         }
-        chdir("../../../../../");
+        chdir("../../../../../../");
         return $result;
     }
 }

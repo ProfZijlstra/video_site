@@ -136,6 +136,7 @@ class VideoCtrl
         // get pdf and video related data
         $pdfs = $this->pdfDao->forDay($course_num, $block, $day);
         $videos = $this->videoDao->forDay($course_num, $block, $day);
+
         $files = [];
         foreach ($videos["file_info"] as $idx => $file) {
             if (!$idx) {

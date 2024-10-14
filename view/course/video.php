@@ -164,13 +164,15 @@
                             $pdf_info = $pdf_vid['pdf'];
                             ?>
                             
-                            <a class="pdf" target="_blank" data-file="<?= $idx ?>_<?= $pdf_info["parts"][1] ?>" href='res/<?=$course?>/<?=$block?>/<?=$day?>/pdf/<?= $pdf_info['file'] ?>'>
+                            <a class="pdf" target="_blank" 
+                                data-file="<?= $idx ?>_<?= $pdf_info["parts"][1] ?>" 
+                                href='res/<?=$course?>/<?=$block?>/lecture/<?=$day?>/pdf/<?= $pdf_info['file'] ?>'>
                                 <i class="far fa-file-pdf"></i>
                             </a>
                         <?php endif; ?>
 
                         <?php if(isset($pdf_vid["vid"])): ?>
-                            <?php $src = "res/{$course}/{$block}/{$day}/vid/{$info["file"]}"; ?>
+                            <?php $src = "res/{$course}/{$block}/lecture/{$day}/vid/{$info["file"]}"; ?>
                         <video controls controlslist="nodownload" 
                             <?php if ($idx == $file_idx): ?>
                                 src="<?= $src ?>" 
