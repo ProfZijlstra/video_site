@@ -76,7 +76,6 @@
 
             <div id="submission" data-id="<?= isset($submission) ? $submission['id'] : ''  ?>">
                 <h2><?= count($deliverables) ?> Deliverable(s) </h2>
-                <p class="delivInstr">Deliverables with 0:00 hours or 0% complete are auto-graded to zero points</p>
                 <?php foreach ($deliverables as $deliv) : ?>
                     <?php $delivery = $deliveries[$deliv['id']] ?? [] ?>
                     <div class="dcontainer deliverables camContainer" data-id="<?= $deliv['id'] ?>" data-type="<?= $deliv['type'] ?>">
@@ -92,7 +91,7 @@
                         </div>
                         <div class="deliv" data-id="<?= $delivery['id'] ?>">
                             <div class="stats">
-                                <label title="Hours spent creating this deliverable">Hours:
+                                <label title="Time spent creating this deliverable">Time Spent:
                                     <select class="duration" autofocus>
                                         <?php
                                         $now = new DateTime();
@@ -109,7 +108,7 @@
                                     </select>
                                 </label>
 
-                                <label title="Approximately how far you completed this deliverable" class="completion">Complete:
+                                <label title="Approximately how far you completed this deliverable" class="completion">Completion:
                                     <select class="completion">
                                         <option value="0">0%</option>
                                         <?php for ($i = 100; $i >= 10; $i -= 10) : ?>
