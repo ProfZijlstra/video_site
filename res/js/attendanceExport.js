@@ -50,6 +50,11 @@ window.addEventListener("load", () => {
             modal.classList.remove("hide");
         }
     };
+    
+    // when page opens show the export modal if the URL has #export
+    if (window.location.hash == "#export") {
+        document.getElementById("exportBtn").click();
+    }
 
     // hide overlay and any/all modal(s)
     function hide() {

@@ -77,7 +77,7 @@
                     <form id="delete_form" method="post" action="<?= $meeting["id"] ?>/delete">
                         <i id="delete_meeting" class="far fa-trash-alt" title="Delete Meeting"></i>
                     </form>
-                    <a href="<?= "../attendance/{$day['abbr']}/{$session['type']}" ?>">
+                    <a href="<?= "../attendance/{$day['abbr']}/{$session['type']}#export" ?>">
                         <i title="Export Session Attendance" class="fas fa-cloud-upload-alt <?= $session["status"] ?>"></i>
                     </a>
                 </h3>

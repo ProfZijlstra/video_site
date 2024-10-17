@@ -58,7 +58,7 @@
                                 <i title="Excused Absences" class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>" data-excused='<?= json_encode($excused[$session['id']]) ?>'>
                                 </i>
                                 <?php if ($session["meetings"]) : ?>
-                                    <a href="<?= "attendance/W{$w}D{$d}/$stype" ?>">
+                                    <a href="<?= "attendance/W{$w}D{$d}/{$stype}#export" ?>">
                                         <i title="Export Attendance <?= $session["status"] ?>" class="fas fa-cloud-upload-alt <?= $session["status"] ?>"></i>
                                     </a>
                                 <?php endif; ?>
