@@ -14,7 +14,7 @@
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/camera-1.3.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.7.js"></script>
+    <script src="res/js/quiz/quiz-1.8.js"></script>
     <script src="res/js/ensureSaved.js"></script>
 </head>
 
@@ -106,7 +106,7 @@
             <?php endforeach; ?>
             <div class="done">
                 <div class="note">Answers are saved automatically</div>
-                <form method="POST" action="<?= $quiz['id'] ?>/finish">
+                <form id="finishQuiz" method="POST" action="<?= $quiz['id'] ?>/finish">
                     <button id="finish">Finish Quiz</button>
                 </form>
             </div>

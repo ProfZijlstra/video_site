@@ -109,6 +109,11 @@ window.addEventListener("load", () => {
         document.getElementById('finish').click();
     }
 
+    document.forms['finishQuiz'].onsubmit = function(evt) {
+        evt.preventDefault();
+        setTimeout(() => this.submit(), 500);
+    };
+
     // Hook up the delete functions
     document.querySelectorAll("i.fa-trash-can").forEach(trash => {
         trash.addEventListener("click", deleteFile);
