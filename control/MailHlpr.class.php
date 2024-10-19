@@ -32,15 +32,15 @@ class MailHlpr
             //Server settings
             //$mail->SMTPDebug = 2;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.dreamhost.com';                  // Specify main and backup SMTP servers
+            $mail->Host = MAIL_SERVER;                  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'videos@manalabs.org';             // SMTP username
+            $mail->Username = MAIL_SERVER;             // SMTP username
             $mail->Password = MAIL_PASS;                           // SMTP password
             $mail->SMTPSecure = 'ssl';                            // Enable SSL encryption, TLS also accepted with port 465
             $mail->Port = 465;                                    // TCP port to connect to
 
             //Recipients
-            $mail->setFrom('videos@manalabs.org', 'Manalabs Video System');          //This is the email your form sends From
+            $mail->setFrom(MAIL_FROM, MAIL_NAME);          //This is the email your form sends From
             if (is_array($to)) {
                 $mail->addAddress($to[0], $to[1]);
             } else if (is_string($to)) {
