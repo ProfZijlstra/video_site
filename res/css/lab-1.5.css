@@ -222,6 +222,9 @@ body#editLab {
 }
 
 body.labDeliverables {
+    div#content a {
+        text-decoration: underline;
+    }
     div#content div.about {
         label {
             display: inline-block;
