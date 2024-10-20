@@ -65,14 +65,22 @@ window.addEventListener("load", () => {
             for (let i = 0; i < 4; i++) {
                 t = t?.nextElementSibling;
             }
-            t?.querySelector("input.points")?.focus();
+            const next = t?.querySelector("input.points");
+            if (next) {
+                next.focus();
+                next.scrollIntoView(true);
+            }
         }
         else if (evt.key == "p" || evt.key == "P") {
             evt.preventDefault();
             for (let i = 0; i < 4; i++) {
                 t = t?.previousElementSibling;
             }
-            t?.querySelector("input.points")?.focus();
+            const prev = t?.querySelector("input.points");
+            if (prev) {
+                prev.focus();
+                prev.scrollIntoView(true);
+            }
         }
     }
     document.querySelectorAll('input.points').forEach(input => {
