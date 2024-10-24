@@ -27,6 +27,7 @@
                 <h1>Files</h1>
                 <?php if (hasMinAuth('instructor')) { ?>
                 <div>Students only see the contents of public</div>
+                <div>Files uploaded in other areas (lecture, lab, quiz) are placed in their respective directories</div>
                 <?php } ?>
                 <div class="files">
                     <?php include 'listing.php'; ?>

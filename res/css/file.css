@@ -25,6 +25,10 @@ div#content {
                 cursor: pointer;
                 position: absolute;
                 right: 5px;
+                i {
+                    display: inline-block;
+                    width: 15px;
+                }
             }
             div.listing {
                 margin-left: 10px;

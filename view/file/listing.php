@@ -21,7 +21,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
         </span>
         <span class="ops">
             <?php if (hasMinAuth('instructor')) { ?>
-            <?php if (isset($norem) && ! in_array($dir, $norem)) { ?>
+            <?php if ((isset($norem) && ! in_array($dir, $norem) || ! isset($norem))) { ?>
             <i title="Rename" class="fa-regular fa-pen-to-square"></i>
             <i title="Remove Directory" class="fa-solid fa-trash-can"></i>
             <?php } ?>
