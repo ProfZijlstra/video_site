@@ -576,6 +576,9 @@ class LabAdminCtrl
             $count++;
         }
 
+        $VIEW_DATA['course'] =  $course;
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['type'] = 'lab';
         $VIEW_DATA['colCount'] = $count + 3; // 3 are sid, first, last
         $VIEW_DATA['header'] = $header;
         $VIEW_DATA['data'] = $data;
