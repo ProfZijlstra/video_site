@@ -20,10 +20,13 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
             <?= $dir ?>
         </span>
         <span class="ops">
-            <?php if (isset($norem) && ! in_array($dir, $norem) && hasMinAuth('instructor')) { ?>
+            <?php if (hasMinAuth('instructor')) { ?>
+            <?php if (isset($norem) && ! in_array($dir, $norem)) { ?>
+            <i title="Rename" class="fa-regular fa-pen-to-square"></i>
             <i title="Remove Directory" class="fa-solid fa-trash-can"></i>
             <?php } ?>
             <i title="Upload File" class="fa-solid fa-upload"></i>
+            <?php } ?>
         </span>
     </div>
     <?php } ?>
@@ -43,6 +46,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
         </span>
         <span class="ops">
             <?php if (hasMinAuth('instructor')) { ?>
+            <i title="Rename" class="fa-regular fa-pen-to-square"></i>
             <i title="Remove File" class="fa-solid fa-trash-can"></i>
             <?php } ?>
             <i title="Copy Link" 
