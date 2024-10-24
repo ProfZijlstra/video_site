@@ -1,0 +1,74 @@
+div#content {
+    h1 {
+        margin-bottom: 0px;
+    }
+    div.files {
+        border: 1px solid var(--border);
+        background-color: var(--light-gray);
+        min-width: 50vw;
+        min-height: 50vh;
+        max-height: 80vh;
+        overflow: auto;
+
+        div.file {
+            padding-left: 5px;
+            position: relative;
+
+            span.dir, span.file {
+                cursor: pointer;
+                i {
+                    display: inline-block;
+                    width: 20px;
+                }
+            }
+            span.ops {
+                cursor: pointer;
+                position: absolute;
+                right: 5px;
+            }
+            div.listing {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+@media screen and (max-width: 900px) {
+    header {
+        height: 120px;
+        h1 {
+            display: none;
+        }
+        div#course {
+            top: 60px;
+            left: 0px;
+            width: 100%;
+        }
+        div#controls {
+            top: 20px;
+            right: 30px;
+        }
+    }
+    nav.areas {
+        margin-left: 10px;
+        width: 100%;
+        div {
+            display: inline-block;
+            min-width: 40px;
+        }
+    }
+    nav.tools {
+        top: 70px;
+        right: 20px;
+    }
+    div#content {
+        margin-top: 70px;
+        margin-left: 10px;
+        width: 100%;
+        div.files {
+            width: 95vw;
+            div.file div.listing {
+                margin-left: 5px;
+            }
+        }
+    }
+}
