@@ -140,6 +140,7 @@ class VideoDao
             chdir("res/$course/$block/lecture/$day/vid/");
         }
         move_uploaded_file($tmp, "$name");
+        chdir("../../../../../../");
     }
 
     public function nextIndex($course, $block, $day)
@@ -152,8 +153,10 @@ class VideoDao
             $last = $videos[count($videos) - 1];
             $parts = explode("_", $last);
             $idx = $parts[0];
+            chdir("../../../../../../");
             return $idx + 1;
         }
+        chdir("../../../../../../");
         return 1;
     }
 
