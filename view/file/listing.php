@@ -17,7 +17,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
     <div class="file">
         <span class="dir" data-dir="<?= "{$parent}/{$dir}" ?>">
             <i class="fa-regular fa-folder"></i>
-            <?= $dir ?>
+            <?= $dir ?><i class="spinner fa-solid fa-circle-notch"></i>
         </span>
         <span class="ops">
             <?php if (hasMinAuth('instructor')) { ?>

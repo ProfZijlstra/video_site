@@ -13,6 +13,8 @@ window.addEventListener("load", () => {
         this.dataset.isOpen = true;
 
         const dir = this.dataset.dir;
+        const spinner = this.querySelector("i.spinner");
+        spinner.classList.add('rotate');
         const data = new URLSearchParams();
         data.append("dir", dir);
 
@@ -35,9 +37,11 @@ window.addEventListener("load", () => {
                     e => e.onclick = copyLink
                 );
                 this.parentNode.appendChild(listing);
+                spinner.classList.remove('rotate');
             })
             .catch(error => {
                 alert(error);
+                spinner.classList.remove('rotate');
             });
     }
     document.querySelectorAll("span.dir").forEach(e => e.onclick = openDir);
