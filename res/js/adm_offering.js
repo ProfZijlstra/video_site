@@ -46,8 +46,10 @@ window.addEventListener("load", () => {
     document.getElementById('edit_modal').classList.remove('hide');
     document.getElementById('day_id').value = day_id;
     document.getElementById('day_desc').setAttribute("placeholder", desc);
+    document.getElementById('day_desc').focus();
   }
   document.getElementById("edit").onclick = function () {
+    // TODO: make this idempotent, or so that it can be turned on / off
     const divs = document.querySelectorAll("div.data");
     for (const div of divs) {
       const nextSib = div.querySelector("time");
