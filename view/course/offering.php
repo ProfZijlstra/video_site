@@ -9,48 +9,48 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/offering-1.3.css">
     <script src="res/js/offering.js"></script>
-    <?php if (hasMinAuth('instructor')) : ?>
+    <?php if (hasMinAuth('instructor')) { ?>
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
         <script src="res/js/info.js"></script>
         <script src="res/js/adm_offering.js"></script>
-    <?php endif; ?>
+    <?php } ?>
     <style>
         div#days {
-            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) : ?>auto <?php endfor; ?>;
+            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) { ?>auto <?php } ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
     </style>
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
-        <?php if (hasMinAuth('instructor')) : ?>
+        <?php if (hasMinAuth('instructor')) { ?>
             <nav class="tools">
-                <?php if (!$isRemembered) : ?>
+                <?php if (! $isRemembered) { ?>
                     <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
                     <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                     <i title="Clone Offering" id="clone" class="far fa-copy"></i>
                     <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
-                <?php else : ?>
+                <?php } else { ?>
                     <a href="reAuth">
                         <i title="View Info" class="fas fa-info-circle"></i>
                         <i title="Edit Calendar" class="far fa-edit"></i>
                         <i title="Clone Offering" class="far fa-copy"></i>
                         <i title="Delete Offering" class="far fa-trash-alt"></i>
                     </a>
-                <?php endif; ?>
+                <?php } ?>
                 <a href="settings">
                     <i title="Offering Settings" class="fa-solid fa-gear"></i>
                 </a>
             </nav>
-        <?php endif; ?>
+        <?php } ?>
 
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <div id="days">
-            <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']): ?>
+            <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']) { ?>
                 <div class="dayHeader">Monday</div>
                 <div class="dayHeader">Tuesday</div>
                 <div class="dayHeader">Wednesday</div>
@@ -58,51 +58,51 @@
                 <div class="dayHeader">Friday</div>
                 <div class="dayHeader">Saturday</div>
                 <div class="dayHeader">Sunday</div>
-            <?php endif; ?>
-            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
-                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
-                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering["daysPerLesson"]; ?>
+            <?php } ?>
+            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) { ?>
+                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) { ?>
+                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering['daysPerLesson']; ?>
 
-                    <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $offering['showDates'] && $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" data-text="<?= $days["W{$w}D{$d}"]["desc"] ?>">
+                    <div class="data <?= $w == 1 ? 'w1' : '' ?> <?= $d == 1 ? 'd1 ' : '' ?><?= $offering['showDates'] && $date < $now ? 'done' : '' ?> <?= date('z', $date) == date('z', $now) ? 'curr' : '' ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]['id'] ?>" data-text="<?= $days["W{$w}D{$d}"]['desc'] ?>">
                         <div class="info"></div>
                         <a href="W<?= $w ?>D<?= $d ?>/">
                             <span class="day"><?= "W{$w}D{$d}" ?></span>
-                            <span class="text"><?= $days["W{$w}D{$d}"]["desc"] ?></span>
+                            <span class="text"><?= $days["W{$w}D{$d}"]['desc'] ?></span>
                         </a>
-                        <?php if ($offering['showDates']) : ?>
-                            <time><?= date("M j Y", $date); ?></time>
-                        <?php endif; ?>
+                        <?php if ($offering['showDates']) { ?>
+                            <time><?= date('M j Y', $date); ?></time>
+                        <?php } ?>
                     </div>
 
-                <?php endfor ?>
-            <?php endfor ?>
+                <?php } ?>
+            <?php } ?>
         </div>
         <div id="total">
             <div class="info"></div>
         </div>
     </main>
-    <?php if (hasMinAuth('instructor')) : ?>
+    <?php if (hasMinAuth('instructor')) { ?>
         <div id="overlay">
             <i id="close-overlay" class="fas fa-times-circle"></i>
             <div id="clone_modal" class="modal hide">
                 <h2>Clone Offering</h2>
-                <form method="POST" action="clone">
+                <form method="POST" action="clone" id="clone_form">
                     <input type="hidden" name="offering_id" value=<?= $offering['id'] ?> />
                     <div class="line">
                         <label>New Block:</label>
-                        <input name="block" />
+                        <input name="block" id="block" required pattern="20\d{2}-\d{2}[^\/]*" title="Block code"/>
                     </div>
                     <div class="line">
                         <label>Faculty</label>
                         <select name="fac_user_id" id="fac_user_id">
-                            <?php foreach ($faculty as $user) : ?>
-                                <option value="<?= $user['id'] ?>"><?= $user['firstname'] . " " .  $user['lastname'] ?></option>
-                            <?php endforeach; ?>
+                            <?php foreach ($faculty as $user) { ?>
+                                <option value="<?= $user['id'] ?>"><?= $user['firstname'].' '.$user['lastname'] ?></option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="line">
                         <label>Start Date:</label>
-                        <input type="date" name="start" />
+                        <input type="date" name="start" required />
                     </div>
                     <div>
                         <label>Days per Lesson</label>
@@ -114,19 +114,19 @@
                     </div>
                     <div class="indent">
                         <label class="checkbox">
-                            <input type="checkbox" name="hasQuiz" value="1" <?= $offering['hasQuiz'] ? "checked" : "" ?> />
+                            <input type="checkbox" name="hasQuiz" value="1" <?= $offering['hasQuiz'] ? 'checked' : '' ?> />
                             Has Quiz
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" name="hasLab" value="1" <?= $offering['hasLab'] ? "checked" : "" ?> />
+                            <input type="checkbox" name="hasLab" value="1" <?= $offering['hasLab'] ? 'checked' : '' ?> />
                             Has Lab
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" name="showDates" value="1" <?= $offering['showDates'] ? "checked" : "" ?> />
+                            <input type="checkbox" name="showDates" value="1" <?= $offering['showDates'] ? 'checked' : '' ?> />
                             Show Dates
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" name="usesFlowcharts" value="1" <?= $offering['usesFlowcharts'] ? "checked" : "" ?> />
+                            <input type="checkbox" name="usesFlowcharts" value="1" <?= $offering['usesFlowcharts'] ? 'checked' : '' ?> />
                             Flowcharts
                         </label>
 
@@ -167,7 +167,7 @@
                 <!-- React puts it's table with view data here -->
             </div>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
 </body>
 

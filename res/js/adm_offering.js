@@ -28,12 +28,14 @@ window.addEventListener("load", () => {
     document.getElementById('clone_modal').classList.remove('hide');
     document.getElementById('delete_modal').classList.add('hide');
     document.getElementById('edit_modal').classList.add('hide');
+    document.getElementById("block").focus();
   };
   document.getElementById("delete").onclick = function () {
     document.getElementById("overlay").classList.add("visible");
     document.getElementById('clone_modal').classList.add('hide');
     document.getElementById('edit_modal').classList.add('hide');
     document.getElementById('delete_modal').classList.remove('hide');
+    document.getElementById('cancel_delete').focus();
   };
   function editDay(day_id, desc, evt) {
     evt.preventDefault();

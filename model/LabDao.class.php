@@ -189,7 +189,7 @@ class LabDao
         $stmt = $this->db->prepare(
             "INSERT INTO lab 
             VALUES(NULL, :day_id, :name, :desc, :hasMD, 
-                    :start, :stop, :visible, :type, :points)"
+                    :start, :stop, :visible, :type)"
         );
         foreach ($labs as $lab) {
             // move start date by date difference between offerings

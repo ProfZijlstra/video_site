@@ -46,4 +46,40 @@ class FileDao
 
         return ['dirs' => $dirs, 'files' => $files];
     }
+
+    /**
+     * This function clones the public files and is expected to be run after
+     * the lectures have been cloned (which creates the directory structure).
+     */
+    public function clone($course, $new_block, $old_block, $dir = 'public'): void
+    {
+        $deep = count(explode('/', $dir));
+        $depth = implode('/', array_fill(0, $deep, '..'));
+
+        $listing = scandir("res/{$course}/{$old_block}/{$dir}/");
+        mkdir("res/{$course}/{$new_block}/{$dir}");
+        foreach ($listing as $item) {
+            if (is_dir("res/{$course}/{$old_block}/{$dir}/{$item}")) {
+                if (str_starts_with($item, '.')) {
+                    continue;
+                }
+                mkdir("res/{$course}/{$new_block}/{$dir}/$item", 0775, true);
+                $this->clone($course, $new_block, $old_block, "{$dir}/{$item}");
+            } else {
+                symlink("../{$depth}/{$old_block}/{$dir}/{$item}",
+                    "res/{$course}/{$new_block}/{$dir}/{$item}");
+            }
+        }
+    }
+
+    /**
+     * DANGER!
+     * Deletes the offering from teh file system.
+     *
+     * @param  string  $block  the
+     */
+    public function delete($course, $block): void
+    {
+        exec("rm -rf res/{$course}/{$block}");
+    }
 }
