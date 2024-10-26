@@ -39,7 +39,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
         ?>
     <div class="file">
         <span class="file">
-            <a href="<?= "res/{$course}/{$block}/{$parent}/{$file}" ?>">
+            <a target="_blank" href="<?= "res/{$course}/{$block}/{$parent}/{$file}" ?>">
                 <i class="fa-regular <?= $icon ?>"></i>
                 <?= $file ?>
             </a>
