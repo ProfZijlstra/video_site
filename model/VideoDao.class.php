@@ -87,24 +87,24 @@ class VideoDao
             // make symlinks to previous offering videos
             mkdir("vid");
             // find previoud video files
-            if (chdir("../../{$old_block}/$dir/vid")) {
+            if (chdir("../../../{$old_block}/lecture/$dir/vid")) {
                 $videos = glob("*.mp4");
                 // make links in new vid directory
-                chdir("../../../{$block}/$dir/vid");
+                chdir("../../../../{$block}/lecture/$dir/vid");
                 foreach ($videos as $video) {
-                    symlink("../../../{$old_block}/lecture/$dir/vid/$video", $video);
+                    symlink("../../../../{$old_block}/lecture/$dir/vid/$video", $video);
                 }
                 chdir(".."); // exit vid dir
             }
             // make symlinks to previous offering pdfs
             mkdir("pdf");
             // find previoud pdf files
-            if (chdir("../../{$old_block}/$dir/pdf")) {
+            if (chdir("../../../{$old_block}/lecture/$dir/pdf")) {
                 $pdfs = glob("*.pdf");
                 // make links in new pdf directory
-                chdir("../../../{$block}/$dir/pdf");
+                chdir("../../../../{$block}/lecture/$dir/pdf");
                 foreach ($pdfs as $pdf) {
-                    symlink("../../../{$old_block}/$dir/pdf/$pdf", $pdf);
+                    symlink("../../../../{$old_block}/lecture/$dir/pdf/$pdf", $pdf);
                 }
                 chdir(".."); // exit pdf dir    
             }
