@@ -98,6 +98,7 @@ class CourseCtrl
         $daysPerLesson = filter_input(INPUT_POST, 'daysPerLesson', FILTER_SANITIZE_NUMBER_INT);
         $lessonsPerRow = filter_input(INPUT_POST, 'lessonsPerPart', FILTER_SANITIZE_NUMBER_INT);
         $lessonRows = filter_input(INPUT_POST, 'lessonParts', FILTER_SANITIZE_NUMBER_INT);
+        $start .= " 12:00:00";
 
         // only if offering doesn't exists
         $new_offering_id = $this->offeringDao->getOfferingByCourse($number, $block);
@@ -156,6 +157,7 @@ class CourseCtrl
         $hasLab = filter_input(INPUT_POST, 'hasLab', FILTER_SANITIZE_NUMBER_INT);
         $showDates = filter_input(INPUT_POST, 'showDates', FILTER_SANITIZE_NUMBER_INT);
         $usesFlowcharts = filter_input(INPUT_POST, 'usesFlowcharts', FILTER_SANITIZE_NUMBER_INT);
+        $start .= " 12:00:00";
 
         if ($hasQuiz == null) {
             $hasQuiz = 0;
