@@ -260,7 +260,7 @@ body.labDeliverables {
     div.txtDelivery {
         position: relative;
         margin: 10px 0px;
-        max-width: 978px;
+        max-width: 620px;
         overflow: auto;
     }
     div.comment {
@@ -530,6 +530,9 @@ body#gradeDeliverable {
             font-weight: bold;
         }
 
+        div.txtDelivery {
+            max-width: 978px;
+        }
         div.comment { 
             min-height: 100px;
             position: relative;
