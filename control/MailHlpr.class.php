@@ -34,7 +34,7 @@ class MailHlpr
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = MAIL_SERVER;                  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = MAIL_SERVER;             // SMTP username
+            $mail->Username = MAIL_USER;             // SMTP username
             $mail->Password = MAIL_PASS;                           // SMTP password
             $mail->SMTPSecure = 'ssl';                            // Enable SSL encryption, TLS also accepted with port 465
             $mail->Port = 465;                                    // TCP port to connect to
