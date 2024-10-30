@@ -132,6 +132,11 @@
                         <a href="../enrolled"><i class="fas fa-user-friends"></i></a>
                     </span>
                     <?php endif; ?>
+                    <?php if (hasMinAuth('student')) { ?>
+                    <span title="Files" class="<?= $area == 'file' ? 'active' : ''?>">
+                        <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/file"><i class="fa-solid fa-hard-drive"></i></a>
+                    </span>
+                    <?php } ?>
                 </div>
 
             </div>
@@ -200,7 +205,7 @@
                                 ?>
                                     <?php if(isset($content["vid"])): ?>
                                         <?php $vid = $content["vid"]; ?>
-                                        <div title="<?= $content["vid"]["parts"][1] ?>"
+                                        <div title="<?= $content["vid"]["parts"][1] . " (" . substr($content['vid']['parts'][3], 3, 5) . ")"  ?>")
                                         data-vid="<?= $content["vid"]["parts"][0] ?>" 
                                         class="tab <?= $progClass ?>" 
                                         style="width: <?= number_format(($content['vid']['duration'] / $totalDuration) * 100, 2) ?>%"></div>
