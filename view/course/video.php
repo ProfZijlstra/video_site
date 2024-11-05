@@ -122,6 +122,11 @@
                         <a href="../lab"><i class="fas fa-flask"></i></a>
                     </span>
                     <?php endif; ?>
+                    <?php if (hasMinAuth('student')) { ?>
+                    <span title="Files" class="<?= $area == 'file' ? 'active' : ''?>">
+                        <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/file"><i class="fa-solid fa-hard-drive"></i></a>
+                    </span>
+                    <?php } ?>
                     <?php if (hasMinAuth('assistant')) : ?>
                     <span title="Attendance">
                         <a href="../attendance"><i class="fas fa-user-check"></i></a>
@@ -132,11 +137,6 @@
                         <a href="../enrolled"><i class="fas fa-user-friends"></i></a>
                     </span>
                     <?php endif; ?>
-                    <?php if (hasMinAuth('student')) { ?>
-                    <span title="Files" class="<?= $area == 'file' ? 'active' : ''?>">
-                        <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/file"><i class="fa-solid fa-hard-drive"></i></a>
-                    </span>
-                    <?php } ?>
                 </div>
 
             </div>
