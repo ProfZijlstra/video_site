@@ -855,7 +855,7 @@ class LabTakingCtrl
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start'], $tz);
         $ts_lab = $date->getTimestamp();
         $listing = "";
-        $listing_limit = 30;
+        $listing_limit = 40;
         $listing_count = 0;
         
         // indicate that we're starting to check the zip
