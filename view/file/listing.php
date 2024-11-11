@@ -25,7 +25,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
             <i title="Rename" class="fa-regular fa-pen-to-square"></i>
             <i title="Remove Directory" class="fa-solid fa-trash-can"></i>
             <?php } ?>
-            <i title="Upload File" class="fa-solid fa-upload"></i>
+            <i title="Upload File" class="fa-solid fa-upload upload" data-loc="<?= "{$parent}/{$dir}" ?>"></i>
             <?php } ?>
         </span>
     </div>

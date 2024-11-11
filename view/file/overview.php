@@ -35,6 +35,14 @@
 
             </div>
         </main>
+        <dialog id="uploadDialog" class="modal">
+            <i id="closeUploadDialog" class="fas fa-times-circle close"></i>
+            <h3>Upload File</h3>
+            <form id="uploadForm" method="POST" action="">
+                <input type="hidden" name="location" id="uploadLocation" value="">
+                <input type="file" name="file" id="uploadFile" value="">
+            </form>
+        </dialog>
     </body>
 
 </html>

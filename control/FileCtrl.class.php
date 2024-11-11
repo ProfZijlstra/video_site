@@ -73,4 +73,29 @@ class FileCtrl
 
         return 'file/listing.php';
     }
+
+    #[Post(uri: '/upload', sec: 'instructor')]
+    public function upload(): array
+    {
+        // stop if there was an upload error
+        if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
+            return ['error' => 'Upload Error'];
+        }
+        if ($_FILES['file']['size'] > 52428800) {
+            return ['error' => 'File too large, 50MB is the maximum'];
+        }
+
+        // gather all the input data
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $location = filter_input(INPUT_POST, 'location');
+
+        $curr = $_FILES['file']['tmp_name'];
+        $name = $_FILES['file']['name'];
+        $dst = "res/{$course}/{$block}/{$location}/{$name}";
+        move_uploaded_file($curr, $dst);
+
+        return ['ok' => $dst];
+    }
 }

@@ -18,7 +18,7 @@ div#content {
                 cursor: pointer;
                 i {
                     display: inline-block;
-                    width: 20px;
+                    margin-left: 5px;
                 }
             }
             span.ops {

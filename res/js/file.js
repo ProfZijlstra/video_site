@@ -36,6 +36,9 @@ window.addEventListener("load", () => {
                 listing.querySelectorAll("i.fa-link").forEach(
                     e => e.onclick = copyLink
                 );
+                listing.querySelectorAll("i.upload").forEach(
+                    e => e.onclick = clickUpload
+                );
                 this.parentNode.appendChild(listing);
                 spinner.classList.remove('rotate');
             })
@@ -62,5 +65,42 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll("i.fa-link").forEach(e => e.onclick = copyLink);
 
+    let icon = null;
+    function clickUpload() {
+        icon = this;
+        document.getElementById("uploadLocation").value = this.dataset.loc;
+        document.getElementById("uploadFile").click();
+    }
+    document.querySelectorAll("i.upload").forEach(e => e.onclick = clickUpload);
+
+    function sendFile() {
+        const parent = icon.closest("div.file");
+        const data = new FormData();
+        data.append("location", document.getElementById("uploadLocation").value);
+        data.append("file", this.files[0]);
+        fetch("file/upload", {
+            method: "POST",
+            body: data,
+        })
+            .then(response =>  {
+                if (!response.ok) {
+                    throw new Error("Uploading file failed.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // delete listing
+                    const dir = parent.querySelector("span.dir")
+                    delete dir.dataset.isOpen;
+                    parent.querySelector('div.listing')?.remove();
+                    // get listing again
+                    dir.click();
+                }
+            });
+    }
+    document.getElementById("uploadFile").onchange = sendFile;
 });
 
