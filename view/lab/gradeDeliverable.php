@@ -79,8 +79,8 @@
                                 <?= $delivery['lastname'] ?>
                             </a>
                         </div>
-                        <div class="timestamp">Created: <?= substr($delivery['created'], 11) ?></div>
-                        <div class="timestamp">Updated: <?= substr($delivery['updated'], 11) ?></div>
+                        <div class="timestamp">Created: <?= $delivery['created'] ?></div>
+                        <div class="timestamp">Updated: <?= $delivery['updated'] ?></div>
                     </div>
                     <div class="delivery">
                         <div class="stats">
