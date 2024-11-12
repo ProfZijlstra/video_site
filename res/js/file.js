@@ -78,11 +78,21 @@ window.addEventListener("load", () => {
         const data = new FormData();
         data.append("location", document.getElementById("uploadLocation").value);
         data.append("file", this.files[0]);
+
+        const spinner = parent.querySelector("i.spinner");
+        spinner.classList.add('rotate');
+
+        // delete listing
+        const dir = parent.querySelector("span.dir")
+        delete dir.dataset.isOpen;
+        parent.querySelector('div.listing')?.remove();
+        
         fetch("file/upload", {
             method: "POST",
             body: data,
         })
             .then(response =>  {
+                spinner.classList.remove('rotate');
                 if (!response.ok) {
                     throw new Error("Uploading file failed.");
                 }
@@ -92,10 +102,6 @@ window.addEventListener("load", () => {
                 if (data.error) {
                     alert(data.error);
                 } else {
-                    // delete listing
-                    const dir = parent.querySelector("span.dir")
-                    delete dir.dataset.isOpen;
-                    parent.querySelector('div.listing')?.remove();
                     // get listing again
                     dir.click();
                 }
