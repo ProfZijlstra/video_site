@@ -39,6 +39,12 @@ window.addEventListener("load", () => {
                 listing.querySelectorAll("i.upload").forEach(
                     e => e.onclick = clickUpload
                 );
+                listing.querySelectorAll("i.remFile").forEach(
+                    e => e.onclick = clickRemFile
+                );
+                listing.querySelectorAll("i.remDir").forEach(
+                    e => e.onclick = clickRemDir
+                );
                 this.parentNode.appendChild(listing);
                 spinner.classList.remove('rotate');
             })
@@ -94,7 +100,7 @@ window.addEventListener("load", () => {
             .then(response =>  {
                 spinner.classList.remove('rotate');
                 if (!response.ok) {
-                    throw new Error("Uploading file failed.");
+                    alert("Uploading file failed.");
                 }
                 return response.json();
             })
@@ -108,5 +114,69 @@ window.addEventListener("load", () => {
             });
     }
     document.getElementById("uploadFile").onchange = sendFile;
+
+    function clickRemFile() {
+        const file = this.dataset.loc;
+        if(!confirm("Delete the following file?\n\n" + file)) {
+            return;
+        }
+
+        const data = new FormData();
+        data.append("location", file);
+
+        fetch("file/deleteFile", {
+            method: "POST",
+            body: data
+        })
+            .then(response =>  {
+                if (!response.ok) {
+                    alert("Deleting file failed.");
+                }
+                // delete listing
+                const parent = this.closest("div.file").parentNode.closest("div.file");
+                const dir = parent.querySelector("span.dir");
+                delete dir.dataset.isOpen;
+                parent.querySelector("div.listing").remove();
+
+                // show new listing
+                dir.click();
+            });
+    }
+    document.querySelectorAll("i.remFile").forEach(
+        e => e.onclick = clickRemFile
+    );
+
+    function clickRemDir() {
+        const file = this.dataset.loc;
+        if(!confirm("Delete the following directory?\n\n" + file)) {
+            return;
+        }
+
+        const data = new FormData();
+        data.append("location", file);
+
+        fetch("file/deleteDir", {
+            method: "POST",
+            body: data
+        })
+            .then(response =>  {
+                if (!response.ok) {
+                    alert("Deleting directory failed.\n\n"
+                    + "Only empty directories can be deleted");
+                }
+                // delete listing
+                const parent = this.closest("div.file").parentNode.closest("div.file");
+                const dir = parent.querySelector("span.dir");
+                delete dir.dataset.isOpen;
+                parent.querySelector("div.listing").remove();
+
+                // show new listing
+                dir.click();
+            });
+
+    }
+    document.querySelectorAll("i.remDir").forEach(
+        e => e.onclick = clickRemDir
+    );
 });
 

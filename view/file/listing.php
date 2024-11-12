@@ -23,7 +23,8 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
             <?php if (hasMinAuth('instructor')) { ?>
             <?php if ((isset($norem) && ! in_array($dir, $norem) || ! isset($norem))) { ?>
             <i title="Rename" class="fa-regular fa-pen-to-square"></i>
-            <i title="Remove Directory" class="fa-solid fa-trash-can"></i>
+            <i title="Remove Directory" class="fa-solid fa-trash-can remDir" 
+                data-loc="<?= "{$parent}/{$dir}" ?>"></i>
             <?php } ?>
             <i title="Upload File" class="fa-solid fa-upload upload" data-loc="<?= "{$parent}/{$dir}" ?>"></i>
             <?php } ?>
@@ -47,7 +48,8 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
         <span class="ops">
             <?php if (hasMinAuth('instructor')) { ?>
             <i title="Rename" class="fa-regular fa-pen-to-square"></i>
-            <i title="Remove File" class="fa-solid fa-trash-can"></i>
+            <i title="Remove File" class="fa-solid fa-trash-can remFile" 
+                data-loc="<?= "{$parent}/{$file}" ?>"></i>
             <?php } ?>
             <i title="Copy Link" 
                 data-link="<?= "{$proto}{$server}{$MY_BASE}/res/{$course}/{$block}/{$parent}/{$file}"?>" 

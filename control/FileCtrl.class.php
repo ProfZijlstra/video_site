@@ -98,4 +98,38 @@ class FileCtrl
 
         return ['ok' => $dst];
     }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: '/deleteFile', sec: 'instructor')]
+    public function deleteFile(): void
+    {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $location = filter_input(INPUT_POST, 'location');
+
+        $res = unlink("res/{$course}/{$block}/{$location}");
+        if (! $res) {
+            http_response_code(500);
+        }
+    }
+
+    /**
+     * Expects AJAX
+     */
+    #[Post(uri: '/deleteDir', sec: 'instructor')]
+    public function deleteDir(): void
+    {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $location = filter_input(INPUT_POST, 'location');
+
+        $res = rmdir("res/{$course}/{$block}/{$location}");
+        if (! $res) {
+            http_response_code(500);
+        }
+    }
 }
