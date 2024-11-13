@@ -106,7 +106,7 @@
                             ?>
                                     <a href="submission/<?= $submission['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
                                         <?php if ($submission['group']) { ?>
-                                            Group <?= $submission['group'] ?>:
+                                            <?= $submission['group'] ?>:
                                             <span class="members">
                                                 <?php foreach ($members[$submission['group']] as $member) { ?>
                                                     <?= $member['knownAs'] ?> <?= $member['lastname'] ?>,
