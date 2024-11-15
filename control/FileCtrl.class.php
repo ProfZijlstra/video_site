@@ -132,4 +132,22 @@ class FileCtrl
             http_response_code(500);
         }
     }
+
+    #[Post(uri: '/makeDir', sec: 'instructor')]
+    public function makeDir(): string
+    {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $dir = filter_input(INPUT_POST, 'dir');
+
+        $made = mkdir("res/{$course}/{$block}/{$dir}", 0777, true);
+        if (! $made) {
+            http_response_code(500);
+
+            return '';
+        }
+
+        return 'Location: ../file';
+    }
 }

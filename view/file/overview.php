@@ -43,6 +43,22 @@
                 <input type="file" name="file" id="uploadFile" value="">
             </form>
         </dialog>
+        <dialog id="renameDialog" class="modal">
+            <i id="closeRenameDialog" class="fas fa-times-circle close"></i>
+            <h3>Rename</h3>
+            <form id="renameForm" method="POST" action="">
+                <input type="text" id="renameField" placeholder="">
+                <button id="submitRename" >Submit</button>
+            </form>
+        </dialog>
+        <dialog id="makeDirDialog" class="modal">
+            <i id="closeMakeDir" class="fas fa-times-circle close"></i>
+            <h3>Make Directory</h3>
+            <form id="makeDirForm" method="POST" action="file/makeDir">
+                <input id="makeDirField" name="dir" placeholder="public/newDir">
+                <button id="submitMakeDir" >Submit</button>
+            </form>
+        </dialog>
     </body>
 
 </html>

@@ -14,12 +14,13 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
 ?>
 <div class="listing">
     <?php foreach ($dirs as $dir) { ?>
-    <div class="file">
+    <div class="dir" data-dir="<?= $dir ?>">
         <span class="dir" data-dir="<?= "{$parent}/{$dir}" ?>">
             <i class="fa-regular fa-folder"></i>
             <?= $dir ?><i class="spinner fa-solid fa-circle-notch"></i>
         </span>
         <span class="ops">
+            <i title="Refresh" class="fa-solid fa-arrows-rotate refresh hide"></i>
             <?php if (hasMinAuth('instructor')) { ?>
             <?php if ((isset($norem) && ! in_array($dir, $norem) || ! isset($norem))) { ?>
             <i title="Rename" class="fa-regular fa-pen-to-square"></i>
