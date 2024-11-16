@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <style>
         div#days {
-            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) : ?>auto <?php endfor; ?>;
+            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) { ?>auto <?php } ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
     </style>
@@ -19,21 +19,21 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
 
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
 
-        <?php if (hasMinAuth('student')) : ?>
+        <?php if (hasMinAuth('student')) { ?>
             <nav class="tools">
                 <a href="quiz/report">
                     <i title="Download Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
                 </a>
             </nav>
-        <?php endif; ?>
+        <?php } ?>
 
         <div id="days" class="lab">
-            <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']): ?>
+            <?php if ($offering['lessonsPerPart'] == 7 && $offering['showDates']) { ?>
                 <div class="dayHeader">Monday</div>
                 <div class="dayHeader">Tuesday</div>
                 <div class="dayHeader">Wednesday</div>
@@ -41,24 +41,24 @@
                 <div class="dayHeader">Friday</div>
                 <div class="dayHeader">Saturday</div>
                 <div class="dayHeader">Sunday</div>
-            <?php endif; ?>
-            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
-                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
-                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering["daysPerLesson"]; ?>
+            <?php } ?>
+            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) { ?>
+                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) { ?>
+                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering['daysPerLesson']; ?>
 
-                    <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" data-date="<?= date("Y-m-d", $date) ?>">
+                    <div class="data <?= $w == 1 ? 'w1' : '' ?> <?= $d == 1 ? 'd1 ' : '' ?><?= $date < $now ? 'done' : '' ?> <?= date('z', $date) == date('z', $now) ? 'curr' : '' ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]['id'] ?>" data-date="<?= date('Y-m-d', $date) ?>">
 
-                        <?php if (hasMinAuth('instructor')) : ?>
-                            <?php if (!$isRemembered) : ?>
+                        <?php if (hasMinAuth('instructor')) { ?>
+                            <?php if (! $isRemembered) { ?>
                                 <i title="Add Quiz" class="far fa-plus-square"></i>
-                            <?php else : ?>
+                            <?php } else { ?>
                                 <a href="reAuth">
                                     <i title="Add Quiz" class="far fa-plus-square"></i>
                                 </a>
-                            <?php endif; ?>
-                        <?php endif; ?>
+                            <?php } ?>
+                        <?php } ?>
 
-                        <?php foreach ($days["W{$w}D{$d}"]['quizzes'] as $quiz) : ?>
+                        <?php foreach ($days["W{$w}D{$d}"]['quizzes'] as $quiz) { ?>
                             <?php
                             $grade = $graded[$quiz['id']];
                             $gradeStatus = '';
@@ -70,28 +70,28 @@
                             }
                             ?>
                             <div>
-                                <a href="<?= "quiz/" . $quiz['id'] ?>" class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>">
+                                <a href="<?= 'quiz/'.$quiz['id'] ?>" class="<?= $quiz['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
                                     <?= $quiz['name'] ?>
                                 </a>
-                                <?php if (hasMinAuth('instructor')) : ?>
-                                    <a class="edit" href="<?= "quiz/" . $quiz['id'] . "/edit" ?>">
+                                <?php if (hasMinAuth('instructor')) { ?>
+                                    <a class="edit" href="<?= 'quiz/'.$quiz['id'].'/edit' ?>">
                                         <i title="Edit Quiz" class="fa-solid fa-gear"></i>
                                     </a>
-                                <?php endif; ?>
-                                <?php if (hasMinAuth('assistant')) : ?>
-                                    <a href="<?= "quiz/" . $quiz['id'] . "/grade" ?>">
+                                <?php } ?>
+                                <?php if (hasMinAuth('assistant')) { ?>
+                                    <a href="<?= 'quiz/'.$quiz['id'].'/grade' ?>">
                                         <i title="Grade Quiz" class="fa-solid fa-magnifying-glass"></i>
                                     </a>
-                                <?php endif; ?>
+                                <?php } ?>
                             </div>
-                        <?php endforeach; ?>
+                        <?php } ?>
 
                         <time>
-                            <?= date("M j Y", $date); ?>
+                            <?= date('M j Y', $date); ?>
                         </time>
                     </div>
-                <?php endfor ?>
-            <?php endfor ?>
+                <?php } ?>
+            <?php } ?>
         </div>
     </main>
 
@@ -103,12 +103,12 @@
                 <input type="hidden" name="day_id" value="<?= $day_id ?>" id="day_id" />
                 <div>
                     <label>From:</label>
-                    <input id="startdate" type="date" name="startdate" value="<?= date("m/d/Y", $date) ?>" />
+                    <input id="startdate" type="date" name="startdate" value="<?= date('m/d/Y', $date) ?>" />
                     <input type="time" name="starttime" value="10:00" />
                 </div>
                 <div>
                     <label>To:</label>
-                    <input id="stopdate" type="date" name="stopdate" value="<?= date("m/d/Y", $date) ?>" />
+                    <input id="stopdate" type="date" name="stopdate" value="<?= date('m/d/Y', $date) ?>" />
                     <input type="time" name="stoptime" value="10:30" />
                 </div>
                 <div>
