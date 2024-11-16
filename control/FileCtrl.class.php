@@ -148,6 +148,7 @@ class FileCtrl
             return '';
         }
 
+        http_response_code(201);
         return 'Location: ../file';
     }
 }

@@ -241,7 +241,8 @@ window.addEventListener("load", () => {
         makeDirDialog.close();
     }
     document.getElementById("makeDirForm").onsubmit = function() {
-        const dir = document.getElementById("makeDirField").value;
+        const input = document.getElementById("makeDirField");
+        const dir = input.value;
         const data = new FormData();
         data.append("dir", dir);
 
@@ -250,12 +251,13 @@ window.addEventListener("load", () => {
             body: data
         })
             .then(response => {
-                if (!response.redirected) { // on success post redirects
+                if (!response.ok) { // on success post redirects
                     alert("Creating directory failed");
                     return;
                 }
                 makeDirDialog.close();
                 openPath(dir);
+                input.value = "";
             });
 
         return false; // don't actually submit the form
