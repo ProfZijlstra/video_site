@@ -302,7 +302,7 @@ window.addEventListener('load', () => {
 
         // load the video if it's not already loaded
         const videoTag = document.querySelector(`article.selected video`);
-        if (!videoTag.src) {
+        if (videoTag && !videoTag.src) {
             videoTag.src = videoTag.dataset.src;
         }
 
