@@ -234,9 +234,12 @@ window.addEventListener("load", () => {
     );
 
     const makeDirDialog = document.getElementById("makeDirDialog");
-    document.getElementById("addDir").onclick = function() {
-        makeDirDialog.showModal();
-    };
+    const addDirBtn = document.getElementById("addDir");
+    if (addDirBtn) {
+        addDirBtn.onclick = function() {
+            makeDirDialog.showModal();
+        };
+    }
     document.getElementById("closeMakeDir").onclick = function() {
         makeDirDialog.close();
     }
