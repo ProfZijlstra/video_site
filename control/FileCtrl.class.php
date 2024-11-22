@@ -149,6 +149,30 @@ class FileCtrl
         }
 
         http_response_code(201);
+
         return 'Location: ../file';
+    }
+
+    #[Post(uri: '/rename', sec: 'instructor')]
+    public function rename(): void
+    {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $src = filter_input(INPUT_POST, 'src');
+        $dst = filter_input(INPUT_POST, 'dst');
+
+        $parentDir = "/\.\./";
+        if (preg_match($parentDir, $src) || preg_match($parentDir, $dst)) {
+            http_response_code(500);
+
+            return;
+        }
+        $src = "res/{$course}/{$block}/{$src}";
+        $dst = "res/{$course}/{$block}/{$dst}";
+        $res = rename($src, $dst);
+        if (! $res) {
+            http_response_code(500);
+        }
     }
 }

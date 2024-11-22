@@ -46,10 +46,12 @@
         <dialog id="renameDialog" class="modal">
             <i id="closeRenameDialog" class="fas fa-times-circle close"></i>
             <h3>Rename</h3>
-            <form id="renameForm" method="POST" action="">
-                <input type="text" id="renameField" placeholder="">
+            <form id="renameForm" method="POST" action="file/rename">
+                <input type="hidden" name="src" id="renameSrc" placeholder="">
+                <input type="text" name="dst" id="renameDst" placeholder="">
                 <button id="submitRename" >Submit</button>
             </form>
+            <div>Rename can also be used to move files</div>
         </dialog>
         <dialog id="makeDirDialog" class="modal">
             <i id="closeMakeDir" class="fas fa-times-circle close"></i>

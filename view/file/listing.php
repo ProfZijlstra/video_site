@@ -23,7 +23,8 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
             <i title="Refresh" class="fa-solid fa-arrows-rotate refresh hide"></i>
             <?php if (hasMinAuth('instructor')) { ?>
             <?php if ((isset($norem) && ! in_array($dir, $norem) || ! isset($norem))) { ?>
-            <i title="Rename" class="fa-regular fa-pen-to-square"></i>
+            <i title="Rename" class="fa-regular fa-pen-to-square rename"
+                data-loc="<?= "{$parent}/{$dir}" ?>"></i>
             <i title="Remove Directory" class="fa-solid fa-trash-can remDir" 
                 data-loc="<?= "{$parent}/{$dir}" ?>"></i>
             <?php } ?>
@@ -48,7 +49,8 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
         </span>
         <span class="ops">
             <?php if (hasMinAuth('instructor')) { ?>
-            <i title="Rename" class="fa-regular fa-pen-to-square"></i>
+            <i title="Rename" class="fa-regular fa-pen-to-square rename"
+                data-loc="<?= "{$parent}/{$file}" ?>"></i>
             <i title="Remove File" class="fa-solid fa-trash-can remFile" 
                 data-loc="<?= "{$parent}/{$file}" ?>"></i>
             <?php } ?>

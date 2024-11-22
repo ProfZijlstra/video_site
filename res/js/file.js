@@ -5,6 +5,7 @@ window.addEventListener("load", () => {
     // the following used by openPath
     let openCallBack = null;
 
+    // code for opening a directory
     function openDir() {
         const icon = this.querySelector("i");
         icon.classList.toggle("fa-folder");
@@ -56,6 +57,9 @@ window.addEventListener("load", () => {
                 listing.querySelectorAll("i.refresh").forEach(
                     e => e.onclick = clickRefresh
                 );
+                listing.querySelectorAll("i.rename").forEach(
+                    e => e.onclick = clickRename
+                );
                 this.parentNode.appendChild(listing);
                 spinner.classList.remove('rotate');
 
@@ -70,9 +74,14 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll("span.dir").forEach(e => e.onclick = openDir);
 
+    // refreshing a directory
     function refresh(dir) {
         const parent = dir.closest("div.dir");
         const listing = parent.querySelector("div.listing");
+        // double refresh can cause lisiting to be gone
+        if (!listing) {
+            return;
+        }
         const icon = parent.querySelector("i");
         icon.classList.toggle("fa-folder");
         icon.classList.toggle("fa-folder-open");
@@ -87,6 +96,7 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll("i.refresh").forEach(e => e.onclick = clickRefresh);
 
+    // opening all the directories on a path
     function openPath(path) {
         const dirs = path.split("/");
         dirs.pop(); // don't need to open deepest dir
@@ -94,10 +104,10 @@ window.addEventListener("load", () => {
         openPathRec(dirs, pathListing);
     }
     function openPathRec(dirs, pathListing) {
-        const dir = dirs.shift();
+        let dir = dirs.shift();
 
         // remove empty strings from split
-        while (dir == "" && dirs.length) {
+        while (dir == "" && dirs.length > 0) {
             dir = dirs.shift();
         }
         // base case exit
@@ -123,6 +133,7 @@ window.addEventListener("load", () => {
 
     }
 
+    // copying a link
     function showCopied(elem) {
         return function() {
             elem.classList.remove('fa-link');
@@ -139,6 +150,7 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll("i.fa-link").forEach(e => e.onclick = copyLink);
 
+    // uploading a file
     function clickUpload() {
         icon = this;
         document.getElementById("uploadLocation").value = this.dataset.loc;
@@ -177,6 +189,7 @@ window.addEventListener("load", () => {
     }
     document.getElementById("uploadFile").onchange = sendFile;
 
+    // deleting a file
     function clickRemFile() {
         const file = this.dataset.loc;
         if(!confirm("Delete the following file?\n\n" + file)) {
@@ -203,6 +216,7 @@ window.addEventListener("load", () => {
         e => e.onclick = clickRemFile
     );
 
+    // deleting a directory
     function clickRemDir() {
         const file = this.dataset.loc;
         if(!confirm("Delete the following directory?\n\n" + file)) {
@@ -233,6 +247,7 @@ window.addEventListener("load", () => {
         e => e.onclick = clickRemDir
     );
 
+    // making a directory
     const makeDirDialog = document.getElementById("makeDirDialog");
     const addDirBtn = document.getElementById("addDir");
     if (addDirBtn) {
@@ -256,11 +271,65 @@ window.addEventListener("load", () => {
             .then(response => {
                 if (!response.ok) { // on success post redirects
                     alert("Creating directory failed");
-                    return;
+                    return false;
                 }
                 makeDirDialog.close();
                 openPath(dir);
                 input.value = "";
+            });
+
+        return false; // don't actually submit the form
+    };
+
+    // renaming (or moving) a file or directory
+    const renameDialog = document.getElementById("renameDialog");
+    function clickRename() {
+        renameDialog.showModal();
+        document.getElementById("renameSrc").value = this.dataset.loc;
+        document.getElementById("renameDst").value = this.dataset.loc;
+    }
+    document.querySelectorAll("i.rename").forEach(
+        e => e.onclick = renameClick
+    );
+    document.getElementById("closeRenameDialog").onclick = 
+        () => renameDialog.close();
+    document.getElementById("renameForm").onsubmit = function() {
+        renameDialog.close();
+        const src = document.getElementById("renameSrc").value;
+        const dst = document.getElementById("renameDst").value;
+        const parentDir = /\.\./;
+        if (src.match(parentDir)) {
+            alert("Rename source should not contain ../");
+            return false;
+        }
+        if (dst.match(parentDir)) {
+            alert("Rename destination should not contain ../");
+            return false;
+        }
+        const data = new FormData();
+        data.append("src", src);
+        data.append("dst", dst);
+
+        fetch("file/rename", {
+            method: "POST",
+            body: data
+        }).then(response => {
+                if (!response.ok) {
+                    alert("Renaming file failed");
+                    return false;
+                }
+                openPath(src);
+
+                // check if we should also open dst
+                const srcDirs = src.split('/');
+                const dstDirs = dst.split('/');
+                srcDirs.pop();
+                dstDirs.pop();
+                const srcDir = srcDirs.join('/');
+                const dstDir = dstDirs.join('/');
+                if (dstDir != srcDir) {
+                    openPath(dst);
+                }
             });
 
         return false; // don't actually submit the form
