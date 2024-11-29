@@ -26,6 +26,12 @@ window.addEventListener('load', () => {
         }
     }
 
+    // switch to PDF if hash indicates it
+    if (hash && hash == "#pdf") {
+        const btn = document.querySelector("article.selected i.pdf");
+        showPDF.call(btn, false);
+    }
+
     // hide / show video list (theater mode)
     const nav = document.querySelector("nav#videos");
     function toggleTheater() {
@@ -194,7 +200,7 @@ window.addEventListener('load', () => {
             prevVideo();
             break;
         case "KeyD":
-            document.getElementById("pdf").click();
+            showPDF();
         }
     });
     // show keyboard shortcuts
@@ -294,7 +300,7 @@ window.addEventListener('load', () => {
 
         const parent = document.getElementById(video_id);
         parent.classList.add('selected');
-        const video_name = parent.dataset.show;
+        const video_name = "a" + parent.dataset.show;
 
         // show the video
         document.querySelector("main article.selected").classList.remove('selected');
@@ -314,6 +320,8 @@ window.addEventListener('load', () => {
     }
     function genericClick(video_id) {
         const video_seq = encodeURIComponent(video_id);
+        const btn = document.querySelector("article.selected i.video");
+        showVideo.call(btn, false);
 
         // switch video
         switchVideo(video_id);
@@ -344,35 +352,83 @@ window.addEventListener('load', () => {
     // using the browser's back button will pop the history
     const initial_id = document.querySelector(".video_link.selected").id;
     window.addEventListener('popstate', (e) => {
-            const state = e.state;
-            if (state && state.id) {
-                switchVideo(state.id);
-            } else {
-                switchVideo(initial_id);
-            }
+        const state = e.state;
+        if (state && state.id) {
+            switchVideo(state.id);
+        } else {
+            switchVideo(initial_id);
+        }
+        if (state && state.pdf) {
+            const btn = document.querySelector("article.selected i.pdf");
+            showPDF.call(btn, false);
+        } else {
+            const btn = document.querySelector("article.selected i.video");
+            showVideo.call(btn, false);
+        }
+    });
+    window.addEventListener('pushstate', (e) => {
+        const state = e.state;
+        if (state && state.pdf) {
+            const btn = document.querySelector("article.selected i.pdf");
+            showPDF.call(btn, false);
+        } else {
+            const btn = document.querySelector("article.selected i.video");
+            showVideo.call(btn, false);
+        }
+
     });
 
 
      // make clicking on the PDF icon work while communicating with server
-    function openPDF(evt) {
+    function showPDF(push = true) {
+        const pdf = document.querySelector("article.selected object");
+        if (!pdf) {
+            return;
+        }
+
         const file = this.dataset.file;
         const href = this.href;
         const url = `./pdf?day_id=${day_id}&file=${file}`;
         fetch(url, {
             cache : 'no-cache'
-        }).then(() => {window.open(href, '_blank')});
-        evt.preventDefault();
+        });
+
+        if (push) {
+            const path = window.location.pathname;
+            const video_id = path.substr(-2);
+            window.history.pushState({"id": video_id, "pdf": true}, '', `${path}#pdf`);
+        }
+        const video = document.querySelector("article.selected video");
+        if (video) {
+            video.classList.add('hide');
+        }
+        pdf.classList.remove('hide');
     }
-    function disableRightClick(evt) {
-        evt.preventDefault();
-    }
-    const pdfs = document.querySelectorAll('pdf');
+    const pdfs = document.querySelectorAll('i.pdf');
     pdfs.forEach(
         elm => {
-            elm.addEventListener("mousedown", openPDF)
-            elm.addEventListener("contextmenu", disableRightClick);
+            elm.addEventListener("mousedown", showPDF)
         }
     );
+
+    function showVideo(push = true) {
+        const video = document.querySelector("article.selected video");
+        if (!video) {
+            return;
+        }
+
+        if (push) {
+            const path = window.location.pathname;
+            const video_id = path.substr(-2);
+            window.history.pushState({"id": video_id}, '', path);
+        }
+        const pdf = document.querySelector("article.selected object");
+        if (pdf) {
+            pdf.classList.add('hide');
+        }
+        video.classList.remove('hide');
+    }
+    document.querySelectorAll("i.video").forEach(e => e.onmousedown = showVideo);
 
     // make clicking on autoplay work
     function clickAutoplay() {
@@ -425,6 +481,7 @@ window.addEventListener('load', () => {
         form.setAttribute('method', 'post');
         form.setAttribute('action', action);
         form.style.position = 'relative';
+        form.classList.add("textContainer");
         const qid = document.createElement('input');
         qid.setAttribute('type', 'hidden');
         qid.setAttribute('name', 'id');

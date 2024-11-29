@@ -198,10 +198,23 @@ main {
 video:focus {
     outline: none;
 }
-.pdf {
+div.media {
     position: absolute;
     right: 50px;
-    font-size: 50px;
+    font-size: 35px;
+    width: 50px;
+    color: lightgray;
+    i.active {
+	color: black;
+    }
+    i.fa-slash {
+	position: absolute;
+	right: 5px;
+	top: 55px;
+    }
+    i.available {
+	color: var(--black);
+    }
 }
 main article {
     display: none;
@@ -209,9 +222,12 @@ main article {
 main article.selected {
     display: block;
 }
-main article video {
+main article video, main article object {
     width: 80%;
     min-height: 37.5vw;
+}
+main article video.hide, main article object.hide {
+    display: none;
 }
 main article div.noVid {
     min-height: 20vw;
@@ -454,16 +470,18 @@ textarea.commentText {
         top: 15px;
         right: 70px;
     }
-    main .pdf {
+    main .media {
+	font-size: 25px;
         top: 0px;
         right: 15px;
     }
     main article h2 {
         margin-top: 60px;
     }
-    main article video {
+    main article video, main article object {
         width: 100%;
         height: auto;
+	min-height: 56vw;
     }
     main article nav.mobileNav {
         display: block;
