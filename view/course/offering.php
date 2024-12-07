@@ -131,6 +131,16 @@
                         </label>
 
                     </div>
+                    <div class="indent">
+                        <label class="checkbox">
+                            <input type="checkbox" name="cloneFiles" value="1" checked />
+                            Clone Public Files
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="cloneComments" value="1" />
+                            Clone Comments
+                        </label>
+                    </div>
                     <div class="submit">
                         <button>Submit</button>
                     </div>

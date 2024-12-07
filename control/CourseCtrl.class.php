@@ -38,6 +38,9 @@ class CourseCtrl
     #[Inject('FileDao')]
     public $fileDao;
 
+    #[Inject('CommentDao')]
+    public $commentDao;
+
     #[Get(uri: '^/?$', sec: 'login')]
     public function showMyCourses()
     {
@@ -157,6 +160,8 @@ class CourseCtrl
         $hasLab = filter_input(INPUT_POST, 'hasLab', FILTER_SANITIZE_NUMBER_INT);
         $showDates = filter_input(INPUT_POST, 'showDates', FILTER_SANITIZE_NUMBER_INT);
         $usesFlowcharts = filter_input(INPUT_POST, 'usesFlowcharts', FILTER_SANITIZE_NUMBER_INT);
+        $cloneFiles = filter_input(INPUT_POST, 'cloneFiles', FILTER_SANITIZE_NUMBER_INT);
+        $cloneComments = filter_input(INPUT_POST, 'cloneComments', FILTER_SANITIZE_NUMBER_INT);
         $start .= " 12:00:00";
 
         if ($hasQuiz == null) {
@@ -196,10 +201,16 @@ class CourseCtrl
         $this->classSessionDao->createForOffering($new_offering_id);
         $this->quizDao->clone($offering_id, $new_offering_id);
         $this->labDao->clone($offering_id, $new_offering_id);
-        // TODO: clone comments if user specifies
+
+        if ($cloneComments) {
+            $this->commentDao->clone($offering_id, $new_offering_id);
+        }
+
         try {
             $this->videoDao->clone($course_number, $block, $old_block);
-            $this->fileDao->clone($course_number, $block, $old_block);
+            if ($cloneFiles) {
+                $this->fileDao->clone($course_number, $block, $old_block);
+            }
         } catch (Exception $e) {
             $this->fileDao->delete($course_number, $block);
             // throw so that the db also rolls back and the error is logged
