@@ -218,7 +218,8 @@ window.addEventListener('load', () => {
     function playHandler(evt) {
         window.scrollTo(0, 80);
         this.playbackRate = parseFloat(curSpeed.innerHTML);;
-        const video_name = encodeURIComponent(evt.target.parentNode.id);
+        const name = evt.target.parentNode.dataset.name;
+        const video_name = encodeURIComponent(name);
         // invalidate any old id that may have still been in the system
         view_id = false;
         // get view_id by posting to start: day_id, video

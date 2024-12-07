@@ -173,7 +173,7 @@
                     $currentPrecent = $passedPercent + (($info["duration"] / $totalDuration) * 100);
                 } ?>
 
-                <article id="a<?= $idx ?>" class="<?= $idx == $file_idx ? "selected" : "" ?>">
+                <article id="a<?= $idx ?>" class="<?= $idx == $file_idx ? "selected" : "" ?>" data-name="<?= $info["parts"][0]."_".$info['parts'][1] ?>">
                     <h2><?= $info["parts"][1] ?></h2>
 
                     <div class="media">
