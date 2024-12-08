@@ -74,7 +74,7 @@ class VideoCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/$", sec: "observer")]
-    public function offering()
+    public function overview()
     {
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
@@ -100,7 +100,7 @@ class VideoCtrl
         $VIEW_DATA["faculty"] = $this->userDao->faculty();
         $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
 
-        return "course/offering.php";
+        return "course/overview.php";
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$", sec: "observer")]
