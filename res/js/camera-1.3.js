@@ -15,7 +15,7 @@ const CAMERA = (function() {
         document.querySelectorAll('div.closeCamera').forEach((div) => {
             div.onclick = function() {
                 stopCamera.call(this); 
-                this.closest("div.question")
+                this.closest("div.question, div.delivery")
                     .querySelector('img.answer')
                     .classList.remove('hide');
             } 
@@ -85,7 +85,7 @@ const CAMERA = (function() {
         const body = this.closest('body');
         body.addEventListener('keypress', takePictureOnKeyPress);
 
-        const parent = this.closest('div.question');
+        const parent = this.closest('div.question, div.delivery');
         const spinner = parent.querySelector('i.fa-circle-notch');
         const video = parent.querySelector('video');
         const camera = parent.querySelector('div.camera');
