@@ -75,6 +75,9 @@ class LabGradingCtrl
                 $members[$student['group']][] = $student;
             }
             foreach ($groups as $group) {
+                if (!$group) {
+                    continue;
+                }
                 $absent[$group] = $group;
             }
             $key = "group";
