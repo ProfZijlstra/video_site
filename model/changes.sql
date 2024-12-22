@@ -633,3 +633,13 @@ CREATE INDEX `comment_vid_pdf` ON `comment`(`vid_pdf`);
 ALTER TABLE `comment` ADD COLUMN `day_id` INT NOT NULL DEFAULT 0 AFTER `user_id`;
 ALTER TABLE `comment` ADD CONSTRAINT `fk_day_id` FOREIGN KEY (`day_id`) REFERENCES day(id);
 ALTER TABLE `comment` DROP COLUMN `video`;
+
+-- 08 dec 2024
+ALTER TABLE `attachment` DROP CONSTRAINT `fk_attachment_lab1`;
+ALTER TABLE `attachment` ADD COLUMN `deliverable_id` INT UNSIGNED NOT NULL;
+UPDATE attachment a SET deliverable_id = (SELECT d.id FROM deliverable d where d.lab_id = a.lab_id limit 1);
+ALTER TABLE `attachment` ADD  CONSTRAINT `fk_attachment_deliverable` FOREIGN KEY (`deliverable_id`) REFERENCES deliverable(`id`);
+ALTER TABLE `attachment` DROP COLUMN `lab_id`;
+
+ALTER TABLE `lab` DROP COLUMN `desc`;
+ALTER TABLE `lab` DROP COLUMN `hasMarkDown`;

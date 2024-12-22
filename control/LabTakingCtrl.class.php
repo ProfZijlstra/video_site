@@ -57,7 +57,7 @@ class LabTakingCtrl
      * 3. If between start and stop the user can upload deliverables
      * 
      */
-    #[Get(uri: "/(\d+)$", sec: "student")]
+    #[Get(uri: "/(\d+)(/(\d+))?$", sec: "student")]
     public function viewLab()
     {
         global $URI_PARAMS;
@@ -74,6 +74,7 @@ class LabTakingCtrl
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
+        $selected = $URI_PARAMS[5];
 
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);
@@ -179,6 +180,7 @@ class LabTakingCtrl
         }
         $VIEW_DATA['checks'] = $checks;
         $VIEW_DATA['title'] = "Lab: " . $lab['name'];
+        $VIEW_DATA['selected'] = $selected;
         return "lab/doLab.php";
     }
 
@@ -635,11 +637,16 @@ class LabTakingCtrl
             );
         }
 
+        $lab = $this->labDao->byId($lab_id);
+        $lname = str_replace(" ", "_", $lab['name']);
+        $deliverable = $this->deliverableDao->byId($deliverable_id);
+        $dseq = $deliverable['seq'];
+
         // process the file
         $listing = null;
         if ($type == 'img') {
             $name = $_FILES["file"]['name'];
-            $path = "res/{$course}/{$block}/lab/{$lab_id}/submit/{$submission_id}";
+            $path = "res/{$course}/{$block}/lab/{$lname}/submit/{$dseq}/{$submission_id}";
             $res = $this->imageHlpr->process('file', $path);
             if ($res['error']) {
                 return ["error" => $res['error']];
@@ -681,7 +688,7 @@ class LabTakingCtrl
             $name = $_FILES["file"]['name'];
             $time = new DateTimeImmutable("now", new DateTimeZone(TIMEZONE));
             $ts = $time->format("Y-m-d_H:i:s");
-            $dst = "res/{$course}/{$block}/lab/{$lab_id}/submit/"
+            $dst = "res/{$course}/{$block}/lab/{$lname}/submit/{$dseq}/"
                 . "{$submission_id}";
             if (!file_exists($dst) && !is_dir($dst)) {
                 mkdir($dst, 0777, true);

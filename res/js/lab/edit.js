@@ -23,13 +23,10 @@ window.addEventListener("load", () => {
         const stopdate = form.stopdate.value;
         const stoptime = form.stoptime.value;
         const type = form.type.value;
-        const hasMarkDown = form.hasMarkDown.value;
-        const desc = form.desc.value;
-        const shifted = encodeURIComponent(MARKDOWN.ceasarShift(desc));
 
         fetch(`../${id}`, {
             method: "PUT",
-            body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&type=${type}&hasMarkDown=${hasMarkDown}&desc=${shifted}`,
+            body: `visible=${visible}&name=${name}&day_id=${day_id}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}&type=${type}`,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
@@ -72,54 +69,65 @@ window.addEventListener("load", () => {
 
     // enable remove attachment icons
     function delAttachment(e) {
-        if (e.target.classList.contains("remove")) {
-            const attachment = e.target.parentElement;
-            const link = attachment.querySelector("a");
-            const name = link.textContent;
-            const id = e.target.dataset.id;
-            if (confirm(`Are you sure you want to remove ${name}? Including download data, and possibly related zip actions?`)) {
-                const spinner = document.getElementById("attachSpin");
-                spinner.classList.add("rotate");
-                fetch(`attach/${id}`, {
-                        method: "DELETE",
-                    })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        attachment.remove();
-
-                        // remove the entry from each labzip dropdown on the page
-                        document.querySelectorAll("select.zipAttachment option").forEach((e) => {
-                            if (e.value == id) {
-                                e.remove();
-                            }
-                        });
-                    }
-                    spinner.classList.remove('rotate');
-                    const attachments = document.getElementById("attachments");
-                    if (attachments.childElementCount == 0) {
-                        attachments.previousElementSibling.classList.add("empty");
-                    }
-                });
-            }
+        if (!e.target.classList.contains("remove")) {
+            return;
         }
+
+        const attachment = e.target.parentElement;
+        const link = attachment.querySelector("a");
+        const name = link.textContent;
+        const id = e.target.dataset.id;
+        if (!confirm(`Are you sure you want to remove ${name}? Including download data, and possibly related zip actions?`)) {
+            return;
+        }
+
+        const container = e.target.closest("div.attachContainer");
+        const spinner = container.querySelector("i.attachSpin");
+        spinner.classList.add("rotate");
+        fetch(`attach/${id}`, {
+            method: "DELETE",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    attachment.remove();
+
+                    // remove the entry from each labzip dropdown on the page
+                    document.querySelectorAll("select.zipAttachment option").forEach((e) => {
+                        if (e.value == id) {
+                            e.remove();
+                        }
+                    });
+                }
+                spinner.classList.remove('rotate');
+                const attachments = container.querySelector("div.attachments");
+                if (attachments.childElementCount == 0) {
+                    attachments.previousElementSibling.classList.add("empty");
+                }
+            });
     }
     document.querySelectorAll(".attachment i").forEach((e) => {
         e.addEventListener("click", delAttachment);
     });
 
     // enable add attachment icon
-    document.getElementById("attachBtn").addEventListener("click", () => {
-        document.getElementById("attachment").click();
-    });
-    document.getElementById("attachment").addEventListener("change", function() {
-        // upload attachment
-        const spinner = document.getElementById("attachSpin");
+    function clickAttachBtn(evt) {
+        const parent = evt.target.parentElement;
+        const input = parent.querySelector("input.attachment");
+        input.click();
+    }
+    document.querySelectorAll("i.attachBtn").forEach((e) => 
+        e.addEventListener("click", clickAttachBtn)
+    );
+    function uploadAttachment(e) {
+        const container = e.target.closest("div.attachContainer");
+        const spinner = container.querySelector("i.attachSpin");
         spinner.classList.add("rotate");
         const data = new FormData();
         data.append("attachment", this.files[0]);
+        data.append("deliverable_id", this.dataset.deliverable_id);
         fetch("attach", {
                 method: "POST",
                 body: data
@@ -129,7 +137,7 @@ window.addEventListener("load", () => {
                 const div = document.createElement("div");
                 div.innerHTML = html;
                 div.querySelector("i.remove").addEventListener("click", delAttachment);
-                const attachments = document.getElementById("attachments");
+                const attachments = container.querySelector("div.attachments");
                 attachments.appendChild(div);
                 spinner.classList.remove('rotate');
 
@@ -143,7 +151,10 @@ window.addEventListener("load", () => {
                 spinner.classList.remove('rotate');
                 alert(error);
             });
-    });
+    }
+    document.querySelectorAll("input.attachment").forEach((e) => 
+        e.addEventListener("change", uploadAttachment)
+    );
 
     // enable add deliverable 
     const addDeliv = document.getElementById("addDelivIcon");

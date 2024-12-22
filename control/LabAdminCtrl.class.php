@@ -77,15 +77,16 @@ class LabAdminCtrl
         foreach ($grading as $grade) {
             $graded[$grade['id']] = $grade;
         }
-
-        // integrate the labs data into the days data
-        foreach ($VIEW_DATA['days'] as $day) {
-            $day['labs'] = array();
-        }
+        $labTimes = [];
         foreach ($labs as $lab) {
-            $VIEW_DATA['days'][$lab['abbr']]['labs'][] = $lab;
+            $labTimes[] = [
+                "lab" => $lab, 
+                "start" => strtotime($lab['start']),
+                "stop" => strtotime($lab['stop']),
+            ];
         }
 
+        $VIEW_DATA['labTimes'] = $labTimes;
         $VIEW_DATA['title'] = 'Labs';
         $VIEW_DATA['area'] = 'lab';
         $VIEW_DATA['graded'] = $graded;
@@ -267,10 +268,13 @@ class LabAdminCtrl
         global $URI_PARAMS;
         global $VIEW_DATA;
 
-        $id = $URI_PARAMS[3];
+        $lab_id = $URI_PARAMS[3];
+        $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_SANITIZE_NUMBER_INT);
+        $lab = $this->labDao->byId($lab_id);
+        $deliverable = $this->deliverableDao->byId($deliverable_id);
 
         try {
-            $res = $this->attachmentHlpr->process('attachment', $id);
+            $res = $this->attachmentHlpr->process('attachment', $lab, $deliverable);
             $type = "simple";
             if ($res['zip']) {
                 $type = "zip";
@@ -278,7 +282,7 @@ class LabAdminCtrl
             }
             $file = $res['file'];
             $name = $res['name'];
-            $aid = $this->attachmentDao->add($type, $id, $file, $name);
+            $aid = $this->attachmentDao->add($type, $deliverable_id, $file, $name);
             $res['id'] = $aid;
         } catch (Exception $e) {
             error_log($e);
@@ -306,7 +310,7 @@ class LabAdminCtrl
             $attachment = $this->attachmentDao->byId($id);
             $this->downloadDao->deleteForAttachment($id);
             $this->zipDlActionDao->deleteForAttachment($id);
-            $this->attachmentDao->delete($id, $lab_id);
+            $this->attachmentDao->delete($id);
             $this->attachmentHlpr->delete($attachment);
         } catch (Exception $e) {
             error_log($e);

@@ -1,4 +1,4 @@
-<?php require("view/lab/typeDesc.php"); ?>
+<?php require 'view/lab/typeDesc.php'; ?>
 <!DOCTYPE html>
 <html>
 
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/lab-1.5.css">
+    <link rel="stylesheet" href="res/css/lab-1.6.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/back.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
@@ -22,12 +22,12 @@ window.addEventListener("load", () => {
 </head>
 
 <body id="labResults" class="lab labDeliverables">
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav id="back" class="back" title="Back">
             <i class="fa-solid fa-arrow-left"></i>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <nav class="tools">
         </nav>
         <div id="content">
@@ -36,39 +36,20 @@ window.addEventListener("load", () => {
             <div class="about">
                 <div><label>Start:</label> <?= $lab['start'] ?></div>
                 <div><label>Stop:</label> <?= $lab['stop'] ?></div>
-                <?php if ($lab['type'] == "group") : ?>
+                <?php if ($lab['type'] == 'group') { ?>
                     <div id="labGroup">
                         <label>Group:</label> <?= $group ?>
                     </div>
-                <?php endif; ?>
+                <?php } ?>
             </div>
 
             <h1 id="lab_id">
                 <?= $lab['name'] ?>
             </h1>
 
-            <div class="description">
-                <?= $parsedown->text($lab['desc']) ?>
-            </div>
-
-            <div class="attachments">
-                <?php foreach ($attachments as $attachment) : ?>
-                    <div class="attachment">
-                        <?php if ($attachment['type'] == "zip") : ?>
-                            <a target="_blank" href="<?= $lab['id'] . '/download/' . $attachment['id'] ?>">
-                            <?php else : ?>
-                                <a target="_blank" href="<?= $attachment['file'] ?>">
-                                <?php endif; ?>
-                                <i class="fa-solid fa-paperclip"></i>
-                                <?= $attachment['name'] ?>
-                                </a>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
             <div id="submission">
                 <h2><?= count($deliverables) ?> Deliverable(s) </h2>
-                <?php foreach ($deliverables as $deliv) : ?>
+                <?php foreach ($deliverables as $deliv) { ?>
                     <?php $delivery = $deliveries[$deliv['id']] ?? [] ?>
                     <div class="dcontainer deliverables">
                         <div class="about">
@@ -78,28 +59,47 @@ window.addEventListener("load", () => {
                                 </span>
                             </div>
                             <div title="The lab total is <?= $labPoints ?>, this deliverable is <?= $deliv['points'] ?> of that total">
-                                <?php if ($delivery && !is_null($delivery['points'])) : ?>
+                                <?php if ($delivery && ! is_null($delivery['points'])) { ?>
                                     Points Received: <br>
                                     <strong><?= $delivery['points'] ?></strong>
                                     of <?= $deliv['points'] ?>
-                                <?php else : ?>
+                                <?php } else { ?>
                                     <?php $not_graded = true; ?>
                                     Points Possible: <?= $deliv['points'] ?>
                                     <h3>Not graded</h3>
-                                <?php endif; ?>
+                                <?php } ?>
                             </div>
                         </div>
-                        <div class="deliv">
+                        <div class="deliverable">
                             <div>Deliverable Description:</div>
                             <div class="description">
-                                <?php if ($deliv['hasMarkDown']) : ?>
+                                <?php if ($deliv['hasMarkDown']) { ?>
                                     <?= $parsedown->text($deliv['desc']) ?>
-                                <?php else : ?>
+                                <?php } else { ?>
                                     <pre><?= htmlspecialchars($deliv['desc']) ?></pre>
-                                <?php endif; ?>
+                                <?php } ?>
                             </div>
 
-                            <?php if ($delivery) : ?>
+                            <div class="attachments">
+                                <?php foreach ($attachments as $attachment) { ?>
+                                <?php if ($attachment['deliverable_id'] == $deliv['id']) { ?>
+                                    <div class="attachment">
+                                        <?php if ($attachment['type'] == 'zip') { ?>
+                                            <a target="_blank" href="<?= $lab['id'].'/download/'.$attachment['id'] ?>">
+                                            <?php } else { ?>
+                                                <a target="_blank" href="<?= $attachment['file'] ?>">
+                                                <?php } ?>
+                                                <i class="fa-solid fa-paperclip"></i>
+                                                <?= $attachment['name'] ?>
+                                                </a>
+                                    </div>
+                                <?php } ?>
+                                <?php } ?>
+                            </div>
+                        </div> <!-- close deliverable -->
+
+                        <div class="delivery">
+                            <?php if ($delivery) { ?>
                                 <div>Your Submission:</div>
                                 <div class="stats">
                                     <label title="Hours spent creating this deliverable">Hours:
@@ -110,65 +110,65 @@ window.addEventListener("load", () => {
                                         <?= $delivery['completion'] ?>%
                                     </label>
                                 </div>
-                                <?php if ($deliv['type'] == 'txt') : ?>
+                                <?php if ($deliv['type'] == 'txt') { ?>
                                     <div class="txtDelivery">
-                                        <?php if ($delivery['hasMarkDown']) : ?>
+                                        <?php if ($delivery['hasMarkDown']) { ?>
                                             <?= $parsedown->text($delivery['text']) ?>
-                                        <?php else : ?>
+                                        <?php } else { ?>
                                             <pre><?= htmlspecialchars($delivery['text']) ?></pre>
-                                        <?php endif; ?>
+                                        <?php } ?>
                                     </div>
-                                <?php else : ?>
-                                    <?php if ($deliv['type'] == 'url') : ?>
+                                <?php } else { ?>
+                                    <?php if ($deliv['type'] == 'url') { ?>
                                         <div class="urlContainer">
                                             <a href="<?= $delivery['text'] ?>"><?= $delivery['text'] ?></a>
                                         </div>
-                                    <?php else : /* type is: img, pdf, zip */ ?>
+                                    <?php } else { /* type is: img, pdf, zip */ ?>
                                         <div class="fileContainer">
                                             <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
-                                            <?php if ($deliv['type'] == 'img') : ?>
+                                            <?php if ($deliv['type'] == 'img') { ?>
                                                 <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
-                                            <?php elseif ($deliv['type'] == "zip") : ?>
+                                            <?php } elseif ($deliv['type'] == 'zip') { ?>
                                                 <pre class="listing"><?= $delivery['text'] ?></pre>
-                                            <?php endif; ?>
+                                            <?php } ?>
                                         </div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($delivery['stuComment']) : ?>
+                                    <?php } ?>
+                                <?php } ?>
+                                <?php if ($delivery['stuComment']) { ?>
                                     <div>Your Comment:</div>
                                     <div class="comment">
-                                        <?php if ($delivery['stuCmntHasMD']) : ?>
+                                        <?php if ($delivery['stuCmntHasMD']) { ?>
                                             <?= $parsedown->text($delivery['stuComment']) ?>
-                                        <?php else : ?>
+                                        <?php } else { ?>
                                             <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>
-                                        <?php endif; ?>
+                                        <?php } ?>
                                     </div>
-                                <?php endif; ?>
-                            <?php else : ?>
+                                <?php } ?>
+                            <?php } else { ?>
                                 <h3>Not submitted</h3>
-                            <?php endif; ?>
-                            <?php if ($delivery['gradeComment']) : ?>
+                            <?php } ?>
+                            <?php if ($delivery['gradeComment']) { ?>
                                 <div>Grading Comment:</div>
                                 <div class="comment">
-                                    <?php if ($delivery['gradeCmntHasMd']) : ?>
+                                    <?php if ($delivery['gradeCmntHasMd']) { ?>
                                         <div class="description">
                                             <?= $parsedown->text($delivery['gradeComment']) ?>
                                         </div>
-                                    <?php else : ?>
+                                    <?php } else { ?>
                                         <pre><?= htmlspecialchars($delivery['gradeComment']) ?></pre>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </div>
-                            <?php endif; ?>
-                        </div>
+                            <?php } ?>
+                        </div> <!-- close delivery -->
                     </div>
-                <?php endforeach; ?>
+                <?php } ?>
             </div>
 
             <div class="done">
                 <div id="total">
-                    <?php if ($not_graded) : ?>
+                    <?php if ($not_graded) { ?>
                         <div>Not all questions have been graded yet</div>
-                    <?php endif; ?>
+                    <?php } ?>
                     <strong>Total Score:</strong> <?= $received ?> out of <?= $labPoints ?>
                 </div>
                 <nav class="back" title="Back">

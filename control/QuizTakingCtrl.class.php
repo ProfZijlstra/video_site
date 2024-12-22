@@ -168,7 +168,13 @@ class QuizTakingCtrl
             $user_id = $student_user_id;
         }
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
-        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+
+        $quiz = $this->quizDao->byId($quiz_id);
+        $qname = str_replace(" ", "_", $quiz['name']);
+        $question = $this->questionDao->get($question_id);
+        $qseq = $question['seq'];
+
+        $path = "res/{$course}/{$block}/quiz/{$qname}/{$qseq}";
         $res = $this->imageHlpr->process("image", $path);
 
         if (isset($res['error'])) {
@@ -213,7 +219,13 @@ class QuizTakingCtrl
             $user_id = $student_user_id;
         }
         $answer_id = filter_input(INPUT_POST, "answer_id", FILTER_VALIDATE_INT);
-        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+
+        $quiz = $this->quizDao->byId($quiz_id);
+        $qname = $quiz['name'];
+        $question = $this->questionDao->get($question_id);
+        $qseq = $question['seq'];
+
+        $path = "res/{$course}/{$block}/quiz/{$qname}/{$qseq}";
         $img = filter_input(INPUT_POST, "image");
         $dst = $this->imageHlpr->save($img, $path);
 

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/offering-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
+    <link rel="stylesheet" href="res/css/lab-1.6.css">
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) { ?>auto <?php } ?>;
@@ -18,7 +19,7 @@
     <script src="res/js/assignment.js"></script>
 </head>
 
-<body>
+<body id="gradeOverview">
     <?php include 'header.php'; ?>
     <main>
         <?php include 'areas.php'; ?>
@@ -58,8 +59,12 @@
                             <?php } ?>
                         <?php } ?>
 
-                        <?php foreach ($days["W{$w}D{$d}"]['labs'] as $lab) { ?>
+                        <?php foreach ($labTimes as $labTime) { ?>
+                            <?php if ($date < $labTime['start'] || $date > $labTime['stop']) {
+                                continue;
+                            } ?>
                             <?php
+                            $lab = $labTime['lab'];
                             $grade = $graded[$lab['id']];
                             $gradeStatus = '';
                             if ($grade['answers'] != 0) {
@@ -69,7 +74,7 @@
                                 }
                             }
                             ?>
-                            <div>
+                            <div class="lab">
                                 <a href="<?= 'lab/'.$lab['id'] ?>" class="<?= $lab['visible'] ? 'visible' : 'invisible' ?> <?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
                                     <?= $lab['name'] ?>
                                 </a>

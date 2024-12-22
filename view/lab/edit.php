@@ -9,21 +9,21 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/lab-1.5.css">
+    <link rel="stylesheet" href="res/css/lab-1.6.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/lab/edit.js"></script>
 </head>
 
 <body id="editLab" class="lab">
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
             <a href="../../lab">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <nav class="tools">
             <a title="Preview" href="../preview?l=<?= $lab['id'] ?>">
                 <i id="previewBtn" class="fa-solid fa-eye"></i>
@@ -32,7 +32,7 @@
         </nav>
         <div id="content">
             <div class="lab">
-                <form id="updateLab" action="<?= "../" . $lab['id'] ?>" method="POST" data-id="<?= $lab['id'] ?>">
+                <form id="updateLab" action="<?= '../'.$lab['id'] ?>" method="POST" data-id="<?= $lab['id'] ?>">
                     <div class="status" data-id="<?= $lab['id'] ?>">
                         <input id="visible" name="visible" type="checkbox" class="visible" value="1" <?= $lab['visible'] ? 'checked' : '' ?> /><label for="visible"> Visible</label>
                     </div>
@@ -43,11 +43,11 @@
                     <div>
                         <label>Day:</label>
                         <select name="day_id" id="day_id">
-                            <?php foreach ($days as $day) : ?>
-                                <option value="<?= $day['id'] ?>" <?= $day['id'] == $lab['day_id'] ? "selected" : "" ?>>
-                                    <?= $day['abbr'] . " - " . $day['desc'] ?>
+                            <?php foreach ($days as $day) { ?>
+                                <option value="<?= $day['id'] ?>" <?= $day['id'] == $lab['day_id'] ? 'selected' : '' ?>>
+                                    <?= $day['abbr'].' - '.$day['desc'] ?>
                                 </option>
-                            <?php endforeach; ?>
+                            <?php } ?>
                         </select>
                     </div>
                     <div>
@@ -63,56 +63,31 @@
                     <div>
                         <label>Type:</label>
                         <select name="type">
-                            <option value="individual" <?= $lab['type'] == "individual" ? "selected" : "" ?>>Individual</option>
-                            <option value="group" <?= $lab['type'] == "group" ? "selected" : "" ?>>Group</option>
+                            <option value="individual" <?= $lab['type'] == 'individual' ? 'selected' : '' ?>>Individual</option>
+                            <option value="group" <?= $lab['type'] == 'group' ? 'selected' : '' ?>>Group</option>
                         </select>
                     </div>
                     <div title="Calculated from deliverables">
                         <label>Points:</label>
                         <input disabled id="labPoints" class="name" type="number" name="points" value="<?= $labPoints ?>" />
                     </div>
-                    <h3 class="lab">Lab Description:</h3>
-                    <div class="dcontainer">
-                        <div class="textContainer">
-                            <textarea name="desc" class="text" placeholder="Write your lab description here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```" data-txt="Write your lab description here"><?= $lab['desc'] ?></textarea>
-
-                            <i title="Markdown" class="details txt fa-brands fa-markdown <?= $lab['hasMarkDown'] ? "active" : "" ?>"></i>
-                            <input type="hidden" id="descMarkDown" name="hasMarkDown" value="<?= $lab['hasMarkDown'] ?>" />
-                            <div class="mdContainer <?= $lab['hasMarkDown'] ? "active" : "" ?>">
-                                <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
-                                <div class="previewArea"></div>
-                            </div>
-                        </div>
-                    </div>
                 </form>
-            </div>
-            <div>
-                <h3 class="<?= count($attachments) == 0 ? 'empty' : '' ?>">Attachments
-                    <i id="attachBtn" title="Add attachment" class="fa-solid fa-paperclip"></i>
-                    <input type="file" name="attachment" id="attachment" />
-                    <i id="attachSpin" class="fa-solid fa-circle-notch"></i>
-                </h3>
-                <div id="attachments">
-                    <?php foreach ($attachments as $attachment) : ?>
-                        <?php include('view/lab/attachment.php') ?>
-                    <?php endforeach; ?>
-                </div>
             </div>
 
             <h3 class="<?= count($deliverables) == 0 ? 'empty' : '' ?>">
                 Deliverables
                 <i id="addDelivIcon" title="Add Deliverable" class="far fa-plus-square"></i>
             </h3>
-            <?php if (!$deliverables) : ?>
+            <?php if (! $deliverables) { ?>
                 <div id="noDelivs">
                     <h2>No Deliverables Yet!</h2>
                     <p class="warning">Click the <i class="far fa-plus-square"></i> button in the top right to add at least one deliverable.</p>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
             <div id="deliverables">
-                <?php foreach ($deliverables as $deliv) : ?>
-                    <?php include('view/lab/deliverable.php') ?>
-                <?php endforeach; ?>
+                <?php foreach ($deliverables as $deliv) { ?>
+                    <?php include 'view/lab/deliverable.php'?>
+                <?php } ?>
             </div>
     </main>
     <dialog id="addDelivDialog" class="modal">

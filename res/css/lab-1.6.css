@@ -1,4 +1,7 @@
 body.lab {
+    i {
+        cursor: pointer;
+    }
     main nav.areas {
         margin-top: 50px;
     }
@@ -7,11 +10,11 @@ body.lab {
         border-top: none;
         margin-top: 0px;
         position: relative;
-        display: flex;
+        display: grid;
+        grid-template-columns: 150px 1fr;
 
         .about {
-            flex-basis: 150px;
-            flex-shrink: 0;
+            grid-row: 1 / span 2;
             border-right: 1px solid var(--border);
             text-align: center;
             position: relative;
@@ -36,8 +39,13 @@ body.lab {
             }
         }
 
-        .deliv {
-            flex-grow: 1;
+        div.deliverable {
+            grid-column: 2;
+            padding: 5px;
+        }
+
+        div.delivery {
+            grid-column: 2;
             padding: 5px;
         }
 
@@ -141,7 +149,7 @@ body#editLab {
         text-align: center;
     }
 
-    #attachment {
+    input.attachment {
         display: none;
     }
 
@@ -222,9 +230,6 @@ body#editLab {
 }
 
 body.labDeliverables {
-    div#content a {
-        text-decoration: underline;
-    }
     div#content div.about {
         label {
             display: inline-block;
@@ -233,8 +238,13 @@ body.labDeliverables {
         }
     }
     div#content h1 {
+        font-size: 40pt;
         margin-top: 25px;
         margin-bottom: 0px;
+    }
+
+    div#submission a, div.about a {
+        text-decoration: underline;
     }
 
     div.description {
@@ -244,6 +254,7 @@ body.labDeliverables {
         border: 1px solid var(--border);
         padding: 5px 10px;
         background-color: var(--light-gray);
+        overflow: auto;
         pre {
             white-space: pre-wrap;
             code {
@@ -254,7 +265,7 @@ body.labDeliverables {
             width: 100%;
         }
     }
-    div.deliv div.description {
+    div.deliverable div.description {
         max-width: 620px;
     }
     div.txtDelivery {
@@ -280,7 +291,8 @@ body.labDeliverables {
     }
 
     div.stats {
-        margin: 10px 2px;
+        display: inline-block;
+        margin: 5px 0px;
 
         label.completion {
             display: inline-block;
@@ -292,7 +304,7 @@ body.labDeliverables {
         }
     }
 
-    div.dcontainer div.deliv div.textContainer {
+    div.dcontainer div.textContainer {
         position: relative;
 
         textarea {
@@ -305,13 +317,15 @@ body.labDeliverables {
             top: -23px;
         }
         i.fa-markdown.stu.cmt {
-            top: 9px;
+            top: -20px;
         }
     }
 
-    div.fileContainer {
-        margin: 10px 0px;
+    div.dcontainer div.textContainer.commentContainer {
+        margin-top: 25px;
+    }
 
+    div.fileContainer {
         i.fa-upload {
             cursor: pointer;
         }
@@ -319,6 +333,10 @@ body.labDeliverables {
         i.fa-trash-can {
             cursor: pointer;
             margin-left: 10px;
+        }
+
+        i.fa-camera {
+            margin-right: 10px;
         }
 
         input.file {
@@ -369,12 +387,25 @@ body.labDeliverables {
 }
 
 body#doLab{
-    div.dcontainer div.deliv div.textContainer {
+    .hide {
+        display: none;
+    }
+    h2 span.delivNum, h2 i {
+        color: lightgray;
+        cursor: pointer;
+    }
+    h2 span.delivNum:hover {
+        text-decoration: underline;
+    }
+    h2 span.delivNum.active, h2 i.active {
+        color: var(--black);
+    }
+    h3.time {
+        margin-bottom: 5px;
+    }
+    div.dcontainer div.deliverable div.textContainer {
         textarea {
-            margin-top: 30px;
-        }
-        textarea.file {
-            margin-top: 0px;
+            margin-top: 3px;
         }
     }
 
@@ -422,6 +453,13 @@ body.grade {
     }
     div.listing span.old {
         color: red;
+    }
+}
+
+body#gradeOverview {
+    div#days div.lab {
+        margin-bottom: 5px;
+        border-bottom: 1px solid var(--border);
     }
 }
 
@@ -508,6 +546,7 @@ body#gradeDeliverable {
         grid-template-columns: 300px auto 350px 70px;
         border-right: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
+        overflow: auto;
 
         > div {
             border-top: 1px solid var(--border);
@@ -608,6 +647,33 @@ body#gradeDeliverable {
   }
 }
 
+@media screen and (min-width: 1550px) {
+    body.labDeliverables  {
+        main div#content {
+            width: 1400px;
+        }
+
+        div.deliverable div.description {
+            /*max-width: 690px;*/
+        }
+
+        div.dcontainer {
+            grid-template-columns: 150px 1fr 1fr;
+
+            div.about {
+                grid-row: 1;
+            }
+            div.delivery {
+                grid-column: 3;
+                border-left: 1px solid var(--border);
+            }
+            div.textContainer textarea {
+                max-width: initial;
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 900px) {
     /* copied from quiz css, extract to common? */
     header {
@@ -672,7 +738,7 @@ body#gradeDeliverable {
                 font-size: 35px;
             }
         }
-        div.deliv {
+        div.deliverable {
             div.description {
                 max-width: 67vw;
             }

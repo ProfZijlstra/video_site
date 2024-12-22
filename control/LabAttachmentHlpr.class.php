@@ -17,12 +17,14 @@ class LabAttachmentHlpr
         self::$one = pack("CCC", 0xe2, 0x80, 0x8c); // zero width non-joiner
     }
 
-    public function process($key, $lab_id)
+    public function process($key, $lab, $deliverable)
     {
         global $URI_PARAMS;
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
+        $lname = str_replace(" ", "_", $lab['name']);
+        $dseq = $deliverable['seq'];
 
         // stop if there was an upload error
         if ($_FILES[$key]['error'] != UPLOAD_ERR_OK) {
@@ -34,20 +36,20 @@ class LabAttachmentHlpr
 
         $curr = $_FILES[$key]['tmp_name'];
         $name = $_FILES[$key]['name'];
-        $dst = "res/{$course}/{$block}/lab/{$lab_id}/";
+        $dst = "res/{$course}/{$block}/lab/{$lname}/";
         $zip = false;
         $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         if ($extension == "zip" && $this->isZipFile($curr)) {
             $zip = true;
-            $dst .= "upload/";
+            $dst .= "upload/{$dseq}/";
         } else {
-            $dst .= "attachment/";
+            $dst .= "attachment/{$dseq}/";
         }
         $this->ensureDirCreated($dst);
         $dst .= $name;
         move_uploaded_file($curr, $dst);
 
-        return ["file" => $dst, "name" => $name, "lab_id" => $lab_id, "zip" => $zip];
+        return ["file" => $dst, "name" => $name, "zip" => $zip];
     }
 
     public function extract($attachment)
