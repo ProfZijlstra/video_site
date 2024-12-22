@@ -12,6 +12,7 @@ body.lab {
         position: relative;
         display: grid;
         grid-template-columns: 150px 1fr;
+        margin-bottom: 25px;
 
         .about {
             grid-row: 1 / span 2;
@@ -442,6 +443,13 @@ body#doLab{
 }
 
 body.grade {
+    div.note {
+        margin-top: 35px;
+        text-align: center;
+    }
+    div.deliv {
+        padding: 5px;
+    }
     div.timestamp {
         font-size: 10pt;
         color: gray;
@@ -491,11 +499,18 @@ body#gradeSubmission {
 }
 
 body#gradeDeliverable {
+    h2 a.delivNum, h2 i {
+        color: lightgray;
+    }
+    h2 a.delivNum.active, h2 i.active{
+        color: var(--black);
+    }
     div#content {
         width: 90%;
     }
 
     div.dcontainer.deliverables {
+        grid-template-columns: 150px 1fr;
         margin-bottom: 20px;
         width: 750px;
         margin-left: auto;
@@ -648,7 +663,7 @@ body#gradeDeliverable {
 }
 
 @media screen and (min-width: 1550px) {
-    body.labDeliverables  {
+    body#doLab  {
         main div#content {
             width: 1400px;
         }

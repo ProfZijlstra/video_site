@@ -17,14 +17,14 @@
 </head>
 
 <body id="gradeSubmission" class="lab grade labDeliverables">
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
             <a href="../grade">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <nav class="tools">
             <a href="../../<?= $lab_id ?>?student=<?= $members[0]['id'] ?>">
                 <i title="Edit submission" class="fa-regular fa-pen-to-square"></i>
@@ -33,26 +33,29 @@
 
         <div id="content">
             <!-- Submission Being Graded -->
-            <?php if ($submission['group']) : ?>
+            <?php if ($submission['group']) { ?>
                 <h2 data-id="<?= $submission['id'] ?>" data-group="<?= $submission['group'] ?>">
                     Group: <?= $submission['group'] ?>
                 </h2>
                 <div class="members">
-                    <?php foreach ($members as $member) : ?>
+                    <?php foreach ($members as $member) { ?>
                         <div><?= $member['knownAs'] ?> <?= $member['lastname'] ?></div>
-                    <?php endforeach; ?>
+                    <?php } ?>
                 </div>
-            <?php else : ?>
+            <?php } else { ?>
                 <h2 data-id="<?= $submission['id'] ?>" data-user="<?= $members[0]['id'] ?>">
                     Student: <?= $members[0]['knownAs'] ?> <?= $members[0]['lastname'] ?>
                 </h2>
-            <?php endif; ?>
+            <?php } ?>
 
             <div class="timestamp">Submission created: <?= $submission['start'] ?></div>
             <div class="timestamp">Submission updated: <?= $submission['stop'] ?></div>
 
+            <div class="note">
+                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
+            </div>
             <!-- For erach deliverable show -->
-            <?php foreach ($deliverables as $deliv) : ?>
+            <?php foreach ($deliverables as $deliv) { ?>
                 <?php $delivery = $deliveries[$deliv['id']] ?? [] ?>
                 <div class="dcontainer deliverables" data-id="<?= $delivery['id'] ?>" data-deliverable="<?= $deliv['id'] ?>">
                     <div class="about">
@@ -67,13 +70,29 @@
                     <div class="deliv">
                         <h3>Deliverable Description</h3>
                         <div class="description">
-                            <?php if ($deliv['hasMarkDown']) : ?>
+                            <?php if ($deliv['hasMarkDown']) { ?>
                                 <?= $parsedown->text($deliv['desc']) ?>
-                            <?php else : ?>
+                            <?php } else { ?>
                                 <pre><?= htmlspecialchars($deliv['desc']) ?></pre>
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
-                        <?php if ($delivery) : ?>
+                        <div class="attachments">
+                            <?php foreach ($attachments as $attachment) { ?>
+                            <?php if ($attachment['deliverable_id'] == $deliv['id']) { ?>
+                            <div class="attachment">
+                                <?php if ($attachment['type'] == 'zip') { ?>
+                                    <a target="_blank" href="<?= $lab['id'].'/download/'.$attachment['id'] ?>">
+                                <?php } else { ?>
+                                    <a target="_blank" href="<?= $attachment['file'] ?>">
+                                <?php } ?>
+                                        <i class="fa-solid fa-paperclip"></i>
+                                        <?= $attachment['name'] ?>
+                                    </a>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                        </div>
+                        <?php if ($delivery) { ?>
                             <h3>Submitted by Student</h3>
                             <div class="stats">
                                 <label title="Hours spent creating this deliverable">
@@ -85,79 +104,76 @@
                                     <?= $delivery['completion'] ?>%
                                 </label>
                             </div>
-                            <?php if ($deliv['type'] == 'txt') : ?>
+                            <?php if ($deliv['type'] == 'txt') { ?>
                                 <div class="txtDelivery">
-                                    <?php if ($delivery['hasMarkDown']) : ?>
+                                    <?php if ($delivery['hasMarkDown']) { ?>
                                         <?= $parsedown->text($delivery['text']) ?>
-                                    <?php else : ?>
-                                        <pre><?= htmlspecialchars($delivery['text'] ?: "") ?></pre>
-                                    <?php endif; ?>
+                                    <?php } else { ?>
+                                        <pre><?= htmlspecialchars($delivery['text'] ?: '') ?></pre>
+                                    <?php } ?>
                                 </div>
-                            <?php else : ?>
-                                <?php if ($deliv['type'] == 'url') : ?>
+                            <?php } else { ?>
+                                <?php if ($deliv['type'] == 'url') { ?>
                                     <div class="urlContainer">
                                         <a href="<?= $delivery['text'] ?>" target="_blank"><?= $delivery['text'] ?></a>
                                     </div>
-                                <?php else : /* type is: img, pdf, zip */ ?>
+                                <?php } else { /* type is: img, pdf, zip */ ?>
                                     <div class="fileContainer">
                                         <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
-                                        <?php if ($deliv['type'] == 'img') : ?>
+                                        <?php if ($deliv['type'] == 'img') { ?>
                                             <img src="<?= $delivery['file'] ?>" class="<?= $delivery['file'] ? 'show' : '' ?>">
-                                        <?php elseif ($deliv['type'] == "zip") : ?>
+                                        <?php } elseif ($deliv['type'] == 'zip') { ?>
                                             <div class="listing"><?= $delivery['text'] ?></div>
-                                        <?php endif; ?>
+                                        <?php } ?>
                                     </div>
-                                <?php endif; ?>
-                            <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
 
-                            <?php if ($delivery['stuComment']) : ?>
+                            <?php if ($delivery['stuComment']) { ?>
                                 <h3>Student Comment:</h3>
                                 <div class="comment">
-                                    <?php if ($delivery['stuCmntHasMD']) : ?>
+                                    <?php if ($delivery['stuCmntHasMD']) { ?>
                                         <?= $parsedown->text($delivery['stuComment']) ?>
-                                    <?php else : ?>
+                                    <?php } else { ?>
                                         <pre><?= htmlspecialchars($delivery['stuComment']) ?></pre>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </div>
-                            <?php endif; ?>
+                            <?php } ?>
 
-                        <?php else : ?>
+                        <?php } else { ?>
                             <h2>Not Submitted</h2>
-                        <?php endif; ?>
+                        <?php } ?>
 
                         <h3>Grading Comment:</h3>
                         <div class="textContainer">
                             <textarea class="comment" data-id="<?= $delivery['id'] ?>" placeholder="Write grading comments here" data-txt="Write grading comments here" data-md="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
-                            <i title="Markdown" class="cmt fa-brands fa-markdown <?= $delivery['gradeCmntHasMD'] ? "active" : "" ?>"></i>
-                            <div class="mdContainer <?= $delivery['gradeCmntHasMD'] ? "active" : "" ?>">
+                            <i title="Markdown" class="cmt fa-brands fa-markdown <?= $delivery['gradeCmntHasMD'] ? 'active' : '' ?>"></i>
+                            <div class="mdContainer <?= $delivery['gradeCmntHasMD'] ? 'active' : '' ?>">
                                 <div class="preview"><button class="previewBtn">Preview Markdown</button></div>
                                 <div class="previewArea"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php } ?>
 
             <div class="done">
 
-                <?php if ($idx > 0) : ?>
+                <?php if ($idx > 0) { ?>
                     <a href="<?= $ids[$idx - 1] ?>?idx=<?= $idx - 1 ?>">
                         <i title="Previous Submission" class="fa-solid fa-arrow-left"></i>
                     </a>
-                <?php endif; ?>
-                <?php if ($idx < count($ids) - 1) : ?>
+                <?php } ?>
+                <?php if ($idx < count($ids) - 1) { ?>
                     <a href="<?= $ids[$idx + 1] ?>?idx=<?= $idx + 1 ?>">
                         <i title="Next Submission" class="fa-solid fa-arrow-right"></i>
                     </a>
-                <?php endif; ?>
+                <?php } ?>
 
 
                 <a href="../grade">
                     <i title="Finish Grading" class="fa-solid fa-check"></i>
                 </a>
-            <footer>
-                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
-            </footer>
             </div>
         </div>
     </main>

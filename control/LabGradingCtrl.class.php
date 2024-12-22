@@ -32,6 +32,9 @@ class LabGradingCtrl
     #[Inject('UserDao')]
     public $userDao;
 
+    #[Inject('AttachmentDao')]
+    public $attachmentDao;
+
     #[Get(uri: "/(\d+)/grade$", sec: "assistant")]
     public function gradeLab()
     {
@@ -149,6 +152,7 @@ class LabGradingCtrl
                 break;
             }
         }
+        $did = $deliverable['id'];
 
         require_once("lib/Parsedown.php");
         $parsedown = new Parsedown();
@@ -159,7 +163,9 @@ class LabGradingCtrl
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['title'] = "Grade Deliverable";
         $VIEW_DATA['deliv'] = $deliverable;
+        $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['deliveries'] = $deliveries;
+        $VIEW_DATA['attachments'] = $this->attachmentDao->forDeliverable($did);
         $VIEW_DATA['prev_id'] = $prev_id;
         $VIEW_DATA['next_id'] = $next_id;
 
@@ -184,6 +190,7 @@ class LabGradingCtrl
         $submission = $this->submissionDao->byId($submission_id);
         $deliveries = $this->deliveryDao->forSubmission($submission_id);
         $ids = array_column($this->submissionDao->idsForLab($lab_id), 'id');
+        $attachments = $this->attachmentDao->forLab($lab_id);
 
         if ($idx === null) {
             $idx = array_search($submission_id, $ids);
@@ -211,6 +218,7 @@ class LabGradingCtrl
         $VIEW_DATA['idx'] = $idx;
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['deliveries'] = $deliveries;
+        $VIEW_DATA['attachments'] = $attachments;
 
         return "lab/gradeSubmission.php";
     }

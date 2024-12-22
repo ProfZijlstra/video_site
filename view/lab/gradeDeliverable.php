@@ -26,18 +26,24 @@
         </nav>
         <?php include 'areas.php'; ?>
         <nav class="tools">
-            <?php if ($prev_id) { ?>
-                <a href="<?= $prev_id ?>">
-                    <i title="Previous Deliverable" class="fa-solid fa-arrow-left"></i>
-                </a>
-            <?php } ?>
-            <?php if ($next_id) { ?>
-                <a href="<?= $next_id ?>">
-                    <i title="Next Deliverable" class="fa-solid fa-arrow-right"></i>
-                </a>
-            <?php } ?>
         </nav>
         <div id="content">
+                <h2>
+                    <span>Deliverable</span>
+                    <a href="<?= $prev_id ?>">
+                        <i id="chevLeft" class="fa-solid fa-chevron-left <?= $prev_id ? 'active' : '' ?>"></i>
+                    </a>
+                    <?php for ($i = 0; $i < count($deliverables); $i++) { ?>
+                    <a class="delivNum <?= $deliverables[$i]['id'] == $deliv['id'] ? 'active' : '' ?>"
+                        href="./<?= $deliverables[$i]['id']?>">
+                        <?= $i + 1 ?>
+                    </a>
+                    <?php } ?>
+                    <a href="<?= $next_id ?>">
+                        <i id="chevRight" class="fa-solid fa-chevron-right <?= $next_id ? 'active' : '' ?>"></i>
+                    </a>
+                    <span>of <?= count($deliverables) ?></span>
+                </h2>
             <div class="dcontainer deliverables">
                 <div class="about">
                     <div class="meta" title="<?= $typeDesc[$deliv['type']] ?> to complete this deliverable">
@@ -58,9 +64,27 @@
                             <pre><?= htmlspecialchars($deliv['desc']) ?></pre>
                         <?php } ?>
                     </div>
+
+                    <div class="attachments">
+                        <?php foreach ($attachments as $attachment) { ?>
+                        <div class="attachment">
+                            <?php if ($attachment['type'] == 'zip') { ?>
+                                <a target="_blank" href="<?= $lab['id'].'/download/'.$attachment['id'] ?>">
+                            <?php } else { ?>
+                                <a target="_blank" href="<?= $attachment['file'] ?>">
+                            <?php } ?>
+                                    <i class="fa-solid fa-paperclip"></i>
+                                    <?= $attachment['name'] ?>
+                                </a>
+                        </div>
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
 
+            <div class="note">
+                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
+            </div>
             <div class="gradeContainer">
                 <div class="header">Group/User</div>
                 <div class="header">Answer</div>
@@ -162,10 +186,6 @@
                 <a href="../grade">
                     <i title="Finish Grading" class="fa-solid fa-check"></i>
                 </a>
-
-            <footer>
-                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
-            </footer>
 
             </div>
         </div>

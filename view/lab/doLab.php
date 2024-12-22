@@ -46,7 +46,6 @@
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/back.js"></script>
     <script src="res/js/camera-1.3.js"></script>
     <script src="res/js/lab/lab-1.10.js"></script>
     <script src="res/js/ensureSaved.js"></script>
@@ -55,8 +54,10 @@
 <body id="doLab" class="lab labDeliverables">
     <?php include 'header.php'; ?>
     <main>
-        <nav id="back" class="back" title="Back">
-            <i class="fa-solid fa-arrow-left"></i>
+        <nav class="back" title="Back">
+                <a id="back" href="<?= $selected ? '../../lab' : '../lab' ?>">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
         </nav>
         <?php include 'areas.php'; ?>
         <nav class="tools">
@@ -257,7 +258,9 @@ foreach ($deliverables as $deliv) {
             <div class="done">
                 <div class="note">Deliverables are saved automatically</div>
                 <nav class="back <?= $selected ? 'hide' : '' ?>" title="Back">
-                    <i class="fa-solid fa-arrow-left"></i>
+                    <a href="../lab">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
                 </nav>
             </div>
         </div>

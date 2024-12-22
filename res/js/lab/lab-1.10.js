@@ -30,6 +30,7 @@ window.addEventListener("load", () => {
     const keyShortCuts = document.getElementById("keyShortCuts");
     const multiHeader = document.querySelector("h2.multi");
     const singleHeader = document.querySelector("h2.single");
+    const backLink = document.getElementById("back");
     const navBack = document.querySelectorAll("nav.back")[1];
     const delivBtns = document.querySelectorAll('span.delivNum');
     const delivs = document.querySelectorAll('div.deliverables');
@@ -49,6 +50,7 @@ window.addEventListener("load", () => {
         singlePageBtn.classList.remove('hide');
         multiHeader.classList.remove('hide');
         singleHeader.classList.add('hide');
+        backLink.setAttribute("href", "../../lab");
         navBack.classList.add('hide');
         keyShortCuts.classList.remove('hide');
         switchDeliv(1);
@@ -66,6 +68,7 @@ window.addEventListener("load", () => {
         singlePageBtn.classList.add('hide');
         multiHeader.classList.add('hide');
         singleHeader.classList.remove('hide');
+        backLink.setAttribute("href", "../lab");
         navBack.classList.remove('hide');
         keyShortCuts.classList.add('hide');
         delivs.forEach(e => e.classList.remove('hide'));
