@@ -226,14 +226,14 @@ class LabGradingCtrl
         return "Location: ../submission/$sid";
     }
 
-    #[Get(uri: "/(\d+)/group/(\.+)$", sec: "assistant")]
+    #[Get(uri: "/(\d+)/group/(.+)$", sec: "assistant")]
     public function gradeGroup() {
         global $URI_PARAMS;
 
         $lab_id = $URI_PARAMS[3];
         $group = $URI_PARAMS[4];
-        $submission = $this->submissionDao->getOrCreate($lab_id, null, $group);
-        $sid = $submission['id'];
+        $user_id = $_SESSION['user']['id'];
+        $sid = $this->submissionDao->getOrCreate($lab_id, $user_id, $group);
 
         return "Location: ../submission/$sid";
     }
