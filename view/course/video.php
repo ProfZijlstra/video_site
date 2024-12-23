@@ -169,11 +169,11 @@
                                 <span class="action">Play / Pause</span>
                             </div>
                             <div>
-                                <span class="key">J</i></span>
+                                <span class="key">J</span>
                                 <span class="action">Back 5 Secconds</span>
                             </div>
                             <div>
-                                <span class="key">L</i></span>
+                                <span class="key">L</span>
                                 <span class="action">Forward 5 Seconds</span>
                             </div>
                         </section>
@@ -184,12 +184,12 @@
                                 <span class="action">Next Video</span>
                             </div>
                             <div>
-                                <span class="key">P</i></span>
+                                <span class="key">P</span>
                                 <span class="action">Previous Video</span>
                             </div>
                             <div>
-                                <span class="key">D</i></span>
-                                <span class="action">Download PDF</span>
+                                <span class="key">V</span>
+                                <span class="action">View PDF / Video</span>
                             </div>
                         </section>
                         <section>

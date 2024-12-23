@@ -43,17 +43,17 @@ window.addEventListener('load', () => {
             state = 'hidden';
         }
         fetch('./theater', {
-            method : 'POST',
-            body : `toggle=${state}`,
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+            method: 'POST',
+            body: `toggle=${state}`,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
     };
-    document.getElementById("bars").onclick = toggleTheater; 
+    document.getElementById("bars").onclick = toggleTheater;
 
     // auto toggle theater mode if the window.width is below 900
     function checkToggle() {
-        if (!nav.classList.contains('hidden') 
-                && window.innerWidth <= 900) {
+        if (!nav.classList.contains('hidden')
+            && window.innerWidth <= 900) {
             toggleTheater()
         }
     }
@@ -62,7 +62,7 @@ window.addEventListener('load', () => {
 
     // video speed controls
     const curSpeed = document.querySelector('.curSpeed');
-    const numOpts = {minimumFractionDigits : 1, maximumFractionDigits : 2};
+    const numOpts = { minimumFractionDigits: 1, maximumFractionDigits: 2 };
     let ignoreRateChange = false;
     function updateSpeed(speed) {
         ignoreRateChange = true;
@@ -74,7 +74,7 @@ window.addEventListener('load', () => {
         ignoreRateChange = false;
         window.localStorage.setItem("speed", speed);
     }
-    function faster(e) {
+    function faster() {
         let speed = parseFloat(curSpeed.innerHTML)
         speed += 0.1
         if (speed > 4) {
@@ -82,7 +82,7 @@ window.addEventListener('load', () => {
         }
         updateSpeed(speed);
     };
-    function slower(e) {
+    function slower() {
         let speed = parseFloat(curSpeed.innerHTML)
         speed -= 0.1
         if (speed < 0.3) {
@@ -116,7 +116,7 @@ window.addEventListener('load', () => {
         const tab = document.querySelector(".video_link.selected");
         if (tab.nextElementSibling) {
             const nextTab = tab.nextElementSibling.querySelector('a');
-            nextTab.click();    
+            nextTab.click();
         }
     }
     document.querySelectorAll("nav.mobileNav .next a").forEach(
@@ -126,7 +126,7 @@ window.addEventListener('load', () => {
         const tab = document.querySelector(".video_link.selected");
         if (tab.previousElementSibling) {
             const prevTab = tab.previousElementSibling.querySelector('a');
-            prevTab.click();    
+            prevTab.click();
         }
     }
     document.querySelectorAll("nav.mobileNav .prev a").forEach(
@@ -142,60 +142,67 @@ window.addEventListener('load', () => {
         }
         video = document.querySelector("article.selected video");
         switch (e.code) {
-        case "Space":
-            if (video == document.activeElement) {
+            case "Space":
+                if (video == document.activeElement) {
+                    break;
+                }
+                video.focus();
+            case "KeyK":
+                if (video?.paused) {
+                    video?.play();
+                } else {
+                    video?.pause();
+                }
                 break;
-            } 
-            video.focus();
-        case "KeyK":
-            if (video?.paused) {
-                video?.play();
-            } else {
-                video?.pause();
-            }
-            break;
-        case "ArrowLeft":
-            video.currentTime -= 10;
-            break;
-        case "KeyJ":
-            video.currentTime -= 5;
-            break;
-        case "ArrowRight":
-            video.currentTime += 10;
-            break;
-        case "KeyL":
-            video.currentTime += 5;
-            break;
-        case "BracketLeft":
-            slower();
-            break;
-        case "BracketRight":
-            faster();
-            break;
-        case "Digit0":
-            normalSpeed();
-            break;
-        case "KeyA":
-            clickAutoplay();
-            break;
-        case "KeyF":
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            } else {
-                video?.requestFullscreen();
-            }
-            break;
-        case "KeyT":
-            document.getElementById("bars").click();
-            break;
-        case "KeyN":
-            nextVideo();
-            break;
-        case "KeyP":
-            prevVideo();
-            break;
-        case "KeyD":
-            showPDF();
+            case "ArrowLeft":
+                video.currentTime -= 10;
+                break;
+            case "KeyJ":
+                video.currentTime -= 5;
+                break;
+            case "ArrowRight":
+                video.currentTime += 10;
+                break;
+            case "KeyL":
+                video.currentTime += 5;
+                break;
+            case "BracketLeft":
+                slower();
+                break;
+            case "BracketRight":
+                faster();
+                break;
+            case "Digit0":
+                normalSpeed();
+                break;
+            case "KeyA":
+                clickAutoplay();
+                break;
+            case "KeyF":
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    video?.requestFullscreen();
+                }
+                break;
+            case "KeyT":
+                document.getElementById("bars").click();
+                break;
+            case "KeyN":
+                nextVideo();
+                break;
+            case "KeyP":
+                prevVideo();
+                break;
+            case "KeyV":
+                const hash = window.location.hash;
+                if (hash && hash == "#pdf") {
+                    const btn = document.querySelector("article.selected i.video");
+                    showVideo.call(btn);
+                } else {
+                    const btn = document.querySelector("article.selected i.pdf");
+                    showPDF.call(btn);
+                }
         }
     });
     // show keyboard shortcuts
@@ -223,22 +230,22 @@ window.addEventListener('load', () => {
         data.set("video", video_name);
         data.set("speed", window.localStorage.getItem("speed"));
         const url = './start?' + data;
-        fetch(url, {cache : 'no-cache'})
+        fetch(url, { cache: 'no-cache' })
             .then(response => response.text())
             .then(text => view_id = text);
     }
     let pauseAction = null;
-    function pauseHandler(action) {
+    function pauseHandler() {
         if (view_id) {
             // post view_id to url: stop
             const data = new URLSearchParams();
             data.set("view_id", view_id);
             data.set("speed", window.localStorage.getItem("speed"));
             fetch('./stop', {
-                method : 'POST',
-                body : data,
-                headers :
-                    {'Content-Type' : 'application/x-www-form-urlencoded'},
+                method: 'POST',
+                body: data,
+                headers:
+                    { 'Content-Type': 'application/x-www-form-urlencoded' },
             }).then(() => {
                 if (pauseAction) {
                     pauseAction();
@@ -289,7 +296,7 @@ window.addEventListener('load', () => {
     function switchVideo(video_id) {
         ignoreRateChange = true;
 
-        const vid = document.querySelector('article.selected video')?.pause();
+        document.querySelector('article.selected video')?.pause();
         if (document.fullscreenElement) {
             document.exitFullscreen();
         }
@@ -329,7 +336,7 @@ window.addEventListener('load', () => {
         switchVideo(video_id);
 
         // update history
-        window.history.pushState({"id": video_id}, '', `./${video_seq}`);
+        window.history.pushState({ "id": video_id }, '', `./${video_seq}`);
     }
     function clickTab(evt) {
         evt.preventDefault();
@@ -342,7 +349,7 @@ window.addEventListener('load', () => {
     for (const link of video_links) {
         link.addEventListener('click', clickTab);
     }
-    function clickProgress(evt) {
+    function clickProgress() {
         const video_id = this.dataset.vid;
         genericClick(video_id);
     }
@@ -381,7 +388,7 @@ window.addEventListener('load', () => {
     });
 
 
-     // make clicking on the PDF icon work while communicating with server
+    // make clicking on the PDF icon work while communicating with server
     function showPDF(push = true) {
         const pdf = document.querySelector("article.selected object");
         if (!pdf) {
@@ -390,17 +397,16 @@ window.addEventListener('load', () => {
 
         // tell the server about view
         const file = this.dataset.file;
-        const href = this.href;
         const url = `./pdf?day_id=${day_id}&file=${file}`;
         fetch(url, {
-            cache : 'no-cache'
+            cache: 'no-cache'
         });
 
         // update browser history if needed
         if (push) {
             const path = window.location.pathname;
             const video_id = path.substr(-2);
-            window.history.pushState({"id": video_id, "pdf": true}, '', `${path}#pdf`);
+            window.history.pushState({ "id": video_id, "pdf": true }, '', `${path}#pdf`);
         }
 
         // show / hide page segments
@@ -436,7 +442,7 @@ window.addEventListener('load', () => {
         if (push) {
             const path = window.location.pathname;
             const video_id = path.substr(-2);
-            window.history.pushState({"id": video_id}, '', path);
+            window.history.pushState({ "id": video_id }, '', path);
         }
 
         // show / hide page segments
@@ -497,14 +503,14 @@ window.addEventListener('load', () => {
     // connect ceasar shift to new comment submit
     document.querySelectorAll('.commentForm').forEach(
         elm => elm.addEventListener("submit", ceaseShiftText)
-    );    
+    );
 
     // make clicking on delete comment and delete reply work
     function delHandler() {
         if (window.confirm('Do you really want to delete?')) {
             this.parentNode.submit();
         }
-    } 
+    }
     const dels = document.getElementsByClassName('fa-trash-alt');
     for (const del of dels) {
         del.addEventListener('click', delHandler);
@@ -540,7 +546,7 @@ window.addEventListener('load', () => {
         mdBtn.innerText = "Preview Markdown";
         mdBtn.onclick = MARKDOWN.getHtmlForMarkdown;
         // to match what makdown.js wants
-        const extra = document.createElement('span'); 
+        const extra = document.createElement('span');
         extra.append(mdBtn);
         actions.append(extra);
         const submit = document.createElement('button');
@@ -574,11 +580,11 @@ window.addEventListener('load', () => {
                 const initial = evt.target.parentNode.nextSibling.nextSibling;
                 const form =
                     createEditBox(`upd${type}`, "Update", id, json.text, "",
-                                  () => { 
-                                    initial.style.display = 'block'; 
-                                    target.style.display = "inline"
-                                    del.style.display = 'inline';
-                                });
+                        () => {
+                            initial.style.display = 'block';
+                            target.style.display = "inline"
+                            del.style.display = 'inline';
+                        });
                 evt.target.parentNode.after(form);
                 initial.style.display = 'none';
             });
@@ -603,7 +609,7 @@ window.addEventListener('load', () => {
 const code = "highlighted";
 \`\`\``;
         const form = createEditBox("addReply", "Reply", qid, "", placeholder,
-                                   () => this.style.display = "block");
+            () => this.style.display = "block");
         const container = document.createElement("div");
         container.classList.add("replyContainer");
         container.append(form);
@@ -614,7 +620,7 @@ const code = "highlighted";
     for (const reply of replies) {
         reply.addEventListener('click', createReply);
     }
-    
+
     // make clicking on upvote and downvote comment and reply work
     function voteHandler(url, evt) {
         const parent = evt.target.parentNode;
@@ -623,9 +629,9 @@ const code = "highlighted";
             parent.dataset.vid; // vote id (in comment_vote or reply_vote)
         const type = parent.dataset.type;
         fetch(`./${url}`, {
-            method : 'POST',
-            body : `id=${id}&vid=${vid}&type=${type}`,
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+            method: 'POST',
+            body: `id=${id}&vid=${vid}&type=${type}`,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         })
             .then(response => response.json())
             .then((json) => {
