@@ -37,7 +37,7 @@
                     }
                     ?>
                     <a href="deliverable/<?= $deliv['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
-                        D<?= $count++ ?>(<?= number_format($deliv['avgPoints'], 1) ?>)
+                        D<?= $count++ ?>(<?= $deliv['avgPoints'] ? number_format($deliv['avgPoints'], 1) : 0 ?>)
                     </a>
                 <?php } ?>
             </div>
