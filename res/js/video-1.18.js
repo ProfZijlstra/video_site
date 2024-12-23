@@ -66,16 +66,13 @@ window.addEventListener('load', () => {
     let ignoreRateChange = false;
     function updateSpeed(speed) {
         ignoreRateChange = true;
+        speed = parseFloat(speed);
         curSpeed.innerHTML = speed.toLocaleString('en-US', numOpts);
         for (const vid of videos) {
             vid.playbackRate = speed;
         }
-        // post the speed to the server
-        fetch('./speed', {
-            method : 'POST',
-            body : `speed=${speed}`,
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-        });
+        ignoreRateChange = false;
+        window.localStorage.setItem("speed", speed);
     }
     function faster(e) {
         let speed = parseFloat(curSpeed.innerHTML)
@@ -106,11 +103,9 @@ window.addEventListener('load', () => {
     );
 
     // set speed when page is loaded
-    if (video) {
-        const speed = parseFloat(curSpeed.innerHTML);
-        for (const vid of videos) {
-            vid.playbackRate = speed;
-        }
+    const storedSpeed = window.localStorage.getItem("speed");
+    if (video && storedSpeed) {
+        updateSpeed(storedSpeed);
     }
 
     function clickMobileNav(e) {
@@ -223,7 +218,11 @@ window.addEventListener('load', () => {
         // invalidate any old id that may have still been in the system
         view_id = false;
         // get view_id by posting to start: day_id, video
-        const url = `./start?day_id=${day_id}&video=${video_name}`;
+        const data = new URLSearchParams();
+        data.set("day_id", day_id);
+        data.set("video", video_name);
+        data.set("speed", window.localStorage.getItem("speed"));
+        const url = './start?' + data;
         fetch(url, {cache : 'no-cache'})
             .then(response => response.text())
             .then(text => view_id = text);
@@ -232,9 +231,12 @@ window.addEventListener('load', () => {
     function pauseHandler(action) {
         if (view_id) {
             // post view_id to url: stop
+            const data = new URLSearchParams();
+            data.set("view_id", view_id);
+            data.set("speed", window.localStorage.getItem("speed"));
             fetch('./stop', {
                 method : 'POST',
-                body : `view_id=${view_id}`,
+                body : data,
                 headers :
                     {'Content-Type' : 'application/x-www-form-urlencoded'},
             }).then(() => {
@@ -256,7 +258,6 @@ window.addEventListener('load', () => {
     }
     function ratechangeHandler(evt) {
         if (ignoreRateChange) {
-            ignoreRateChange = false;
             return;
         }
         const speed = evt.target.playbackRate;
@@ -462,19 +463,28 @@ window.addEventListener('load', () => {
             t.classList.toggle("fa-toggle-off");
             t.classList.toggle("fa-toggle-on");
         }
-        let state = 'off';
-        if (toggles[0].classList.contains('fa-toggle-on')) {
-            state = 'on';
+        if (autoplay == "on") {
+            autoplay = "off";
+        } else {
+            autoplay = "on";
         }
-        fetch('./autoplay', {
-            method : 'POST',
-            body : `toggle=${state}`,
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-        });
+        window.localStorage.setItem("autoplay", autoplay);
     }
     document.querySelectorAll("i.auto_toggle").forEach(elm => {
-        elm.addEventListener("click", clickAutoplay);
+        elm.addEventListener("mousedown", clickAutoplay);
     });
+
+    // enable autoplay on start based on local storage
+    let autoplay = window.localStorage.getItem('autoplay');
+    if (autoplay && autoplay == "on") {
+        const toggles = document.querySelectorAll("i.auto_toggle");
+        for (const t of toggles) {
+            t.classList.toggle("fa-toggle-off");
+            t.classList.toggle("fa-toggle-on");
+        }
+        // then also start playing the video
+        video.play();
+    }
 
     // used for both creating and updating comments and replies
     function ceaseShiftText() {

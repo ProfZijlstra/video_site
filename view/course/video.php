@@ -29,7 +29,7 @@
             <main id="day" data-id="<?= $days[$day]['id'] ?>">
                 <div class="playSpeed">
                     <span class="slower">-</span>
-                    <span class="curSpeed"><?= number_format($speed, 1) ?></span>
+                    <span class="curSpeed">1.0</span>
                     <span class="faster">+</span>
                 </div>
                 <?php
@@ -118,7 +118,7 @@
                         <?php } // end foreach files?>
 
                         <div class="time">Total time: <?= $totalTime ?></div>
-                        <div class="autoplay">autoplay <i class="auto_toggle fas fa-toggle-<?= $autoplay ? $autoplay : 'off' ?>"></i></div>
+                        <div class="autoplay">autoplay <i class="auto_toggle fas fa-toggle-off"></i></div>
                         <div title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard shortcuts"></i></div>
                     </div>
                     <?php } ?>

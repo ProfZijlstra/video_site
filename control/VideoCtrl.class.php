@@ -173,19 +173,6 @@ class VideoCtrl
             }
         }
 
-        // fix video play speed if broken
-        if ($_COOKIE['viewspeed']) {
-            $_SESSION['user']['speed'] = $_COOKIE['viewspeed'];
-            setcookie("viewspeed", $_SESSION['user']['speed'], time() + 7 * 24 * 60 * 60, "/videos");
-        };
-        if (!$_SESSION['user']['speed'] || $_SESSION['user']['speed'] < 0.4) {
-            $_SESSION['user']['speed'] = 1;
-        }
-
-        // settings
-        $VIEW_DATA['speed'] = $_SESSION['user']['speed'];
-        $VIEW_DATA['theater'] = $_SESSION['user']['theater'];
-        $VIEW_DATA['autoplay'] = $_SESSION['user']['autoplay'];
         $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
 
         // general course related
@@ -220,23 +207,6 @@ class VideoCtrl
         $VIEW_DATA["replies"] = $replies;
 
         return "course/video.php";
-    }
-
-
-    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/autoplay$", sec: "observer")]
-    public function autoplay()
-    {
-        $toggle = filter_input(INPUT_POST, "toggle");
-        $_SESSION['user']["autoplay"] = $toggle;
-        setcookie("autoplay", $toggle, time() + 30 * 24 * 60 * 60, "/videos");
-    }
-
-
-    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/theater$", sec: "observer")]
-    public function theater()
-    {
-        $toggle = filter_input(INPUT_POST, "toggle");
-        $_SESSION['user']["theater"] = $toggle;
     }
 
 

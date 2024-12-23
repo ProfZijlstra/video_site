@@ -83,16 +83,6 @@ class UserCtrl
                 "isFaculty" => $row['isFaculty'],
                 "isRemembered" => false
             );
-            $_SESSION['user']['speed'] = 1;
-            if ($_COOKIE['viewspeed']) {
-                $_SESSION['user']['speed'] = $_COOKIE['viewspeed'];
-                setcookie("viewspeed", $_SESSION['user']['speed'], time() + 30 * 24 * 60 * 60, "/videos");
-            };
-            $_SESSION['user']['autoplay'] = "off";
-            if ($_COOKIE['autoplay']) {
-                $_SESSION['user']['autoplay'] = $_COOKIE['autoplay'];
-                setcookie("autoplay", $_SESSION['user']['autoplay'], time() + 30 * 24 * 60 * 60, "/videos");
-            }
 
             // create a remember me cookie
             $reme = $row["id"] . ":" .
