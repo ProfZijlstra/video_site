@@ -210,7 +210,7 @@ div.media {
     i.fa-slash {
 	position: absolute;
 	right: 5px;
-	top: 55px;
+	top: 10px;
     }
     i.available {
 	color: var(--black);

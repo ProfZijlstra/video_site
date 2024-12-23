@@ -150,6 +150,7 @@ class VideoCtrl
             }
             $files[$idx]['pdf'] = $file;
         }
+        ksort($files);
 
         // get comments for all videos on this day
         $comments = [];

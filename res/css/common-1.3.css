@@ -23,6 +23,7 @@ a:hover {
     text-decoration: none;
 }
 i {
+    cursor: pointer;
     transition: all 1s ease-in-out;
 }
 i:hover {

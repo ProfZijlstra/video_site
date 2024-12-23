@@ -387,6 +387,7 @@ window.addEventListener('load', () => {
             return;
         }
 
+        // tell the server about view
         const file = this.dataset.file;
         const href = this.href;
         const url = `./pdf?day_id=${day_id}&file=${file}`;
@@ -394,10 +395,21 @@ window.addEventListener('load', () => {
             cache : 'no-cache'
         });
 
+        // update browser history if needed
         if (push) {
             const path = window.location.pathname;
             const video_id = path.substr(-2);
             window.history.pushState({"id": video_id, "pdf": true}, '', `${path}#pdf`);
+        }
+
+        // show / hide page segments
+        const vidIcon = document.querySelector("article.selected .media i.fa-video");
+        if (vidIcon) {
+            vidIcon.classList.remove("hide");
+        }
+        const pdfIcon = document.querySelector("article.selected .media div.pdf");
+        if (pdfIcon) {
+            pdfIcon.classList.add('hide');
         }
         const video = document.querySelector("article.selected video");
         if (video) {
@@ -405,23 +417,35 @@ window.addEventListener('load', () => {
         }
         pdf.classList.remove('hide');
     }
-    const pdfs = document.querySelectorAll('i.pdf');
+    const pdfs = document.querySelectorAll('i.pdf.available');
     pdfs.forEach(
         elm => {
             elm.addEventListener("mousedown", showPDF)
         }
     );
 
+    // make clicking the video icon work
     function showVideo(push = true) {
         const video = document.querySelector("article.selected video");
         if (!video) {
             return;
         }
 
+        // update browser history if needed
         if (push) {
             const path = window.location.pathname;
             const video_id = path.substr(-2);
             window.history.pushState({"id": video_id}, '', path);
+        }
+
+        // show / hide page segments
+        const vidIcon = document.querySelector("article.selected .media i.fa-video");
+        if (vidIcon) {
+            vidIcon.classList.add("hide");
+        }
+        const pdfIcon = document.querySelector("article.selected .media div.pdf");
+        if (pdfIcon) {
+            pdfIcon.classList.remove('hide');
         }
         const pdf = document.querySelector("article.selected object");
         if (pdf) {
