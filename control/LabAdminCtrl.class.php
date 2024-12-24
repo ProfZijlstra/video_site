@@ -51,7 +51,7 @@ class LabAdminCtrl
     public $enrollmentDao;
 
     #[Get(uri: "$", sec: "student")]
-    public function courseOverview()
+    public function courseOverview() : string
     {
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
@@ -95,7 +95,7 @@ class LabAdminCtrl
     }
 
     #[Post(uri: "$", sec: "instructor")]
-    public function addLab()
+    public function addLab() : string
     {
         $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
         $name = filter_input(INPUT_POST, "name");
@@ -112,7 +112,7 @@ class LabAdminCtrl
     }
 
     #[Get(uri: "/(\d+)/edit$", sec: "instructor")]
-    public function editLab()
+    public function editLab() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -145,7 +145,7 @@ class LabAdminCtrl
     }
 
     #[Get(uri: "/preview$", sec: "instructor")]
-    public function previewLab() 
+    public function previewLab() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -202,7 +202,7 @@ class LabAdminCtrl
      * Expects AJAX
      */
     #[Put(uri: "/(\d+)$", sec: "instructor")]
-    public function updateLab()
+    public function updateLab() : void
     {
         global $URI_PARAMS;
         global $_PUT;
@@ -234,7 +234,7 @@ class LabAdminCtrl
      * Expects AJAX
      */
     #[Delete(uri: "/(\d+)$", sec: "instructor")]
-    public function deleteLab()
+    public function deleteLab() : array
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
@@ -263,7 +263,7 @@ class LabAdminCtrl
      * Expects AJAX / HTMX
      */
     #[Post(uri: "/(\d+)/attach$", sec: "instructor")]
-    public function addAttachment()
+    public function addAttachment() : array|string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -299,7 +299,7 @@ class LabAdminCtrl
      * Expects AJAX
      */
     #[Delete(uri: "/(\d+)/attach/(\d+)$", sec: "instructor")]
-    public function delAttachment()
+    public function delAttachment() : array
     {
         global $URI_PARAMS;
 
@@ -323,7 +323,7 @@ class LabAdminCtrl
      * Expects AJAX / HTMX
      */
     #[Post(uri: "/(\d+)/deliverable$", sec: "instructor")]
-    public function addDliverable()
+    public function addDliverable() : array|string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -348,7 +348,7 @@ class LabAdminCtrl
      * Expects AJAX
      */
     #[Delete(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
-    public function delDeliverable()
+    public function delDeliverable() : array
     {
         global $URI_PARAMS;
 
@@ -368,7 +368,7 @@ class LabAdminCtrl
      * Expects AJAX
      */
     #[Put(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
-    public function updateDeliverable()
+    public function updateDeliverable() : void
     {
         global $URI_PARAMS;
         global $_PUT;
@@ -395,7 +395,7 @@ class LabAdminCtrl
      * the watermarks these actions created during download are present.
      */
     #[Put(uri: "/(\d+)/deliverable/(\d+)/zipAttachment$", sec: "instructor")]
-    public function setZipAttachment()
+    public function setZipAttachment() : void
     {
         global $URI_PARAMS;
         global $_PUT;
@@ -411,7 +411,7 @@ class LabAdminCtrl
      * Zip Action related code
      */
     #[Get(uri: "/(\d+)/attachment/(\d+)$", sec: "instructor")]
-    public function getZipFiles()
+    public function getZipFiles() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -435,7 +435,7 @@ class LabAdminCtrl
     }
 
     #[Get(uri: "/(\d+)/(\d+)/zipActions$", sec: "instructor")]
-    public function getZipActions()
+    public function getZipActions() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -448,7 +448,7 @@ class LabAdminCtrl
     }
 
     #[Post(uri: "/(\d+)/(\d+)/zipActions$", sec: "instructor")]
-    public function addZipAction()
+    public function addZipAction() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -465,7 +465,7 @@ class LabAdminCtrl
     }
 
     #[Delete(uri: "/(\d+)/zipActions/(\d+)$", sec: "instructor")]
-    public function deleteZipAction()
+    public function deleteZipAction() : void
     {
         global $URI_PARAMS;
 
@@ -477,7 +477,7 @@ class LabAdminCtrl
      * Zip check related code
      */
     #[Get(uri: "/(\d+)/(\d+)/zipChecks$", sec: "instructor")]
-    function getZipChecks()
+    function getZipChecks() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -490,7 +490,7 @@ class LabAdminCtrl
     }
 
     #[Post(uri: "/(\d+)/(\d+)/zipChecks$", sec: "instructor")]
-    function addZipCheck()
+    function addZipCheck() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -499,19 +499,20 @@ class LabAdminCtrl
         $type = filter_input(INPUT_POST, "type");
         $file = filter_input(INPUT_POST, "file");
         $byte = filter_input(INPUT_POST, "byte", FILTER_SANITIZE_NUMBER_INT);
+        $block = filter_input(INPUT_POST, "block", FILTER_SANITIZE_NUMBER_INT);
 
         if (!$byte || $byte < 0) {
             $byte = 0;
         } 
 
-        $this->zipUlCheckDao->add($deliverable_id, $type, $file, $byte);
+        $this->zipUlCheckDao->add($deliverable_id, $type, $file, $byte, $block);
 
         $VIEW_DATA['checks'] = $this->zipUlCheckDao->forDeliverable($deliverable_id);
         return "lab/zipChecks.php";  // zipCheck view
     }
 
     #[Delete(uri: "/(\d+)/zipChecks/(\d+)$", sec: "instructor")]
-    function deleteZipCheck()
+    function deleteZipCheck() : void
     {
         global $URI_PARAMS;
 
@@ -520,7 +521,7 @@ class LabAdminCtrl
     }
     
     #[Get(uri: "/report$", sec: "student")]
-    public function resultsReport()
+    public function resultsReport() : string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;

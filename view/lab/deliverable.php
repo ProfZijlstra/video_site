@@ -27,7 +27,7 @@
             </div>
 
             <div class="attachContainer">
-                <h3 class="<?= count($attachments) == 0 ? 'empty' : '' ?>">Attachments
+                <h3 class="<?= ! $attachments ? 'empty' : '' ?>">Attachments
                     <i title="Add attachment" class="fa-solid fa-paperclip attachBtn""></i>
                     <input type="file" name="attachment" class="attachment" 
                         data-deliverable_id="<?= $deliv['id']?>" />

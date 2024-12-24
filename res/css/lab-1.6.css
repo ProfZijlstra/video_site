@@ -92,7 +92,7 @@ body.lab {
     div.dcontainer.deliverables {
         border-top: 1px solid var(--border);
         .textContainer .fa-markdown {
-            top: 10px;
+            top: 8px;
         }
     }
     div.listing {
@@ -224,6 +224,14 @@ body#editLab {
 
     #zipCheckDialog #checkFile {
         width: 610px;
+    }
+
+    #zipCheckDialog span#block {
+        cursor: pointer;
+        color: lightgray;
+    }
+    #zipCheckDialog span#block.active {
+        color: var(--black);
     }
 }
 
@@ -459,6 +467,12 @@ body.grade {
     div.listing span.old {
         color: red;
     }
+    div.stats {
+        font-size: 8pt;
+        div {
+            border-top: 1px solid var(--border);
+        }
+    }
 }
 
 body#gradeOverview {
@@ -514,37 +528,6 @@ body#gradeDeliverable {
         margin-right: auto;
     }
 
-    td {
-        padding: 3px;
-    }
-
-    td.comment {
-        width: 30%;
-        vertical-align: top;
-    }
-
-    td.comment textarea.comment {
-        width: 95%;
-        min-height: 50px;
-    }
-
-    td.points {
-        width: 50px;
-        vertical-align: top;
-    }
-
-    td.points input.points {
-        width: 50px;
-    }
-
-    td.users {
-        width: 250px;
-        vertical-align: top;
-    }
-
-    td.answer img {
-        width: 800px;
-    }
     div.done {
         position: absolute;
         right: 70px;
@@ -588,6 +571,7 @@ body#gradeDeliverable {
             min-height: 100px;
             position: relative;
             margin-bottom: 0px;
+            overflow: visible;
 
             i.previewBtn, i.fa-markdown {
                 position: absolute;

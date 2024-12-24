@@ -643,3 +643,7 @@ ALTER TABLE `attachment` DROP COLUMN `lab_id`;
 
 ALTER TABLE `lab` DROP COLUMN `desc`;
 ALTER TABLE `lab` DROP COLUMN `hasMarkDown`;
+
+-- 23 dec 2024
+ALTER TABLE `zip_ul_check` ADD COLUMN `block` TINYINT UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `zip_ul_stat` ADD COLUMN `comment` varchar(255) DEFAULT NULL;

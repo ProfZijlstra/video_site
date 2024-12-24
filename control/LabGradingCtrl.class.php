@@ -35,6 +35,9 @@ class LabGradingCtrl
     #[Inject('AttachmentDao')]
     public $attachmentDao;
 
+    #[Inject('ZipUlStatDao')]
+    public $zipUlStatDao;
+
     #[Get(uri: "/(\d+)/grade$", sec: "assistant")]
     public function gradeLab()
     {
@@ -156,6 +159,10 @@ class LabGradingCtrl
             }
         }
         $did = $deliverable['id'];
+        if ($deliverable['type'] == 'zip') {
+            $stats = $this->zipUlStatDao->forDeliverable($did);
+            $VIEW_DATA['stats'] = $stats;
+        }
 
         require_once("lib/Parsedown.php");
         $parsedown = new Parsedown();
@@ -194,6 +201,7 @@ class LabGradingCtrl
         $deliveries = $this->deliveryDao->forSubmission($submission_id);
         $ids = array_column($this->submissionDao->idsForLab($lab_id), 'id');
         $attachments = $this->attachmentDao->forLab($lab_id);
+        $stats = $this->zipUlStatDao->forSubmission($submission_id);
 
         if ($idx === null) {
             $idx = array_search($submission_id, $ids);
@@ -222,6 +230,7 @@ class LabGradingCtrl
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['deliveries'] = $deliveries;
         $VIEW_DATA['attachments'] = $attachments;
+        $VIEW_DATA['stats'] = $stats;
 
         return "lab/gradeSubmission.php";
     }

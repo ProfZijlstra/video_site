@@ -643,6 +643,7 @@ class LabTakingCtrl
         $dseq = $deliverable['seq'];
 
         // process the file
+        $error = false;
         $listing = null;
         if ($type == 'img') {
             $name = $_FILES["file"]['name'];
@@ -675,13 +676,9 @@ class LabTakingCtrl
                     return ["error" => $result['error']];
                 }
                 $listing = $result['listing'];
-                $failed = $result['failed'];
-                if ($failed) {
-                    $error = 
-                        "The zip file does not meet the requirements."
-                        . "\n\nPlease make sure that the file requirements "
-                        . "(present / not present) are met in your zip file "
-                        . "and upload again.";
+                $blocked = $result['blocked'];
+                if ($blocked) {
+                    $error = implode("\n\n", $blocked);
                 }
             }
             $curr = $_FILES["file"]['tmp_name'];
@@ -733,7 +730,7 @@ class LabTakingCtrl
         $result = $this->deliveryDao->byId($delivery_id);
         if ($error) {
             $result['error'] = $error;
-            $result['failed'] = $failed;
+            $result['failed'] = array_keys($blocked);
         }
         return $result;
     }
@@ -864,15 +861,14 @@ class LabTakingCtrl
         $listing = "";
         $listing_limit = 40;
         $listing_count = 0;
-        
-        // indicate that we're starting to check the zip
-        $this->zipUlStatDao->add($delivery_id, $now, 'checking', '');
 
-        // initialize present checks
-        $results = [];
+        // initialize zip checks
+        $results = []; // -1 is not seen, 0 is seen and bad, 1 is seen and good
         foreach ($zipChecks as $zipCheck) {
-            if ($zipCheck['type'] == 'present') {
-                $results[$zipCheck['id']] = false;
+            if ($zipCheck['type'] == 'not_present') {
+                $results[$zipCheck['id']] = 1;
+            } else {
+                $results[$zipCheck['id']] = -1;
             }
         }
 
@@ -898,47 +894,61 @@ class LabTakingCtrl
                 $byte = $zipCheck['byte'];
 
                 if ($type == 'present' && $file == $name) {
-                    $results[$id] = true;
+                    $results[$id] = 1;
                     continue;
                 }
-
                 if ($type == 'not_present' && $file == $name) {
-                    $results[$id] = false;
-                    $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
+                    $results[$id] = 0;
+                    $cmt = "Was present";
+                    $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
+                    continue;
+                }
+                if (!str_ends_with($type, "wm") || $results[$id] != -1) {
                     continue;
                 }
 
+                // get the file to look for a WM
+                $data = $zip->getFromIndex($i);
+
+                // get the WM
                 if ($type == 'txt_wm' && $file == $name) {
-                    $data = $zip->getFromIndex($i);
                     $wm = intval($this->labAttachmentHlpr->readTxtWm($data, $byte));
-                    $download = $this->downloadDao->getById($wm);
-                    if (!$download) {
-                        $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
-                        continue;
-                    }
-                    $uid = $download['user_id'];
-                    $date = DateTime::createFromFormat('Y-m-d H:i:s', $download['created'], $tz);
-                    $ts_lab = $date->getTimestamp();
-                    if ($uid != $user_id) {
-                        $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
-                    }
-                    continue;
+                }
+                if ($type == 'png_wm' && $file == $name) {
+                    $wm = $this->labAttachmentHlpr->readPngWm($data, $byte);
                 }
 
-                if ($type == 'png_wm' && $file == $name) {
-                    $data = $zip->getFromIndex($i);
-                    $wm = $this->labAttachmentHlpr->readPngWm($data, $byte);
-                    if ($wm === false || $wm != $user_id) {
-                        $this->zipUlStatDao->add($delivery_id, $now, $type, $file);
-                    }
+                // get the download record indicated by the WM
+                $download = $this->downloadDao->getById($wm);
+                if (!$download) {
+                    $cmt = "User never downloaded the required attachment";
+                    $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
+                    $results[$id] = 0;
                     continue;
+                }
+                $uid = $download['user_id'];
+
+                // now that we have the download, might as well create a finer
+                // precision start time for the time stamp checks
+                $date = DateTime::createFromFormat('Y-m-d H:i:s', $download['created'], $tz);
+                $ts_lab = $date->getTimestamp();
+
+                // check if the watermark user is the upload user
+                if ($uid != $user_id) {
+                    $cmt = "User_id does not match";
+                    $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
+                    $results[$id] = 0;
+                } else {
+                    $results[$id] = 1;
                 }
             }
+
+            // do timestamp checks to see if the file was created after the
+            // lab started (or if we got the download time, after download)
             $mtime = $zip->statIndex($i)['mtime'];
             $class = 'time';
             if ($mtime < $ts_lab) {
                 $class .= " old";
-                $this->zipUlStatDao->add($delivery_id, $now, 'timestamp', $name);
             }
 
             if ($listing_count < $listing_limit) {
@@ -952,29 +962,47 @@ class LabTakingCtrl
             } else if ($listing_count == $listing_limit) {
                 $listing .= "<div class='zFile'>... [Listing Truncated]</div>";
                 $listing_count++;
-            }            
+            }
         }
         $zip->close();
 
-        // finalize present / not_present checks
+        // finalize present and WM checks
         foreach ($zipChecks as $zipCheck) {
             $id = $zipCheck['id'];
-            if ($zipCheck['type'] == 'not_present' && $results[$id] !== false) {
-                $results[$zipCheck['id']] = true;
-            }
-            if ($zipCheck['type'] == 'present' && $results[$id] === false) {
-                $file = $zipCheck['file'];
-                $this->zipUlStatDao->add($delivery_id, $now, 'not_present', $file);
+            $type = $zipCheck['type'];
+            $file = $zipCheck['file'];
+            $cmt = "Required file not found";
+            if ($zipCheck['type'] !== 'not_present' && $results[$id] < 0) {
+                $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
             }
         }
 
-        // collect failed checks
-        $failed = [];
-        foreach ($results as $id => $result) {
-            if (!$result) {
-                $failed[] = $id;
+        // create blocked error messages
+        $blocked = [];
+        foreach ($zipChecks as $zipCheck) {
+            if ($zipCheck['block'] && $results[$zipCheck['id']] != 1) {
+                $id = $zipCheck['id'];
+                $file = $zipCheck['file'];
+                $msg = "";
+                switch ($zipCheck['type']) {
+                    case "present":
+                        $msg = "Required file {$file} is not present";
+                    break;
+                    case "not_present":
+                        $msg = "{$file} should not be present";
+                    break;
+                    case "txt_wm":
+                    case "png_wm":
+                        $msg = "Identity check failed. Did you write this code?";
+                        // because we want to avoid showing multiple ID checks
+                        $id = $deliverable_id;
+                    break;
+                }
+                $blocked[$id] = $msg;
             }
         }
-        return [ "listing" => $listing, "failed" => $failed ];
+        ksort($blocked);
+
+        return [ "listing" => $listing, "blocked" => $blocked ];
     }
 }

@@ -124,7 +124,7 @@
                 <!-- Get zip file listing when dialog opens -->
             </select>
             <label>Byte:</label>
-            <input type="number" id="byte" placeholder="Insert at byte" />
+            <input type="number" id="byte" placeholder="Byte insertion location" />
             <div class="btn">
                 <button type="button" id="addZipActionBtn">Add Action</button>
             </div>
@@ -159,6 +159,15 @@
                 <label>Byte:</label>
                 <input id="checkByte" type="number" name="byte" placeholder="Check at byte">
             </div>
+
+            <div>
+                <label>Public:</label>
+                <span id="block" class="active" title="Blocking checks are public / displayed to users">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    Publicly announce and show result of check
+                </span>
+            </div>
+
             <div class="btn">
                 <button type="submit" id="addZipCheckBtn">Add Check</button>
             </div>

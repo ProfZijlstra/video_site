@@ -83,8 +83,10 @@
             </div>
 
             <div class="note">
+                <i class="fa-solid fa-keyboard"></i> Pressing CTRL-M inside a comment textarea toggles markdown <br>
                 <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
             </div>
+
             <div class="gradeContainer">
                 <div class="header">Group/User</div>
                 <div class="header">Answer</div>
@@ -105,6 +107,22 @@
                         </div>
                         <div class="timestamp">Created: <?= $delivery['created'] ?></div>
                         <div class="timestamp">Updated: <?= $delivery['updated'] ?></div>
+
+                        <?php if ($deliv['type'] == 'zip') { ?>
+                        <div>Upload Checks:</div>
+                        <div class="stats">
+                            <?php foreach ($stats as $stat) { ?>
+                            <?php if ($stat['delivery_id'] == $delivery['id']) { ?>
+                            <div>
+                                <?= $stat['created']?>
+                                <span class="error"><?= $stat['type']?></span>
+                                <?= $stat['file']?>
+                                <span class="error"><?= $stat['comment']?></span>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                        </div>
+                        <?php } ?>
                     </div>
                     <div class="delivery">
                         <div class="stats">

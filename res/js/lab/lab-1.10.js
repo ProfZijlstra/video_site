@@ -59,7 +59,7 @@ window.addEventListener("load", () => {
         if (!hist) {
             return;
         }
-        window.history.pushState({"id": 1}, '', window.location + "/1");
+        window.history.pushState({ "id": 1 }, '', window.location + "/1");
     };
     multiPageBtn.onmousedown = toSpa;
 
@@ -115,7 +115,7 @@ window.addEventListener("load", () => {
     function clickDeliv() {
         const id = this.textContent;
         switchDeliv(id);
-        window.history.pushState({"id": id}, '', urlNoDelivNum() + '/'+id);
+        window.history.pushState({ "id": id }, '', urlNoDelivNum() + '/' + id);
     }
     delivBtns.forEach(e => e.onmousedown = clickDeliv);
 
@@ -157,19 +157,19 @@ window.addEventListener("load", () => {
             return;
         }
 
-        switch(e.code) {
+        switch (e.code) {
             case "Period":
                 if (!e.ctrlKey) {
                     return;
                 }
                 goClickDeliv(delivId + 1);
-            break
+                break
             case "Comma":
                 if (!e.ctrlKey) {
                     return;
                 }
                 goClickDeliv(delivId - 1);
-            break;
+                break;
         }
     });
 
@@ -181,47 +181,48 @@ window.addEventListener("load", () => {
         if (this.classList.contains("fileUpload")) {
             return; // separate event listner for files below
         }
-        const deliv = this.closest("div.deliv");
-        const type = deliv.parentNode.dataset.type;
-        const durSel = deliv.querySelector("select.duration");
-        const comSel = deliv.querySelector("select.completion");
+        const delivery = this.closest("div.delivery");
+        const deliverable = delivery.previousElementSibling;
+        const type = deliverable.parentNode.dataset.type;
+        const durSel = delivery.querySelector("select.duration");
+        const comSel = delivery.querySelector("select.completion");
         const completion = comSel.value;
         const duration = durSel.value;
 
         let data = "";
         data += "submission_id=" + submission_id;
-        data += "&deliverable_id="+ deliv.parentNode.dataset.id;
+        data += "&deliverable_id=" + deliverable.dataset.id;
         data += "&completion=" + completion;
         data += "&duration=" + duration;
         if (group) {
             data += "&group=" + group;
         }
-        const stuComment = deliv.querySelector("textarea.cmt").value;
+        const stuComment = delivery.querySelector("textarea.cmt").value;
         if (stuComment) {
             const stuShifted = encodeURIComponent(MARKDOWN.ceasarShift(stuComment));
             data += "&stuComment=" + stuShifted;
-            const stuMD = deliv.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
+            const stuMD = delivery.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
             data += "&stuCmntHasMD=" + stuMD;
         }
 
         let check = true;
         if (type == "txt") {
-            const md = deliv.querySelector("i.txt").classList.contains("active") ? 1 : 0
-            const text = deliv.querySelector("textarea.txt").value;
+            const md = delivery.querySelector("i.txt").classList.contains("active") ? 1 : 0
+            const text = delivery.querySelector("textarea.txt").value;
             const shifted = encodeURIComponent(MARKDOWN.ceasarShift(text));
             data += "&hasMarkDown=" + md;
             data += "&text=" + shifted;
             check = text ? true : false;
         } else if (type == "url") {
-            const url = deliv.querySelector("input.url").value;
+            const url = delivery.querySelector("input.url").value;
             data += "&url=" + encodeURIComponent(url);
             check = url ? true : false;
         } // all other types are files (and have own event listener)
 
         // alert if duration and completion are not set 
-        if ((check || stuComment) 
+        if ((check || stuComment)
             && (duration == "00:00" || completion == "0")
-            && !this.classList.contains("duration") 
+            && !this.classList.contains("duration")
             && !this.classList.contains("completion")) {
             alert("Please set duration and completion before continuing.");
             if (duration == "00:00") {
@@ -231,15 +232,15 @@ window.addEventListener("load", () => {
             }
         }
 
-        const id = deliv.dataset.id;
+        const delivery_id = delivery.dataset.id;
         let url = `${lab_id}/${type}`;
         let method = "POST";
         let action = "Creating";
-        if (id) {
-            url += `/${id}`;
+        if (delivery_id) {
+            url += `/${delivery_id}`;
             method = "PUT";
             action = "Updating";
-        }         
+        }
         if (user_id) {
             url += `?student=${user_id}`;
         }
@@ -251,22 +252,22 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-        .then(response =>  {
-            if (!response.ok) {
-                throw new Error(action + " deliverable failed.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            submission_id = data.submission_id;
-            deliv.dataset.id = data.id;
-        })
-        .catch(error => {
-            alert(error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(action + " deliverable failed.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                submission_id = data.submission_id;
+                delivery.dataset.id = data.id;
+            })
+            .catch(error => {
+                alert(error);
+            });
     }
 
     // hook up icon click to file input
@@ -280,25 +281,26 @@ window.addEventListener("load", () => {
         file.addEventListener("change", sendFile);
     });
     function sendFile() {
-        const deliv = this.closest("div.deliv");
-        const type = deliv.parentNode.dataset.type;
-        const id = deliv.dataset.id;
+        const delivery = this.closest("div.delivery");
+        const deliverable = delivery.previousElementSibling;
+        const type = deliverable.parentNode.dataset.type;
+        const delivery_id = delivery.dataset.id;
         const data = new FormData();
-        const durSel = deliv.querySelector("select.duration");
-        const comSel = deliv.querySelector("select.completion");
+        const durSel = delivery.querySelector("select.duration");
+        const comSel = delivery.querySelector("select.completion");
         const completion = comSel.value;
         const duration = durSel.value;
-        const stuComment = deliv.querySelector("textarea.cmt").value;
+        const stuComment = delivery.querySelector("textarea.cmt").value;
 
-        const spinner = deliv.querySelector("i.spinner");
-        const check = deliv.querySelector("span.check");
-        const upload = deliv.querySelector("i.upload");
-        const trash = deliv.querySelector("i.fa-trash-can");
+        const spinner = delivery.querySelector("i.spinner");
+        const check = delivery.querySelector("span.check");
+        const upload = delivery.querySelector("i.upload");
+        const trash = delivery.querySelector("i.fa-trash-can");
         check.classList.remove("show");
 
         data.append("submission_id", submission_id);
-        data.append("deliverable_id", deliv.parentNode.dataset.id);
-        data.append("delivery_id", id);
+        data.append("deliverable_id", deliverable.dataset.id);
+        data.append("delivery_id", delivery_id);
         data.append("completion", completion);
         data.append("duration", duration);
         data.append("file", this.files[0]);
@@ -309,13 +311,13 @@ window.addEventListener("load", () => {
         if (stuComment) {
             const stuShifted = MARKDOWN.ceasarShift(stuComment);
             data.append("stuComment", stuShifted);
-            const stuMD = deliv.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
+            const stuMD = delivery.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
             data.append("stuCmntHasMD", stuMD);
         }
 
         // alert if duration and completion are not set 
         if ((duration == "00:00" || completion == "0")
-            && !this.classList.contains("duration") 
+            && !this.classList.contains("duration")
             && !this.classList.contains("completion")) {
             alert("Please set duration and completion before continuing.");
             if (duration == "00:00") {
@@ -334,58 +336,59 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data,
         })
-        .then(response =>  {
-            if (!response.ok) {
-                throw new Error("Uploading file failed.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                if (data.failed) {
-                    alert(data.error);
-                    // reset failure highlights
-                    deliv.querySelectorAll('.zipCheck').forEach(check => {
-                        check.classList.remove("error");
-                    });
-
-                    // set failure highlights
-                    data.failed.forEach(fail => {
-                        const failDiv = deliv.querySelector(`#c${fail}`);
-                        failDiv.classList.add("error");
-                    });
-                } else {
-                    throw new Error(data.error);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Uploading file failed.");
                 }
-            }
-            submission_id = data.submission_id;
-            deliv.dataset.id = data.id;
-            spinner.classList.remove("rotate");
-            upload.setAttribute("title", `Replace ${type}`);
-            const link = deliv.querySelector("a.fileLink");
-            link.setAttribute("href", data.file);
-            link.textContent = data.name;
-            check.classList.add("show");
-            trash.dataset.id = data.id;
-            trash.classList.remove("hide");
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    if (data.failed) {
+                        alert(data.error);
+                        // reset failure highlights
+                        delivery.querySelectorAll('.zipCheck').forEach(check => {
+                            check.classList.remove("error");
+                        });
 
-            if (type == "img") {
-                const img = deliv.querySelector("img");
-                img.setAttribute("src", data.file);
-                img.classList.add("show");
-            } else if (type == "zip") {
-                const listing = deliv.querySelector(".listing");
-                listing.innerHTML = data.text;
-            }
-        })
-        .catch(error => {
-            alert(error);
-            spinner.classList.remove("rotate");
-        });
+                        // set failure highlights
+                        data.failed.forEach(fail => {
+                            const failDiv = delivery.querySelector(`#c${fail}`);
+                            failDiv.classList.add("error");
+                        });
+                    } else {
+                        throw new Error(data.error);
+                    }
+                } else {
+                    check.classList.add("show");
+                }
+                submission_id = data.submission_id;
+                delivery.dataset.id = data.id;
+                spinner.classList.remove("rotate");
+                upload.setAttribute("title", `Replace ${type}`);
+                const link = delivery.querySelector("a.fileLink");
+                link.setAttribute("href", data.file);
+                link.textContent = data.name;
+                trash.dataset.id = data.id;
+                trash.classList.remove("hide");
+
+                if (type == "img") {
+                    const img = delivery.querySelector("img");
+                    img.setAttribute("src", data.file);
+                    img.classList.add("show");
+                } else if (type == "zip") {
+                    const listing = delivery.querySelector(".listing");
+                    listing.innerHTML = data.text;
+                }
+            })
+            .catch(error => {
+                alert(error);
+                spinner.classList.remove("rotate");
+            });
     }
 
     // Hook up the camera functions
-    CAMERA.init(`${lab_id}`); 
+    CAMERA.init(`${lab_id}`);
 
     // Hook up the delete functions
     document.querySelectorAll("i.fa-trash-can").forEach(trash => {
@@ -397,41 +400,40 @@ window.addEventListener("load", () => {
         fetch(url, {
             method: "DELETE",
         })
-        .then(response =>  {
-            if (!response.ok) {
-                alert("Deleting file failed.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-            // remove the file from the DOM
-            const parent = this.closest("div.fileContainer");
-            const link = parent.querySelector("a.fileLink");
-            link.removeAttribute("href");
-            link.textContent = "";
-            this.classList.add("hide");
+            .then(response => {
+                if (!response.ok) {
+                    alert("Deleting file failed.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                // remove the file from the DOM
+                const parent = this.closest("div.fileContainer");
+                const link = parent.querySelector("a.fileLink");
+                link.removeAttribute("href");
+                link.textContent = "";
+                this.classList.add("hide");
 
-            // remove the previous delivery id
-            this.closest("div.deliv").dataset.id = "";
+                // remove the previous delivery id
+                this.closest("div.delivery").dataset.id = "";
 
-            // for images, remove the image
-            const img = parent.querySelector("img.answer");
-            if (img) {
-                img.removeAttribute("src");
-                img.classList.remove("show");
-                img.classList.add("hide");
-                img.dataset.id = "";
-            }
-            // for zip files, remove the listing
-            const listing = parent.querySelector("div.listing");
-            if (listing) {
-                listing.innerHTML = "";
-            }
-        });
-
+                // for images, remove the image
+                const img = parent.querySelector("img.answer");
+                if (img) {
+                    img.removeAttribute("src");
+                    img.classList.remove("show");
+                    img.classList.add("hide");
+                    img.dataset.id = "";
+                }
+                // for zip files, remove the listing
+                const listing = parent.querySelector("div.listing");
+                if (listing) {
+                    listing.innerHTML = "";
+                }
+            });
     }
 });

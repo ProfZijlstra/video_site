@@ -66,6 +66,21 @@
                         </div>
                         Points Possible: <?= $deliv['points'] ?> <br />
                         <input autofocus class="points" type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" data-value="<?= $delivery['points'] ? $delivery['points'] : 0 ?>" />
+                        <?php if ($deliv['type'] == 'zip') { ?>
+                        <div>Upload Checks:</div>
+                        <div class="stats">
+                            <?php foreach ($stats as $stat) { ?>
+                            <?php if ($stat['delivery_id'] == $delivery['id']) { ?>
+                            <div>
+                                <?= $stat['created']?>
+                                <span class="error"><?= $stat['type']?></span>
+                                <?= $stat['file']?>
+                                <span class="error"><?= $stat['comment']?></span>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                        </div>
+                        <?php } ?>
                     </div>
                     <div class="deliv">
                         <h3>Deliverable Description</h3>

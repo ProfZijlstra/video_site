@@ -10,7 +10,7 @@ class DeliveryDao
     #[Inject('DB')]
     public $db;
 
-    public function forSubmission($submission_id)
+    public function forSubmission($submission_id) : array|bool
     {
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
@@ -27,7 +27,7 @@ class DeliveryDao
         return $result;
     }
 
-    public function forDeliverable($deliverable_id)
+    public function forDeliverable($deliverable_id) : array|bool
     {
         $stmt = $this->db->prepare(
             "SELECT d.id, d.created, d.updated, d.completion, d.duration, 
@@ -47,7 +47,7 @@ class DeliveryDao
         return $stmt->fetchAll();
     }
 
-    public function byId($id)
+    public function byId($id) : array|bool
     {
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
@@ -69,7 +69,7 @@ class DeliveryDao
         $hasMarkDown,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) : int {
         // to prevent duplicate entries, check if it's already been made
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
@@ -95,7 +95,7 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
-            return;
+            return -1;
         }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
@@ -130,7 +130,7 @@ class DeliveryDao
         $hasMarkDown,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) : void {
         $stmt = $this->db->prepare(
             "UPDATE delivery 
                 SET updated = NOW(),
@@ -164,7 +164,7 @@ class DeliveryDao
         $url,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) : int {
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
@@ -188,7 +188,7 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
-            return;
+            return -1;
         }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
@@ -221,7 +221,7 @@ class DeliveryDao
         $url,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) :void {
         $stmt = $this->db->prepare(
             "UPDATE delivery 
                 SET updated = NOW(),
@@ -255,7 +255,7 @@ class DeliveryDao
         $name,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) :int {
         // to prevent duplicate entries, check if it's already been made
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
@@ -282,7 +282,7 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
-            return;
+            return -1;
         }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
@@ -316,7 +316,7 @@ class DeliveryDao
         $completion, 
         $duration, 
         $stuComment, 
-        $stuCmntHasMD) 
+        $stuCmntHasMD) :int 
     {
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
@@ -339,7 +339,7 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
-            return;
+            return -1;
         }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
@@ -369,7 +369,7 @@ class DeliveryDao
         $duration,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) : void {
         $stmt = $this->db->prepare(
             "UPDATE delivery 
                 SET updated = NOW(),
@@ -398,7 +398,7 @@ class DeliveryDao
         $name,
         $stuComment,
         $stuCmntHasMD
-    ) {
+    ) : void {
         $stmt = $this->db->prepare(
             "UPDATE delivery 
                 SET updated = NOW(),
@@ -431,7 +431,7 @@ class DeliveryDao
         $user_id,
         $file,
         $name,
-    ) {
+    ) : int {
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
@@ -451,7 +451,7 @@ class DeliveryDao
                 $file,
                 $name
             );
-            return;
+            return -1;
         }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
@@ -473,7 +473,7 @@ class DeliveryDao
         return $this->db->lastInsertId();
     }
 
-    public function updatePicture($id, $file, $name)
+    public function updatePicture($id, $file, $name) : void
     {
         $stmt = $this->db->prepare(
             "UPDATE delivery 
@@ -489,7 +489,7 @@ class DeliveryDao
         ]);
     }
 
-    public function grade($id, $points, $comment, $hasMarkDown)
+    public function grade($id, $points, $comment, $hasMarkDown) : void
     {
         $stmt = $this->db->prepare(
             "UPDATE delivery 
@@ -513,7 +513,7 @@ class DeliveryDao
         $points,
         $comment,
         $hasMarkDown
-    ) {
+    ) : int {
         $stmt = $this->db->prepare(
             "SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
@@ -532,7 +532,7 @@ class DeliveryDao
                 $comment,
                 $hasMarkDown
             );
-            return;
+            return -1;
         }
         $stmt = $this->db->prepare(
             "INSERT INTO delivery VALUES (
@@ -554,18 +554,12 @@ class DeliveryDao
         return $this->db->lastInsertId();
     }
 
-    function delete($id)
+    function delete($id) : void
     {
         $stmt = $this->db->prepare(
-            "DELETE FROM zip_ul_stat 
-                WHERE delivery_id = :id"
-        );
-        $stmt->execute([
-            "id" => $id
-        ]);
-        $stmt = $this->db->prepare(
-            "DELETE FROM delivery 
-                WHERE id = :id"
+            'UPDATE delivery 
+            SET file = null, text = null, name = null
+            WHERE id = :id'
         );
         $stmt->execute([
             "id" => $id

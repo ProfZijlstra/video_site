@@ -59,11 +59,11 @@ window.addEventListener("load", () => {
             fetch(`../${document.forms.delLab.dataset.id}`, {
                 method: "DELETE"
             })
-            .then(htmlOrError("Deleting lab failed (probably has submissions)."))
-            .then(() => {
-                window.location = "../../lab";
-            })
-            .catch(alertError);
+                .then(htmlOrError("Deleting lab failed (probably has submissions)."))
+                .then(() => {
+                    window.location = "../../lab";
+                })
+                .catch(alertError);
         }
     });
 
@@ -118,7 +118,7 @@ window.addEventListener("load", () => {
         const input = parent.querySelector("input.attachment");
         input.click();
     }
-    document.querySelectorAll("i.attachBtn").forEach((e) => 
+    document.querySelectorAll("i.attachBtn").forEach((e) =>
         e.addEventListener("click", clickAttachBtn)
     );
     function uploadAttachment(e) {
@@ -129,8 +129,8 @@ window.addEventListener("load", () => {
         data.append("attachment", this.files[0]);
         data.append("deliverable_id", this.dataset.deliverable_id);
         fetch("attach", {
-                method: "POST",
-                body: data
+            method: "POST",
+            body: data
         })
             .then(htmlOrError("Upload attachment failed."))
             .then((html) => {
@@ -152,7 +152,7 @@ window.addEventListener("load", () => {
                 alert(error);
             });
     }
-    document.querySelectorAll("input.attachment").forEach((e) => 
+    document.querySelectorAll("input.attachment").forEach((e) =>
         e.addEventListener("change", uploadAttachment)
     );
 
@@ -165,16 +165,16 @@ window.addEventListener("load", () => {
     document.getElementById("closeAddDialog").onclick = function() {
         document.getElementById("addDelivDialog").close();
     };
-    document.getElementById("addDelivBtn").onclick = function(e) { 
+    document.getElementById("addDelivBtn").onclick = function(e) {
         const data = new FormData();
         data.append("type", document.getElementById("delivType").value);
         data.append("seq", e.target.dataset.seq);
         data.append("lab_id", e.target.dataset.lab_id);
         e.target.dataset.seq++;
         fetch("deliverable", {
-                method: "POST",
-                body: data,
-            })
+            method: "POST",
+            body: data,
+        })
             .then(htmlOrError("Adding deliverable failed."))
             .then((html) => {
                 document.getElementById("noDelivs")?.classList.add("hide");
@@ -185,7 +185,7 @@ window.addEventListener("load", () => {
                     txt.addEventListener("change", updateDeliv);
                     txt.addEventListener("keydown", MARKDOWN.keyEventHandler);
                     txt.dataset.initialHeight = "108"; // bad hardcoding
-                    txt.addEventListener("keydown", MARKDOWN.autoExpand);    
+                    txt.addEventListener("keydown", MARKDOWN.autoExpand);
                 }
                 div.querySelector("i.delDeliv").addEventListener("click", delDeliv);
                 div.querySelector(".labPoints").textContent = document.getElementById("labPoints").value;
@@ -211,8 +211,8 @@ window.addEventListener("load", () => {
         const deliv = this.parentElement.parentElement;
         if (confirm("Are you sure you want to remove this deliverable?")) {
             fetch(`deliverable/${this.dataset.id}`, {
-                    method: "DELETE",
-                })
+                method: "DELETE",
+            })
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.error) {
@@ -242,8 +242,8 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
         })
-        .then(htmlOrError("Updating deliverable failed."))
-        .catch(alertError);
+            .then(htmlOrError("Updating deliverable failed."))
+            .catch(alertError);
     }
     document.querySelectorAll(".about input, .deliv textarea").forEach((e) => {
         e.addEventListener("change", updateDeliv);
@@ -261,8 +261,8 @@ window.addEventListener("load", () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
         })
-        .then(htmlOrError("Updating deliverable failed."))
-        .catch(alertError);
+            .then(htmlOrError("Updating deliverable failed."))
+            .catch(alertError);
     }
     document.querySelectorAll(".dcontainer select.zipAttachment").forEach((e) => {
         e.addEventListener("change", updateZipAttachment);
@@ -296,8 +296,8 @@ window.addEventListener("load", () => {
     function removeZipAction() {
         const action_id = this.parentNode.dataset.id;
         fetch("zipActions/" + action_id, {
-                method: "DELETE",
-            })
+            method: "DELETE",
+        })
             .then((response) => {
                 if (response.ok) {
                     this.parentNode.remove();
@@ -327,7 +327,7 @@ window.addEventListener("load", () => {
             })
             .catch(alertError);
 
-        };
+    };
     document.querySelectorAll(".zipActionConfig").forEach((e) => {
         e.onclick = openZipActionDialog;
     });
@@ -339,7 +339,7 @@ window.addEventListener("load", () => {
     document.getElementById("addZipActionBtn").onclick = function(evt) {
         evt.preventDefault();
         const aid = document.getElementById("attachment_id").value;
-        
+
         // check if byte is a number
         const byteField = document.getElementById("byte");
         const byte = byteField.value;
@@ -363,18 +363,21 @@ window.addEventListener("load", () => {
             return false;
         }
 
+        // send to server to create
         const data = new FormData();
         data.append("type", action);
         data.append("file", file);
         data.append("byte", num);
         fetch(aid + "/zipActions", {
-                method: "POST",
-                body: data,
-            })
+            method: "POST",
+            body: data,
+        })
             .then(htmlOrError("Adding action failed"))
             .then(setZipActionHTML)
             .catch(alertError);
 
+        // clear fields for next add
+        fileField.value = "";
         byteField.value = "";
     }
 
@@ -384,8 +387,8 @@ window.addEventListener("load", () => {
     function removeZipCheck() {
         const check_id = this.parentNode.dataset.id;
         fetch("zipChecks/" + check_id, {
-                method: "DELETE",
-            })
+            method: "DELETE",
+        })
             .then((response) => {
                 if (response.ok) {
                     this.parentNode.remove();
@@ -424,25 +427,41 @@ window.addEventListener("load", () => {
     };
     const byteField = document.getElementById("byteField");
     document.getElementById("checkType").addEventListener("change", function() {
+        const blockTxt = document.getElementById('block');
         if (this.value.endsWith("wm")) {
             byteField.classList.remove("hide");
+            blockTxt.classList.remove("active");
         } else {
-            byteField.classList.add("hide"); 
+            byteField.classList.add("hide");
+            blockTxt.classList.add("active");
         }
     });
+    document.getElementById('block').onclick = function() {
+        this.classList.toggle("active");
+    }
     document.getElementById("addZipCheckBtn").onclick = function(evt) {
         evt.preventDefault();
         const did = document.getElementById("deliverable_id").value;
         const data = new FormData();
+        const fileField = document.getElementById("checkFile");
+        const byteField = document.getElementById("checkByte");
+        const blockTxt = document.getElementById('block');
+
+        // send to server to create
         data.append("type", document.getElementById("checkType").value);
-        data.append("file", document.getElementById("checkFile").value);
-        data.append("byte", document.getElementById("checkByte").value);
+        data.append("file", fileField.value);
+        data.append("byte", byteField.value);
+        data.append("block", blockTxt.classList.contains('active') ? 1 : 0);
         fetch(did + "/zipChecks", {
-                method: "POST",
-                body: data,
-            })
+            method: "POST",
+            body: data,
+        })
             .then(htmlOrError("Adding check failed"))
             .then(setZipCheckHTML)
             .catch(alertError);
+
+        // clear fields for next add
+        fileField.value = "";
+        byteField.value = "";
     };
 });
