@@ -55,6 +55,7 @@ window.addEventListener("load", () => {
         keyShortCuts.classList.remove('hide');
         switchDeliv(1);
         window.localStorage.setItem("view", "multi");
+        window.scrollTo(0, 0);
 
         if (!hist) {
             return;

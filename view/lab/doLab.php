@@ -97,7 +97,7 @@
                         <?= count($deliverables) ?> Deliverable(s)
                     </h2>
                     <h2 class="multi <?= $selected ? '' : 'hide' ?>">
-                        <span>Deliverable</span>
+                        <span class="mobileBlock">Deliverable</span>
                         <i id="chevLeft" class="fa-solid fa-chevron-left <?= $selected && $selected > 1 ? 'active' : '' ?>"></i>
                         <?php for ($i = 1; $i <= count($deliverables); $i++) { ?>
                         <span id="db<?= $i ?>" class="delivNum <?= $i == $selected ? 'active' : '' ?>"><?= $i ?></span>
@@ -109,7 +109,7 @@
                     <?php foreach ($deliverables as $deliverable) { ?>
                     <?php $i++; ?>
                     <?php $delivery = $deliveries[$deliverable['id']] ?? [] ?>
-                    <div id="d<?= $i ?>" class="dcontainer deliverables camContainer <?= $selected ? ($selected == $i ? '' : 'hide') : '' ?>"
+                    <div id="d<?= $i ?>" class="dcontainer deliverables <?= $selected ? ($selected == $i ? '' : 'hide') : '' ?>"
                     data-type="<?= $deliverable['type'] ?>">
                         <div class="about">
                             <div class="meta" title="<?= $typeDesc[$deliverable['type']] ?> to complete this deliverable">

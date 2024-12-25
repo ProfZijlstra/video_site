@@ -681,7 +681,7 @@ class LabTakingCtrl
                 $blocked = $result['blocked'];
                 if ($blocked) {
                     $error = 'Please fix the following issues in your zip '
-                        .   "and upload again\n\n".implode("\n", $blocked);
+                        ."and upload again\n\n".implode("\n", $blocked);
                 }
             }
             $curr = $_FILES['file']['tmp_name'];
@@ -1011,7 +1011,6 @@ class LabTakingCtrl
                 $blocked[$id] = $msg;
             }
         }
-        ksort($blocked);
 
         return ['listing' => $listing, 'blocked' => $blocked];
     }

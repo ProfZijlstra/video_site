@@ -649,10 +649,6 @@ body#gradeDeliverable {
             width: 1400px;
         }
 
-        div.deliverable div.description {
-            /*max-width: 690px;*/
-        }
-
         div.dcontainer {
             grid-template-columns: 150px 1fr 1fr;
 
@@ -701,8 +697,8 @@ body#gradeDeliverable {
         }
     }
     nav.tools {
-        top: 55px;
-        right: 70px; /* not same as quiz */
+        top: 65px;
+        right: 20px; /* not same as quiz */
         z-index: 100;
 
         h3 {
@@ -712,7 +708,7 @@ body#gradeDeliverable {
     }
 
     /* custom for lab mobile view */
-    #content {
+    body.lab #content {
         width: auto;
         margin-top: 100px;
 
@@ -723,7 +719,11 @@ body#gradeDeliverable {
         h1 {
             text-align: center;
         }
+        #submission h2 span.mobileBlock {
+            display: block;
+        }
         div.dcontainer {
+            grid-template-columns: 100px 1fr;
             margin-left: 5px;
         }
         div.about {
@@ -735,9 +735,13 @@ body#gradeDeliverable {
             }
         }
         div.deliverable {
+            overflow: auto;
             div.description {
                 max-width: 67vw;
             }
+        }
+        div.delivery {
+            overflow: auto;
             div.stats label {
                 display: block;
                 margin-left: 0px;
@@ -748,6 +752,13 @@ body#gradeDeliverable {
             }
             div.fileContainer {
                 margin-bottom: 30px;
+
+                div.camera video {
+                    width: 100%;
+                }
+                img {
+                    width: 100%;
+                }
             }
             div.urlContainer input.url {
                 width: 100%;
@@ -767,3 +778,4 @@ body#gradeDeliverable {
         }
     }
 }
+

@@ -16,7 +16,7 @@
         <input type="url" class="url" placeholder="https://github.com/student/project" value="<?= $delivery['text'] ?>" />
     </div>
     <?php } else { /* type is: img, pdf, zip */ ?>
-    <div class="fileContainer">
+    <div class="fileContainer camContainer" data-id="<?= $deliverable['id']?>">
         <i title="<?= $delivery['text'] ? 'Replace' : 'Upload' ?> <?= $deliverable['type'] ?>" class="upload fa-solid fa-upload"></i>
         <i class="spinner fa-solid fa-circle-notch"></i>
         <?php if ($deliverable['type'] == 'img') { ?>
@@ -62,7 +62,7 @@
         <?php } ?>
         <?php if ($presents) { ?>
         <div class="checks presents">
-            <h3>Should be present in zip file root:</h3>
+            <h3>Should be in zip root:</h3>
             <?php foreach ($presents as $check) { ?>
             <div class="zipCheck present" id="c<?= $check['id']?>"
                 title="This file should be present in your zip">
@@ -75,7 +75,7 @@
         <?php } ?>
         <?php if ($not_presents) { ?>
         <div class="checks notPresents">
-            <h3>Should not be in zip file root:</h3>
+            <h3>Should not be in zip:</h3>
             <?php foreach ($not_presents as $check) { ?>
             <div class="zipCheck notPresent" id="c<?= $check['id']?>"
                 title="Your zip should not contain this file">
