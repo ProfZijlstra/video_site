@@ -14,11 +14,11 @@ const CAMERA = (function() {
 
         document.querySelectorAll('div.closeCamera').forEach((div) => {
             div.onclick = function() {
-                stopCamera.call(this); 
+                stopCamera.call(this);
                 this.closest("div.question, div.delivery")
                     .querySelector('img.answer')
                     .classList.remove('hide');
-            } 
+            }
         });
 
         document.querySelectorAll('div.switchCamera').forEach((div) => {
@@ -43,7 +43,7 @@ const CAMERA = (function() {
         const pic = parent.querySelector('div.takePicture');
         pictureBtn = pic;
         spinner.classList.add('rotate');
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false})
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
             .then((stream) => {
                 video.srcObject = stream;
                 video.classList.add('show');
@@ -92,7 +92,7 @@ const CAMERA = (function() {
         spinner.classList.add('rotate');
 
         // start the stream for the next device
-        deviceIdx = (deviceIdx + 1) % videoDevs.length; 
+        deviceIdx = (deviceIdx + 1) % videoDevs.length;
         const deviceId = videoDevs[deviceIdx]['deviceId'];
         navigator.mediaDevices.getUserMedia(
             { video: { deviceId: { exact: deviceId } } }
@@ -102,10 +102,10 @@ const CAMERA = (function() {
             spinner.classList.remove('rotate');
             camera.classList.remove('hide');
         })
-        .catch((e) => {
-            alert('Failed to switch camera: ' + e);
-            spinner.classList.remove('rotate');
-        });
+            .catch((e) => {
+                alert('Failed to switch camera: ' + e);
+                spinner.classList.remove('rotate');
+            });
     }
 
     function takePicture() {
@@ -140,6 +140,9 @@ const CAMERA = (function() {
         data.append("image", picture);
 
         const user_id = document.getElementById('user_id')?.value;
+        if (window.localStorage.view == "multi") {
+            urlBase = "../" + urlBase;
+        }
         let url = `${urlBase}/${qid}/picture`;
         if (user_id) {
             url += `?user_id=${user_id}`;
@@ -148,32 +151,32 @@ const CAMERA = (function() {
             method: "POST",
             body: data
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                img.src = data.dst;
-                img.dataset.id = data.answer_id;
-                const deliv = this.closest("div.deliv");
-                if (deliv) {
-                    deliv.dataset.id = data.answer_id;
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    img.src = data.dst;
+                    img.dataset.id = data.answer_id;
+                    const deliv = this.closest("div.deliv");
+                    if (deliv) {
+                        deliv.dataset.id = data.answer_id;
+                    }
+                    img.classList.remove('hide');
+                    img.classList.add('show');
+                    anchor.href = data.dst;
+                    const name = data.dst.split('/').pop();
+                    anchor.innerText = name;
+                    if (trash) {
+                        trash.classList.remove('hide');
+                        trash.dataset.id = data.answer_id;
+                    }
                 }
-                img.classList.remove('hide');
-                img.classList.add('show');
-                anchor.href = data.dst;
-                const name = data.dst.split('/').pop();
-                anchor.innerText = name;
-                if (trash) {
-                    trash.classList.remove('hide');
-                    trash.dataset.id = data.answer_id;    
-                }
-            }
-            spinner.classList.remove('rotate');    
-        })
-        .catch((error) => {
-            alert(error);
-        });
+                spinner.classList.remove('rotate');
+            })
+            .catch((error) => {
+                alert("Image upload error: " + error);
+            });
     }
 
     function takePictureOnKeyPress(event) {
