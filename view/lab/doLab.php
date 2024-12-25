@@ -46,7 +46,7 @@
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown-1.8.js"></script>
         <script src="res/js/countdown-1.1.js"></script>
-        <script src="res/js/camera-1.3.js"></script>
+        <script src="res/js/camera-1.4.js"></script>
         <script src="res/js/lab/lab-1.10.js"></script>
         <script src="res/js/ensureSaved.js"></script>
     </head>
