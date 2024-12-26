@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
     function mdToggle() {
         sendDeliverable.call(this);
     }
-    MARKDOWN.enablePreview("../markdown");
+    MARKDOWN.enablePreview("../markdown", false, true);
     MARKDOWN.activateButtons(mdToggle);
 
     // user_id if present
@@ -245,6 +245,9 @@ window.addEventListener("load", () => {
         if (user_id) {
             url += `?student=${user_id}`;
         }
+        if (window.localStorage.view == "multi") {
+            url = "../" + url;
+        }
 
         fetch(url, {
             method: method,
@@ -333,6 +336,9 @@ window.addEventListener("load", () => {
         if (user_id) {
             url += `?student=${user_id}`;
         }
+        if (window.localStorage.view == "multi") {
+            url = "../" + url;
+        }
         fetch(url, {
             method: "POST",
             body: data,
@@ -398,6 +404,9 @@ window.addEventListener("load", () => {
     function deleteFile() {
         const id = this.dataset.id;
         url = `${lab_id}/delivery/${id}`;
+        if (window.localStorage.view == "multi") {
+            url = '../' + url;
+        }
         fetch(url, {
             method: "DELETE",
         })

@@ -2,6 +2,7 @@ const MARKDOWN = (function() {
     let mdurl = "markdown";
     let btnCallback = null;
     let closePreview = false;
+    let multiViewAble = false;
 
     // we ceasar shift because dreamhost has some very solid XSS injection 
     // protection... which stops a variety of markdown submits
@@ -32,11 +33,15 @@ const MARKDOWN = (function() {
         const data = new FormData();
         data.append("markdown", shifted);
 
-        fetch(mdurl, { method: "POST", body: data })
+        let url = mdurl;
+        if (multiViewAble && window.localStorage.view == "multi") {
+            url = "../" + url;
+        }
+        fetch(url, { method: "POST", body: data })
             .then((response) => response.text())
             .then((data) => {
                 if (closePreview) {
-                    let close = '<i title="Close" class="fas fa-times-circle"></i>'; 
+                    let close = '<i title="Close" class="fas fa-times-circle"></i>';
                     data = close + data;
                 }
                 container.innerHTML = data;
@@ -50,13 +55,14 @@ const MARKDOWN = (function() {
             });
     }
 
-    function enablePreview(url, closable = false) {
+    function enablePreview(url, closable = false, multiView = false) {
         mdurl = url;
         const buttons = document.querySelectorAll('.previewBtn');
         for (const button of buttons) {
             button.onclick = getHtmlForMarkdown;
-        }    
+        }
         closePreview = closable;
+        multiViewAble = multiView;
     }
 
     function toggleMarkDown() {
@@ -235,11 +241,11 @@ const MARKDOWN = (function() {
         }
     }
 
-    return { 
-        getHtmlForMarkdown, 
-        enablePreview, 
-        ceasarShift, 
-        activateButtons, 
+    return {
+        getHtmlForMarkdown,
+        enablePreview,
+        ceasarShift,
+        activateButtons,
         toggleMarkDown,
         addCopyButton,
         keyEventHandler,
@@ -259,7 +265,7 @@ window.addEventListener("load", () => {
         for (const className of pre.classList) {
             if (className.startsWith('language-')) {
                 // Remove tabindex added by prism.js to prevent focus
-                pre.removeAttribute('tabindex'); 
+                pre.removeAttribute('tabindex');
                 MARKDOWN.addCopyButton(pre);
             }
         }
