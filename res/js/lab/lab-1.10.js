@@ -154,21 +154,16 @@ window.addEventListener("load", () => {
 
     // keyboard shortcuts in SPA mode
     document.addEventListener('keydown', (e) => {
-        if (window.localStorage.getItem("view") != "multi") {
+        if (window.localStorage.getItem("view") != "multi"
+            || !e.ctrlKey) {
             return;
         }
 
         switch (e.code) {
             case "Period":
-                if (!e.ctrlKey) {
-                    return;
-                }
                 goClickDeliv(delivId + 1);
                 break
             case "Comma":
-                if (!e.ctrlKey) {
-                    return;
-                }
                 goClickDeliv(delivId - 1);
                 break;
         }
