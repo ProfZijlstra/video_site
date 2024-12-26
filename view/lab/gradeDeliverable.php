@@ -110,7 +110,7 @@
                         <div class="timestamp">Updated: <?= $delivery['updated'] ?></div>
 
                         <?php if ($deliv['type'] == 'zip') { ?>
-                        <div>Upload Checks:</div>
+                        <div>Failed Checks:</div>
                         <div class="stats">
                             <?php foreach ($stats as $stat) { ?>
                             <?php if ($stat['delivery_id'] == $delivery['id']) { ?>

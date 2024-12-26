@@ -866,10 +866,11 @@ class LabTakingCtrl
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $lab['start'], $tz);
         $ts_lab = $date->getTimestamp();
         $listing = '';
-        $listing_limit = 40;
+        $listing_limit = 50;
         $listing_count = 0;
 
         // initialize checks
+        $timeFail = false;
         $results = []; // -1 is not seen, 0 is seen and bad, 1 is seen and good
         foreach ($zipChecks as $zipCheck) {
             $results[$zipCheck['id']] = -1;
@@ -959,6 +960,7 @@ class LabTakingCtrl
             $mtime = $zip->statIndex($i)['mtime'];
             $class = 'time';
             if ($mtime < $ts_lab) {
+                $timeFail = true;
                 $class .= ' old';
             }
 
@@ -971,7 +973,8 @@ class LabTakingCtrl
                 $listing .= '</div>';
                 $listing_count++;
             } elseif ($listing_count == $listing_limit) {
-                $listing .= "<div class='zFile'>... [Listing Truncated]</div>";
+                $listing .= "<div class='zFile'>... [Max {$listing_limit}: "
+                    .'Listing Truncated]</div>';
                 $listing_count++;
             }
         }
@@ -988,6 +991,12 @@ class LabTakingCtrl
             } elseif ($type == 'not_present' && $results[$id] == -1) {
                 $results[$id] = 1;
             }
+        }
+        if ($timeFail) {
+            $type = 'timestamp';
+            $file = 'see zip file listing';
+            $cmt = 'Files(s) from before lab start';
+            $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
         }
 
         // create blocked error messages
