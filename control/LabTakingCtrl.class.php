@@ -680,7 +680,7 @@ class LabTakingCtrl
                 $listing = $result['listing'];
                 $blocked = $result['blocked'];
                 if ($blocked) {
-                    $error = 'Please fix the following issues in your zip '
+                    $error = 'Please fix the following in your zip file '
                         ."and upload again\n\n".implode("\n", $blocked);
                 }
             }
@@ -869,14 +869,10 @@ class LabTakingCtrl
         $listing_limit = 40;
         $listing_count = 0;
 
-        // initialize zip checks
+        // initialize checks
         $results = []; // -1 is not seen, 0 is seen and bad, 1 is seen and good
         foreach ($zipChecks as $zipCheck) {
-            if ($zipCheck['type'] == 'not_present') {
-                $results[$zipCheck['id']] = 1;
-            } else {
-                $results[$zipCheck['id']] = -1;
-            }
+            $results[$zipCheck['id']] = -1;
         }
 
         // look through the files in the zip
@@ -894,10 +890,15 @@ class LabTakingCtrl
             ) {
                 continue;
             }
+            $name = strtolower($name); // for case insensitive comparison
+
             foreach ($zipChecks as $zipCheck) {
                 $id = $zipCheck['id'];
+                if ($results[$id] != -1) {
+                    continue;
+                }
                 $type = $zipCheck['type'];
-                $file = $zipCheck['file'];
+                $file = strtolower($zipCheck['file']); // for lowercase compare
                 $byte = $zipCheck['byte'];
 
                 if ($type == 'present' && $file == $name) {
@@ -912,7 +913,7 @@ class LabTakingCtrl
 
                     continue;
                 }
-                if (! str_ends_with($type, 'wm') || $results[$id] != -1) {
+                if (! str_ends_with($type, 'wm')) {
                     continue;
                 }
 
@@ -930,7 +931,7 @@ class LabTakingCtrl
                 // get the download record indicated by the WM
                 $download = $this->downloadDao->getById($wm);
                 if (! $download) {
-                    $cmt = 'User never downloaded the required attachment';
+                    $cmt = 'User never downloaded? No download record for WM';
                     $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
                     $results[$id] = 0;
 
@@ -976,14 +977,16 @@ class LabTakingCtrl
         }
         $zip->close();
 
-        // finalize present and WM checks
+        // finalize checks
         foreach ($zipChecks as $zipCheck) {
             $id = $zipCheck['id'];
             $type = $zipCheck['type'];
             $file = $zipCheck['file'];
             $cmt = 'Required file not found';
-            if ($zipCheck['type'] !== 'not_present' && $results[$id] < 0) {
+            if ($type !== 'not_present' && $results[$id] < 0) {
                 $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
+            } elseif ($type == 'not_present' && $results[$id] == -1) {
+                $results[$id] = 1;
             }
         }
 
