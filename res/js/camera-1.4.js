@@ -31,6 +31,22 @@ const CAMERA = (function() {
     }
 
     function openCamera() {
+        // try and find if there are multiple cameras
+        let intervalCount = 0;
+        let findDevInterval = setInterval(() => {
+            intervalCount++;
+            navigator.mediaDevices.enumerateDevices()
+                .then(devices => {
+                    videoDevs = devices.filter(d => d.kind == "videoinput");
+                    console.log(videoDevs.length);
+                    if (intervalCount >= 20 || videoDevs.length > 1) {
+                        clearInterval(findDevInterval);
+                        switchCam.classList.remove('hide');
+                    }
+                });
+        }, 500);
+
+        // do the actual opening
         const parent = this.closest('div');
         const body = this.closest('body');
         body.addEventListener('keypress', takePictureOnKeyPress);
@@ -63,10 +79,6 @@ const CAMERA = (function() {
                 alert("Unable to open camera");
                 spinner.classList.remove('rotate');
             });
-        navigator.mediaDevices.enumerateDevices()
-            .then(devices => {
-                videoDevs = devices.filter(d => d.kind == "videoinput");
-            });
     }
 
     function stopCamera() {
@@ -77,6 +89,11 @@ const CAMERA = (function() {
         const tracks = video.srcObject.getTracks();
         tracks.forEach(track => track.stop());
         parent.classList.add('hide');
+        const img = parent.nextElementSibling;
+        if (img.getAttribute("src")) {
+            img.classList.remove('hide');
+            img.classList.add('show');
+        }
     }
 
     function switchCamera() {
@@ -140,12 +157,15 @@ const CAMERA = (function() {
         data.append("image", picture);
 
         const user_id = document.getElementById('user_id')?.value;
-        if (window.localStorage.view == "multi") {
-            urlBase = "../" + urlBase;
-        }
         let url = `${urlBase}/${qid}/picture`;
         if (user_id) {
             url += `?user_id=${user_id}`;
+        }
+        // currently camera is only used on multi-viewable pages
+        // if we ever use it on a non-multiviewable page we need
+        // to add a flag to the init to disable this check
+        if (window.localStorage.view == "multi") {
+            url = "../" + url;
         }
         fetch(url, {
             method: "POST",
