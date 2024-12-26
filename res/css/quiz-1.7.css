@@ -1,6 +1,14 @@
 main nav.areas {
     margin-top: 50px;
 }
+main nav.tools {
+    h3 {
+        margin: 0px;
+    }
+    div.icons {
+        text-align: right;
+    }
+}
 div.questionText, div.answerText {
     position: relative;
     border: 1px solid grey;
@@ -19,23 +27,38 @@ form#delQuiz {
 }
 div.quiz {
     text-align: center;
+    div.status {
+        margin-bottom: 5px;
+    }
+    form label {
+        display: inline-block;
+        width: 60px;
+        margin-bottom: 5px;
+    }
+    input.name {
+        width: 310px;
+    }
+    select {
+        width: 320px;
+    }
+    input[type="time"], div.quiz input[type="date"] {
+        width: 150px;
+    }
 }
-div.quiz div.status {
-    margin-bottom: 5px;
-}
-div.quiz form label {
-    display: inline-block;
-    width: 60px;
-    margin-bottom: 5px;
-}
-div.quiz input.name {
-    width: 310px;
-}
-div.quiz select {
-    width: 320px;
-}
-div.quiz input[type="time"], div.quiz input[type="date"] {
-    width: 150px;
+body#doQuiz {
+    .hide {
+        display: none;
+    }
+    h2 span.questNum, h2 i {
+        color: lightgray;
+        cursor: pointer;
+    }
+    h2 span.questNum:hover {
+        text-decoration: underline;
+    }
+    h2 span.questNum.active, h2 i.active {
+        color: var(--black);
+    }
 }
 body#editQuiz {
     #content h3 {
@@ -58,7 +81,8 @@ body#editQuiz {
 }
 
 div.qcontainer {
-    display: flex;
+    display: grid;
+    grid-template-columns: 150px 1fr;
     border-top: 1px solid var(--border);
     margin-bottom: 30px;
 
@@ -67,96 +91,93 @@ div.qcontainer {
     }
 }
 div.qcontainer div.about {
-    flex-basis: 150px;
-    flex-shrink: 0;
+    grid-row: 1 / span 2;
     border-right: 1px solid var(--border);
     text-align: center;
     position: relative;
-}
-div.qcontainer div.about div.seq {
-    font-size: 50pt;
-}
-div.qcontainer div.about input[type="number"] {
-    width: 50px;
-}
-div.qcontainer div.about i.fa-trash-alt {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-}
-div.qcontainer div.question {
-    flex-grow: 1;
-    padding: 5px;
-}
-div.qcontainer div.question div.qType{
-    font-weight: bold;
-    font-size: 15pt;
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-div.qcontainer div.question div.textContainer {
-    position: relative;
-}
-div.textContainer i.fa-markdown {
-    position: absolute;
-    top: -18px;
-    right: 0px;
-    cursor: pointer;
-    color: gray;
-}
-div.textContainer i.fa-markdown.active {
-    color: var(--black);
-}
-div.qcontainer div.question textarea {
-    width: 100%;
-    height: 10em;
-}
-div.qcontainer div.mdContainer {
-    display: none;
-}
-div.qcontainer div.mdContainer.active {
-    display: block;
-}
-div.qcontainer div.preview {
-    margin: 5px 0px;
-    text-align: right;
-}
-div.qcontainer div.pcontainer {
-    padding: 5px;
-    border: 1px solid var(--border);
-    max-width: 630px;
-    overflow: auto;
-}
-div.question pre {
-    white-space: pre-wrap;
-}
-div.question img {
-    width: 100%;
-}
-div.question span.block {
-    display: inline-block;
-    margin: 10px 0px;
-}
-div.question span.block {
-    i.fa-upload, i.fa-camera, i.fa-trash-can {
+
+    div.seq {
+        font-size: 50pt;
+    }
+    input[type="number"] {
+        width: 50px;
+    }
+    i.fa-trash-alt {
+        position: absolute;
+        top: 10px;
+        right: 10px;
         cursor: pointer;
     }
-    a {
-        display: inline-block;
-        margin-left: 20px;
-    }
-    i.fa-trash-can {
-        margin-left: 10px;
+}
+
+div.qcontainer div.question {
+    grid-column: 2;
+    padding: 5px;
+
+    div.qType{
+        font-weight: bold;
+        font-size: 15pt;
+        margin-top: 5px;
+        margin-bottom: 10px;
     }
 }
-div.question {
-    .hide {
+
+div.qcontainer div.answer {
+    grid-column: 2;
+    padding: 5px;
+
+    div.textContainer {
+        position: relative;
+
+        i.fa-markdown {
+            position: absolute;
+            top: -18px;
+            right: 0px;
+            cursor: pointer;
+            color: gray;
+        }
+        i.fa-markdown.active {
+            color: var(--black);
+        }
+    }
+    textarea {
+        width: 100%;
+        height: 10em;
+    }
+    div.mdContainer {
         display: none;
     }
-}
-div.question span input[type="file"] {
-    display: none;
+    div.mdContainer.active {
+        display: block;
+    }
+    div.preview {
+        margin: 5px 0px;
+        text-align: right;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
+    img {
+        width: 100%;
+    }
+    span.block {
+        display: inline-block;
+        margin: 10px 0px;
+
+        i.fa-upload, i.fa-camera, i.fa-trash-can {
+            cursor: pointer;
+        }
+        a {
+            display: inline-block;
+            margin-left: 20px;
+        }
+        i.fa-trash-can {
+            margin-left: 10px;
+        }
+    }
+    span input[type="file"] {
+        display: none;
+    }
 }
 i.fa-circle-notch.rotate {
     width: 16px;
@@ -341,7 +362,6 @@ body#gradeQuestion {
         text-align: center;
     }
     nav.tools h3 {
-        margin: 0px;
         padding: 3px;
     }
     main nav.areas {
@@ -354,6 +374,12 @@ body#gradeQuestion {
             display: inline-block;
             min-width: 40px;
         }
+    }
+    div.mobileBlock {
+        display: block;
+    }
+    div.qcontainer {
+        grid-template-columns: 100px 1fr 1fr;
     }
     #content {
         width: auto;
@@ -381,3 +407,30 @@ body#gradeQuestion {
         max-width: 73vw;
     }
 }
+/**
+* Copy / pasted from lab.css
+* TODO: extract out common parts
+*/
+@media screen and (min-width: 1550px) {
+    body#doQuiz {
+        main div#content {
+            width: 1450px;
+        }
+
+        div.qcontainer {
+            grid-template-columns: 150px 1fr 1fr;
+
+            div.question {
+                grid-column: 2;
+            }
+            div.answer {
+                grid-column: 3;
+                border-left: 1px solid var(--border);
+            }
+            div.textContainer textarea {
+                max-width: initial;
+            }
+        }
+    }
+}
+

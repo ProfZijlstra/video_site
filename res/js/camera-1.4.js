@@ -15,7 +15,7 @@ const CAMERA = (function() {
         document.querySelectorAll('div.closeCamera').forEach((div) => {
             div.onclick = function() {
                 stopCamera.call(this);
-                this.closest("div.question, div.delivery")
+                this.closest("div.answer, div.delivery")
                     .querySelector('img.answer')
                     .classList.remove('hide');
             }
@@ -102,12 +102,17 @@ const CAMERA = (function() {
         const body = this.closest('body');
         body.addEventListener('keypress', takePictureOnKeyPress);
 
-        const parent = this.closest('div.question, div.delivery');
+        const parent = this.closest('div.answer, div.delivery');
         const spinner = parent.querySelector('i.fa-circle-notch');
         const video = parent.querySelector('video');
         const camera = parent.querySelector('div.camera');
         spinner.classList.add('rotate');
 
+        const img = camera.nextElementSibling;
+        if (img.getAttribute("src")) {
+            img.classList.add('hide');
+            img.classList.remove('show');
+        }
         // start the stream for the next device
         deviceIdx = (deviceIdx + 1) % videoDevs.length;
         const deviceId = videoDevs[deviceIdx]['deviceId'];
