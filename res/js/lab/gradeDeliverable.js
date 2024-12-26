@@ -1,4 +1,6 @@
 window.addEventListener("load", () => {
+    let leaveAction = null;
+
     // enable markdown previews
     MARKDOWN.enablePreview("../../../markdown", true);
     MARKDOWN.activateButtons(gradeDeliverable);
@@ -38,15 +40,18 @@ window.addEventListener("load", () => {
         data.append("comment", shifted);
 
         fetch(`../delivery/${delivery_id}`, {
-                method: "PUT",
-                body: data,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            })
+            method: "PUT",
+            body: data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Grading delivery failed.");
+                }
+                if (leaveAction) {
+                    leaveAction();
                 }
             })
             .catch(error => {
@@ -85,5 +90,33 @@ window.addEventListener("load", () => {
     }
     document.querySelectorAll('input.points').forEach(input => {
         input.addEventListener("keydown", nextPrevPoints);
+    });
+
+    // have CTRL-< and CTRL-> move to prev / next deliverable
+    const chevLeft = document.getElementById('chevLeft');
+    const chevRight = document.getElementById('chevRight');
+    document.addEventListener('keydown', (e) => {
+        if (window.localStorage.getItem("view") != "multi"
+            || !e.ctrlKey) {
+            return;
+        }
+
+        let whereTo = null;
+        switch (e.code) {
+            case "Period":
+                whereTo = () => chevRight.click();
+                break
+            case "Comma":
+                whereTo = () => chevLeft.click();
+                break;
+        }
+
+        const curElem = document.activeElement;
+        if (curElem.tagName == "TEXTAREA" || curElem.tagName == "INPUT") {
+            leaveAction = whereTo;
+            gradeDeliverable.call(curElem);
+        } else {
+            whereTo();
+        }
     });
 });

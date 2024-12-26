@@ -83,8 +83,9 @@
             </div>
 
             <div class="note">
-                <i class="fa-solid fa-keyboard"></i> Pressing CTRL-M inside a comment textarea toggles markdown <br>
-                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous field
+                <i class="fa-solid fa-keyboard"></i> CTRL+< for prev deliverable, CTRL+> for next deliverable<br>
+                <i class="fa-solid fa-keyboard"></i> Pressing CTRL+M inside a comment textarea toggles markdown <br>
+                <i class="fa-solid fa-keyboard"></i> Pressing N or P inside a points field takes you to the next / previous user
             </div>
 
             <div class="gradeContainer">
