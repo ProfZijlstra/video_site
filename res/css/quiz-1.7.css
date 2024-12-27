@@ -64,7 +64,7 @@ body#editQuiz {
     #content h3 {
         position: relative;
         margin-bottom: 0px;
-        
+
         i#addQuestion {
             position: absolute;
             right: 10px;
@@ -77,6 +77,11 @@ body#editQuiz {
     }
     p.warning {
         text-align: center;
+    }
+    dialog#addQuestionDialog {
+        select {
+            width: 650px;
+        }
     }
 }
 
@@ -136,8 +141,9 @@ div.qcontainer div.about {
     text-align: center;
     position: relative;
 
-    div.seq {
-        font-size: 50pt;
+
+    div.qType{
+        font-size: 50px;
     }
     input[type="number"] {
         width: 50px;
@@ -153,13 +159,6 @@ div.qcontainer div.about {
 div.qcontainer div.question {
     grid-column: 2;
     padding: 5px;
-
-    div.qType{
-        font-weight: bold;
-        font-size: 15pt;
-        margin-top: 5px;
-        margin-bottom: 10px;
-    }
 }
 
 div.qcontainer div.answer {
@@ -207,6 +206,7 @@ div.modal input[type='number'] {
 div.modal textarea {
     width: 100%;
     min-height: 10em;
+    resize: vertical;
 }
 #img_answer {
     display: none;
@@ -347,16 +347,16 @@ body#gradeQuestion {
 @media screen and (max-width: 900px) {
     header {
         height: 120px;
-    }
-    header div#course {
-        display: none;
-    }
-    header h1 {
-        margin-top: 60px;
-    }
-    header div#controls {
-        top: 20px;
-        right: 30px;
+        div#course {
+            display: none;
+        }
+        h1 {
+            margin-top: 60px;
+        }
+        div#controls {
+            top: 20px;
+            right: 30px;
+        }
     }
     nav.back {
         left: 20px;
@@ -366,9 +366,17 @@ body#gradeQuestion {
         right: auto;
         width: 100%;
         text-align: center;
-    }
-    nav.tools h3 {
-        padding: 3px;
+        h3 {
+            padding: 3px;
+        }
+        div.icons {
+            position: absolute;
+            top: 0px;
+            right: 20px;
+            #keyShortCuts {
+                display: none;
+            }
+        }
     }
     main nav.areas {
         margin-top: 0px;
@@ -376,41 +384,34 @@ body#gradeQuestion {
         top: 10px;
         left: 60px;
         width: auto;
+        height: 50px;
         div {
             display: inline-block;
             min-width: 40px;
         }
     }
-    div.mobileBlock {
+    span.mobileBlock {
         display: block;
-    }
-    div.qcontainer {
-        grid-template-columns: 100px 1fr 1fr;
     }
     #content {
         width: auto;
         margin-top: 100px;
-    }
-    #content h1 {
-        text-align: center;
+        h1 {
+            text-align: center;
+        }
+        div.qcontainer {
+            grid-template-columns: 100px 1fr;
+            margin-left: 5px;
+        }
+        #countdown {
+            font-size: 35px;
+        }
+        .question, .answer {
+            overflow: auto;
+        }
     }
     #content > div {
         margin-left: 20px;
-    }
-    #content div.qcontainer {
-        margin-left: 5px;
-    }
-    #content div.about {
-        flex-basis: 75px;
-    }
-    #content #countdown {
-        font-size: 35px;
-    }
-    #content div.questionText {
-        max-width: 73vw;
-    }
-    #content div.textContainer {
-        max-width: 73vw;
     }
 }
 /**

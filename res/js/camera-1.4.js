@@ -4,21 +4,18 @@ const CAMERA = (function() {
     let deviceIdx = 0;
     let urlBase = "";
     let pictureBtn = null;
+    let multiPageable = true;
 
-    function init(url) {
+    function init(url, multi = true) {
         urlBase = url;
+        multiPageable = multi;
 
         document.querySelectorAll("span i.fa-camera").forEach((camera) => {
             camera.onclick = openCamera;
         });
 
         document.querySelectorAll('div.closeCamera').forEach((div) => {
-            div.onclick = function() {
-                stopCamera.call(this);
-                this.closest("div.answer, div.delivery")
-                    .querySelector('img.answer')
-                    .classList.remove('hide');
-            }
+            div.onclick = closeCamera;
         });
 
         document.querySelectorAll('div.switchCamera').forEach((div) => {
@@ -28,6 +25,13 @@ const CAMERA = (function() {
         document.querySelectorAll('div.takePicture').forEach((div) => {
             div.onclick = takePicture;
         });
+    }
+
+    function closeCamera() {
+        stopCamera.call(this);
+        this.closest("div.answer, div.delivery")
+            .querySelector('img.answer')
+            .classList.remove('hide');
     }
 
     function openCamera() {
@@ -47,7 +51,7 @@ const CAMERA = (function() {
         }, 500);
 
         // do the actual opening
-        const parent = this.closest('div');
+        const parent = this.closest('div.camContainer');
         const body = this.closest('body');
         body.addEventListener('keypress', takePictureOnKeyPress);
         const video = parent.querySelector('video');
@@ -161,15 +165,12 @@ const CAMERA = (function() {
         data.append("answer_id", aid);
         data.append("image", picture);
 
-        const user_id = document.getElementById('user_id')?.value;
         let url = `${urlBase}/${qid}/picture`;
+        const user_id = document.getElementById('user_id')?.value;
         if (user_id) {
             url += `?user_id=${user_id}`;
         }
-        // currently camera is only used on multi-viewable pages
-        // if we ever use it on a non-multiviewable page we need
-        // to add a flag to the init to disable this check
-        if (window.localStorage.view == "multi") {
+        if (multiPageable && window.localStorage.view == "multi") {
             url = "../" + url;
         }
         fetch(url, {
@@ -189,9 +190,11 @@ const CAMERA = (function() {
                     }
                     img.classList.remove('hide');
                     img.classList.add('show');
-                    anchor.href = data.dst;
-                    const name = data.dst.split('/').pop();
-                    anchor.innerText = name;
+                    if (anchor) {
+                        anchor.href = data.dst;
+                        const name = data.dst.split('/').pop();
+                        anchor.innerText = name;
+                    }
                     if (trash) {
                         trash.classList.remove('hide');
                         trash.dataset.id = data.answer_id;
@@ -214,6 +217,7 @@ const CAMERA = (function() {
     return {
         init: init,
         openCamera: openCamera,
+        closeCamera: closeCamera,
         stopCamera: stopCamera,
         switchCamera: switchCamera,
         takePicture: takePicture

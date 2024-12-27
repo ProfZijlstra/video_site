@@ -16,7 +16,7 @@
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/quiz/quiz-1.8.js"></script>
     <script src="res/js/ensureSaved.js"></script>
-    <script src="res/js/spa.js"></script>
+    <script src="res/js/lab_quiz_spa.js"></script>
 </head>
 
 <body id="doQuiz" data-selected="<?= $selected ?>">
@@ -60,12 +60,11 @@
                 <?php $i++; ?>
                 <div id="d<?= $i ?>" class="qcontainer  <?= $selected ? ($selected == $i ? '' : 'hide') : '' ?>">
                     <div class="about">
-                        <div class="seq"><?= $question['seq'] ?></div>
+                        <div class="qType"><?= $question['type'] == 'text' ? 'txt' : 'img' ?></div>
                         <div class="points">Points: <?= $question['points'] ?></div>
                     </div>
 
                     <div class="question" data-id="<?= $question['id'] ?>">
-                        <div class="qType" data-type="<?= $question['type'] ?>">Type: <?= $question['type'] == 'text' ? 'Text' : 'Image Upload' ?></div>
                         <div>Question Text:</div>
                         <div class="questionText">
                             <?php if ($question['hasMarkDown']) { ?>
@@ -78,7 +77,7 @@
 
                     <?php $answer = $answers[$question['id']] ?>
                     <div class="answer camContainer" data-id="<?= $question['id'] ?>">
-                        <span class="block">Your Answer:</span>
+                        <div>Your Answer:</div>
                         <?php if ($question['type'] == 'text') { ?>
                             <div class="textContainer">
                                 <i title="Markdown" class="fa-brands fa-markdown <?= $answer['hasMarkDown'] ? 'active' : '' ?>"></i>

@@ -1,54 +1,69 @@
-window.addEventListener("load", () => {    
-    // hide overlay and any/all modal(s)
-    function hide() {
-        overlay.classList.remove("visible");
-        const modals = document.querySelectorAll(".modal");
-        for (const modal of modals) {
-            modal.classList.add("hide");
-        }
-    }
-    document.getElementById("close-overlay").onclick = hide;
-    document.getElementById("overlay").onclick = function (evt) {
-        if (evt.target == this) {
-            hide();
-        }
+window.addEventListener("load", () => {
+    document.getElementById("addQuestion").onmousedown = () => {
+        document.getElementById("addQuestionDialog").showModal();
     };
-
-    // show add question modal
-    document.getElementById('addQuestion').onclick = function() {
-        overlay.classList.add("visible");
-        document.getElementById("add_question_modal").classList.remove("hide");
-        document.getElementById("addQuestionText").focus();
+    document.getElementById("closeAddDialog").onmousedown = () => {
+        document.getElementById("addQuestionDialog").close();
     };
+    document.getElementById("addQuestBtn").onmousedown = function() {
+        const data = new FormData();
+        data.append("type", document.getElementById("questionType").value);
+        data.append("seq", this.dataset.seq);
+        data.append("quiz_id", this.dataset.quiz_id);
+        this.dataset.seq++;
+        fetch("question", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("Adding question failed");
+                }
+            })
+            .then((html) => {
+                document.getElementById("noQuestions")?.classList.add("hide");
+                const div = document.createElement("div");
+                div.innerHTML = html;
 
-    // make question type select work
-    const md_answer = document.getElementById("md_answer");
-    const img_answer = document.getElementById("img_answer");
-    const add_form = document.getElementById('add_form');
-    document.querySelector('#typeSelect select').onchange = function() {
-        add_form.elements.type.value = this.value;
-        if (this.value == "image") {
-            md_answer.style.display = "none";
-            img_answer.style.display = "block"
-        } else if (this.value == "text"){
-            img_answer.style.display = "none"
-            md_answer.style.display = "block";
-            md_answer.setAttribute("placeholder", md_answer.dataset.ph);
-        }
+                // hook up JS
+                const trash = div.querySelector("i.fa-trash-alt");
+                trash.onmousedown = deleteQuestion;
+                const txtas = div.querySelectorAll("textarea");
+                txtas.forEach(e => {
+                    e.onchange = saveQuestionChange;
+                    e.addEventListener('keydown', MARKDOWN.keyEventHandler);
+                    e.dataset.initialHeight = "120";
+                    e.addEventListener('keydown', MARKDOWN.autoExpand);
+                });
+                const mds = div.querySelectorAll("i.fa-markdown");
+                mds.forEach(e => e.onmousedown = MARKDOWN.toggleMarkDown);
+                const previews = div.querySelectorAll("button.previewBtn");
+                previews.forEach(e => e.onmousedown = MARKDOWN.getHtmlForMarkdown);
+                const cameras = div.querySelectorAll("i.fa-camera");
+                cameras.forEach(e => e.onmousedown = CAMERA.openCamera);
+                const switches = div.querySelectorAll("div.switchCamera");
+                switches.forEach(e => e.onmousedown = CAMERA.switchCamera);
+                const closes = div.querySelectorAll("div.closeCamera");
+                closes.forEach(e => e.onmousedown = CAMERA.closeCamera);
+                const takes = div.querySelectorAll("div.takePicture");
+                takes.forEach(e => e.onmousedown = CAMERA.takePicture);
+
+
+                const quests = document.getElementById("questions");
+                quests.appendChild(div);
+                document.getElementById("addQuestionDialog").close();
+                window.scrollTo(0, document.body.scrollHeight);
+
+                // focus the (top) textarea
+                div.querySelector("textarea").focus();
+            })
+            .catch((error) => {
+                document.getElementById("addQuestionDialog").close();
+                alert(error);
+            });
     };
-
-    // ceasar shift question text and model answer text when on add submit
-    document.getElementById('add_form').onsubmit = function() {
-        const qtext = this.elements.text;
-        if (qtext.value == "") {
-            return false;
-        } 
-        const atext = this.elements.model_answer;
-        const qshifted = MARKDOWN.ceasarShift(qtext.value);
-        const ashifted = MARKDOWN.ceasarShift(atext.value);
-        qtext.value = qshifted;
-        atext.value = ashifted;
-    }
 
     // change quiz status when a checkbox is clicked
     document.getElementById("visible").onchange = function updateStatus() {
@@ -58,10 +73,10 @@ window.addEventListener("load", () => {
         const visible = parent.querySelector('.visible').value;
 
         fetch(`status`, {
-            method : "POST",
-            body : `visible=${visible}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
+            method: "POST",
+            body: `visible=${visible}`,
+            headers:
+                { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
     }
 
@@ -77,10 +92,10 @@ window.addEventListener("load", () => {
         const stoptime = form.querySelector("input.stoptime").value;
 
         fetch(`../${id}`, {
-            method : "POST",
-            body : `day_id=${day_id}&name=${name}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
+            method: "POST",
+            body: `day_id=${day_id}&name=${name}&startdate=${startdate}&starttime=${starttime}&stopdate=${stopdate}&stoptime=${stoptime}`,
+            headers:
+                { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
     }
     const fields = document.querySelectorAll("#updateQuiz input");
@@ -108,42 +123,40 @@ window.addEventListener("load", () => {
     MARKDOWN.enablePreview("../../markdown");
     MARKDOWN.activateButtons(saveQuestionChange);
 
+    // enable taking pictures
+    CAMERA.init('question', false);
+
     // automatically save changes to points, text and model answer
     function saveQuestionChange() {
-        let parent = this.parentNode;
-        while (!parent.classList.contains('qcontainer')) {
-            parent = parent.parentNode;
-        }
-
+        const parent = this.closest('.qcontainer')
         const id = parent.querySelector('.question').dataset.id;
         const type = parent.querySelector('.qType').dataset.type;
         const text = parent.querySelector('textarea.text').value;
         const points = parent.querySelector(".points input").value;
-        const qshifted = encodeURIComponent(MARKDOWN.ceasarShift(text));
-        let body = `type=${type}&text=${qshifted}&points=${points}`;
-
+        const qshifted = MARKDOWN.ceasarShift(text);
         const txtMdBtn = parent.querySelector("i.fa-markdown.txt");
         const hasMarkdown = txtMdBtn.classList.contains('active') ? 1 : 0;
-        body += `&hasMarkDown=${hasMarkdown}`;
+        const data = new FormData();
+        data.set("type", type);
+        data.set("text", qshifted);
+        data.set("points", points);
+        data.set("hasMarkDown", hasMarkdown);
 
         if (type == "text") {
-            const model_answer = parent.querySelector('textarea.model_answer').value;
-            const ashifted = encodeURIComponent(MARKDOWN.ceasarShift(model_answer));
-            body += `&model_answer=${ashifted}`;
-
+            const model_answer = parent.querySelector('.model_answer').value;
+            const ashifted = MARKDOWN.ceasarShift(model_answer);
             const ansMdBtn = parent.querySelector("i.fa-markdown.mdl");
             const mdlAnsHasMD = ansMdBtn.classList.contains('active') ? 1 : 0;
-            body += `&mdlAnsHasMD=${mdlAnsHasMD}`;
+            data.set("model_answer", ashifted);
+            data.set("mdlAnsHasMD", mdlAnsHasMD);
         } else if (type == "image") {
-            const src = encodeURIComponent(parent.querySelector("img").getAttribute('src'));
-            body += `&model_answer=${src}`;
+            const src = parent.querySelector("img").getAttribute('src');
+            data.set("model_answer", src);
         }
 
         fetch(`question/${id}`, {
-            method : "POST",
-            body : body,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
+            method: "POST",
+            body: data,
         });
     }
     const areas = document.querySelectorAll('.qcontainer textarea');
@@ -157,9 +170,10 @@ window.addEventListener("load", () => {
 
     // enable image replacement
     function uploadReplacement() {
-        const img = this.parentNode.parentNode.querySelector('img');
-        const qid = this.parentNode.parentNode.dataset.id;
-        const spinner = this.parentNode.querySelector('i.fa-circle-notch');
+        const parent = this.closest("div.qcontainer");
+        const img = parent.querySelector('.answer img');
+        const qid = parent.querySelector(".question").dataset.id;
+        const spinner = parent.querySelector('i.fa-circle-notch');
         spinner.classList.add('rotate');
         const data = new FormData();
         data.append("image", this.files[0]);
@@ -168,20 +182,29 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                img.src = data.dst;
-            }
-            spinner.classList.remove('rotate');    
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    img.src = data.dst;
+                }
+                spinner.classList.remove('rotate');
+            });
 
     }
-    const files = document.querySelectorAll("div.question input[type=file]");
+    const files = document.querySelectorAll("div.qcontainer input[type=file]");
     for (const file of files) {
         file.onchange = uploadReplacement;
+    }
+    function clickUploadBtn() {
+        const parent = this.closest("div");
+        const file = parent.querySelector("input");
+        file.click();
+    }
+    const uploadBtns = document.querySelectorAll("i.fa-upload");
+    for (const btn of uploadBtns) {
+        btn.onmousedown = clickUploadBtn;
     }
 
 
@@ -194,6 +217,6 @@ window.addEventListener("load", () => {
     }
     const dels = document.querySelectorAll(".about i.fa-trash-alt");
     for (const del of dels) {
-        del.onclick = deleteQuestion;
+        del.onmousedown = deleteQuestion;
     }
 });

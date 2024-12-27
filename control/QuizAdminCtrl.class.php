@@ -2,9 +2,9 @@
 
 /**
  * Quiz Admin Controller Class
+ *
  * @author mzijlstra 07/31/2022
  */
-
 #[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/quiz")]
 class QuizAdminCtrl
 {
@@ -35,7 +35,7 @@ class QuizAdminCtrl
     #[Inject('AnswerDao')]
     public $answerDao;
 
-    #[Get(uri: "$", sec: "student")]
+    #[Get(uri: '$', sec: 'student')]
     public function courseOverview()
     {
         // We're building on top of  overview -- run it first
@@ -45,7 +45,7 @@ class QuizAdminCtrl
         global $VIEW_DATA;
 
         // get all quizzes for this offering
-        $oid = $VIEW_DATA["offering_id"];
+        $oid = $VIEW_DATA['offering_id'];
         if (
             $_SESSION['user']['isAdmin'] ||
             $_SESSION['user']['isFaculty']
@@ -65,7 +65,7 @@ class QuizAdminCtrl
 
         // integrate the quizzes data into the days data
         foreach ($VIEW_DATA['days'] as $day) {
-            $day['quizzes'] = array();
+            $day['quizzes'] = [];
         }
         foreach ($quizzes as $quiz) {
             $VIEW_DATA['days'][$quiz['abbr']]['quizzes'][] = $quiz;
@@ -74,20 +74,20 @@ class QuizAdminCtrl
         $VIEW_DATA['title'] = 'Quizzes';
         $VIEW_DATA['area'] = 'quiz';
         $VIEW_DATA['graded'] = $graded;
-        $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
-        return "quiz/overview.php";
+        $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
+
+        return 'quiz/overview.php';
     }
 
-
-    #[Post(uri: "$", sec: "instructor")]
+    #[Post(uri: '$', sec: 'instructor')]
     public function addQuiz()
     {
-        $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
-        $name = filter_input(INPUT_POST, "name");
-        $startdate = filter_input(INPUT_POST, "startdate");
-        $stopdate = filter_input(INPUT_POST, "stopdate");
-        $starttime = filter_input(INPUT_POST, "starttime");
-        $stoptime = filter_input(INPUT_POST, "stoptime");
+        $day_id = filter_input(INPUT_POST, 'day_id', FILTER_SANITIZE_NUMBER_INT);
+        $name = filter_input(INPUT_POST, 'name');
+        $startdate = filter_input(INPUT_POST, 'startdate');
+        $stopdate = filter_input(INPUT_POST, 'stopdate');
+        $starttime = filter_input(INPUT_POST, 'starttime');
+        $stoptime = filter_input(INPUT_POST, 'stoptime');
 
         $start = "{$startdate} {$starttime}";
         $stop = "{$stopdate} {$stoptime}";
@@ -96,7 +96,7 @@ class QuizAdminCtrl
         return "Location: quiz/{$id}/edit"; // edit quiz view
     }
 
-    #[Get(uri: "/(\d+)/edit$", sec: "instructor")]
+    #[Get(uri: "/(\d+)/edit$", sec: 'instructor')]
     public function editQuiz()
     {
         global $URI_PARAMS;
@@ -115,57 +115,58 @@ class QuizAdminCtrl
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['quiz'] = $this->quizDao->byId($quiz_id);
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
-        $VIEW_DATA['title'] = "Edit Quiz";
+        $VIEW_DATA['title'] = 'Edit Quiz';
 
-        return "quiz/edit.php";
+        return 'quiz/edit.php';
     }
 
-    #[Get(uri: "/preview$", sec: "instructor")]
-    public function previewQuiz() 
+    #[Get(uri: '/preview$', sec: 'instructor')]
+    public function previewQuiz()
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $quiz_id = filter_input(INPUT_GET, "q", FILTER_SANITIZE_NUMBER_INT);
+        $quiz_id = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_NUMBER_INT);
         $user_id = $_SESSION['user']['id'];
-        
+
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $quiz = $this->quizDao->byId($quiz_id);
-        $stopDiff = new DateInterval("PT1H"); // 1 hour
+        $stopDiff = new DateInterval('PT1H'); // 1 hour
 
-        require_once("lib/Parsedown.php");
-        $parsedown = new Parsedown();
+        require_once 'lib/Parsedown.php';
+        $parsedown = new Parsedown;
         $parsedown->setSafeMode(true);
 
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['quiz'] = $quiz;
-        $VIEW_DATA["parsedown"] = $parsedown;
+        $VIEW_DATA['parsedown'] = $parsedown;
         $VIEW_DATA['questions'] = $this->questionDao->forQuiz($quiz_id);
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
-        $VIEW_DATA['title'] = "Quiz: " . $quiz['name'];
+        $VIEW_DATA['title'] = 'Quiz: '.$quiz['name'];
         $VIEW_DATA['stop'] = $stopDiff;
-        return "quiz/doQuiz.php";
+
+        return 'quiz/doQuiz.php';
     }
 
     /**
      * Expects AJAX
      */
-    #[Post(uri: "/(\d+)$", sec: "instructor")]
+    #[Post(uri: "/(\d+)$", sec: 'instructor')]
     public function updateQuiz()
     {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[3];
-        $day_id = filter_input(INPUT_POST, "day_id");
-        $name = filter_input(INPUT_POST, "name");
-        $startdate = filter_input(INPUT_POST, "startdate");
-        $stopdate = filter_input(INPUT_POST, "stopdate");
-        $starttime = filter_input(INPUT_POST, "starttime");
-        $stoptime = filter_input(INPUT_POST, "stoptime");
+        $day_id = filter_input(INPUT_POST, 'day_id');
+        $name = filter_input(INPUT_POST, 'name');
+        $startdate = filter_input(INPUT_POST, 'startdate');
+        $stopdate = filter_input(INPUT_POST, 'stopdate');
+        $starttime = filter_input(INPUT_POST, 'starttime');
+        $stoptime = filter_input(INPUT_POST, 'stoptime');
 
         $start = "{$startdate} {$starttime}";
         $stop = "{$stopdate} {$stoptime}";
@@ -176,98 +177,82 @@ class QuizAdminCtrl
     /**
      * Expects AJAX
      */
-    #[Post(uri: "/(\d+)/status$", sec: "instructor")]
+    #[Post(uri: "/(\d+)/status$", sec: 'instructor')]
     public function setQuizStatus()
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
-        $visible = filter_input(INPUT_POST, "visible", FILTER_VALIDATE_INT);
+        $visible = filter_input(INPUT_POST, 'visible', FILTER_VALIDATE_INT);
         $this->quizDao->setStatus($id, $visible);
     }
 
-
-    #[Post(uri: "/(\d+)/del$", sec: "instructor")]
+    #[Post(uri: "/(\d+)/del$", sec: 'instructor')]
     public function deleteQuiz()
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
         $this->quizDao->delete($id);
-        return "Location: ../../quiz";
+
+        return 'Location: ../../quiz';
     }
 
-
-    #[Post(uri: "/(\d+)/question$", sec: "instructor")]
+    #[Post(uri: "/(\d+)/question$", sec: 'instructor')]
     public function addQuestion()
     {
-        global $URI_PARAMS;
-        $course = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
+        global $VIEW_DATA;
 
-        $quiz_id = filter_input(INPUT_POST, "quiz_id", FILTER_SANITIZE_NUMBER_INT);
-        $type = filter_input(INPUT_POST, "type");
-        $qshifted = filter_input(INPUT_POST, "text");
-        $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
-        $seq = filter_input(INPUT_POST, "seq", FILTER_SANITIZE_NUMBER_INT);
-        $text = $this->markdownCtrl->ceasarShift($qshifted);
+        $quiz_id = filter_input(INPUT_POST, 'quiz_id', FILTER_SANITIZE_NUMBER_INT);
+        $given_type = filter_input(INPUT_POST, 'type');
+        $seq = filter_input(INPUT_POST, 'seq', FILTER_SANITIZE_NUMBER_INT);
 
-        $model_answer = "";
-        if ($type == "text") {
-            $ashifted = filter_input(INPUT_POST, "model_answer");
-            if ($ashifted) {
-                $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
-            }
+        $text = '';
+        $model_answer = '';
+        $points = 0;
+        $type = 'text';
+        if ($given_type == 'image') {
+            $type = $given_type;
         }
 
         $question_id = $this->questionDao->add($quiz_id, $type, $text, $model_answer, $points, $seq);
+        $VIEW_DATA['question'] = $this->questionDao->get($question_id);
 
-        if ($type == "image" && $_FILES['image']['tmp_name']) {
-            $path = "res/{$course}/{$block}/quiz/{$question_id}";
-            $res = $this->imageHlpr->process("image", $path);
-            if (isset($res['error'])) {
-                return $res;
-            }
-            $this->questionDao->update($question_id, $text, $res['dst'], $points, $seq);
-        }
-
-        return "Location: ../{$quiz_id}/edit";
+        return 'quiz/question.php';
     }
 
-
-    #[Post(uri: "/\d+/question/(\d+)$", sec: "instructor")]
+    #[Post(uri: "/\d+/question/(\d+)$", sec: 'instructor')]
     public function updateQuestion()
     {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[3];
-        $type = filter_input(INPUT_POST, "type");
-        $points = filter_input(INPUT_POST, "points", FILTER_SANITIZE_NUMBER_INT);
-        $qshifted = filter_input(INPUT_POST, "text");
+        $type = filter_input(INPUT_POST, 'type');
+        $points = filter_input(INPUT_POST, 'points', FILTER_SANITIZE_NUMBER_INT);
+        $qshifted = filter_input(INPUT_POST, 'text');
         $text = $this->markdownCtrl->ceasarShift($qshifted);
-        $hasMarkdown = filter_input(INPUT_POST, "hasMarkDown", FILTER_VALIDATE_INT);
-        $mdlAnsHasMd = filter_input(INPUT_POST, "mdlAnsHasMD", FILTER_VALIDATE_INT);
-        if (!$hasMarkdown) {
+        $hasMarkdown = filter_input(INPUT_POST, 'hasMarkDown', FILTER_VALIDATE_INT);
+        $mdlAnsHasMd = filter_input(INPUT_POST, 'mdlAnsHasMD', FILTER_VALIDATE_INT);
+        if (! $hasMarkdown) {
             $hasMarkdown = 0;
         }
-        if (!$mdlAnsHasMd) {
+        if (! $mdlAnsHasMd) {
             $mdlAnsHasMd = 0;
         }
 
-        $model_answer = "";
-        if ($type == "text") {
-            $ashifted = filter_input(INPUT_POST, "model_answer");
+        $model_answer = '';
+        if ($type == 'text') {
+            $ashifted = filter_input(INPUT_POST, 'model_answer');
             if ($ashifted) {
                 $model_answer = $this->markdownCtrl->ceasarShift($ashifted);
             }
-        } else if ($type == "image") {
-            $model_answer = filter_input(INPUT_POST, "model_answer");
+        } elseif ($type == 'image') {
+            $model_answer = filter_input(INPUT_POST, 'model_answer');
         }
 
         $this->questionDao->update($id, $text, $model_answer, $points, $hasMarkdown, $mdlAnsHasMd);
     }
 
-
-    #[Post(uri: "/(\d+)/question/(\d+)/modelAnswerImage$", sec: "instructor")]
-    public function uploadReplacementModelImage()
+    #[Post(uri: "/(\d+)/question/(\d+)/modelAnswerImage$", sec: 'instructor')]
+    public function uploadReplacementModelImage(): array
     {
         global $URI_PARAMS;
 
@@ -276,23 +261,41 @@ class QuizAdminCtrl
         $question_id = $URI_PARAMS[4];
 
         $path = "res/{$course}/{$block}/quiz/{$question_id}";
-        $res = $this->imageHlpr->process("image", $path);
+        $res = $this->imageHlpr->process('image', $path);
         $this->questionDao->updateModelAnswer($question_id, $res['dst'], 0);
 
         return $res;
     }
 
+    // Pictures are taken with camera, images are uploaded from the FS
+    #[Post(uri: "/(\d+)/question/(\d+)/picture", sec: 'instructor')]
+    public function uploadModelPicture(): array
+    {
+        global $URI_PARAMS;
+        $course = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $question_id = $URI_PARAMS[4];
 
-    #[Post(uri: "/(\d+)/question/(\d+)/del$", sec: "instructor")]
+        $img = filter_input(INPUT_POST, 'image');
+
+        $path = "res/{$course}/{$block}/quiz/{$lab_id}/submit/{$submission_id}";
+        $dst = $this->imageHlpr->save($img, $path);
+        $this->questionDao->updateModelAnswer($question_id, $dst, 0);
+
+        return ['dst' => $dst];
+    }
+
+    #[Post(uri: "/(\d+)/question/(\d+)/del$", sec: 'instructor')]
     public function delQuestion()
     {
         global $URI_PARAMS;
         $question_id = $URI_PARAMS[4];
         $this->questionDao->delete($question_id);
-        return "Location: ../../edit";
+
+        return 'Location: ../../edit';
     }
 
-    #[Get(uri: "/report$", sec: "student")]
+    #[Get(uri: '/report$', sec: 'student')]
     public function resultsReport()
     {
         global $URI_PARAMS;
@@ -330,18 +333,18 @@ class QuizAdminCtrl
 
         $quizzes = $this->quizDao->allForOffering($offering['id']);
 
-        // build CSV header and query for data fetching 
+        // build CSV header and query for data fetching
         $count = 1;
         $header = '"studentId","firstName","lastName",';
         foreach ($quizzes as $quiz) {
             // build CSV header line
-            $header .= '"' . $quiz['abbr'] . '",';
+            $header .= '"'.$quiz['abbr'].'",';
 
             // build data column for this quiz
             $pts = $this->quizDao->getQuizTotalsForEnrolled($quiz['id'], $offering['id']);
             foreach ($pts as $pt) {
                 if (isset($data[$pt['user_id']])) {
-                    $data[$pt['user_id']][] = number_Format($pt['points'], 2);
+                    $data[$pt['user_id']][] = number_format($pt['points'], 2);
                 }
             }
             $count++;
@@ -354,6 +357,6 @@ class QuizAdminCtrl
         $VIEW_DATA['header'] = $header;
         $VIEW_DATA['data'] = $data;
 
-        return "csv.php";
+        return 'csv.php';
     }
 }
