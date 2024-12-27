@@ -789,7 +789,10 @@ class LabTakingCtrl
             }
         }
 
-        $path = "res/{$course}/{$block}/lab/{$lab_id}/submit/{$submission_id}";
+        $deliverable = $this->deliverableDao->byId($deliverable_id);
+        $lname = str_replace(' ', '_', $lab['name']);
+        $dseq = $deliverable['seq'];
+        $path = "res/{$course}/{$block}/lab/{$lname}/submit/{$dseq}/{$submission_id}";
         $dst = $this->imageHlpr->save($img, $path);
         $name = basename($dst);
 
