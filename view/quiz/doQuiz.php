@@ -134,7 +134,7 @@
             <?php } ?>
             <div class="done">
                 <div class="note">Answers are saved automatically</div>
-                    <div class="finish <?= $selected != count($questions) ? 'hide' : '' ?>">
+                    <div class="finish <?= $selected ? ($selected != count($questions) ? 'hide' : '') : '' ?>">
                         <form id="finishQuiz" method="POST" action="<?= $selected ? '../' : ''?><?= $quiz['id'] ?>/finish">
                         <button id="finish">Finish Quiz</button>
                     </form>

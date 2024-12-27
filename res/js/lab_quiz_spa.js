@@ -66,6 +66,7 @@ window.addEventListener("load", () => {
         if (finForm) { // for the quiz
             const action = finForm.getAttribute("action");
             finForm.setAttribute("action", action.substring(3));
+            finish.classList.remove("hide");
         }
     };
     singlePageBtn.onmousedown = fromSpa;
