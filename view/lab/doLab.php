@@ -49,7 +49,7 @@
         <script src="res/js/camera-1.4.js"></script>
         <script src="res/js/lab/lab-1.10.js"></script>
         <script src="res/js/ensureSaved.js"></script>
-        <script src="res/js/spa.js"></script>
+        <script src="res/js/lab_quiz_spa.js"></script>
     </head>
 
     <body id="doLab" class="lab labDeliverables" data-selected="<?= $selected ?>">

@@ -695,6 +695,7 @@ body#gradeDeliverable {
         top: 10px;
         left: 60px;
         width: auto;
+        height: 50px;
         div {
             display: inline-block;
             min-width: 40px;
@@ -704,10 +705,8 @@ body#gradeDeliverable {
         top: 65px;
         right: 20px; /* not same as quiz */
         z-index: 100;
-
-        h3 {
-            margin: 0px;
-            padding: 3px;
+        #keyShortCuts {
+            display: none;
         }
     }
 
