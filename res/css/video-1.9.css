@@ -344,6 +344,11 @@ div.keyboard.hidden {
     margin-left: 3px;
     margin-right: 3px;
 }
+div.pcontainer {
+    padding: 5px;
+    border: 1px solid var(--border);
+    text-align: left;
+}
 .author {
     color: grey;
     font-size: 10pt;

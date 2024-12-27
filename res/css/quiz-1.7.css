@@ -89,6 +89,46 @@ div.qcontainer {
     a {
         text-decoration: underline;
     }
+    div.textContainer {
+        position: relative;
+
+        i.fa-markdown {
+            position: absolute;
+            top: -18px;
+            right: 0px;
+            cursor: pointer;
+            color: gray;
+        }
+        i.fa-markdown.active {
+            color: var(--black);
+        }
+    }
+    textarea {
+        width: 100%;
+        height: 10em;
+    }
+    div.mdContainer {
+        display: none;
+    }
+    div.mdContainer.active {
+        display: block;
+    }
+    div.preview {
+        margin: 5px 0px;
+        text-align: right;
+    }
+    div.pcontainer {
+        max-width: 630px;
+        padding: 5px;
+        border: 1px solid var(--border);
+        overflow: auto;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
+    img {
+        width: 100%;
+    }
 }
 div.qcontainer div.about {
     grid-row: 1 / span 2;
@@ -126,40 +166,6 @@ div.qcontainer div.answer {
     grid-column: 2;
     padding: 5px;
 
-    div.textContainer {
-        position: relative;
-
-        i.fa-markdown {
-            position: absolute;
-            top: -18px;
-            right: 0px;
-            cursor: pointer;
-            color: gray;
-        }
-        i.fa-markdown.active {
-            color: var(--black);
-        }
-    }
-    textarea {
-        width: 100%;
-        height: 10em;
-    }
-    div.mdContainer {
-        display: none;
-    }
-    div.mdContainer.active {
-        display: block;
-    }
-    div.preview {
-        margin: 5px 0px;
-        text-align: right;
-    }
-    pre {
-        white-space: pre-wrap;
-    }
-    img {
-        width: 100%;
-    }
     span.block {
         display: inline-block;
         margin: 10px 0px;

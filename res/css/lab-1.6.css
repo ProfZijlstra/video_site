@@ -76,6 +76,12 @@ body.lab {
                     margin: 5px 0px;
                     text-align: right;
                 }
+                div.pcontainer {
+                    max-width: 630px;
+                    padding: 5px;
+                    border: 1px solid var(--border);
+                    overflow: auto;
+                }
             }
             div.mdContainer.active {
                 display: block;
