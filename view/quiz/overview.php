@@ -15,7 +15,7 @@
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
     </style>
-    <script src="res/js/assignment.js"></script>
+    <script src="res/js/addDialog.js"></script>
 </head>
 
 <body>
@@ -95,9 +95,8 @@
         </div>
     </main>
 
-    <div id="overlay">
-        <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div id="add_modal" class="modal hide">
+        <dialog id="add_modal" class="modal">
+            <i id="closeAddDialog" class="fas fa-times-circle close"></i>
             <h3>Add Quiz</h3>
             <form action="quiz" method="post" id="add_form">
                 <input type="hidden" name="day_id" value="<?= $day_id ?>" id="day_id" />
@@ -117,8 +116,7 @@
                 </div>
                 <div class="btn"><button>Add Quiz</button></div>
             </form>
-        </div>
-    </div>
+        </dialog>
 
 </body>
 

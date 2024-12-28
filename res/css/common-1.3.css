@@ -233,7 +233,6 @@ div.camera {
     padding: 1em;
     position: relative;
     top: 100px;
-    background-color: white;
 }
 .modal h3 {
     border-bottom: 1px solid var(--black);

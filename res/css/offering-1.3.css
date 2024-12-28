@@ -90,20 +90,20 @@ div#days.lab div.data i.fa-plus-square {
     right: 10px;
 }
 
-div#days div.data a.edit {
+#days div.data a.edit {
     width: auto;
 }
 
-div#add_modal {
+#add_modal {
     width: 425px;
 }
 
-div#add_modal input[type="time"],
-div#add_modal input[type="date"] {
+#add_modal input[type="time"],
+#add_modal input[type="date"] {
     width: 150px;
 }
 
-div#add_modal input#name {
+#add_modal input#name {
     width: 310px;
 }
 

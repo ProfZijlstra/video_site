@@ -139,6 +139,7 @@ window.addEventListener("load", () => {
                 div.querySelector("i.remove").addEventListener("click", delAttachment);
                 const attachments = container.querySelector("div.attachments");
                 attachments.appendChild(div);
+                attachments.previousElementSibling.classList.remove('empty');
                 spinner.classList.remove('rotate');
 
                 // zip attachments also have a config icon
@@ -177,7 +178,11 @@ window.addEventListener("load", () => {
         })
             .then(htmlOrError("Adding deliverable failed."))
             .then((html) => {
-                document.getElementById("noDelivs")?.classList.add("hide");
+                const noDelivs = document.getElementById("noDelivs");
+                if (noDelivs) {
+                    noDelivs.previousElementSibling.classList.remove("empty");
+                    noDelivs.classList.add("hide");
+                }
                 const div = document.createElement("div");
                 div.innerHTML = html;
                 const txt = div.querySelector("textarea");

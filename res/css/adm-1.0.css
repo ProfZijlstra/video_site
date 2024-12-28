@@ -74,33 +74,32 @@ div.modal.hide {
     margin-left: 100px;
     font-size: 10pt;
 }
-div.modal {
+.modal {
     background-color: #DDD;
     border: 1px solid var(--border);
-    padding: 2em;
 }
-div.modal h2 {
+.modal h2 {
     margin-top: 0px;
 }
-div.modal label {
+.modal label {
     display: inline-block;
     width: 100px;
     margin-bottom: 10px;
 }
-div.modal label.checkbox {
+.modal label.checkbox {
     display: inline;
 }
-div.modal input, div.modal select {
+.modal input, div.modal select {
     width: 575px;
     height: 25px;
 }
-div.modal input[type=checkbox] {
+.modal input[type=checkbox] {
     width: auto;
     height: auto;
 }
-div.modal div.indent {
+.modal div.indent {
     margin-left: 100px;
 }
-div.modal .submit {
+.modal .submit {
     text-align: right;
 }

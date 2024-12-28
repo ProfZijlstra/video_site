@@ -79,6 +79,9 @@ body#editQuiz {
         text-align: center;
     }
     dialog#addQuestionDialog {
+        label {
+            width: initial;
+        }
         select {
             width: 650px;
         }
@@ -190,23 +193,6 @@ i.fa-circle-notch.rotate {
 div#total, div#total2 {
     margin-top: 2em;
     text-align: center;
-}
-div.modal #typeSelect {
-    position: absolute;
-    right: 30px;
-    top: 50px;
-}
-div.modal #typeSelect select { 
-    width: auto;
-}
-div.modal input[type='number'] {
-    width: 50px;
-    float: right;
-}
-div.modal textarea {
-    width: 100%;
-    min-height: 10em;
-    resize: vertical;
 }
 #img_answer {
     display: none;

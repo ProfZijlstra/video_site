@@ -23,7 +23,11 @@ window.addEventListener("load", () => {
                 }
             })
             .then((html) => {
-                document.getElementById("noQuestions")?.classList.add("hide");
+                const noqs = document.getElementById("noQuestions");
+                if (noqs) {
+                    noqs.classList.add("hide");
+                    noqs.previousElementSibling.classList.remove("empty");
+                }
                 const div = document.createElement("div");
                 div.innerHTML = html;
 
