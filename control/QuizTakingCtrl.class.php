@@ -178,8 +178,11 @@ class QuizTakingCtrl
         $qname = str_replace(' ', '_', $quiz['name']);
         $question = $this->questionDao->get($question_id);
         $qseq = $question['seq'];
+        if (strlen($qseq) == 1) {
+            $qseq = '0'.$qseq;
+        }
 
-        $path = "res/{$course}/{$block}/quiz/{$qname}/{$qseq}";
+        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}";
         $res = $this->imageHlpr->process('image', $path);
 
         if (isset($res['error'])) {
@@ -226,11 +229,14 @@ class QuizTakingCtrl
         $answer_id = filter_input(INPUT_POST, 'answer_id', FILTER_VALIDATE_INT);
 
         $quiz = $this->quizDao->byId($quiz_id);
-        $qname = $quiz['name'];
+        $qname = str_replace(' ', '_', $quiz['name']);
         $question = $this->questionDao->get($question_id);
         $qseq = $question['seq'];
+        if (strlen($qseq) == 1) {
+            $qseq = '0'.$qseq;
+        }
 
-        $path = "res/{$course}/{$block}/quiz/{$qname}/{$qseq}";
+        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}";
         $img = filter_input(INPUT_POST, 'image');
         $dst = $this->imageHlpr->save($img, $path);
 
@@ -273,7 +279,7 @@ class QuizTakingCtrl
             return ['error' => 'You are not the owner of this file'];
         }
         // remove the file from the filesystem
-        if (str_starts_with($answer['text'], 'res/')) {
+        if (str_starts_with($answer['text'], 'res/course/')) {
             unlink($answer['text']);
         }
         // remove the delivery from the database

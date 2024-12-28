@@ -258,9 +258,17 @@ class QuizAdminCtrl
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
+        $quiz_id = $URI_PARAMS[3];
         $question_id = $URI_PARAMS[4];
 
-        $path = "res/{$course}/{$block}/quiz/{$question_id}";
+        $quiz = $this->quizDao->byId($quiz_id);
+        $qname = str_replace(' ', '_', $quiz['name']);
+        $question = $this->questionDao->get($question_id);
+        $qseq = $question['seq'];
+        if (strlen($qseq) == 1) {
+            $qseq = '0'.$qseq;
+        }
+        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}/model";
         $res = $this->imageHlpr->process('image', $path);
         $this->questionDao->updateModelAnswer($question_id, $res['dst'], 0);
 
@@ -274,11 +282,19 @@ class QuizAdminCtrl
         global $URI_PARAMS;
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
+        $quiz_id = $URI_PARAMS[3];
         $question_id = $URI_PARAMS[4];
 
         $img = filter_input(INPUT_POST, 'image');
 
-        $path = "res/{$course}/{$block}/quiz/{$lab_id}/submit/{$submission_id}";
+        $quiz = $this->quizDao->byId($quiz_id);
+        $qname = str_replace(' ', '_', $quiz['name']);
+        $question = $this->questionDao->get($question_id);
+        $qseq = $question['seq'];
+        if (strlen($qseq) == 1) {
+            $qseq = '0'.$qseq;
+        }
+        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}/model";
         $dst = $this->imageHlpr->save($img, $path);
         $this->questionDao->updateModelAnswer($question_id, $dst, 0);
 

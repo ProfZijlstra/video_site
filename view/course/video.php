@@ -74,9 +74,9 @@
                     <?php if ($has_vid) { ?>
                     <video controls controlslist="nodownload" 
                         <?php if ($idx == $file_idx) { ?>
-                        src="<?= "res/{$course}/{$block}/lecture/{$day}/vid/{$vid_info['file']}" ?>" 
+                        src="<?= "res/course/{$course}/{$block}/lecture/{$day}/vid/{$vid_info['file']}" ?>" 
                         <?php } ?>
-                        data-src="<?= "res/{$course}/{$block}/lecture/{$day}/vid/{$vid_info['file']}" ?>">
+                        data-src="<?= "res/course/{$course}/{$block}/lecture/{$day}/vid/{$vid_info['file']}" ?>">
                     </video>
                     <?php } ?>
 

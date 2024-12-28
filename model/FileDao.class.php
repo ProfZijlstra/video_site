@@ -24,11 +24,11 @@ class FileDao
             throw new InvalidArgumentException('dir cannot specify parent dir');
         }
 
-        if (! file_exists("res/{$course}/{$block}/public")) {
-            mkdir("res/{$course}/{$block}/public");
+        if (! file_exists("res/course/{$course}/{$block}/public")) {
+            mkdir("res/course/{$course}/{$block}/public");
         }
 
-        $path = "res/{$course}/{$block}/{$dir}";
+        $path = "res/course/{$course}/{$block}/{$dir}";
         $listing = scandir($path);
         $files = [];
         $dirs = [];
@@ -56,18 +56,18 @@ class FileDao
         $deep = count(explode('/', $dir));
         $depth = implode('/', array_fill(0, $deep, '..'));
 
-        $listing = scandir("res/{$course}/{$old_block}/{$dir}/");
-        mkdir("res/{$course}/{$new_block}/{$dir}");
+        $listing = scandir("res/course/{$course}/{$old_block}/{$dir}/");
+        mkdir("res/course/{$course}/{$new_block}/{$dir}");
         foreach ($listing as $item) {
-            if (is_dir("res/{$course}/{$old_block}/{$dir}/{$item}")) {
+            if (is_dir("res/course/{$course}/{$old_block}/{$dir}/{$item}")) {
                 if (str_starts_with($item, '.')) {
                     continue;
                 }
-                mkdir("res/{$course}/{$new_block}/{$dir}/$item", 0775, true);
+                mkdir("res/course/{$course}/{$new_block}/{$dir}/$item", 0775, true);
                 $this->clone($course, $new_block, $old_block, "{$dir}/{$item}");
             } else {
                 symlink("../{$depth}/{$old_block}/{$dir}/{$item}",
-                    "res/{$course}/{$new_block}/{$dir}/{$item}");
+                    "res/course/{$course}/{$new_block}/{$dir}/{$item}");
             }
         }
     }
@@ -80,6 +80,6 @@ class FileDao
      */
     public function delete($course, $block): void
     {
-        exec("rm -rf res/{$course}/{$block}");
+        exec("rm -rf res/course/{$course}/{$block}");
     }
 }

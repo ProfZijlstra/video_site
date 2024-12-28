@@ -93,7 +93,7 @@ class FileCtrl
 
         $curr = $_FILES['file']['tmp_name'];
         $name = $_FILES['file']['name'];
-        $dst = "res/{$course}/{$block}/{$location}/{$name}";
+        $dst = "res/course/{$course}/{$block}/{$location}/{$name}";
         move_uploaded_file($curr, $dst);
 
         return ['ok' => $dst];
@@ -110,7 +110,7 @@ class FileCtrl
         $block = $URI_PARAMS[2];
         $location = filter_input(INPUT_POST, 'location');
 
-        $res = unlink("res/{$course}/{$block}/{$location}");
+        $res = unlink("res/course/{$course}/{$block}/{$location}");
         if (! $res) {
             http_response_code(500);
         }
@@ -127,7 +127,7 @@ class FileCtrl
         $block = $URI_PARAMS[2];
         $location = filter_input(INPUT_POST, 'location');
 
-        $res = rmdir("res/{$course}/{$block}/{$location}");
+        $res = rmdir("res/course/{$course}/{$block}/{$location}");
         if (! $res) {
             http_response_code(500);
         }
@@ -141,7 +141,7 @@ class FileCtrl
         $block = $URI_PARAMS[2];
         $dir = filter_input(INPUT_POST, 'dir');
 
-        $made = mkdir("res/{$course}/{$block}/{$dir}", 0777, true);
+        $made = mkdir("res/course/{$course}/{$block}/{$dir}", 0777, true);
         if (! $made) {
             http_response_code(500);
 
@@ -168,8 +168,8 @@ class FileCtrl
 
             return;
         }
-        $src = "res/{$course}/{$block}/{$src}";
-        $dst = "res/{$course}/{$block}/{$dst}";
+        $src = "res/course/{$course}/{$block}/{$src}";
+        $dst = "res/course/{$course}/{$block}/{$dst}";
         $res = rename($src, $dst);
         if (! $res) {
             http_response_code(500);

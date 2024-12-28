@@ -42,7 +42,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
         ?>
     <div class="file">
         <span class="file">
-            <a target="_blank" href="<?= "res/{$course}/{$block}/{$parent}/{$file}" ?>">
+            <a target="_blank" href="<?= "res/course/{$course}/{$block}/{$parent}/{$file}" ?>">
                 <i class="fa-regular <?= $icon ?>"></i>
                 <?= $file ?>
             </a>
@@ -55,7 +55,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
                 data-loc="<?= "{$parent}/{$file}" ?>"></i>
             <?php } ?>
             <i title="Copy Link" 
-                data-link="<?= "{$proto}{$server}{$MY_BASE}/res/{$course}/{$block}/{$parent}/{$file}"?>" 
+                data-link="<?= "{$proto}{$server}{$MY_BASE}/res/course/{$course}/{$block}/{$parent}/{$file}"?>" 
                 class="fa-solid fa-link"></i>
         </span>
     </div>

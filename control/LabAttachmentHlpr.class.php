@@ -2,19 +2,20 @@
 
 /**
  * Attachment Lab Upload Helper Class
+ *
  * @author mzijlstra 2024-02-17
  */
-
 #[Controller]
 class LabAttachmentHlpr
 {
     private static $zero;
+
     private static $one;
 
     public function __construct()
     {
-        self::$zero = pack("CCC", 0xe2, 0x80, 0x8b); // zero width space
-        self::$one = pack("CCC", 0xe2, 0x80, 0x8c); // zero width non-joiner
+        self::$zero = pack('CCC', 0xE2, 0x80, 0x8B); // zero width space
+        self::$one = pack('CCC', 0xE2, 0x80, 0x8C); // zero width non-joiner
     }
 
     public function process($key, $lab, $deliverable)
@@ -23,33 +24,36 @@ class LabAttachmentHlpr
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $lname = str_replace(" ", "_", $lab['name']);
+        $lname = str_replace(' ', '_', $lab['name']);
         $dseq = $deliverable['seq'];
+        if (strlen($dseq) == 1) {
+            $dseq = '0'.$dseq;
+        }
 
         // stop if there was an upload error
         if ($_FILES[$key]['error'] != UPLOAD_ERR_OK) {
-            return ["error" => "Upload Error"];
+            return ['error' => 'Upload Error'];
         }
         if ($_FILES[$key]['size'] > 10485760) {
-            return ["error" => "File too large, 10MB is the maximum"];
+            return ['error' => 'File too large, 10MB is the maximum'];
         }
 
         $curr = $_FILES[$key]['tmp_name'];
         $name = $_FILES[$key]['name'];
-        $dst = "res/{$course}/{$block}/lab/{$lname}/";
+        $dst = "res/course/{$course}/{$block}/lab/{$lname}/{$dseq}/";
         $zip = false;
         $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-        if ($extension == "zip" && $this->isZipFile($curr)) {
+        if ($extension == 'zip' && $this->isZipFile($curr)) {
             $zip = true;
-            $dst .= "upload/{$dseq}/";
+            $dst .= 'upload/';
         } else {
-            $dst .= "attachment/{$dseq}/";
+            $dst .= 'attachment/';
         }
         $this->ensureDirCreated($dst);
         $dst .= $name;
         move_uploaded_file($curr, $dst);
 
-        return ["file" => $dst, "name" => $name, "zip" => $zip];
+        return ['file' => $dst, 'name' => $name, 'zip' => $zip];
     }
 
     public function extract($attachment)
@@ -62,12 +66,12 @@ class LabAttachmentHlpr
         }
 
         $this->ensureDirCreated($dir);
-        $zip = new ZipArchive();
-        if ($zip->open($attachment['file']) === TRUE) {
+        $zip = new ZipArchive;
+        if ($zip->open($attachment['file']) === true) {
             $zip->extractTo($dir);
             $zip->close();
         } else {
-            throw new Exception("Failed to extract zip file");
+            throw new Exception('Failed to extract zip file');
         }
     }
 
@@ -76,7 +80,7 @@ class LabAttachmentHlpr
         if ($attachment) {
             $file = $attachment['file'];
             unlink($file);
-            if ($attachment['type'] === "zip") {
+            if ($attachment['type'] === 'zip') {
                 $dir = dirname(dirname($file));
                 $dir .= "download/{$attachment['id']}/";
                 shell_exec("rm -rf {$dir}");
@@ -90,8 +94,9 @@ class LabAttachmentHlpr
         $fh = fopen($path, 'r');
         $bytes = fread($fh, 4);
         fclose($fh);
+
         // ZIP file magic number is PK\003\004
-        return ('504b0304' === bin2hex($bytes));
+        return bin2hex($bytes) === '504b0304';
     }
 
     public function isPdfFile($path)
@@ -99,27 +104,31 @@ class LabAttachmentHlpr
         $fh = fopen($path, 'r');
         $bytes = fread($fh, 4);
         fclose($fh);
-        return ($bytes === "%PDF");
+
+        return $bytes === '%PDF';
     }
 
     public function ensureDirCreated($dir)
     {
-        if (!file_exists($dir) && !is_dir($dir)) {
+        if (! file_exists($dir) && ! is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
     }
 
-    public function readTxtWm($data, $byte) {
+    public function readTxtWm($data, $byte)
+    {
         $watermark = substr($data, $byte, 32 * 3);
         $watermark = str_replace(self::$zero, '0', $watermark);
         $watermark = str_replace(self::$one, '1', $watermark);
+
         return bindec($watermark);
     }
 
-    public function readPngWm($data, $byte) {
+    public function readPngWm($data, $byte)
+    {
         $png = imagecreatefromstring($data);
         $info = getimagesizefromstring($data);
-        if (!$png || !$info) {
+        if (! $png || ! $info) {
             return false;
         }
         $width = $info[0];
@@ -137,15 +146,16 @@ class LabAttachmentHlpr
                 $y++;
             }
         }
+
         return $out;
     }
 
-    public function wmTxt($path, $inzip, $bytepos, $num) 
+    public function wmTxt($path, $inzip, $bytepos, $num)
     {
         $wm = $this->makeTxtWm($num);
         $filename = "{$path}/{$inzip}";
         $contents = file_get_contents($filename);
-        $file = fopen($filename, "w");
+        $file = fopen($filename, 'w');
         fwrite($file, $contents, $bytepos);
         $contents = substr($contents, $bytepos);
         fwrite($file, $wm);
@@ -153,12 +163,12 @@ class LabAttachmentHlpr
         fclose($file);
     }
 
-    public function wmPng($path, $file, $byte, $num) 
+    public function wmPng($path, $file, $byte, $num)
     {
         $filename = "{$path}/{$file}";
         $watermark = decbin($num);
         while (strlen($watermark) < 32) {
-            $watermark = '0' . $watermark;
+            $watermark = '0'.$watermark;
         }
         $png = imagecreatefrompng($filename);
         $info = getimagesize($filename);
@@ -188,15 +198,16 @@ class LabAttachmentHlpr
         imagepng($png, $filename);
     }
 
-    private function makeTxtWm($num) 
+    private function makeTxtWm($num)
     {
         $num = decbin($num);
         // pad with zeros to 32 bits
         while (strlen($num) < 32) {
-            $num = '0' . $num;
+            $num = '0'.$num;
         }
         $num = str_replace('0', self::$zero, $num);
         $num = str_replace('1', self::$one, $num);
+
         return $num;
     }
 }
