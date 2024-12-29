@@ -6,28 +6,25 @@
  * Refactoring to use PHP Attributes instead of doc comment annotations
  * mzijlstra 2024 Jan 09
  */
-
-use Attribute;
-
 #[Attribute(Attribute::TARGET_CLASS)]
 class Controller
 {
     public string $path;
-    public function __construct(string $path = "")
+
+    public function __construct(string $path = '')
     {
         $this->path = $path;
     }
 }
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Repository
-{
-}
+class Repository {}
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Inject
 {
     public string $name;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -38,24 +35,28 @@ class Inject
 class Request
 {
     public string $method;
+
     public string $uri;
+
     public string $sec;
-    public function __construct(string $method, string $uri = "", string $sec = "none")
+
+    public function __construct(string $method, string $uri = '', string $sec = 'none')
     {
         $this->method = $method;
         $this->uri = $uri;
         $this->sec = $sec;
     }
+
     public function __toString(): string
     {
-        return $this->method . " " . $this->uri . " " . $this->sec;
+        return $this->method.' '.$this->uri.' '.$this->sec;
     }
 }
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class Get extends Request
 {
-    public function __construct(string $uri, string $sec = "none")
+    public function __construct(string $uri, string $sec = 'none')
     {
         parent::__construct('GET', $uri, $sec);
     }
@@ -64,7 +65,7 @@ class Get extends Request
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class Post extends Request
 {
-    public function __construct(string $uri, string $sec = "none")
+    public function __construct(string $uri, string $sec = 'none')
     {
         parent::__construct('POST', $uri, $sec);
     }
@@ -73,7 +74,7 @@ class Post extends Request
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class Put extends Request
 {
-    public function __construct(string $uri, string $sec = "none")
+    public function __construct(string $uri, string $sec = 'none')
     {
         parent::__construct('PUT', $uri, $sec);
     }
@@ -82,7 +83,7 @@ class Put extends Request
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class Delete extends Request
 {
-    public function __construct(string $uri, string $sec = "none")
+    public function __construct(string $uri, string $sec = 'none')
     {
         parent::__construct('DELETE', $uri, $sec);
     }
@@ -90,11 +91,15 @@ class Delete extends Request
 
 class AnnotationReader
 {
-    private array $REQ_TYPES = ["GET", "POST", "PUT", "DELETE"];
-    public array $mappings = array();
-    public array $repositories = array();
-    public array $controllers = array();
-    public string $context = "";
+    private array $REQ_TYPES = ['GET', 'POST', 'PUT', 'DELETE'];
+
+    public array $mappings = [];
+
+    public array $repositories = [];
+
+    public array $controllers = [];
+
+    public string $context = '';
 
     /**
      * Constructor, initiallizes internal mappings arrays
@@ -102,55 +107,57 @@ class AnnotationReader
     public function __construct()
     {
         foreach ($this->REQ_TYPES as $req) {
-            $this->mappings[$req] = array();
+            $this->mappings[$req] = [];
         }
     }
 
     /**
      * Checks the properties of a class for Inject attributes
-     * 
-     * @param type $reflect_class
+     *
+     * @param  type  $reflect_class
      * @return type
      */
     private function to_inject(ReflectionClass $reflect_class): array
     {
-        $result = array();
+        $result = [];
         foreach ($reflect_class->getProperties() as $prop) {
             $attrs = $prop->getAttributes();
             foreach ($attrs as $attr) {
-                if ($attr->getName() == "Inject") {
+                if ($attr->getName() == 'Inject') {
                     $result[$prop->getName()] = $attr->getArguments()[0];
                 }
             }
         }
+
         return $result;
     }
 
     /**
      * Validate the content of a Request annotation
-     * 
-     * @param Request $request
+     *
      * @global type $SEC_LVLS
+     *
      * @throws Exception
      */
     private function validate_request_annotation(Request $request): void
     {
         global $SEC_LVLS;
-        if (!in_array($request->method, $this->REQ_TYPES)) {
+        if (! in_array($request->method, $this->REQ_TYPES)) {
             throw new Exception("Bad request attribute method value in: $request");
         }
-        if ($request->uri == "") {
+        if ($request->uri == '') {
             throw new Exception("Request attribute missing uri in: $request");
         }
-        if (!in_array($request->sec, $SEC_LVLS)) {
+        if (! in_array($request->sec, $SEC_LVLS)) {
             throw new Exception("Bad sec value in @GET or @POST found in: $request");
         }
     }
 
     /**
      * Maps Request annotations to the internal mappings array
-     
-     * @param Reflection_Class $reflect_class
+
+     *
+     * @param  Reflection_Class  $reflect_class
      */
     private function map_requests(ReflectionClass $reflect_class, string $path): void
     {
@@ -158,13 +165,13 @@ class AnnotationReader
             $attrs = $m->getAttributes();
             foreach ($attrs as $a) {
                 $req = $a->newInstance();
-                if (!($req instanceof Request)) {
+                if (! ($req instanceof Request)) {
                     continue;
                 }
                 $this->validate_request_annotation($req);
-                $method_loc = $reflect_class->getName() . "@" . $m->getName();
-                $mapping = ["sec" => $req->sec, "route" => $method_loc];
-                $uri = "!" . $path . $req->uri . "!";
+                $method_loc = $reflect_class->getName().'@'.$m->getName();
+                $mapping = ['sec' => $req->sec, 'route' => $method_loc];
+                $uri = '!'.$path.$req->uri.'!';
                 $this->mappings[$req->method][$uri] = $mapping;
             }
         }
@@ -173,15 +180,15 @@ class AnnotationReader
     /**
      * Checks if a class has an Repository annotation, if it does adds it to
      * the array of repositories
-     * 
-     * @param string $class
+     *
+     * @param  string  $class
      */
     private function check_repository($class)
     {
         $r = new ReflectionClass($class);
         $attrs = $r->getAttributes();
         foreach ($attrs as $a) {
-            if ($a->getName() == "Repository") {
+            if ($a->getName() == 'Repository') {
                 $to_inject = $this->to_inject($r);
                 $this->repositories[$class] = $to_inject;
             }
@@ -191,15 +198,15 @@ class AnnotationReader
     /**
      * Checks if classes have a Controller annotation, and
      * processes them as needed
-     * 
-     * @param string $class
+     *
+     * @param  string  $class
      */
     private function check_controller($class)
     {
         $r = new ReflectionClass($class);
         $attrs = $r->getAttributes();
         foreach ($attrs as $a) {
-            if ($a->getName() == "Controller") {
+            if ($a->getName() == 'Controller') {
                 $to_inject = $this->to_inject($r);
                 $this->controllers[$class] = $to_inject;
                 $path = $a->newInstance()->path;
@@ -210,19 +217,19 @@ class AnnotationReader
 
     /**
      * Scan for PHP classes in a directory, calling the passed function on them
-     * 
-     * @param string $directory
-     * @param function $function
+     *
+     * @param  string  $directory
+     * @param  function  $function
      */
     private function scan_classes($directory, $function)
     {
         $files = scandir($directory);
         foreach ($files as $file) {
-            $mats = array();
+            $mats = [];
             // skip hidden files, directories, files that are not .class.php
             if (
-                $file[0] === "." || is_dir($file) ||
-                !preg_match("#(.*)\.class\.php#i", $file, $mats)
+                $file[0] === '.' || is_dir($file) ||
+                ! preg_match("#(.*)\.class\.php#i", $file, $mats)
             ) {
                 continue;
             }
@@ -232,20 +239,21 @@ class AnnotationReader
 
     /**
      * Scans the standard directories, reading .php files for annotations
-     * 
+     *
      * @return AnnotationContext self for call chaining
      */
     public function scan()
     {
-        $this->scan_classes("model", "check_repository");
-        $this->scan_classes("control", "check_controller");
+        $this->scan_classes('model', 'check_repository');
+        $this->scan_classes('control', 'check_controller');
+
         return $this;
     }
 
     /**
      * Generate code for the retrievable classes to the context class
-     * 
-     * @param type $classes
+     *
+     * @param  type  $classes
      */
     private function add_classes_to_context($classes)
     {
@@ -258,7 +266,7 @@ IF_START;
             foreach ($injects as $prop => $id) {
                 $this->context .=
                     "            \$this->objects[\"$class\"]->$prop = "
-                    . "\$this->get(\"$id\");\n";
+                    ."\$this->get(\"$id\");\n";
             }
             $this->context .= "        }\n"; // close if statement
         }
@@ -266,12 +274,12 @@ IF_START;
 
     /**
      * Creates the context in memory
-     * 
+     *
      * @return AnnotationContext self for call chaining
      */
     public function create_context()
     {
-        $this->context .= <<< WARNING
+        $this->context .= <<< 'WARNING'
 /******************************************************************************* 
  * DO NOT MODIFY THIS FILE, IT IS GENERATED 
  * 
@@ -317,8 +325,8 @@ HEADER;
         $this->add_classes_to_context($this->repositories);
         $this->add_classes_to_context($this->controllers);
 
-        $this->context .= <<< FOOTER
-        return \$this->objects[\$id];
+        $this->context .= <<< 'FOOTER'
+        return $this->objects[$id];
     } // close get method
 } // close Context class
 FOOTER;
@@ -328,14 +336,15 @@ FOOTER;
 
     /**
      * Writes the context (as found by scan) to a file
-     * 
-     * @param string $filename
+     *
+     * @param  string  $filename
      * @return AnnotationContext self for call chaining
      */
     public function write($filename)
     {
-        $data = "<?php\n" . $this->context;
+        $data = "<?php\n".$this->context;
         file_put_contents($filename, $data);
+
         return $this;
     }
 }
