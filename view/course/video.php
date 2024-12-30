@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <title><?= strtoupper($course) ?> <?= $day ?> Videos</title>
+        <title><?= strtoupper($course) ?> <?= $day ?> Lecture</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
@@ -34,16 +34,16 @@
                 </div>
                 <?php
                 $passed = 0;
-        foreach ($files as $idx => $pdf_vid) {
+        foreach ($parts as $idx => $part) {
             $has_pdf = false;
             $has_vid = false;
-            if (isset($pdf_vid['pdf'])) {
+            if (isset($pdfs[$idx])) {
                 $has_pdf = true;
-                $info = $pdf_info = $pdf_vid['pdf'];
+                $info = $pdf_info = $pdfs[$idx];
             }
-            if (isset($pdf_vid['vid'])) {
+            if (isset($videos[$idx])) {
                 $has_vid = true;
-                $info = $vid_info = $pdf_vid['vid'];
+                $info = $vid_info = $videos[$idx];
             }
 
             if ($totalDuration == 0) {
@@ -52,11 +52,12 @@
             } else {
                 $passedPercent = ($passed / $totalDuration) * 100;
                 $currentPrecent = $passedPercent + (($info['duration'] / $totalDuration) * 100);
-            } ?>
+            }
+            ?>
 
                 <article id="a<?= $idx ?>" class="<?= $idx == $file_idx ? 'selected' : '' ?>" 
-                    data-name="<?= $info['parts'][0].'_'.$info['parts'][1] ?>">
-                    <h2><?= $info['parts'][1] ?></h2>
+                    data-name="<?= $part ?>">
+                    <h2><?= $part ?></h2>
 
                     <div class="media">
                         <i class="fa-solid video fa-video<?= $has_vid ? ' available hide' : '-slash'?>" 
@@ -64,7 +65,7 @@
                         <div class="pdf <?= ! $has_vid ? 'hide' : '' ?>">
                             <i class="far fa-file-pdf pdf <?= $has_pdf ? 'available ' : '' ?>"
                                 title="Switch to PDF <?= $has_pdf ? '' : 'not available'?>"
-                                data-file="<?= $pdf_info['parts'][0].'_'.$pdf_info['parts'][1] ?>"></i>
+                                data-file="<?= $part ?>"></i>
                             <?php if (! $has_pdf) { ?>
                             <i title="Switch to PDF not available" class="fa-solid fa-slash"></i>
                             <?php } ?>
@@ -74,21 +75,21 @@
                     <?php if ($has_vid) { ?>
                     <video controls controlslist="nodownload" 
                         <?php if ($idx == $file_idx) { ?>
-                        src="<?= "res/course/{$course}/{$block}/lecture/{$day}/vid/{$vid_info['file']}" ?>" 
+                        src="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$vid_info['file']}" ?>" 
                         <?php } ?>
-                        data-src="<?= "res/course/{$course}/{$block}/lecture/{$day}/vid/{$vid_info['file']}" ?>">
+                        data-src="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$vid_info['file']}" ?>">
                     </video>
                     <?php } ?>
 
                     <?php if ($has_pdf) { ?>
                     <object class="<?= $has_vid ? 'hide' : ''?>" 
                         type="application/pdf" 
-                        data="res/<?= $course?>/<?= $block?>/lecture/<?= $day?>/pdf/<?= $pdf_info['file'] ?>">
+                        data="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$pdf_info['file']}" ?>">
                         <div class="noVid">
                             <i class="fa-solid fa-video" title="Video"></i>
                             <div>Your browser doesn't seem to support PDF previews</div>
                             <p>
-                                <a href="res/<?= $course?>/<?= $block?>/lecture/<?= $day?>/pdf/<?= $pdf_info['file'] ?>">
+                                <a href="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$pdf_info['file']}" ?>">
                                     Click here to download the PDF
                                 </a>
                             </p>
@@ -99,8 +100,8 @@
                     <?php if ($totalDuration) { ?>
                     <div class="progress">
                         <?php
-                        $progClass = 'passed';
-                        foreach ($files as $idxx => $content) {
+                    $progClass = 'passed';
+                        foreach ($parts as $idxx => $content) {
                             if ($progClass == 'current') {
                                 $progClass = 'future';
                             }
@@ -108,12 +109,14 @@
                                 $progClass = 'current';
                             }
                             ?>
-                        <?php if (isset($content['vid'])) { ?>
-                        <?php $vid = $content['vid']; ?>
-                        <div title="<?= $content['vid']['parts'][1].' ('.substr($content['vid']['parts'][3], 3, 5).')'  ?>"
-                            data-vid="<?= $content['vid']['parts'][0] ?>" 
+                        <?php if (isset($videos[$idxx])) { ?>
+                        <?php $vid = $videos[$idxx]; ?>
+                        <?php $matches = [];
+                            preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $vid['file'], $matches); ?>
+                        <div data-vid="<?= $idxx ?>" 
+                            title="<?= "{$content} ({$matches[2]}:{$matches[3]})"?>"
                             class="tab <?= $progClass ?>" 
-                            style="width: <?= number_format(($content['vid']['duration'] / $totalDuration) * 100, 2) ?>%"></div>
+                            style="width: <?= number_format(($vid['duration'] / $totalDuration) * 100, 2) ?>%"></div>
                         <?php } ?>
                         <?php } // end foreach files?>
 

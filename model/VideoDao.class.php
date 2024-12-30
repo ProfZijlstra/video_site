@@ -10,7 +10,7 @@
 #[Repository]
 class VideoDao
 {
-    public function forOffering($course_num, $block)
+    public function forOffering($course_num, $block): array
     {
         chdir("res/course/{$course_num}/{$block}/");
         $dirs = glob('*', GLOB_ONLYDIR);
@@ -23,29 +23,51 @@ class VideoDao
         return $result;
     }
 
-    public function forDay($course_num, $block, $day)
+    public function forDay($course_num, $block, $day): array
     {
-        chdir("res/course/{$course_num}/{$block}/lecture/{$day}/vid/");
-        $files = glob('*.mp4');
-        $file_info = [];
+        $videos = [];
         $totalDuration = 0;
-        foreach ($files as $file) {
+        $ch = chdir("res/course/{$course_num}/{$block}/lecture/{$day}/");
+        $parts = glob('*', GLOB_ONLYDIR);
+        foreach ($parts as $part) {
+            if (strpos($part, '_') === false) {
+                continue;
+            }
+            $deep = chdir($part);
+            $files = glob('*.mp4');
+            $latest = array_pop($files);
+            if (! $latest) {
+                if ($deep) {
+                    chdir('..');
+                }
+
+                continue;
+            }
+
             $matches = [];
-            preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $file, $matches);
+            preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $latest, $matches);
             $hours = $matches[1];
             $minutes = $matches[2];
             $seconds = $matches[3];
             $hundreth = $matches[4];
             // duration in hundreth of a second
-            $duration = $hundreth + ($seconds * 100) + ($minutes * 60 * 100) + ($hours * 60 * 60 * 100);
+            $duration = $hundreth
+                + ($seconds * 100)
+                + ($minutes * 60 * 100)
+                + ($hours * 60 * 60 * 100);
             $totalDuration += $duration;
-            $parts = explode('_', $file);
-            $data = [];
-            $data['type'] = 'vid';
-            $data['file'] = $file;
-            $data['duration'] = $duration;
-            $data['parts'] = $parts;
-            $file_info[$parts[0]] = $data;
+
+            $chunks = explode('_', $part);
+            $videos[$chunks[0]] = [
+                'type' => 'vid',
+                'file' => $latest,
+                'duration' => $duration,
+                'parts' => explode('_', $latest),
+            ];
+
+            if ($deep) {
+                chdir('../');
+            }
         }
         $totalHours = floor($totalDuration / (60 * 60 * 100));
         $totalMinutes = intval($totalDuration / (60 * 100)) % 60;
@@ -56,16 +78,18 @@ class VideoDao
         }
         $totalTime .= str_pad($totalMinutes, 2, '0', STR_PAD_LEFT).':';
         $totalTime .= str_pad($totalSeconds, 2, '0', STR_PAD_LEFT);
-        chdir('../../../../../../../');
+        if ($ch) {
+            chdir('../../../../../../');
+        }
 
         return [
-            'file_info' => $file_info,
+            'videos' => $videos,
             'totalDuration' => $totalDuration,
             'totalTime' => $totalTime,
         ];
     }
 
-    public function clone($course_number, $block, $old_block)
+    public function clone($course_number, $block, $old_block): void
     {
         // change directory to where the course materials are and start clone
         chdir("res/course/$course_number");
@@ -114,7 +138,7 @@ class VideoDao
         chdir('../../../../..'); // exit lecture, block, course, res dirs
     }
 
-    public function create($number, $block, $lessonsPerRow, $lessonRows)
+    public function create($number, $block, $lessonsPerRow, $lessonRows): void
     {
         chdir('res/course');
         mkdir($number);
@@ -131,10 +155,10 @@ class VideoDao
                 chdir('..');
             }
         }
-        chrdir('../../../../');
+        chdir('../../../../');
     }
 
-    public function addVideo($course, $block, $day, $tmp, $name)
+    public function addVideo($course, $block, $day, $tmp, $name): void
     {
         $cwd = getcwd();
         if (! str_ends_with($cwd, "res/course/{$course}/{$block}/{$day}/vid")) {
@@ -145,7 +169,7 @@ class VideoDao
         chdir('../../../../../../../');
     }
 
-    public function nextIndex($course, $block, $day)
+    public function nextIndex($course, $block, $day): int
     {
         // get the index of the last file and add one
         // probably better than counting the files and adding one
@@ -164,12 +188,12 @@ class VideoDao
         return 1;
     }
 
-    public function updateTitle($course, $block, $day, $file, $title)
+    public function updateTitle($course, $block, $day, $file, $title): void
     {
         $this->updatePart($course, $block, $day, $file, 1, $title);
     }
 
-    public function updateSequence($course, $block, $day, $file, $value)
+    public function updateSequence($course, $block, $day, $file, $value): void
     {
         if (! is_numeric($value)) {
             return;
@@ -180,7 +204,7 @@ class VideoDao
         $this->updatePart($course, $block, $day, $file, 0, $value);
     }
 
-    private function updatePart($course, $block, $day, $file, $part, $upd)
+    private function updatePart($course, $block, $day, $file, $part, $upd): void
     {
         chdir("res/course/{$course}/{$block}/lecture/{$day}/vid/");
         $parts = explode('_', $file);

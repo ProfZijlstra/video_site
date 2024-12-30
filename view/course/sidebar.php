@@ -28,50 +28,45 @@
     </nav>
     <div id="tabs">
         <?php
-        $file_count = 0;
+        $part_count = 0;
 $first_idx = -1;
 ?>
-        <?php foreach ($files as $idx => $pdf_vid) {
+        <?php foreach ($parts as $idx => $part) {
             if ($first_idx == -1) {
                 $first_idx = $idx;
-            }
-            if (isset($pdf_vid['vid'])) {
-                $info = $pdf_vid['vid'];
-            } else {
-                $info = $pdf_vid['pdf'];
             }
             ?>
 
         <div class='video_link <?= $idx == $file_idx ? 'selected' : '' ?>' data-show="<?= $idx ?>" id="<?= $idx ?>">
             <div>
-                <a href="<?= $idx ?>"><?= $info['parts'][1] ?></a>
+                <a href="<?= $idx ?>"><?= $part ?></a>
                 <?php if (hasMinAuth('instructor')) { ?>
                 <span class="config">
                     <?php
-                        $decrease = true;
+                    $decrease = true;
                     $increase = true;
-                    if ($file_count == 0) {
+                    if ($part_count == 0) {
                         $decrease = false;
                     }
-                    if ($file_count == (count($files) - 1)) {
+                    if ($part_count == (count($parts) - 1)) {
                         $increase = false;
                     }
                     ?>
-                    <i title="Move video up" class="fa-solid fa-arrow-up <?= ! $decrease ? 'disabled' : '' ?>" 
-                        <?php if ($increase) { ?> data-file="<?= $info['file'] ?>" data-prev_file="<?= $files[$file_count - 1]['file'] ?>" <?php } ?>>
+                    <i title="Move lesson part up" class="fa-solid fa-arrow-up <?= ! $decrease ? 'disabled' : '' ?>" 
+                        <?php if ($increase) { ?> data-file="<?= $part ?>" data-prev_file="<?= $parts[$part_count - 1] ?>" <?php } ?>>
                     </i>
-                    <i title="Move video down" class="fa-solid fa-arrow-down <?= ! $increase ? 'disabled' : '' ?>" 
-                        <?php if ($decrease) { ?> data-file="<?= $info['file'] ?>" data-next_file="<?= $files[$file_count + 1]['file'] ?>" <?php } ?>>
+                    <i title="Move lesson part down" class="fa-solid fa-arrow-down <?= ! $increase ? 'disabled' : '' ?>" 
+                        <?php if ($decrease) { ?> data-file="<?= $part ?>" data-next_file="<?= $parts[$part_count + 1] ?>" <?php } ?>>
                     </i>
-                    <i title="Edit title" class="fa-regular fa-pen-to-square" data-title="<?= $info['parts'][1] ?>" data-file="<?= $info['file'] ?>"></i>
+                    <i title="Edit title" class="fa-regular fa-pen-to-square" data-title="<?= $part ?>" data-file="<?= "{$idx}_{$part}" ?>"></i>
                 </span>
                 <?php } ?>
             </div>
             <div class="info"></div>
         </div>
-        <?php $file_count++ ?>
+        <?php $part_count++ ?>
         <?php } // end foreach files?>
-        <?php $last_id = $idx; ?>
+        <?php $last_id = $idx; // for mobile nav in main page?>
     </div>
     <div id="total" data-day="<?= $day ?>" data-day_id="<?= $days[$day]['id'] ?>" data-text="<?= $days[$day]['desc'] ?>"></div>
     <div id="back">
@@ -96,7 +91,7 @@ $first_idx = -1;
             </span>
             <?php } ?>
             <?php if (hasMinAuth('student')) { ?>
-            <span title="Files" class="<?= $area == 'file' ? 'active' : ''?>">
+            <span title="Files"> 
                 <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/file"><i class="fa-solid fa-hard-drive"></i></a>
             </span>
             <?php } ?>

@@ -20,20 +20,34 @@ class PdfDao
      */
     public function forDay($course_num, $block, $day): array
     {
-        chdir("res/course/{$course_num}/{$block}/lecture/{$day}/pdf/");
-        $files = glob('*.[pP][dD][fF]'); // pdf files
         $result = [];
-        foreach ($files as $file) {
-            $info = pathinfo($file);
-            $parts = explode('_', $info['filename']);
-            $result[$parts[0]] = [
+        $ch = chdir("res/course/{$course_num}/{$block}/lecture/{$day}/");
+        $parts = glob('*', GLOB_ONLYDIR);
+        foreach ($parts as $part) {
+            $deep = chdir($part);
+            $files = glob('*.[pP][dD][fF]'); // pdf files
+            $latest = array_pop($files);
+            if (! $latest) {
+                if ($deep) {
+                    chdir('..');
+                }
+
+                continue;
+            }
+            $chunks = explode('_', $part);
+            $result[$chunks[0]] = [
                 'type' => 'pdf',
-                'file' => $file,
+                'file' => $latest,
                 'duration' => 0,
-                'parts' => explode('_', $info['filename']),
+                'parts' => explode('_', $latest),
             ];
+            if ($deep) {
+                chdir('../');
+            }
         }
-        chdir('../../../../../../../');
+        if ($ch) {
+            chdir('../../../../../../');
+        }
 
         return $result;
     }
