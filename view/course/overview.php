@@ -30,7 +30,7 @@
         <?php if (hasMinAuth('instructor')) { ?>
             <nav class="tools">
                 <?php if (! $isRemembered) { ?>
-                    <i title="View Info" id="info-btn" class="fas fa-info-circle"></i>
+                    <i title="View Info" id="info-btn" class="fa-solid fa-eye"></i>
                     <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
                     <i title="Clone Offering" id="clone" class="far fa-copy"></i>
                     <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>

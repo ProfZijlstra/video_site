@@ -26,14 +26,28 @@ class LessonPartDao
         $result = [];
         foreach ($files as $file) {
             $chunks = explode('_', $file);
-            if (count($chunks) >= 2) {
-                $result[$chunks[0]] = $chunks[1];
-            }
+            $result[$chunks[0]] = $chunks[1];
         }
         if ($ch) {
             chdir('../../../../../../');
         }
 
         return $result;
+    }
+
+    public function updateTitle($course, $block, $day, $file, $title): bool
+    {
+        $parts = explode('_', $file);
+        $parts[1] = $title;
+        $upd = implode('_', $parts);
+
+        $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/");
+        if ($ch) {
+            $ren = rename($file, $upd);
+            echo 'Renamed? '.($ren ? 'true' : 'false');
+            chdir('../../../../../../');
+        }
+
+        return $ch && $ren;
     }
 }

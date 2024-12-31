@@ -85,7 +85,7 @@ nav#videos nav #info-btn, #config-btn {
     left: 24px;
 }
 #config-btn {
-    top: 80px;
+    top: 40px;
     cursor: pointer;
 }
 nav#videos div.video_link {
@@ -117,19 +117,27 @@ div.video_link span.config {
 }
 nav#videos div.video_link.config {
     text-align: left;
-    padding-left: 15px;
+    padding-left: 25px;
     cursor: pointer;
 }
 div.video_link.config span.config {
     display: inline;
 }
-div.video_link.config span.config i.disabled {
-    color: lightgray;
-}
-div.video_link.config div.info {
+div.video_link span.grip {
+    position: absolute;
+    left: 5px;
+    top: 5px;
     display: none;
+    i {
+	cursor: grab;
+    }
+    i:active {
+	cursor: grabbing;
+    }
 }
-
+div.video_link.config span.grip {
+    display: inline;
+}
 
 div#total {
 	margin-top: 10px;
@@ -444,6 +452,15 @@ textarea.commentText {
 }
 #content td.num {
     text-align: right;
+}
+
+dialog.modal {
+    input {
+	width: 588px;
+    }
+    button {
+	width: 50px;
+    }
 }
 
 @media screen and (max-width: 900px) {

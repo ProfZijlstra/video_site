@@ -13,11 +13,8 @@
         <script src="res/js/video-1.18.js"></script>
         <script src="res/js/lib/prism.js"></script>
         <?php if (hasMinAuth('instructor')) { ?>
-        <link rel="stylesheet" href="res/css/adm-1.0.css">
-        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
-        <script src="res/js/info.js"></script>
         <script src="res/js/adm_video.js"></script>
+        <link rel="stylesheet" href="res/css/adm-1.0.css" />
         <?php } ?>
     </head>
 
@@ -25,7 +22,88 @@
         <?php include 'header.php'; ?>
         <i id="bars" class="fa-solid fa-bars"></i>
         <div id="container" data-oid="<?= $offering_id ?>">
-            <?php include 'sidebar.php'; ?>
+
+            <!-- start sidebar -->
+            <nav id="videos" class="<?= $theater ?>">
+                <nav>
+                    <?php if (hasMinAuth('instructor')) { ?>
+                    <?php if (! $isRemembered) { ?>
+                    <i title="Configure Videos" id="config-btn" class="fa-solid fa-gear"></i>
+                    <?php } else { ?>
+                    <a href="reAuth">
+                        <i title="Configure Videos" id="config-btn" class="fa-solid fa-gear"></i>
+                    </a>
+                    <?php } // end is not remembered?>
+                    <?php } // end is instructor?>
+
+                    <!-- mini course calendar -->
+                    <table id="days">
+                        <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) { ?>
+                        <tr>
+                            <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) { ?>
+                            <td class="<?= $offering['showDates'] && $w < $curr_w || ($w == $curr_w && $d <= $curr_d) ? 'done' : '' ?>
+                                <?= $offering['showDates'] && $w == $page_w && $d == $page_d ? 'curr' : '' ?>">
+                                <a href="../W<?= $w ?>D<?= $d ?>/">&nbsp;</a>
+                            </td>
+                            <?php } // td loop?>
+                        </tr>
+                        <?php } // tr loop?>
+                    </table>
+                </nav>
+
+                <!-- Lecture part navigation tabs -->
+                <div id="tabs">
+                    <?php include 'tabs.php' ?>
+                </div>
+
+                <div id="back">
+                    <a href="../" title="Back to overview">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+
+                    <?php if (hasMinAuth('instructor')) { ?>
+                    <span class="config">
+                    <?php if (! $isRemembered) { ?>
+                        <i title="Add Lesson Part" class="fa-solid fa-plus" id="add_part"></i>
+                    <?php } else { ?>
+                        <a href="reAuth">
+                            <i title="Add Lesson Part" class="fa-solid fa-plus" id="add_part"></i>
+                        </a>
+                    <?php } ?>
+                    </span>
+                    <?php } ?>
+
+                    <div class="otherAreas">
+                        <?php if (hasMinAuth('student') && $offering['hasQuiz']) { ?>
+                        <span title="Quizzes">
+                            <a href="../quiz"><i class="fas fa-vial"></i></a>
+                        </span>
+                        <?php } ?>
+                        <?php if (hasMinAuth('student') && $offering['hasLab']) { ?>
+                        <span title="Labs">
+                            <a href="../lab"><i class="fas fa-flask"></i></a>
+                        </span>
+                        <?php } ?>
+                        <?php if (hasMinAuth('student')) { ?>
+                        <span title="Files"> 
+                            <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/file"><i class="fa-solid fa-hard-drive"></i></a>
+                        </span>
+                        <?php } ?>
+                        <?php if (hasMinAuth('assistant')) { ?>
+                        <span title="Attendance">
+                            <a href="../attendance"><i class="fas fa-user-check"></i></a>
+                        </span>
+                        <?php } ?>
+                        <?php if (hasMinAuth('instructor')) { ?>
+                        <span title="Enrolled">
+                            <a href="../enrolled"><i class="fas fa-user-friends"></i></a>
+                        </span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+            </nav> <!-- End sidebar -->
+
             <main id="day" data-id="<?= $days[$day]['id'] ?>">
                 <div class="playSpeed">
                     <span class="slower">-</span>
@@ -33,7 +111,9 @@
                     <span class="faster">+</span>
                 </div>
                 <?php
-                $passed = 0;
+        $firstIdx = array_key_first($parts);
+        $lastIdx = array_key_last($parts);
+        $passed = 0;
         foreach ($parts as $idx => $part) {
             $has_pdf = false;
             $has_vid = false;
@@ -54,181 +134,8 @@
                 $currentPrecent = $passedPercent + (($info['duration'] / $totalDuration) * 100);
             }
             ?>
+                <?php include 'lessonPart.php' ?>
 
-                <article id="a<?= $idx ?>" class="<?= $idx == $file_idx ? 'selected' : '' ?>" 
-                    data-name="<?= $part ?>">
-                    <h2><?= $part ?></h2>
-
-                    <div class="media">
-                        <i class="fa-solid video fa-video<?= $has_vid ? ' available hide' : '-slash'?>" 
-                            title="Switch to video <?= $has_vid ? '' : 'not available'?>"></i>
-                        <div class="pdf <?= ! $has_vid ? 'hide' : '' ?>">
-                            <i class="far fa-file-pdf pdf <?= $has_pdf ? 'available ' : '' ?>"
-                                title="Switch to PDF <?= $has_pdf ? '' : 'not available'?>"
-                                data-file="<?= $part ?>"></i>
-                            <?php if (! $has_pdf) { ?>
-                            <i title="Switch to PDF not available" class="fa-solid fa-slash"></i>
-                            <?php } ?>
-                        </div>
-                    </div>
-
-                    <?php if ($has_vid) { ?>
-                    <video controls controlslist="nodownload" 
-                        <?php if ($idx == $file_idx) { ?>
-                        src="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$vid_info['file']}" ?>" 
-                        <?php } ?>
-                        data-src="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$vid_info['file']}" ?>">
-                    </video>
-                    <?php } ?>
-
-                    <?php if ($has_pdf) { ?>
-                    <object class="<?= $has_vid ? 'hide' : ''?>" 
-                        type="application/pdf" 
-                        data="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$pdf_info['file']}" ?>">
-                        <div class="noVid">
-                            <i class="fa-solid fa-video" title="Video"></i>
-                            <div>Your browser doesn't seem to support PDF previews</div>
-                            <p>
-                                <a href="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}/{$pdf_info['file']}" ?>">
-                                    Click here to download the PDF
-                                </a>
-                            </p>
-                        </div>
-                    </object>
-                    <?php } ?>
-
-                    <?php if ($totalDuration) { ?>
-                    <div class="progress">
-                        <?php
-                    $progClass = 'passed';
-                        foreach ($parts as $idxx => $content) {
-                            if ($progClass == 'current') {
-                                $progClass = 'future';
-                            }
-                            if ($idx == $idxx) {
-                                $progClass = 'current';
-                            }
-                            ?>
-                        <?php if (isset($videos[$idxx])) { ?>
-                        <?php $vid = $videos[$idxx]; ?>
-                        <?php $matches = [];
-                            preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $vid['file'], $matches); ?>
-                        <div data-vid="<?= $idxx ?>" 
-                            title="<?= "{$content} ({$matches[2]}:{$matches[3]})"?>"
-                            class="tab <?= $progClass ?>" 
-                            style="width: <?= number_format(($vid['duration'] / $totalDuration) * 100, 2) ?>%"></div>
-                        <?php } ?>
-                        <?php } // end foreach files?>
-
-                        <div class="time">Total time: <?= $totalTime ?></div>
-                        <div class="autoplay">autoplay <i class="auto_toggle fas fa-toggle-off"></i></div>
-                        <div title="Keyboard Shortcuts"><i class="fa-solid fa-keyboard shortcuts"></i></div>
-                    </div>
-                    <?php } ?>
-
-                    <nav class="mobileNav">
-                        <div class="prev">
-                            <?php if ($idx > $first_idx) { ?>
-                            <a href="<?= $idx <= 10 ? '0'.($idx - 1) : $idx ?>" title="Previous Video"
-                                data-video="<?= $idx <= 10 ? '0'.($idx - 1) : $idx ?>">
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </a>
-                            <?php } else { ?>
-                            <i class="fa-solid fa-arrow-left disabled"></i>
-                            <?php } ?>
-                        </div>
-                        <div class="next">
-                            <?php if ($idx < $last_id) { ?>
-                            <a href="<?= $idx < 9 ? '0'.($idx + 1) : $idx ?>" title="Next Video"
-                                data-video="<?= $idx < 9 ? '0'.($idx + 1) : $idx ?>">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                            <?php } else { ?>
-                            <i class="fa-solid fa-arrow-right disabled"></i>
-                            <?php } ?>
-                        </div>
-                    </nav>
-
-                    <div class="keyboard hidden">
-                        <section>
-                            <h5>Playback</h5>
-                            <div>
-                                <span class="key">Space</span>
-                                <span class="action">Play / Pause</span>
-                            </div>
-                            <div>
-                                <span class="key"><i class="fa-solid fa-arrow-left"></i></span>
-                                <span class="action">Back 10 secconds</span>
-                            </div>
-                            <div>
-                                <span class="key"><i class="fa-solid fa-arrow-right"></i></span>
-                                <span class="action">Forward 10 seconds</span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5>Alternate Playback</h5>
-                            <div>
-                                <span class="key">K</span>
-                                <span class="action">Play / Pause</span>
-                            </div>
-                            <div>
-                                <span class="key">J</span>
-                                <span class="action">Back 5 Secconds</span>
-                            </div>
-                            <div>
-                                <span class="key">L</span>
-                                <span class="action">Forward 5 Seconds</span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5>Content Control</h5>
-                            <div>
-                                <span class="key">N</span>
-                                <span class="action">Next Video</span>
-                            </div>
-                            <div>
-                                <span class="key">P</span>
-                                <span class="action">Previous Video</span>
-                            </div>
-                            <div>
-                                <span class="key">V</span>
-                                <span class="action">View PDF / Video</span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5>Speed</h5>
-                            <div>
-                                <span class="key">[</span>
-                                <span class="action">Decrease Speed</span>
-                            </div>
-                            <div>
-                                <span class="key">]</span>
-                                <span class="action">Increase Speed</span>
-                            </div>
-                            <div>
-                                <span class="key">0</span>
-                                <span class="action">Normal Speed</span>
-                            </div>
-                        </section>
-                        <section>
-                            <h5>Modes</h5>
-                            <div>
-                                <span class="key">A</span>
-                                <span class="action">Toggle Auto Play</span>
-                            </div>
-                            <div>
-                                <span class="key">T</span>
-                                <span class="action">Toggle Theater Mode</span>
-                            </div>
-                            <div>
-                                <span class="key">F</span>
-                                <span class="action">Toggle Full Screen</span>
-                            </div>
-                        </section>
-                    </div>
-
-                    <?php include 'comments.php'; ?>
-                </article>
                 <?php
             $passed += $info['duration'];
         } // end all articles (vid-pdfs)
@@ -237,53 +144,37 @@
         </div> <!-- close container-->
 
         <?php if (hasMinAuth('instructor')) { ?>
-        <div id="overlay">
-            <i id="close-overlay" class="fas fa-times-circle"></i>
 
-            <div id="edit_modal" class="modal hide">
-                <h2>Edit Video Title</h2>
-                <form method="POST" action="title">
-                    <input type="hidden" name="file" id="video_file" value="" />
-                    <div class="line">
-                        <label>Title:</label>
-                        <input name="title" id="video_title" value="" />
-                    </div>
-                    <div class="submit">
-                        <button>Submit</button>
-                    </div>
-                </form>
-            </div>
+        <dialog id="editDialog" class="modal">
+            <i id="closeEdit" class="fas fa-times-circle close"></i>
 
-            <div id="content"></div>
-
-            <form method="post" action="decrease" id="decreaseSequence">
-                <input type="hidden" name="file" id="up_file" />
-                <input type="hidden" name="prev_file" id="prev_file" />
+            <h3>Edit Lecture Part</h3>
+            <form>
+                <label>Title:</label>
+                <input name="title" id="editTitle" value="">
+                <div class="btn">
+                    <button id="editBtn">
+                        <i title="Submit Add" class="fa-solid fa-pen"></i>
+                    </button>
+                </div>
             </form>
+        </dialog>
 
-            <form method="post" action="increase" id="increaseSequence">
-                <input type="hidden" name="file" id="down_file" />
-                <input type="hidden" name="next_file" id="next_file" />
+        <dialog id="addDialog" class="modal">
+            <i id="closeAdd" class="fas fa-times-circle close"></i>
+
+            <h3>Add Lecture Part</h3>
+            <form>
+                <label>Title:</label>
+                <input name="title" id="addTitle" value="">
+                <div class="btn">
+                    <button id="addBtn">
+                        <i title="Submit Edit" class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
             </form>
+        </dialog>
 
-            <div id="add_modal" class="modal hide">
-                <h2>Add Video</h2>
-                <form method="POST" action="add" enctype="multipart/form-data">
-                    <div class="line">
-                        <label>File:</label>
-                        <input name="file" type="file" id="add_file" value="" />
-                    </div>
-                    <div class="line">
-                        <label>Title:</label>
-                        <input name="title" id="video_title" value="" />
-                    </div>
-                    <div class="submit">
-                        <button>Submit</button>
-                    </div>
-                </form>
-            </div>
-
-        </div>
         <?php } ?>
 
     </body>

@@ -1,109 +1,91 @@
 window.addEventListener('load', () => {
-    // display on page summary when clicking info button
-    document.getElementById('info-btn').onclick = function() {
-        const offering_id = document.getElementById('container').dataset.oid;
-        const day_id = document.getElementById('day').dataset.id;
-        fetch(`info?day_id=${day_id}`)
-            .then(response => response.json())
-            .then(function(json) {
-                const e = React.createElement;
-                const tabs =
-                    document.getElementById('videos').getElementsByClassName(
-                        'video_link');
-                for (const tab of tabs) {
-                    const props = json[tab.dataset.show];
-                    if (props) {
-                        props.showUsers = INFO.videoViewers;
-                        const container = tab.getElementsByClassName('info')[0];
-                        ReactDOM.render(e(INFO.Info, props), container);    
-                    }
-                }
-                const props = json['total'];
-                props.showUsers = INFO.dayViewers;
-                ReactDOM.render(e('div', null, 'Total: ', e(INFO.Info, props)),
-                                document.getElementById('total'));
-            });
-
-        fetch(`enrollment?offering_id=${offering_id}`)
-            .then(response => response.json())
-            .then(json => INFO.setEnrollment(json));
-    };
+    let editLink = null;
 
     // enable video configuration when clicking config button
-    document.getElementById("config-btn").onclick = function() {
+    document.getElementById("config-btn").onmousedown = function() {
         const videoLinks = document.querySelectorAll(".video_link");
         for (const div of videoLinks) {
-            div.classList.add("config");
+            div.classList.toggle("config");
         }
-        document.getElementById("total").innerHTML = "";
-        document.getElementById("back").classList.add("config");
+        document.getElementById("back").classList.toggle("config");
+        document.querySelector("article.selected .media")
+            .classList.toggle("hide");
+        document.querySelector("article.selected .media.upload")
+            .classList.toggle("hide");
     }
 
-    // show update title modal when clicking title edit icons
-    const edit_modal = document.getElementById("edit_modal");
-    const overlay = document.getElementById("overlay");
-    const edits = document.querySelectorAll(".fa-pen-to-square");
-    const video_file = document.getElementById("video_file");
-    const video_title = document.getElementById("video_title");
-    const modals = document.querySelectorAll(".modal");
-    function showEdit(evt) {
-        modals.forEach((e) => e.classList.add("hide"));
-        video_file.value = this.dataset.file;
-        video_title.value = this.dataset.title;
-        overlay.classList.add("visible");
-        edit_modal.classList.remove("hide");
-    }
-    for (const edit of edits) {
-        edit.onclick = showEdit;
-    }
-
-    // make the title input field not trigger key events 
-    video_title.onkeydown = function(evt) {
-        evt.stopPropagation();
+    // enable clicking plus to show add  dialog
+    document.getElementById("add_part").onmousedown = function() {
+        document.getElementById("addDialog").showModal();
+        document.getElementById("addTitle").focus();
     };
-
-    // enable clicking arrow up to move video up
-    const ups = document.querySelectorAll(".fa-arrow-up");
-    function moveUp() {
-        document.getElementById("up_file").value = this.dataset.file;
-        document.getElementById("prev_file").value = this.dataset.prev_file;
-        document.getElementById("decreaseSequence").submit();
+    document.getElementById("closeAdd").onmousedown = function() {
+        document.getElementById("addDialog").close();
     }
-    for (const up of ups) {
-        if (up.classList.contains("disabled")) {
-            continue;
+
+    // enable clicking edit to show edit dialog
+    function editLessonPart() {
+        const parent = this.closest(".video_link");
+        editLink = parent;
+
+        const title = parent.querySelector("a").innerText;
+        const file = parent.querySelector(".config").dataset.file;
+        document.getElementById("editDialog").showModal();
+        const editTitle = document.getElementById("editTitle");
+        editTitle.value = title;
+        editTitle.dataset.file = file;
+    }
+    document.querySelectorAll(".video_link i.fa-pen-to-square").forEach(
+        e => e.onmousedown = editLessonPart
+    );
+    function closeEditDialog() {
+        document.getElementById("editDialog").close();
+    }
+    document.getElementById("closeEdit").onmousedown = closeEditDialog;
+
+    // submit edit should:
+    // 1. send to server
+    // 2. update the tab
+    // 3. update the article title
+    //
+    // .onclick is used so that enter inside the textfield also triggers
+    document.getElementById("editBtn").onclick = function(evt) {
+        evt.preventDefault();
+
+        const editTitle = document.getElementById("editTitle");
+        const title = editTitle.value;
+        const file = editTitle.dataset.file;
+        if (title.indexOf("_") !== -1) {
+            alert("Title cannot not contain underscores.\n"
+                + "Please remove the underscore and try again");
+            return;
         }
-        up.onclick = moveUp;
-    }
+        closeEditDialog();
 
-    // enable clicking arrow down to move video up
-    const downs = document.querySelectorAll(".fa-arrow-down");
-    function moveDown() {
-        document.getElementById("down_file").value = this.dataset.file;
-        document.getElementById("next_file").value = this.dataset.prev_file;
-        document.getElementById("increaseSequence").submit();
-    }
-    for (const down of downs) {
-        if (down.classList.contains("disabled")) {
-            continue;
-        }
-        down.onclick = moveDown;
-    }
+        const data = new FormData();
+        data.append("title", title);
+        data.append("file", file);
+        fetch('title', {
+            method: "POST",
+            body: data,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    alert("Updating title failed");
+                    return;
+                }
 
-    // enable clicking plus to show add video modal
-    const add_modal = document.getElementById("add_modal");
-    document.getElementById("add_video").onclick = function() {
-        modals.forEach((e) => e.classList.add("hide"));
-        overlay.classList.add("visible");
-        add_modal.classList.remove("hide");
-        document.getElementById("add_file").focus();
-    };
-
-    // overlay closing related code
-    document.getElementById("close-overlay").onclick = INFO.hideTables;
-    document.getElementById("overlay").onclick = function(evt) {
-        if (evt.target == this) {
-            INFO.hideTables();
-        }
-    };
+                // change title on page
+                const tab = editLink.querySelector("a");
+                tab.innerText = title;
+                const id = "a" + editLink.id;
+                const hdr = document.querySelector(`#${id} h2`);
+                hdr.innerText = title;
+                const config = tab.parentNode.querySelector(".config");
+                const parts = file.split('_');
+                parts[1] = title;
+                config.dataset.file = parts.join('_');
+            })
+            .catch(e => alert(e));
+    }
 });

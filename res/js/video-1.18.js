@@ -342,7 +342,7 @@ window.addEventListener('load', () => {
         evt.preventDefault();
 
         // update the module wide video_id variable
-        video_id = this.parentElement.parentElement.id;
+        video_id = this.parentElement.id;
         genericClick(video_id);
     }
     const video_links = document.querySelectorAll('#tabs div.video_link a');

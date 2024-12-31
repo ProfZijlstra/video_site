@@ -208,12 +208,16 @@ class VideoCtrl
 
         $file = filter_input(INPUT_POST, 'file');
         $title = filter_input(INPUT_POST, 'title');
+        // title should not have underscores
+        if (strpos($title, '_') !== false) {
+            http_response_code(400);
 
-        $this->videoDao->updateTitle($course_num, $block, $day, $file, $title);
-
-        $idx = substr($file, 0, 2);
-
-        return "Location: $idx";
+            return;
+        }
+        $res = $this->lessonPartDao->updateTitle($course_num, $block, $day, $file, $title);
+        if (! $res) {
+            http_response_code(500);
+        }
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$", sec: 'instructor')]

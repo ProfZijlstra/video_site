@@ -89,8 +89,12 @@ class VideoDao
         ];
     }
 
+    /* Everything below this needs to be updated / fixed to werk with new dirs */
+
     public function clone($course_number, $block, $old_block): void
     {
+        // TODO: this needs to be fixed after the change in vid/pdf directories
+
         // change directory to where the course materials are and start clone
         chdir("res/course/$course_number");
 
@@ -186,11 +190,6 @@ class VideoDao
         chdir('../../../../../../../');
 
         return 1;
-    }
-
-    public function updateTitle($course, $block, $day, $file, $title): void
-    {
-        $this->updatePart($course, $block, $day, $file, 1, $title);
     }
 
     public function updateSequence($course, $block, $day, $file, $value): void
