@@ -9,13 +9,10 @@
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" type="text/css" href="res/css/video-1.9.css" />
         <link rel="stylesheet" href="res/css/lib/prism.css" />
+        <link rel="stylesheet" href="res/css/adm-1.0.css" />
         <script src="res/js/markdown-1.8.js"></script>
         <script src="res/js/video-1.18.js"></script>
         <script src="res/js/lib/prism.js"></script>
-        <?php if (hasMinAuth('instructor')) { ?>
-        <script src="res/js/adm_video.js"></script>
-        <link rel="stylesheet" href="res/css/adm-1.0.css" />
-        <?php } ?>
     </head>
 
     <body>
@@ -149,7 +146,7 @@
             <i id="closeEdit" class="fas fa-times-circle close"></i>
 
             <h3>Edit Lecture Part</h3>
-            <form>
+            <form method="post" action="title">
                 <label>Title:</label>
                 <input name="title" id="editTitle" value="">
                 <div class="btn">
@@ -164,7 +161,7 @@
             <i id="closeAdd" class="fas fa-times-circle close"></i>
 
             <h3>Add Lecture Part</h3>
-            <form>
+            <form method="post" action="add">
                 <label>Title:</label>
                 <input name="title" id="addTitle" value="">
                 <div class="btn">

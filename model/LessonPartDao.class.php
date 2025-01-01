@@ -22,7 +22,7 @@ class LessonPartDao
     public function forDay($course_num, $block, $day): array
     {
         $ch = chdir("res/course/{$course_num}/{$block}/lecture/{$day}/");
-        $files = glob('*', GLOB_ONLYDIR);
+        $files = glob('*_on', GLOB_ONLYDIR);
         $result = [];
         foreach ($files as $file) {
             $chunks = explode('_', $file);
@@ -35,6 +35,33 @@ class LessonPartDao
         return $result;
     }
 
+    public function add($course, $block, $day, $title): string|bool
+    {
+        // find max sequence / index
+        $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/");
+        if (! $ch) {
+            return false;
+        }
+
+        $parts = glob('*_on', GLOB_ONLYDIR);
+        $last = array_pop($parts);
+        $idx = explode('_', $last)[0];
+        $idx++;
+        if ($idx < 10) {
+            $idx = '0'.$idx;
+        }
+        // create new directory
+        $new = "{$idx}_{$title}_on";
+        $mk = mkdir($new);
+        chdir('../../../../../../');
+
+        if ($mk) {
+            return $idx;
+        }
+
+        return false;
+    }
+
     public function updateTitle($course, $block, $day, $file, $title): bool
     {
         $parts = explode('_', $file);
@@ -44,7 +71,6 @@ class LessonPartDao
         $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/");
         if ($ch) {
             $ren = rename($file, $upd);
-            echo 'Renamed? '.($ren ? 'true' : 'false');
             chdir('../../../../../../');
         }
 

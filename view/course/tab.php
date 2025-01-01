@@ -1,4 +1,6 @@
-<div class='video_link <?= $idx == $file_idx ? 'selected' : '' ?>' data-show="<?= $idx ?>" id="<?= $idx ?>">
+<div id="<?= $idx ?>"
+    class="video_link <?= $idx == $file_idx ? 'selected' : '' ?> <?= $config ? 'config' : '' ?>"
+    data-show="<?= $idx ?>">
     <span class="grip">
         <i class="fa-solid fa-grip"></i>
     </span>

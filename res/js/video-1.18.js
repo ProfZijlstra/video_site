@@ -674,4 +674,121 @@ const code = "highlighted";
 
     // make markdown preview work
     MARKDOWN.enablePreview("../markdown");
+
+
+    /**
+     * Admin related code
+     **/
+    const configBtn = document.getElementById("config-btn");
+    if (!configBtn) {
+        return;
+    }
+    let editLink = null;
+
+    // enable video configuration when clicking config button
+    function goConfigu(evt, flip = true) {
+        const videoLinks = document.querySelectorAll(".video_link");
+        for (const div of videoLinks) {
+            div.classList.toggle("config");
+        }
+        document.getElementById("back").classList.toggle("config");
+        document.querySelectorAll("article .media").forEach(e => {
+            e.classList.toggle("hide");
+        });
+        if (flip && window.sessionStorage.getItem("config") == "true") {
+            window.sessionStorage.setItem("config", "false");
+        } else {
+            window.sessionStorage.setItem("config", "true");
+        }
+    }
+    configBtn.onclick = goConfigu;
+    if (window.sessionStorage.getItem("config") == "true") {
+        goConfigu(null, false);
+    }
+
+    // enable clicking plus to show add  dialog
+    document.getElementById("add_part").onmousedown = function() {
+        document.getElementById("addDialog").showModal();
+        document.getElementById("addTitle").focus();
+    };
+    function closeAddDialog() {
+        document.getElementById("addDialog").close();
+    }
+    document.getElementById("closeAdd").onmousedown = closeAddDialog;
+
+    // enable clicking edit to show edit dialog
+    function editLessonPart() {
+        const parent = this.closest(".video_link");
+        editLink = parent;
+
+        const title = parent.querySelector("a").innerText;
+        const file = parent.querySelector(".config").dataset.file;
+        document.getElementById("editDialog").showModal();
+        const editTitle = document.getElementById("editTitle");
+        editTitle.value = title;
+        editTitle.dataset.file = file;
+        document.getElementById("editTitle").focus();
+    }
+    document.querySelectorAll(".video_link i.fa-pen-to-square").forEach(
+        e => e.onmousedown = editLessonPart
+    );
+    function closeEditDialog() {
+        document.getElementById("editDialog").close();
+    }
+    document.getElementById("closeEdit").onmousedown = closeEditDialog;
+
+    // submit edit should:
+    // 1. send to server
+    // 2. update the tab
+    // 3. update the article title
+    //
+    // .onclick is used so that enter inside the textfield also triggers it
+    document.getElementById("editBtn").onclick = function(evt) {
+        evt.preventDefault();
+
+        const editTitle = document.getElementById("editTitle");
+        const title = editTitle.value;
+        const file = editTitle.dataset.file;
+        if (title.indexOf("_") !== -1) {
+            alert("Title cannot not contain underscores.\n"
+                + "Please remove the underscore and try again");
+            return;
+        }
+        closeEditDialog();
+
+        const data = new FormData();
+        data.append("title", title);
+        data.append("file", file);
+        fetch('title', {
+            method: "POST",
+            body: data,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Updating title failed");
+                }
+
+                // change title on page
+                const tab = editLink.querySelector("a");
+                tab.innerText = title;
+                const id = "a" + editLink.id;
+                const hdr = document.querySelector(`#${id} h2`);
+                hdr.innerText = title;
+                const config = tab.parentNode.querySelector(".config");
+                const parts = file.split('_');
+                parts[1] = title;
+                config.dataset.file = parts.join('_');
+            })
+            .catch(e => alert(e));
+    }
+
+    // validate before submitting
+    document.getElementById("addBtn").onclick = function(evt) {
+        const title = document.getElementById("addTitle").value;
+        if (title.indexOf("_") !== -1) {
+            alert("Title cannot not contain underscores.\n"
+                + "Please remove the underscore and try again");
+            return false;
+        }
+    }
 });

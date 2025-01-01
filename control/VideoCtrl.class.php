@@ -220,6 +220,31 @@ class VideoCtrl
         }
     }
 
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$", sec: 'instructor')]
+    public function addLessonPart()
+    {
+        global $URI_PARAMS;
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+
+        $title = filter_input(INPUT_POST, 'title');
+        // title should not have underscores
+        if (strpos($title, '_') !== false) {
+            http_response_code(400);
+
+            return;
+        }
+        $res = $this->lessonPartDao->add($course_num, $block, $day, $title);
+        if ($res === false) {
+            http_response_code(500);
+        }
+
+        return "Location: $res";
+    }
+
+    /* TODO: everything below this needs to be refactored for the new UI */
+
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$", sec: 'instructor')]
     public function increaseSequence()
     {

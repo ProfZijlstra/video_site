@@ -2,7 +2,7 @@
     data-name="<?= $part ?>">
     <h2><?= $part ?></h2>
 
-    <div class="media">
+    <div class="media <?= $config ? 'hide' : '' ?>">
         <i class="fa-solid video fa-video<?= $has_vid ? ' available hide' : '-slash'?>" 
             title="Switch to video <?= $has_vid ? '' : 'not available'?>"></i>
         <div class="pdf <?= ! $has_vid ? 'hide' : '' ?>">
@@ -14,9 +14,11 @@
             <?php } ?>
         </div>
     </div>
-    <div class="media upload hide">
+    <?php if (hasMinAuth('instructor')) { ?>
+    <div class="media upload <?= $config ? '' : 'hide' ?>">
         <i title="Upload a .mp4 and/or .pdf" class="fa-solid fa-upload available"></i>
     </div>
+    <?php } ?>
 
     <?php if ($has_vid) { ?>
     <video controls controlslist="nodownload" 
@@ -45,7 +47,9 @@
 
     <?php if (! $has_vid && ! $has_pdf) { ?>
     <div class="noVid">
-        This lesson part does not have a Video or PDF file (yet).
+        This lesson part <br>
+        does not have a Video or PDF file <br>
+        (yet).
     </div>
     <?php } ?>
 
@@ -78,6 +82,7 @@
     </div>
     <?php } ?>
 
+    <?php if ($firstIdx && $lastIdx) { ?>
     <nav class="mobileNav">
         <div class="prev">
             <?php if ($idx > $first_idx) { ?>
@@ -100,6 +105,7 @@
             <?php } ?>
         </div>
     </nav>
+    <?php } ?>
 
     <div class="keyboard hidden">
         <section>
