@@ -172,6 +172,11 @@
             </form>
         </dialog>
 
+        <div class="hide">
+            <form id="deleteForm" method="post" action="delete">
+                <input id="deletePart" type="hidden" name="part" value="">
+            </form>
+        </div>
         <?php } ?>
 
     </body>

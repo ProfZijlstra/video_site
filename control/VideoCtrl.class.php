@@ -243,6 +243,23 @@ class VideoCtrl
         return "Location: $res";
     }
 
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/delete$", sec: 'instructor')]
+    public function deleteLessonPart()
+    {
+        global $URI_PARAMS;
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+
+        $part = filter_input(INPUT_POST, 'part');
+        $res = $this->lessonPartDao->delete($course_num, $block, $day, $part);
+        if (! $res) {
+            http_response_code(500);
+        }
+
+        return 'Location: 01';
+    }
+
     /* TODO: everything below this needs to be refactored for the new UI */
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$", sec: 'instructor')]
@@ -303,7 +320,7 @@ class VideoCtrl
         return "Location: $seq";
     }
 
-    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$", sec: 'instructor')]
+    /*#[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$", sec: 'instructor')]*/
     public function addVideo()
     {
         global $URI_PARAMS;

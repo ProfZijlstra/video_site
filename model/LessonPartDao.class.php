@@ -69,11 +69,42 @@ class LessonPartDao
         $upd = implode('_', $parts);
 
         $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/");
-        if ($ch) {
-            $ren = rename($file, $upd);
-            chdir('../../../../../../');
+        if (! $ch) {
+            return false;
+        }
+        $ren = rename($file, $upd);
+        chdir('../../../../../../');
+
+        return $ren;
+    }
+
+    public function delete($course, $block, $day, $file): bool
+    {
+        $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/");
+        if (! $ch) {
+            return false;
         }
 
-        return $ch && $ren;
+        // delete by turning off
+        $chunks = explode('_', $file);
+        $new_file = '99_'.$chunks[1].'_off';
+        $ren = rename($file, $new_file);
+
+        // decrement the sequence of all files after this one
+        $files = glob('*_on');
+        foreach ($files as $f) {
+            $parts = explode('_', $f);
+            if ($parts[0] > $chunks[0]) {
+                $parts[0]--;
+                if ($parts[0] < 10) {
+                    $parts[0] = '0'.$parts[0];
+                }
+                $new = implode('_', $parts);
+                rename($f, $new);
+            }
+        }
+        chdir('../../../../../../');
+
+        return $ren;
     }
 }

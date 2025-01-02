@@ -791,4 +791,16 @@ const code = "highlighted";
             return false;
         }
     }
+
+    function deleteLessonPart() {
+        if (window.confirm('Delete this lesson part?')) {
+            const parent = this.closest(".video_link");
+            const file = parent.querySelector(".config").dataset.file;
+            document.getElementById("deletePart").value = file;
+            document.getElementById("deleteForm").submit();
+        }
+    }
+    document.querySelectorAll(".video_link i.fa-trash-can").forEach(e =>
+        e.onmousedown = deleteLessonPart
+    );
 });
