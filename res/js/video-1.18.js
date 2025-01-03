@@ -837,13 +837,14 @@ const code = "highlighted";
                 if (!response.ok) {
                     throw new Error("Server reordering failed");
                 }
-                fixUrls(seqs, ids);
+                const speed = window.localStorage.getItem("speed");
+                fixUrls(ids);
+                updateSpeed(speed);
             })
             .catch(e => alert(e));
     });
-    function fixUrls(seqs, ids) {
-        // TODO: fix this to use seqs and ids
-        for (const key in seqs) {
+    function fixUrls(ids) {
+        for (const key in ids) {
             let newSeq = parseInt(key) + 1;
             if (newSeq < 10) {
                 newSeq = '0' + newSeq;
