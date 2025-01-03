@@ -260,6 +260,22 @@ class VideoCtrl
         return 'Location: 01';
     }
 
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/reorder$", sec: 'instructor')]
+    public function reorderLessonParts()
+    {
+        global $URI_PARAMS;
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+
+        $order = filter_input(INPUT_POST, 'order');
+        $ids = explode(',', $order);
+        $res = $this->lessonPartDao->reorder($course_num, $block, $day, $ids);
+        if (! $res) {
+            http_response_code(500);
+        }
+    }
+
     /* TODO: everything below this needs to be refactored for the new UI */
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$", sec: 'instructor')]

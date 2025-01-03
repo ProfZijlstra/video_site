@@ -123,20 +123,21 @@ nav#videos div.video_link.config {
 div.video_link.config span.config {
     display: inline;
 }
-div.video_link span.grip {
+div.video_link i.grip {
     position: absolute;
     left: 5px;
     top: 5px;
     display: none;
-    i {
-	cursor: grab;
-    }
-    i:active {
-	cursor: grabbing;
-    }
+    cursor: grab;
 }
-div.video_link.config span.grip {
+div.video_link.config.dragging i.grip {
+    cursor: grabbing;
+}
+div.video_link.config i.grip {
     display: inline;
+}
+div.video_link.config.dragging {
+    opacity: 0.5;
 }
 
 div#total {

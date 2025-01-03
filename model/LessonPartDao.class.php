@@ -107,4 +107,39 @@ class LessonPartDao
 
         return $ren;
     }
+
+    public function reorder($course, $block, $day, $ids): bool
+    {
+        $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/");
+        if (! $ch) {
+            return false;
+        }
+
+        $files = glob('*_on');
+        $ordered = [];
+        foreach ($files as $file) {
+            $parts = explode('_', $file);
+            $ordered[$parts[0]] = $file;
+        }
+
+        foreach ($ids as $idx => $id) {
+            if (! isset($ordered[$id])) {
+                echo 'Missing file for id '.$id;
+                chdir('../../../../../../');
+
+                return false;
+            }
+            $file = $ordered[$id];
+            $parts = explode('_', $file);
+            $new_id = intval($idx) + 1;
+            if ($new_id < 10) {
+                $new_id = '0'.$new_id;
+            }
+            $parts[0] = $new_id;
+            rename($file, implode('_', $parts));
+        }
+        chdir('../../../../../../');
+
+        return true;
+    }
 }

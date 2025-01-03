@@ -683,7 +683,9 @@ const code = "highlighted";
     if (!configBtn) {
         return;
     }
+    // global variables for the admin section
     let editLink = null;
+    let dragPart = null;
 
     // enable video configuration when clicking config button
     function goConfigu(evt, flip = true) {
@@ -803,4 +805,87 @@ const code = "highlighted";
     document.querySelectorAll(".video_link i.fa-trash-can").forEach(e =>
         e.onmousedown = deleteLessonPart
     );
+
+    const tabList = document.getElementById("tabs");
+
+    tabList.addEventListener('dragstart', (e) => {
+        dragPart = e.target.closest('div.video_link');
+        dragPart.classList.add('dragging');
+    });
+    tabList.addEventListener('dragend', () => {
+        dragPart.classList.remove('dragging');
+        dragPart = null;
+        const tabs = tabList.children;
+        const seqs = [];
+        const ids = [];
+        for (let i = 0; i < tabs.length; i++) {
+            seqs.push(tabs[i].dataset.seq)
+            ids.push(tabs[i].id);
+            let newSeq = i + 1;
+            if (newSeq < 10) {
+                newSeq = '0' + newSeq;
+            }
+            tabs[i].dataset.seq = newSeq;
+        }
+
+        fetch('./reorder', {
+            method: 'POST',
+            body: `order=${seqs.join(',')}`,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Server reordering failed");
+                }
+                fixUrls(seqs, ids);
+            })
+            .catch(e => alert(e));
+    });
+    function fixUrls(seqs, ids) {
+        // TODO: fix this to use seqs and ids
+        for (const key in seqs) {
+            let newSeq = parseInt(key) + 1;
+            if (newSeq < 10) {
+                newSeq = '0' + newSeq;
+            }
+            const id = ids.shift();
+            const article = document.getElementById(`a${id}`);
+            const video = article.querySelector('video');
+            const src = video.dataset.src;
+            const dirs = src.split('/');
+            const partDir = dirs[dirs.length - 2];
+            const parts = partDir.split('_');
+            parts[0] = newSeq;
+            dirs[dirs.length - 2] = parts.join('_');
+            video.dataset.src = dirs.join('/');
+            video.setAttribute('src', dirs.join('/'));
+
+            const pdf = article.querySelector('object');
+            const data = pdf.data;
+            const dirs2 = data.split('/');
+            const partDir2 = dirs2[dirs2.length - 2];
+            const parts2 = partDir2.split('_');
+            parts2[0] = newSeq;
+            dirs2[dirs2.length - 2] = parts2.join('_');
+            pdf.data = dirs2.join('/');
+            pdf.querySelector('a').setAttribute('href', dirs2.join('/'));
+        }
+    }
+    tabList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const target = e.target;
+        if (dragPart && dragPart != target && target.tagName === 'DIV') {
+            const bounding = target.getBoundingClientRect();
+            const offset = e.clientY - bounding.top;
+            const middle = bounding.height / 2;
+
+            if (offset > middle) {
+                target.insertAdjacentElement('afterend', dragPart);
+            } else {
+                target.insertAdjacentElement('beforebegin', dragPart);
+            }
+        }
+    });
+
+
 });
