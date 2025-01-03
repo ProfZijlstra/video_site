@@ -94,7 +94,7 @@
                             </div>
                         <?php } elseif ($question['type'] == 'image') { ?>
                             <span class="block">
-                                <input type="file" class="img_replace" />
+                                <input type="file" class="img_replace" accept=".png,.jpg,.gif" >
                                 <i title="Upload image" class="fa-solid fa-upload"></i>
                                 <i class="fa-solid fa-circle-notch"></i>
                                 <i title="Open camera" class="fa-solid fa-camera"></i>

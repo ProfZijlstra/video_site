@@ -22,7 +22,15 @@
         <?php if ($deliverable['type'] == 'img') { ?>
         <span><i class="fa-solid fa-camera" title="Open Camera"></i></span>
         <?php } ?>
-        <input type="file" class="file fileUpload" />
+
+        <?php if ($deliverable['type'] == 'img') { ?>
+        <input type="file" class="file fileUpload" accept=".png,.jpg,.gif">
+        <?php } elseif ($deliverable['type'] == 'pdf') { ?>
+        <input type="file" class="file fileUpload" accept=".pdf">
+        <?php } elseif ($deliverable['type'] == 'zip') { ?>
+        <input type="file" class="file fileUpload" accept=".zip">
+        <?php } ?>
+
         <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
         <i title="Delete" class="fa-solid fa-trash-can <?= $delivery['file'] ? '' : 'hide' ?>" data-id="<?= $delivery['id']?>"></i>
         <span class="check"><i class="fa-solid fa-check"></i></span>
