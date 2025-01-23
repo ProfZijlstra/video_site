@@ -177,8 +177,14 @@
                 <input id="deletePart" type="hidden" name="part" value="">
             </form>
         </div>
+
+        <div class="hide">
+            <form id="uploadForm" method="post" action="upload" enctype="multipart/form-data">
+                <input id="part" type="hidden" name="part" value="">
+                <input id="file" type="file" name="file" accept=".pdf,.mp4">
+            </form>
+        </div>
         <?php } ?>
 
     </body>
-
 </html>

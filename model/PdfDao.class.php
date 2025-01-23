@@ -51,4 +51,46 @@ class PdfDao
 
         return $result;
     }
+
+    public function nextIndex($course, $block, $day, $part): string
+    {
+        // get the index of the last file and add one
+        // probably better than counting the files and adding one
+        $idx = '00';
+        chdir("res/course/{$course}/{$block}/lecture/{$day}/{$part}/");
+        $files = glob('*.pdf');
+        if (count($files) > 0) {
+            $last = $files[count($files) - 1];
+            $parts = explode('_', $last);
+            $full = $parts[0];
+            $parts = explode('.', $full);
+            $idx = $parts[1];
+
+            $idx += 1;
+            if ($idx < 10) {
+                $idx = '0'.$idx;
+            }
+        }
+        chdir('../../../../../../../');
+
+        return $idx;
+    }
+
+    public function addPdf($course, $block, $day, $part, $file, $title): bool
+    {
+        $chunks = explode('_', $part);
+        $major = $chunks[0];
+        $minor = $this->nextIndex($course, $block, $day, $part);
+        $idx = $major.'.'.$minor;
+
+        $name = $idx.'_'.$title.'.pdf';
+        $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/{$part}/");
+        if (! $ch) {
+            return false;
+        }
+        $move = move_uploaded_file($file, $name);
+        chdir('../../../../../../');
+
+        return true;
+    }
 }

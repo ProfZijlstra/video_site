@@ -888,5 +888,15 @@ const code = "highlighted";
         }
     });
 
-
+    function uploadHandler() {
+        const file = document.getElementById('file');
+        document.getElementById("part").value = this.dataset.part;
+        file.click();
+    }
+    const uploads = document.querySelectorAll('div.media.upload');
+    uploads.forEach(e => e.onmousedown = uploadHandler);
+    document.getElementById('file').onchange = function() {
+        const form = document.getElementById('uploadForm');
+        form.submit();
+    }
 });

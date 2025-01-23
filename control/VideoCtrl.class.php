@@ -276,68 +276,8 @@ class VideoCtrl
         }
     }
 
-    /* TODO: everything below this needs to be refactored for the new UI */
-
-    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/increase$", sec: 'instructor')]
-    public function increaseSequence()
-    {
-        global $URI_PARAMS;
-        $course_num = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
-        $day = $URI_PARAMS[3];
-
-        $file = filter_input(INPUT_POST, 'file');
-        $next_file = filter_input(INPUT_POST, 'next_file');
-
-        $parts = explode('_', $file);
-        $seq = intval($parts[0]);
-        $seq += 1;
-
-        $parts = explode('_', $next_file);
-        $next_seq = intval($parts[0]);
-        $next_seq -= 1;
-
-        $this->videoDao->updateSequence($course_num, $block, $day, $file, $seq);
-        $this->videoDao->updateSequence($course_num, $block, $day, $next_file, $next_seq);
-
-        if ($seq < 10) {
-            $seq = '0'.$seq;
-        }
-
-        return "Location: $seq";
-    }
-
-    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/decrease$", sec: 'instructor')]
-    public function decreaseSequence()
-    {
-        global $URI_PARAMS;
-        $course_num = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
-        $day = $URI_PARAMS[3];
-
-        $file = filter_input(INPUT_POST, 'file');
-        $prev_file = filter_input(INPUT_POST, 'prev_file');
-
-        $parts = explode('_', $file);
-        $seq = intval($parts[0]);
-        $seq -= 1;
-
-        $parts = explode('_', $prev_file);
-        $prev_seq = intval($parts[0]);
-        $prev_seq += 1;
-
-        $this->videoDao->updateSequence($course_num, $block, $day, $file, $seq);
-        $this->videoDao->updateSequence($course_num, $block, $day, $prev_file, $prev_seq);
-
-        if ($seq < 10) {
-            $seq = '0'.$seq;
-        }
-
-        return "Location: $seq";
-    }
-
-    /*#[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$", sec: 'instructor')]*/
-    public function addVideo()
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/upload$", sec: 'instructor')]
+    public function uploadVidPdf()
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];
@@ -346,41 +286,31 @@ class VideoCtrl
 
         // check upload error
         if ($_FILES['file']['error']) {
-            echo 'Error uploading file (server settings)';
+            echo 'Error uploading file (exceeded max file size?)';
 
             return;
         }
 
-        $video = $_FILES['file']['tmp_name'];
-        $title = filter_input(INPUT_POST, 'title');
+        $file = $_FILES['file']['tmp_name'];
+        $name = $_FILES['file']['name'];
+        $name = strtolower($name);
+        $part = filter_input(INPUT_POST, 'part');
+        $chunks = explode('_', $part);
+        $title = $chunks[1];
 
-        // get duration
-        $text = shell_exec("ffmpeg -i \"$video\" 2>&1");
-        $matches = [];
-        preg_match("/Duration: (\d\d:\d\d:\d\d\.\d\d)/", $text, $matches);
-        if ($matches) {
-            $duration = $matches[1];
+        if (str_ends_with($name, '.pdf')) {
+            $this->pdfDao->addPdf($course_num, $block, $day, $part, $file, $title);
+
+            return "Location: $chunks[0]#pdf";
+        } elseif (str_ends_with($name, '.mp4')) {
+            $this->videoDao->addVideo($course_num, $block, $day, $part, $file, $title);
+
+            return "Location: $chunks[0]";
         } else {
-            // show error and exit
-            echo 'Uploaded file does not appear to be a video';
+            echo 'Uploaded file does not appear to be a video or pdf';
 
             return;
         }
 
-        // get next index number
-        $idx = $this->videoDao->nextIndex($course_num, $block, $day);
-        if ($idx < 10) {
-            $idx = '0'.$idx;
-        }
-
-        // get current timestamp
-        $now = new DateTimeImmutable;
-        $timeStamp = $now->format('Y-m-d G-i-s');
-
-        // finally move the uploaded file to the right location
-        $name = "{$idx}_{$title}_{$timeStamp}_{$duration}.mp4";
-        $this->videoDao->addVideo($course_num, $block, $day, $video, $name);
-
-        return "Location: $idx";
     }
 }

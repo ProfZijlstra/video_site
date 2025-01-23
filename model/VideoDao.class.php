@@ -89,6 +89,56 @@ class VideoDao
         ];
     }
 
+    public function nextIndex($course, $block, $day, $part): string
+    {
+        // get the index of the last file and add one
+        // probably better than counting the files and adding one
+        $idx = '01';
+        chdir("res/course/{$course}/{$block}/lecture/{$day}/{$part}/");
+        $videos = glob('*.mp4');
+        if (count($videos) > 0) {
+            $last = $videos[count($videos) - 1];
+            $parts = explode('_', $last);
+            $idx = $parts[0];
+
+            $idx += 1;
+            if ($idx < 10) {
+                $idx = '0'.$idx;
+            }
+        }
+        chdir('../../../../../../../');
+
+        return $idx;
+    }
+
+    public function addVideo($course, $block, $day, $part, $file, $title): bool
+    {
+        $text = shell_exec("ffmpeg -i \"$file\" 2>&1");
+        $matches = [];
+        preg_match("/Duration: (\d\d:\d\d:\d\d\.\d\d)/", $text, $matches);
+        if ($matches) {
+            $duration = $matches[1];
+        } else {
+            return false;
+        }
+
+        // get next index number
+        $idx = $this->nextIndex($course, $block, $day, $part);
+
+        // get current timestamp
+        $now = new DateTimeImmutable;
+        $timeStamp = $now->format('Y-m-d G-i-s');
+
+        // finally move the uploaded file to the right location
+        $name = "{$idx}_{$title}_{$timeStamp}_{$duration}.mp4";
+
+        chdir("res/course/{$course}/{$block}/lecture/{$day}/{$part}/");
+        move_uploaded_file($file, $name);
+        chdir('../../../../../../../');
+
+        return true;
+    }
+
     /* Everything below this needs to be updated / fixed to werk with new dirs */
 
     public function clone($course_number, $block, $old_block): void
@@ -144,6 +194,7 @@ class VideoDao
 
     public function create($number, $block, $lessonsPerRow, $lessonRows): void
     {
+        // TODO: move this into the courseDao
         chdir('res/course');
         mkdir($number);
         chdir($number);
@@ -160,56 +211,5 @@ class VideoDao
             }
         }
         chdir('../../../../');
-    }
-
-    public function addVideo($course, $block, $day, $tmp, $name): void
-    {
-        $cwd = getcwd();
-        if (! str_ends_with($cwd, "res/course/{$course}/{$block}/{$day}/vid")) {
-            mkdir("res/course/{$course}/{$block}/lecture/{$day}/vid/", 0775, true);
-            chdir("res/course/{$course}/{$block}/lecture/{$day}/vid/");
-        }
-        move_uploaded_file($tmp, "$name");
-        chdir('../../../../../../../');
-    }
-
-    public function nextIndex($course, $block, $day): int
-    {
-        // get the index of the last file and add one
-        // probably better than counting the files and adding one
-        chdir("res/course/{$course}/{$block}/lecture/{$day}/vid/");
-        $videos = glob('*.mp4');
-        if (count($videos) > 0) {
-            $last = $videos[count($videos) - 1];
-            $parts = explode('_', $last);
-            $idx = $parts[0];
-            chdir('../../../../../../../');
-
-            return $idx + 1;
-        }
-        chdir('../../../../../../../');
-
-        return 1;
-    }
-
-    public function updateSequence($course, $block, $day, $file, $value): void
-    {
-        if (! is_numeric($value)) {
-            return;
-        }
-        if ($value < 10) {
-            $value = '0'.$value;
-        }
-        $this->updatePart($course, $block, $day, $file, 0, $value);
-    }
-
-    private function updatePart($course, $block, $day, $file, $part, $upd): void
-    {
-        chdir("res/course/{$course}/{$block}/lecture/{$day}/vid/");
-        $parts = explode('_', $file);
-        $parts[$part] = $upd;
-        $upd = implode('_', $parts);
-        rename($file, $upd);
-        chdir('../../../../../../../');
     }
 }

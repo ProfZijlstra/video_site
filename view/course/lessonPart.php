@@ -15,7 +15,7 @@
         </div>
     </div>
     <?php if (hasMinAuth('instructor')) { ?>
-    <div class="media upload <?= $config ? '' : 'hide' ?>">
+    <div class="media upload <?= $config ? '' : 'hide' ?>" data-part="<?= "{$idx}_{$part}_on"?>"}>
         <i title="Upload a .mp4 and/or .pdf" class="fa-solid fa-upload available"></i>
     </div>
     <?php } ?>
