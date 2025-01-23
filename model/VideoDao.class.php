@@ -133,7 +133,7 @@ class VideoDao
 
         // get current timestamp
         $now = new DateTimeImmutable;
-        $timeStamp = $now->format('Y-m-d G-i-s');
+        $timeStamp = $now->format('Y-m-d H-i-s');
 
         // finally move the uploaded file to the right location
         $name = "{$idx}_{$title}_{$timeStamp}_{$duration}_{$status}.mp4";
@@ -189,7 +189,7 @@ class VideoDao
             $idx = '0'.$idx;
         }
         $name = "{$idx}_{$parts[1]}_{$parts[2]}_{$parts[3]}.mp4";
-        shell_exec("ffmpeg -i \"$video\" -vf \"fps=10,scale=1280:720\" -c:v libx264 -preset fast -crf 34 -c:a aac -b:a 96k \"$name\"");
+        shell_exec("nice ffmpeg -i \"$video\" -vf \"fps=10,scale=1280:720\" -c:v libx264 -preset fast -crf 34 -c:a aac -b:a 96k \"$name\"");
 
         chdir('../../../../../../../');
 
