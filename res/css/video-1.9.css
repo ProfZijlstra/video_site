@@ -141,9 +141,9 @@ div.video_link.config.dragging {
 }
 
 div#total {
-	margin-top: 10px;
+    margin-top: 10px;
     margin-bottom: 5px;
-	text-align: center;
+    text-align: center;
 }
 div#back {
     position: relative;
@@ -241,6 +241,18 @@ main article video.hide, main article object.hide {
 main article div.noVid {
     min-height: 20vw;
     font-size: 30pt;
+}
+main article div.reencode {
+    position: absolute;
+    top: 60px;
+    right: 150px;
+    font-size: 20pt;
+    border: 1px solid var(--border);
+    background-color: var(--bg-color);
+    padding: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
 }
 /* TODO: make progress use flexbox to show sections for each video */
 main article .progress {

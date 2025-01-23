@@ -62,7 +62,7 @@ class VideoDao
                 'type' => 'vid',
                 'file' => $latest,
                 'duration' => $duration,
-                'parts' => explode('_', $latest),
+                'parts' => explode('_', basename($latest, '.mp4')),
             ];
 
             if ($deep) {
@@ -113,13 +113,19 @@ class VideoDao
 
     public function addVideo($course, $block, $day, $part, $file, $title): bool
     {
-        $text = shell_exec("ffmpeg -i \"$file\" 2>&1");
+        $text = shell_exec("ffprobe \"$file\" 2>&1");
         $matches = [];
-        preg_match("/Duration: (\d\d:\d\d:\d\d\.\d\d)/", $text, $matches);
+        preg_match("/Duration: (\d\d:\d\d:\d\d\.\d\d).*bitrate: (\d+) kb/", $text, $matches);
         if ($matches) {
             $duration = $matches[1];
+            $bitrate = $matches[2];
         } else {
             return false;
+        }
+
+        $status = '';
+        if ($bitrate > 250) {
+            $status = 'big';
         }
 
         // get next index number
@@ -130,10 +136,61 @@ class VideoDao
         $timeStamp = $now->format('Y-m-d G-i-s');
 
         // finally move the uploaded file to the right location
-        $name = "{$idx}_{$title}_{$timeStamp}_{$duration}.mp4";
+        $name = "{$idx}_{$title}_{$timeStamp}_{$duration}_{$status}.mp4";
 
         chdir("res/course/{$course}/{$block}/lecture/{$day}/{$part}/");
         move_uploaded_file($file, $name);
+        chdir('../../../../../../../');
+
+        return true;
+    }
+
+    public function reencode($course, $block, $day, $part): bool
+    {
+        $ch = chdir("res/course/{$course}/{$block}/lecture/{$day}/{$part}/");
+        if (! $ch) {
+            echo "Could not change directory\n";
+
+            return false;
+        }
+        $videos = glob('*.mp4');
+        $latest = array_pop($videos);
+        if (! $latest) {
+            echo "No video found\n";
+
+            return false;
+        }
+        $parts = explode('_', basename($latest, '.mp4'));
+        if (count($parts) < 5) {
+            echo "Not enough parts\n";
+
+            return false;
+        }
+        $status = $parts[4];
+        if ($status != 'big') {
+            echo "Not a high bitrate video\n";
+
+            return false;
+        }
+
+        // rename the file to remove the status (stop addtional reencodes)
+        $video = "{$parts[0]}_{$parts[1]}_{$parts[2]}_{$parts[3]}_original.mp4";
+        $res = rename($latest, $video);
+        if (! $res) {
+            echo "Could not rename\n";
+
+            return false;
+        }
+
+        set_time_limit(0);
+        $idx = $parts[0];
+        $idx += 1;
+        if ($idx < 10) {
+            $idx = '0'.$idx;
+        }
+        $name = "{$idx}_{$parts[1]}_{$parts[2]}_{$parts[3]}.mp4";
+        shell_exec("ffmpeg -i \"$video\" -vf \"fps=10,scale=1280:720\" -c:v libx264 -preset fast -crf 34 -c:a aac -b:a 96k \"$name\"");
+
         chdir('../../../../../../../');
 
         return true;

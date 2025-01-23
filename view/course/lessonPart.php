@@ -27,6 +27,11 @@
         <?php } ?>
         data-src="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}_on/{$vid_info['file']}" ?>">
     </video>
+        <?php if (hasMinAuth('instructor') && count($vid_info['parts']) >= 5 && $vid_info['parts'][4] == 'big') { ?>
+        <div class="reencode hide" data-part="<?= "{$idx}_{$part}_on" ?>">
+            <i class="fa-solid fa-paint-roller" title="Reencode for streaming"></i>
+        </div>
+        <?php } ?>
     <?php } ?>
 
     <?php if ($has_pdf) { ?>

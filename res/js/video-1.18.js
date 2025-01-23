@@ -683,18 +683,19 @@ const code = "highlighted";
     if (!configBtn) {
         return;
     }
+
     // global variables for the admin section
     let editLink = null;
     let dragPart = null;
 
     // enable video configuration when clicking config button
-    function goConfigu(evt, flip = true) {
+    function goConfig(evt, flip = true) {
         const videoLinks = document.querySelectorAll(".video_link");
         for (const div of videoLinks) {
             div.classList.toggle("config");
         }
         document.getElementById("back").classList.toggle("config");
-        document.querySelectorAll("article .media").forEach(e => {
+        document.querySelectorAll("article .media, article .reencode").forEach(e => {
             e.classList.toggle("hide");
         });
         if (flip && window.sessionStorage.getItem("config") == "true") {
@@ -703,9 +704,9 @@ const code = "highlighted";
             window.sessionStorage.setItem("config", "true");
         }
     }
-    configBtn.onclick = goConfigu;
+    configBtn.onclick = goConfig;
     if (window.sessionStorage.getItem("config") == "true") {
-        goConfigu(null, false);
+        goConfig(null, false);
     }
 
     // enable clicking plus to show add  dialog
@@ -899,4 +900,35 @@ const code = "highlighted";
         const form = document.getElementById('uploadForm');
         form.submit();
     }
+
+    setTimeout(() => {
+        // show warning if video is not optimized for streaming
+        if (window.sessionStorage.getItem("config") == "true") {
+            let reenc = document.querySelector("article.selected .reencode");
+            if (reenc) {
+                alert("This video is not optimized for streaming.\n\n" +
+                    "Please reencode it by clicking on the paint roller icon" +
+                    " in the top right corner of the video.");
+            }
+        }
+    }, 100);
+    function clickReencode() {
+        const part = this.dataset.part;
+        fetch('./reencode', {
+            method: 'POST',
+            body: `part=${part}`,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Server reencoding failed");
+                }
+            })
+            .catch(e => alert(e));
+        this.remove();
+        alert("Reencoding started. It may take a while before the video is ready.");
+    }
+    document.querySelectorAll("article div.reencode").forEach((e) => {
+        e.onmousedown = clickReencode;
+    });
 });

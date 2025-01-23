@@ -313,4 +313,19 @@ class VideoCtrl
         }
 
     }
+
+    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/reencode$", sec: 'instructor')]
+    public function reencode()
+    {
+        global $URI_PARAMS;
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+
+        $part = filter_input(INPUT_POST, 'part');
+        $res = $this->videoDao->reencode($course_num, $block, $day, $part);
+        if (! $res) {
+            http_response_code(500);
+        }
+    }
 }
