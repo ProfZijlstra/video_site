@@ -196,18 +196,14 @@ class VideoDao
         return true;
     }
 
-    /* Everything below this needs to be updated / fixed to werk with new dirs */
-
     public function clone($course_number, $block, $old_block): void
     {
-        // TODO: this needs to be fixed after the change in vid/pdf directories
-
         // change directory to where the course materials are and start clone
         chdir("res/course/$course_number");
 
         // get subdirectory names from old offering
         chdir($old_block.'/lecture');
-        $dirs = glob('W*');
+        $dirs = glob('W*', GLOB_ONLYDIR);
         chdir('../..');
 
         // create new offering
@@ -219,39 +215,47 @@ class VideoDao
         // clone the day of week directories
         foreach ($dirs as $dir) {
             mkdir($dir);
-            chdir($dir);
-            // make symlinks to previous offering videos
-            mkdir('vid');
-            // find previoud video files
-            if (chdir("../../../{$old_block}/lecture/$dir/vid")) {
+
+            // get lesson part directories
+            chdir("../../$old_block/lecture/$dir");
+            $parts = glob('*', GLOB_ONLYDIR);
+            chdir("../../../$block/lecture/$dir");
+
+            foreach ($parts as $part) {
+                mkdir($part);
+
+                // find video for this part
+                chdir("../../../$old_block/lecture/$dir/$part/");
                 $videos = glob('*.mp4');
-                // make links in new vid directory
-                chdir("../../../../{$block}/lecture/$dir/vid");
-                foreach ($videos as $video) {
-                    symlink("../../../../{$old_block}/lecture/$dir/vid/$video", $video);
+                if ($videos) {
+                    $video = array_pop($videos);
+                    chdir("../../../../$block/lecture/$dir/$part/");
+                    symlink("../../../../$old_block/lecture/$dir/$part/$video", $video);
                 }
-                chdir('..'); // exit vid dir
-            }
-            // make symlinks to previous offering pdfs
-            mkdir('pdf');
-            // find previoud pdf files
-            if (chdir("../../../{$old_block}/lecture/$dir/pdf")) {
+
+                // find pdf file for this part
+                chdir("../../../../$old_block/lecture/$dir/$part/");
                 $pdfs = glob('*.pdf');
-                // make links in new pdf directory
-                chdir("../../../../{$block}/lecture/$dir/pdf");
-                foreach ($pdfs as $pdf) {
-                    symlink("../../../../{$old_block}/lecture/$dir/pdf/$pdf", $pdf);
+                if ($pdfs) {
+                    $pdf = array_pop($pdfs);
+                    chdir("../../../../$block/lecture/$dir/$part/");
+                    symlink("../../../../$old_block/lecture/$dir/$part/$pdf", $pdf);
                 }
-                chdir('..'); // exit pdf dir
+
+                chdir('../'); // exit this part dir
             }
-            chdir('..'); // exit day dir
+
+            chdir('../'); // exit this day dir
         }
         chdir('../../../../..'); // exit lecture, block, course, res dirs
     }
 
+    /**
+     * Creates the directory structure for a new course offering
+     * cannot put this into the courseDao as that's a DB repository
+     */
     public function create($number, $block, $lessonsPerRow, $lessonRows): void
     {
-        // TODO: move this into the courseDao
         chdir('res/course');
         mkdir($number);
         chdir($number);
