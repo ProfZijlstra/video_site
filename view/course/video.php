@@ -172,6 +172,18 @@
             </form>
         </dialog>
 
+        <dialog id="progressDialog" class="modal">
+            <i id="closeProgress" class="fas fa-times-circle close"></i>
+
+            <h3>Uploading</h3>
+            <div id="progressText">
+                <span id="loaded">0</span> of <span id="total">0</span>
+            </div>
+            <div id="progressBar">
+                <div id="progress"></div>
+            </div>
+        </dialog>
+
         <div class="hide">
             <form id="deleteForm" method="post" action="delete">
                 <input id="deletePart" type="hidden" name="part" value="">

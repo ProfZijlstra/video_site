@@ -3,7 +3,11 @@ window.addEventListener('load', () => {
     const day_id = document.getElementById('day').dataset.id;
     const videos = document.querySelectorAll('video');
     let video = document.querySelector("article.selected video");
-    let video_id = document.querySelector(".video_link.selected").id;
+    let video_id = "01";
+    const link = document.querySelector(".video_link.selected");
+    if (link) {
+        video_id = link.id;
+    }
 
     // disable right clicking
     for (const vid of videos) {
@@ -322,7 +326,7 @@ window.addEventListener('load', () => {
         }
 
         const auto = document.querySelector('i.auto_toggle');
-        if (auto.classList.contains('fa-toggle-on')) {
+        if (auto && auto.classList.contains('fa-toggle-on')) {
             video = document.querySelector("article.selected video");
             video?.play();
         }
@@ -359,7 +363,7 @@ window.addEventListener('load', () => {
     }
 
     // using the browser's back button will pop the history
-    const initial_id = document.querySelector(".video_link.selected").id;
+    const initial_id = video_id;
     window.addEventListener('popstate', (e) => {
         const state = e.state;
         if (state && state.id) {
@@ -482,7 +486,7 @@ window.addEventListener('load', () => {
 
     // enable autoplay on start based on local storage
     let autoplay = window.localStorage.getItem('autoplay');
-    if (autoplay && autoplay == "on") {
+    if (autoplay && autoplay == "on" && video) {
         const toggles = document.querySelectorAll("i.auto_toggle");
         for (const t of toggles) {
             t.classList.toggle("fa-toggle-off");
@@ -896,9 +900,60 @@ const code = "highlighted";
     }
     const uploads = document.querySelectorAll('div.media.upload');
     uploads.forEach(e => e.onmousedown = uploadHandler);
+    function uploadFile() {
+        const dialog = document.getElementById("progressDialog")
+        dialog.showModal();
+
+        const part = document.getElementById('part').value;
+        const file = document.getElementById('file');
+        const fileVal = file.value;
+        if (!fileVal) {
+            alert("Please select a file to upload");
+            return false;
+        }
+        if (fileVal.indexOf('.mp4') == -1 && fileVal.indexOf('.pdf') == -1) {
+            alert("Only .mp4 and .pdf files are allowed");
+            return false;
+        }
+        const data = new FormData();
+        data.append('part', part);
+        data.append('file', file.files[0]);
+
+        const progressBar = document.getElementById('progress');
+        const progressLoaded = document.getElementById('loaded');
+        const progressTotal = document.getElementById('total');
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', './upload', true);
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                progressLoaded.innerHTML = e.loaded;
+                progressTotal.innerHTML = e.total;
+                const percent = (e.loaded / e.total) * 100;
+                progressBar.style.width = percent + '%';
+            }
+        };
+
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                window.location.reload();
+            } else {
+                dialog.close();
+                alert("Upload failed: " + xhr.statusText);
+            }
+        };
+        xhr.onerror = function() {
+            dialog.close();
+            alert("An error occurred while uploading");
+        };
+        xhr.send(data);
+        return false;
+    };
+    document.getElementById('closeProgress').onmousedown = function() {
+        document.getElementById('progressDialog').close();
+    };
+    document.getElementById('uploadForm').onsubmit = uploadFile;
     document.getElementById('file').onchange = function() {
-        const form = document.getElementById('uploadForm');
-        form.submit();
+        uploadFile();
     }
 
     setTimeout(() => {
