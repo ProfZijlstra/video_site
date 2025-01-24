@@ -45,7 +45,7 @@ class VideoDao
             }
 
             $matches = [];
-            preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d)\.mp4/", $latest, $matches);
+            preg_match("/.*(\d\d):(\d\d):(\d\d)\.(\d\d).*\.mp4/", $latest, $matches);
             $hours = $matches[1];
             $minutes = $matches[2];
             $seconds = $matches[3];
