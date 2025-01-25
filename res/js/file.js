@@ -124,10 +124,11 @@ window.addEventListener("load", () => {
                     const nextListing = child.querySelector(".listing");
                     openPathRec(dirs, nextListing);
                 }
-                if (child.firstElementChild.dataset.isOpen) {
-                    refresh(child.firstElementChild);
+                const dir = child.querySelector("span.dir");
+                if (dir.dataset.isOpen) {
+                    refresh(dir);
                 } else {
-                    child.firstElementChild.click();
+                    dir.click();
                 }
                 return;
             }
