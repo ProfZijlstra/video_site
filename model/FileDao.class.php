@@ -32,6 +32,7 @@ class FileDao
         $listing = scandir($path);
         $files = [];
         $dirs = [];
+        $sizes = [];
         foreach ($listing as $file) {
             if (str_starts_with($file, '.')) {
                 continue;
@@ -41,10 +42,17 @@ class FileDao
                 $dirs[] = $file;
             } else {
                 $files[] = $file;
+                $size = filesize("{$path}/{$file}");
+                $power = 0;
+                while ($size > 1024) {
+                    $size /= 1024;
+                    $power++;
+                }
+                $sizes[$file] = round($size, 2).' '.['B', 'KB', 'MB', 'GB', 'TB'][$power];
             }
         }
 
-        return ['dirs' => $dirs, 'files' => $files];
+        return ['dirs' => $dirs, 'files' => $files, 'sizes' => $sizes];
     }
 
     /**

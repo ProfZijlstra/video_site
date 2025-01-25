@@ -15,7 +15,7 @@ window.addEventListener("load", () => {
         if (this.dataset.isOpen) {
             refreshIcon.classList.add("hide");
             delete this.dataset.isOpen;
-            this.parentNode.querySelector('div.listing').remove();
+            this.parentNode.parentNode.querySelector('div.listing').remove();
             return;
         }
         refreshIcon.classList.remove("hide");
@@ -29,7 +29,7 @@ window.addEventListener("load", () => {
 
         const url = "file/dir?"
         fetch(url + data)
-            .then(response =>  {
+            .then(response => {
                 if (!response.ok) {
                     throw new Error(action + "Fetching directory failed.");
                 }
@@ -60,7 +60,10 @@ window.addEventListener("load", () => {
                 listing.querySelectorAll("i.rename").forEach(
                     e => e.onclick = clickRename
                 );
-                this.parentNode.appendChild(listing);
+                listing.querySelectorAll("div.file").forEach(
+                    e => e.onclick = clickLine
+                );
+                this.parentNode.parentNode.appendChild(listing);
                 spinner.classList.remove('rotate');
 
                 if (openCallBack) {
@@ -171,7 +174,7 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data,
         })
-            .then(response =>  {
+            .then(response => {
                 spinner.classList.remove('rotate');
                 if (!response.ok) {
                     alert("Uploading file failed.");
@@ -192,7 +195,7 @@ window.addEventListener("load", () => {
     // deleting a file
     function clickRemFile() {
         const file = this.dataset.loc;
-        if(!confirm("Delete the following file?\n\n" + file)) {
+        if (!confirm("Delete the following file?\n\n" + file)) {
             return;
         }
 
@@ -203,7 +206,7 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data
         })
-            .then(response =>  {
+            .then(response => {
                 if (!response.ok) {
                     alert("Deleting file failed.");
                 }
@@ -219,7 +222,7 @@ window.addEventListener("load", () => {
     // deleting a directory
     function clickRemDir() {
         const file = this.dataset.loc;
-        if(!confirm("Delete the following directory?\n\n" + file)) {
+        if (!confirm("Delete the following directory?\n\n" + file)) {
             return;
         }
 
@@ -230,10 +233,10 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data
         })
-            .then(response =>  {
+            .then(response => {
                 if (!response.ok) {
                     alert("Deleting directory failed.\n\n"
-                    + "Only empty directories can be deleted");
+                        + "Only empty directories can be deleted");
                     return;
                 }
                 // delete listing
@@ -291,7 +294,7 @@ window.addEventListener("load", () => {
     document.querySelectorAll("i.rename").forEach(
         e => e.onclick = renameClick
     );
-    document.getElementById("closeRenameDialog").onclick = 
+    document.getElementById("closeRenameDialog").onclick =
         () => renameDialog.close();
     document.getElementById("renameForm").onsubmit = function() {
         renameDialog.close();
@@ -314,25 +317,41 @@ window.addEventListener("load", () => {
             method: "POST",
             body: data
         }).then(response => {
-                if (!response.ok) {
-                    alert("Renaming file failed");
-                    return false;
-                }
-                openPath(src);
+            if (!response.ok) {
+                alert("Renaming file failed");
+                return false;
+            }
+            openPath(src);
 
-                // check if we should also open dst
-                const srcDirs = src.split('/');
-                const dstDirs = dst.split('/');
-                srcDirs.pop();
-                dstDirs.pop();
-                const srcDir = srcDirs.join('/');
-                const dstDir = dstDirs.join('/');
-                if (dstDir != srcDir) {
-                    openPath(dst);
-                }
-            });
+            // check if we should also open dst
+            const srcDirs = src.split('/');
+            const dstDirs = dst.split('/');
+            srcDirs.pop();
+            dstDirs.pop();
+            const srcDir = srcDirs.join('/');
+            const dstDir = dstDirs.join('/');
+            if (dstDir != srcDir) {
+                openPath(dst);
+            }
+        });
 
         return false; // don't actually submit the form
     };
+
+    function clickLine(evt) {
+        if (this != evt.target) {
+            return;
+        }
+        const href = this.querySelector("a");
+        if (href) {
+            href.click();
+            return;
+        }
+        const dir = this.querySelector("span.dir");
+        if (dir) {
+            dir.click();
+        }
+    }
+    document.querySelectorAll("div.file").forEach(e => e.onclick = clickLine);
 });
 

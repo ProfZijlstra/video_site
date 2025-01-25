@@ -41,6 +41,7 @@ class FileCtrl
         $VIEW_DATA['parent'] = $dir;
         $VIEW_DATA['dirs'] = $fs['dirs'];
         $VIEW_DATA['files'] = $fs['files'];
+        $VIEW_DATA['sizes'] = $fs['sizes'];
 
         return 'file/overview.php';
     }
@@ -70,6 +71,7 @@ class FileCtrl
         $VIEW_DATA['parent'] = $dir;
         $VIEW_DATA['dirs'] = $fs['dirs'];
         $VIEW_DATA['files'] = $fs['files'];
+        $VIEW_DATA['sizes'] = $fs['sizes'];
 
         return 'file/listing.php';
     }

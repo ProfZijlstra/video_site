@@ -15,22 +15,24 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
 <div class="listing">
     <?php foreach ($dirs as $dir) { ?>
     <div class="dir" data-dir="<?= $dir ?>">
-        <span class="dir" data-dir="<?= "{$parent}/{$dir}" ?>">
-            <i class="fa-regular fa-folder"></i>
-            <?= $dir ?><i class="spinner fa-solid fa-circle-notch"></i>
-        </span>
-        <span class="ops">
-            <i title="Refresh" class="fa-solid fa-arrows-rotate refresh hide"></i>
-            <?php if (hasMinAuth('instructor')) { ?>
-            <?php if ((isset($norem) && ! in_array($dir, $norem) || ! isset($norem))) { ?>
-            <i title="Rename" class="fa-regular fa-pen-to-square rename"
-                data-loc="<?= "{$parent}/{$dir}" ?>"></i>
-            <i title="Remove Directory" class="fa-solid fa-trash-can remDir" 
-                data-loc="<?= "{$parent}/{$dir}" ?>"></i>
-            <?php } ?>
-            <i title="Upload File" class="fa-solid fa-upload upload" data-loc="<?= "{$parent}/{$dir}" ?>"></i>
-            <?php } ?>
-        </span>
+        <div class="file">
+            <span class="dir" data-dir="<?= "{$parent}/{$dir}" ?>">
+                <i class="fa-regular fa-folder"></i>
+                <?= $dir ?><i class="spinner fa-solid fa-circle-notch"></i>
+            </span>
+            <span class="ops">
+                <i title="Refresh" class="fa-solid fa-arrows-rotate refresh hide"></i>
+                <?php if (hasMinAuth('instructor')) { ?>
+                <?php if ((isset($norem) && ! in_array($dir, $norem) || ! isset($norem))) { ?>
+                <i title="Rename" class="fa-regular fa-pen-to-square rename"
+                    data-loc="<?= "{$parent}/{$dir}" ?>"></i>
+                <i title="Remove Directory" class="fa-solid fa-trash-can remDir" 
+                    data-loc="<?= "{$parent}/{$dir}" ?>"></i>
+                <?php } ?>
+                <i title="Upload File" class="fa-solid fa-upload upload" data-loc="<?= "{$parent}/{$dir}" ?>"></i>
+                <?php } ?>
+            </span>
+        </div>
     </div>
     <?php } ?>
     <?php foreach ($files as $file) {
@@ -47,6 +49,7 @@ $proto = $_SERVER['https'] ? 'https://' : 'http://';
                 <?= $file ?>
             </a>
         </span>
+        <span class="size"><?= $sizes[$file] ?></span>
         <span class="ops">
             <?php if (hasMinAuth('instructor')) { ?>
             <i title="Rename" class="fa-regular fa-pen-to-square rename"

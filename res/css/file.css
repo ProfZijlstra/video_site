@@ -25,6 +25,10 @@ div#content {
                     margin-left: 5px;
                 }
             }
+            span.size {
+                position: absolute;
+                right: 65px;
+            }
             span.ops {
                 cursor: pointer;
                 position: absolute;
@@ -38,6 +42,9 @@ div#content {
                 margin-left: 10px;
             }
         }
+        div.file:hover {
+            background-color: #f0f0f0;
+        }
     }
 }
 dialog.modal form {
@@ -49,7 +56,7 @@ dialog.modal form {
     button {
         position: absolute;
         right: 0px;
-        top: 27px;
+        top: 35px;
     }
 }
 @media screen and (max-width: 900px) {

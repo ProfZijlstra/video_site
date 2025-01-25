@@ -40,15 +40,15 @@
             <h3>Upload File</h3>
             <form id="uploadForm" method="POST" action="">
                 <input type="hidden" name="location" id="uploadLocation" value="">
-                <input type="file" name="file" id="uploadFile" value="">
+                <input type="file" name="file" id="uploadFile" value="" autofocus>
             </form>
         </dialog>
         <dialog id="renameDialog" class="modal">
             <i id="closeRenameDialog" class="fas fa-times-circle close"></i>
             <h3>Rename</h3>
             <form id="renameForm" method="POST" action="file/rename">
-                <input type="hidden" name="src" id="renameSrc" placeholder="">
-                <input type="text" name="dst" id="renameDst" placeholder="">
+                <input type="hidden" name="src" id="renameSrc">
+                <input type="text" name="dst" id="renameDst" autofocus>
                 <button id="submitRename" >Submit</button>
             </form>
             <div>Rename can also be used to move files</div>
@@ -57,7 +57,7 @@
             <i id="closeMakeDir" class="fas fa-times-circle close"></i>
             <h3>Make Directory</h3>
             <form id="makeDirForm" method="POST" action="file/makeDir">
-                <input id="makeDirField" name="dir" placeholder="public/newDir">
+                <input id="makeDirField" name="dir" placeholder="public/newDir" autofocus>
                 <button id="submitMakeDir" >Submit</button>
             </form>
         </dialog>
