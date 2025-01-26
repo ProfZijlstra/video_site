@@ -63,9 +63,6 @@ div.data .views {
     top: 25px;
 	left: 13px;
 }
-div.data span.day {
-    display: none;
-}
 div#total {
 	margin-top: 15px;
 	text-align: center;
