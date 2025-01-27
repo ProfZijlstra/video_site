@@ -148,7 +148,7 @@
             <h3>Edit Lecture Part</h3>
             <form method="post" action="title">
                 <label>Title:</label>
-                <input name="title" id="editTitle" value="">
+                <input name="title" id="editTitle" autofocus>
                 <div class="btn">
                     <button id="editBtn">
                         <i title="Submit Add" class="fa-solid fa-pen"></i>
@@ -163,7 +163,7 @@
             <h3>Add Lecture Part</h3>
             <form method="post" action="add">
                 <label>Title:</label>
-                <input name="title" id="addTitle" value="">
+                <input name="title" id="addTitle" autofocus>
                 <div class="btn">
                     <button id="addBtn">
                         <i title="Submit Edit" class="fa-solid fa-plus"></i>

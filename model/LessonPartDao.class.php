@@ -43,6 +43,9 @@ class LessonPartDao
         }
 
         $parts = glob('*_on', GLOB_ONLYDIR);
+        if (! $parts) {
+            $parts = ['00'];
+        }
         $last = array_pop($parts);
         $idx = explode('_', $last)[0];
         $idx++;

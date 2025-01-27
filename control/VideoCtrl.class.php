@@ -236,7 +236,7 @@ class VideoCtrl
             return;
         }
         $res = $this->lessonPartDao->add($course_num, $block, $day, $title);
-        if ($res === false) {
+        if ($res == false) {
             http_response_code(500);
         }
 

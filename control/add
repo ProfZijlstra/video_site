@@ -1,0 +1,5 @@
+VideoCtrl.class.php:        $lessonParts = $this->lessonPartDao->forDay($course_num, $block, $day);
+VideoCtrl.class.php:        $res = $this->lessonPartDao->updateTitle($course_num, $block, $day, $file, $title);
+VideoCtrl.class.php:        $res = $this->lessonPartDao->add($course_num, $block, $day, $title);
+VideoCtrl.class.php:        $res = $this->lessonPartDao->delete($course_num, $block, $day, $part);
+VideoCtrl.class.php:        $res = $this->lessonPartDao->reorder($course_num, $block, $day, $ids);

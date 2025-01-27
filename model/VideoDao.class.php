@@ -261,16 +261,14 @@ class VideoDao
         chdir($number);
         mkdir($block);
         chdir($block);
+        mkdir('lecture');
+        chdir('lecture');
 
         for ($week = 1; $week <= $lessonRows; $week++) {
             for ($day = 1; $day <= $lessonsPerRow; $day++) {
                 mkdir("W{$week}D{$day}");
-                chdir("W{$week}D{$day}");
-                mkdir('vid');
-                mkdir('pdf');
-                chdir('..');
             }
         }
-        chdir('../../../../');
+        chdir('../../../../../');
     }
 }
