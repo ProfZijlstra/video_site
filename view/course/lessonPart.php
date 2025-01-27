@@ -39,7 +39,6 @@
         type="application/pdf" 
         data="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}_on/{$pdf_info['file']}" ?>">
         <div class="noVid">
-            <i class="fa-solid fa-video" title="Video"></i>
             <div>Your browser doesn't seem to support PDF previews</div>
             <p>
                 <a target="_blank" href="<?= "res/course/{$course}/{$block}/lecture/{$day}/{$idx}_{$part}_on/{$pdf_info['file']}" ?>">

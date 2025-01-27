@@ -756,10 +756,11 @@ const code = "highlighted";
         const editTitle = document.getElementById("editTitle");
         const title = editTitle.value;
         const file = editTitle.dataset.file;
-        if (title.indexOf("_") !== -1) {
-            alert("Title cannot not contain underscores.\n"
+        if (title.indexOf("_") !== -1 || title.indexOf("/") !== -1 || title.indexOf("?") !== -1) {
+            alert("Cannot contain underscores: _, "
+                + "slashes: /, or question marks: ?.\n"
                 + "Please remove the underscore and try again");
-            return;
+            return false;
         }
         closeEditDialog();
 
@@ -792,8 +793,9 @@ const code = "highlighted";
     // validate before submitting
     document.getElementById("addBtn").onclick = function(evt) {
         const title = document.getElementById("addTitle").value;
-        if (title.indexOf("_") !== -1) {
-            alert("Title cannot not contain underscores.\n"
+        if (title.indexOf("_") !== -1 || title.indexOf("/") !== -1 || title.indexOf("?") !== -1) {
+            alert("Cannot contain underscores: _, "
+                + "slashes: /, or question marks: ?.\n"
                 + "Please remove the underscore and try again");
             return false;
         }
