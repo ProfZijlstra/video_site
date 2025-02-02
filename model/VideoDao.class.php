@@ -12,9 +12,9 @@ class VideoDao
 {
     public function forOffering($course_num, $block): array
     {
-        chdir("res/course/{$course_num}/{$block}/");
+        chdir("res/course/{$course_num}/{$block}/lecture/");
         $dirs = glob('*', GLOB_ONLYDIR);
-        chdir('../../../../');
+        chdir('../../../../../');
         $result = [];
         foreach ($dirs as $dir) {
             $result[$dir] = $this->forDay($course_num, $block, $dir, true);

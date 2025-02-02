@@ -58,6 +58,36 @@ class ViewCtrl
         return intval($this->viewDao->pdf($user_id, $day_id, $file));
     }
 
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/chart$", sec: 'observer')]
+    public function overviewStats(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $user_id = $_SESSION['user']['id'];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $days = $this->dayDao->getDays($offering['id']);
+        $videos = $this->videoDao->forOffering($course_num, $block);
+        $averages = $this->viewDao->offeringAverages($offering['id']);
+        $person = $this->viewDao->offeringPerson($offering['id'], $user_id);
+
+        $VIEW_DATA['days'] = $days;
+        $VIEW_DATA['videos'] = $videos;
+        $VIEW_DATA['averages'] = $averages;
+        $VIEW_DATA['person'] = $person;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['course'] = strtoupper($course_num);
+        $VIEW_DATA['title'] = "$block View Stats";
+        $VIEW_DATA['area'] = 'course';
+        $VIEW_DATA['block'] = $block;
+
+        return 'course/view/offeringStats.php';
+    }
+
+    /* Everything below this is going to be replaced by the new view system */
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/views/(\d+)?$", sec: 'instructor')]
     public function views(): string
     {

@@ -21,26 +21,27 @@
 <body>
     <?php include 'header.php'; ?>
     <main>
+        <nav class="tools">
+            <a href="chart">
+                <i title="View Statistics" class="fa-solid fa-chart-column"></i>
+            </a>
         <?php if (hasMinAuth('instructor')) { ?>
-            <nav class="tools">
-                <?php if (! $isRemembered) { ?>
-                    <i title="View Info" id="info-btn" class="fa-solid fa-eye"></i>
-                    <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
-                    <i title="Clone Offering" id="clone" class="far fa-copy"></i>
-                    <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
-                <?php } else { ?>
-                    <a href="reAuth">
-                        <i title="View Info" class="fas fa-info-circle"></i>
-                        <i title="Edit Calendar" class="far fa-edit"></i>
-                        <i title="Clone Offering" class="far fa-copy"></i>
-                        <i title="Delete Offering" class="far fa-trash-alt"></i>
-                    </a>
-                <?php } ?>
-                <a href="settings">
-                    <i title="Offering Settings" class="fa-solid fa-gear"></i>
+            <?php if (! $isRemembered) { ?>
+                <i title="Edit Calendar" id="edit" class="far fa-edit"></i>
+                <i title="Clone Offering" id="clone" class="far fa-copy"></i>
+                <i title="Delete Offering" id="delete" class="far fa-trash-alt"></i>
+            <?php } else { ?>
+                <a href="reAuth">
+                    <i title="Edit Calendar" class="far fa-edit"></i>
+                    <i title="Clone Offering" class="far fa-copy"></i>
+                    <i title="Delete Offering" class="far fa-trash-alt"></i>
                 </a>
-            </nav>
+            <?php } ?>
+            <a href="settings">
+                <i title="Offering Settings" class="fa-solid fa-gear"></i>
+            </a>
         <?php } ?>
+        </nav>
 
         <?php include 'areas.php'; ?>
         <div id="days">
