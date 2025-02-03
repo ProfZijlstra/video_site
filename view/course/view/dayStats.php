@@ -51,11 +51,13 @@
                     </tr>
                     <?php } ?>
                 </table>
+                <?php if ($total) { ?>
                 <div class="totals">
                     <span title="Users"><i class="fa-regular fa-user"></i> <?= $total['users'] ?></span> 
                     <span title="Views"><i class="fa-regular fa-eye"></i> <?= $total['views'] ?></span>
                     <span title="Hours"><i class="fa-regular fa-clock"></i> <?= $total['time'] ?></span>
                 </div>
+                <?php } ?>
             </div>
         </main>
     </body>

@@ -200,6 +200,23 @@ class ViewDao
         return $stmt->fetch();
     }
 
+    public function dayUsers($offering_id, $day_abbr)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT v.user_id,
+                CAST(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600 AS DECIMAL(10,2)) AS time 
+                FROM view AS v 
+                JOIN day AS d ON v.day_id = d.id 
+                WHERE d.offering_id = :offering_id 
+                AND d.abbr = :day_abbr
+                GROUP BY v.user_id
+                ORDER BY time DESC'
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
+
+        return $stmt->fetchAll();
+    }
+
     /* Everything below this is going to be replaced */
     public function offering($offering_id)
     {

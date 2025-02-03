@@ -202,6 +202,41 @@ class ViewCtrl
         return 'course/view/dayStats.php';
     }
 
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/userChart$", sec: 'instructor')]
+    public function dayUserStats(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+        $user_id = $_SESSION['user']['id'];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $students = $this->enrollmentDao->getStudentsForOffering($offering['id']);
+        $observers = $this->enrollmentDao->getObserversForOffering($offering['id']);
+        $views = $this->viewDao->dayUsers($offering['id'], $day);
+
+        $max = 0;
+        foreach ($views as $view) {
+            if ($view['time'] > $max) {
+                $max = $view['time'];
+            }
+        }
+
+        $VIEW_DATA['max'] = $max;
+        $VIEW_DATA['course'] = strtoupper($course_num);
+        $VIEW_DATA['title'] = "$block $day User Stats";
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['students'] = $students;
+        $VIEW_DATA['observers'] = $observers;
+        $VIEW_DATA['views'] = $views;
+
+        return 'course/view/userStats.php';
+    }
+
     /* Everything below this is going to be replaced by the new view system */
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/views/(\d+)?$", sec: 'instructor')]
     public function views(): string
