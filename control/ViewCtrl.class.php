@@ -133,6 +133,14 @@ class ViewCtrl
             }
         }
 
+        $no_view = [];
+        foreach ($students as $student) {
+            $no_view[$student['id']] = true;
+        }
+        foreach ($views as $view) {
+            unset($no_view[$view['user_id']]);
+        }
+
         $VIEW_DATA['max'] = $max;
         $VIEW_DATA['course'] = strtoupper($course_num);
         $VIEW_DATA['title'] = "$block User View Stats";
@@ -141,6 +149,7 @@ class ViewCtrl
         $VIEW_DATA['students'] = $students;
         $VIEW_DATA['observers'] = $observers;
         $VIEW_DATA['views'] = $views;
+        $VIEW_DATA['no_view'] = $no_view;
 
         return 'course/view/userStats.php';
     }
@@ -225,6 +234,14 @@ class ViewCtrl
             }
         }
 
+        $no_view = [];
+        foreach ($students as $student) {
+            $no_view[$student['id']] = true;
+        }
+        foreach ($views as $view) {
+            unset($no_view[$view['user_id']]);
+        }
+
         $VIEW_DATA['max'] = $max;
         $VIEW_DATA['course'] = strtoupper($course_num);
         $VIEW_DATA['title'] = "$block $day User Stats";
@@ -233,6 +250,7 @@ class ViewCtrl
         $VIEW_DATA['students'] = $students;
         $VIEW_DATA['observers'] = $observers;
         $VIEW_DATA['views'] = $views;
+        $VIEW_DATA['no_view'] = $no_view;
 
         return 'course/view/userStats.php';
     }

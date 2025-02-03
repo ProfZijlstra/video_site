@@ -57,7 +57,7 @@ class EnrollmentDao
             u.firstname, u.lastname, u.email, u.teamsName
             FROM enrollment e JOIN user u ON e.user_id = u.id 
             WHERE offering_id = :offering_id
-            AND e.auth = 'student' OR e.auth = 'assistant'"
+            AND (e.auth = 'student' OR e.auth = 'assistant')"
         );
         $stmt->execute(['offering_id' => $offering_id]);
         $data = [];

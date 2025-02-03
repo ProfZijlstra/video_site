@@ -18,6 +18,9 @@
         table.observers {
             margin-top: 2em;
         }
+        h3 {
+            margin-bottom: 0px;
+        }
 </style>
     </head>
 
@@ -46,6 +49,14 @@
                     <?php } ?>
                     <?php } ?>
                 </table>
+                <?php if ($no_view) { ?>
+                <h3>Students with no views:</h3>
+                <ul>
+                    <?php foreach ($no_view as $id => $user) { ?>
+                    <li><?= $students[$id]['firstname'].' '.$students[$id]['lastname'].' '.$id ?></li>
+                    <?php } ?>
+                </ul>
+                <?php } ?>
                 <?php if ($observers) { ?>
                 <table class="charts-css bar show-labels show-heading observers">
                     <caption>Observers</caption>
