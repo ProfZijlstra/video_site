@@ -163,14 +163,26 @@ class ViewCtrl
         $total = $this->viewDao->dayTotal($offering['id'], $day);
 
         $max = 0;
-        foreach ($videos as $video) {
+        foreach ($videos['videos'] as $video) {
             $time = $video['duration'] / 360000;
             if ($time > $max) {
                 $max = $time;
             }
         }
-        foreach ($person as $person_day) {
+        foreach ($person as $idx => $person_day) {
+            if (! intval($idx)) {
+                continue;
+            }
             $time = $person_day['time'];
+            if ($time > $max) {
+                $max = $time;
+            }
+        }
+        foreach ($averages as $idx => $average_day) {
+            if (! $average_day['users'] || ! intval($idx)) {
+                continue;
+            }
+            $time = $average_day['time'] / $average_day['users'];
             if ($time > $max) {
                 $max = $time;
             }

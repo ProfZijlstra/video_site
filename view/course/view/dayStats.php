@@ -37,7 +37,7 @@
                         ?>
                     <tr>
                         <th scope="row"><?= $videos['videos'][$idx]['parts'][1] ?></th>
-                        <td style="--size calc(<?= $duration ?> / <?= $max ?>)" title="<?= $duration ?>"> 
+                        <td style="--size: calc(<?= $duration ?> / <?= $max ?>)" title="<?= $duration ?>"> 
                         </td>
                         <td style="--size: calc(<?= $average ?> / <?= $max ?>)"  title="<?= $average ?>" > 
                             <?php if (hasMinAuth('instructor') && $averages[$idx]['users']) { ?>
