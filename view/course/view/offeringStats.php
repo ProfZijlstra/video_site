@@ -40,6 +40,13 @@
                     </a>
                 </div>
             </nav>
+            <?php if (hasMinAuth('instructor')) { ?>
+            <nav class="tools">
+                <a href="userChart">
+                    <i title="User Statistics" class="fa-solid fa-users"></i>
+                </a>
+            </nav>
+            <?php } ?>
 
             <div id="content">
                 <ul class="charts-css legend legend-square legend-inline">
@@ -77,17 +84,9 @@
                     <?php } ?> 
                 </div>
                 <div class="totals">
-                    <?php if (hasMinAuth('instructor')) { ?>
-                    <a href="userChart">
-                        <span title="Users"><i class="fa-regular fa-user"></i> <?= $total['users'] ?></span> 
-                        <span title="Views"><i class="fa-regular fa-eye"></i> <?= $total['views'] ?></span>
-                        <span title="Hours"><i class="fa-regular fa-clock"></i> <?= $total['time'] ?></span>
-                    </a>
-                    <?php } else { ?>
-                        <span title="Users"><i class="fa-regular fa-user"></i> <?= $total['users'] ?></span> 
-                        <span title="Views"><i class="fa-regular fa-eye"></i> <?= $total['views'] ?></span>
-                        <span title="Hours"><i class="fa-regular fa-clock"></i> <?= $total['time'] ?></span>
-                    <?php } ?>
+                    <span title="Users"><i class="fa-regular fa-user"></i> <?= $total['users'] ?></span> 
+                    <span title="Views"><i class="fa-regular fa-eye"></i> <?= $total['views'] ?></span>
+                    <span title="Hours"><i class="fa-regular fa-clock"></i> <?= $total['time'] ?></span>
                 </div>
             </div>
         </main>

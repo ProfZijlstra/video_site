@@ -53,7 +53,7 @@
                 <h3>Students with no views:</h3>
                 <ul>
                     <?php foreach ($no_view as $id => $user) { ?>
-                    <li><?= $students[$id]['firstname'].' '.$students[$id]['lastname'].' '.$id ?></li>
+                    <li><?= $students[$id]['firstname'].' '.$students[$id]['lastname'] ?></li>
                     <?php } ?>
                 </ul>
                 <?php } ?>
