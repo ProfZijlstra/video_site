@@ -1,0 +1,22 @@
+table.column, ul.legend{
+    --color-1: #FF00FF88;
+    --color-2: #0000FF88;
+    --color-3: #00FFFF88;
+}
+div#content {
+    width: 80vw;
+}
+table tr td {
+    position: relative;
+}
+table tr td span {
+    position: absolute;
+    top: -25px;
+}
+div.totals {
+    margin-top: 20px;
+    text-align: center;
+    a:hover {
+        text-decoration: none !important;
+    }
+}

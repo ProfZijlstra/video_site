@@ -1,40 +1,14 @@
 <!DOCTYPE html>
 <html>
-
     <head>
-        <title><?= $block ?> Settings</title>
+        <title><?= $block ?> <?= $day ?> Stats</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/charts.css">
-        <style>
-        table.column, ul.legend{
-            --color-1: #FF00FF88;
-            --color-2: #0000FF88;
-            --color-3: #00FFFF88;
-        }
-        div#content {
-            width: 80vw;
-        }
-        table tr td {
-            position: relative;
-        }
-        table tr td span {
-            position: absolute;
-            top: -25px;
-        }
-        div.totals {
-            margin-top: 20px;
-            text-align: center;
-            a:hover {
-                text-decoration: none !important;
-            }
-        }
-        </style>
-        <script>
-</script>
+        <link rel="stylesheet" href="res/css/colCharts.css">
     </head>
 
     <body>

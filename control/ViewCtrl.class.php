@@ -83,10 +83,34 @@ class ViewCtrl
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['course'] = strtoupper($course_num);
         $VIEW_DATA['title'] = "$block View Stats";
-        $VIEW_DATA['area'] = 'course';
         $VIEW_DATA['block'] = $block;
 
         return 'course/view/offeringStats.php';
+    }
+
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/userChart$", sec: 'instructor')]
+    public function overviewUserStats(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $students = $this->enrollmentDao->getStudentsForOffering($offering['id']);
+        $observers = $this->enrollmentDao->getObserversForOffering($offering['id']);
+        $views = $this->viewDao->offeringUsers($offering['id']);
+
+        $VIEW_DATA['course'] = strtoupper($course_num);
+        $VIEW_DATA['title'] = "$block User View Stats";
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['students'] = $students;
+        $VIEW_DATA['observers'] = $observers;
+        $VIEW_DATA['views'] = $views;
+
+        return 'course/view/userStats.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/chart$", sec: 'observer')]
@@ -111,11 +135,10 @@ class ViewCtrl
         $VIEW_DATA['person'] = $person;
         $VIEW_DATA['total'] = $total;
         $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['day'] = $day;
         $VIEW_DATA['course'] = strtoupper($course_num);
         $VIEW_DATA['title'] = "$block $day View Stats";
-        $VIEW_DATA['area'] = 'course';
         $VIEW_DATA['block'] = $block;
-        $VIEW_DATA['day'] = $day;
 
         return 'course/view/dayStats.php';
     }

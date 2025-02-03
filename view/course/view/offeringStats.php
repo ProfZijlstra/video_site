@@ -1,43 +1,21 @@
 <!DOCTYPE html>
 <html>
-
     <head>
-        <title><?= $block ?> Settings</title>
+        <title><?= $block ?> Stats</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/charts.css">
+        <link rel="stylesheet" href="res/css/colCharts.css">
         <style>
-        table.column, ul.legend{
-            --color-1: #FF00FF88;
-            --color-2: #0000FF88;
-            --color-3: #00FFFF88;
-        }
-        div#content {
-            width: 80vw;
+        table tr {
+            cursor: pointer;
         }
         div.stats {
             display: grid;
             grid-template-columns: auto auto;
-        }
-        table tr {
-            cursor: pointer;
-        }
-        table tr td {
-            position: relative;
-        }
-        table tr td a {
-            position: absolute;
-            top: -25px;
-        }
-        div.totals {
-            margin-top: 20px;
-            text-align: center;
-            a:hover {
-                text-decoration: none !important;
-            }
         }
         </style>
         <script>
@@ -49,7 +27,7 @@
                 tr.addEventListener('click', clickRow);
             });
         });
-</script>
+        </script>
     </head>
 
     <body>
@@ -85,9 +63,9 @@
                                 </td>
                                 <td style="--size: <?= $average ?>"  title="<?= $average ?>" > 
                                     <?php if (hasMinAuth('instructor') && $averages["W{$week}D{$day}"]['users']) { ?>
-                                    <a title="Amount of users for average" href="<?= "W{$week}D{$day}/userChart" ?>"}>
+                                    <span><a title="Amount of users for average" href="<?= "W{$week}D{$day}/userChart" ?>"}>
                                     <?= $averages["W{$week}D{$day}"]['users'] ?>
-                                    </a>
+                                    </a></span>
                                     <?php } ?>
                                 </td>
                                 <td style="--size: <?= $viewed ?>"   title="<?= $viewed ?>"  >
