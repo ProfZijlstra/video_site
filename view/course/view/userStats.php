@@ -8,6 +8,17 @@
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/charts.css">
+        <style>
+        table.charts-css.bar {
+            --labels-size: 150px;
+        }
+        table.charts-css.bar tr td {
+            min-height: 35px;
+        }
+        table.observers {
+            margin-top: 2em;
+        }
+</style>
     </head>
 
     <body>
@@ -15,7 +26,7 @@
         <main>
             <nav class="areas">
                 <div title="Back">
-                    <a href="../chart">
+                    <a href="chart">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                 </div>
@@ -27,20 +38,24 @@
                     <?php foreach ($views as $view) { ?>
                     <?php if (isset($students[$view['user_id']])) { ?>
                     <tr>
-                        <th scope="row"><?= $students[$view['user_id']]['knownAs'] ?></th>
-                        <td style="--size: <?= $view['time']?>" title="<?= $view['time'] ?>"></td>
+                        <th scope="row" title="<?= $students[$view['user_id']]['firstname'].' '.$students[$view['user_id']]['lastname'] ?>">
+                            <?= explode(' ', $students[$view['user_id']]['knownAs'])[0] ?>
+                        </th>
+                        <td style="--size: calc(<?= $view['time']?> / <?= $max ?>)" title="<?= $view['time'] ?>"></td>
                     </tr>
                     <?php } ?>
                     <?php } ?>
                 </table>
                 <?php if ($observers) { ?>
-                <table class="charts-css bar show-labels show-heading">
+                <table class="charts-css bar show-labels show-heading observers">
                     <caption>Observers</caption>
                     <?php foreach ($views as $view) { ?>
                     <?php if (isset($observers[$view['user_id']])) { ?>
                     <tr>
-                        <th scope="row"><?= $observers[$view['user_id']]['knownAs'] ?></th>
-                        <td style="--size: <?= $view['time']?>" title="<?= $view['time'] ?>"></td>
+                        <th scope="row" title="<?= $observers[$view['user_id']]['firstname'].' '.$observers[$view['user_id']]['lastname']?>">
+                            <?= explode(' ', $observers[$view['user_id']]['knownAs'])[0] ?>
+                        </th>
+                        <td style="--size: calc(<?= $view['time']?> / <?= $max ?>)" title="<?= $view['time'] ?>"></td>
                     </tr>
                     <?php } ?>
                     <?php } ?>

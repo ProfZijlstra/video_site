@@ -59,16 +59,16 @@
                                 $viewed = number_format($person["W{$week}D{$day}"]['time'], 2);
                                 ?>
                             <tr data-href="<?= "W{$week}D{$day}" ?>"}>
-                                <td style="--size: <?= $duration ?>" title="<?= $duration ?>"> 
+                                <td style="--size: calc(<?= $duration ?> / <?= $max ?>)" title="<?= $duration ?>"> 
                                 </td>
-                                <td style="--size: <?= $average ?>"  title="<?= $average ?>" > 
+                                <td style="--size: calc(<?= $average ?> / <?= $max ?>)"  title="<?= $average ?>" > 
                                     <?php if (hasMinAuth('instructor') && $averages["W{$week}D{$day}"]['users']) { ?>
                                     <span><a title="Amount of users for average" href="<?= "W{$week}D{$day}/userChart" ?>"}>
                                     <?= $averages["W{$week}D{$day}"]['users'] ?>
                                     </a></span>
                                     <?php } ?>
                                 </td>
-                                <td style="--size: <?= $viewed ?>"   title="<?= $viewed ?>"  >
+                                <td style="--size: calc(<?= $viewed ?> / <?= $max ?>)"   title="<?= $viewed ?>"  >
                                 </td>
                             </tr>
                             <?php } ?>

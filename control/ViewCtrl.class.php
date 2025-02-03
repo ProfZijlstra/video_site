@@ -75,6 +75,30 @@ class ViewCtrl
         $person = $this->viewDao->offeringPerson($offering['id'], $user_id);
         $total = $this->viewDao->offeringTotal($offering['id']);
 
+        $max = 0;
+        foreach ($videos as $video_day) {
+            $time = $video_day['totalDuration'] / 360000;
+            if ($time > $max) {
+                $max = $time;
+            }
+        }
+        foreach ($person as $person_day) {
+            $time = $person_day['time'];
+            if ($time > $max) {
+                $max = $time;
+            }
+        }
+        foreach ($averages as $average_day) {
+            if (! $average_day['users']) {
+                continue;
+            }
+            $time = $average_day['time'] / $average_day['users'];
+            if ($time > $max) {
+                $max = $time;
+            }
+        }
+
+        $VIEW_DATA['max'] = $max;
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['videos'] = $videos;
         $VIEW_DATA['averages'] = $averages;
@@ -102,6 +126,14 @@ class ViewCtrl
         $observers = $this->enrollmentDao->getObserversForOffering($offering['id']);
         $views = $this->viewDao->offeringUsers($offering['id']);
 
+        $max = 0;
+        foreach ($views as $view) {
+            if ($view['time'] > $max) {
+                $max = $view['time'];
+            }
+        }
+
+        $VIEW_DATA['max'] = $max;
         $VIEW_DATA['course'] = strtoupper($course_num);
         $VIEW_DATA['title'] = "$block User View Stats";
         $VIEW_DATA['block'] = $block;
@@ -130,6 +162,21 @@ class ViewCtrl
         $person = $this->viewDao->dayPerson($offering['id'], $day, $user_id);
         $total = $this->viewDao->dayTotal($offering['id'], $day);
 
+        $max = 0;
+        foreach ($videos as $video) {
+            $time = $video['duration'] / 360000;
+            if ($time > $max) {
+                $max = $time;
+            }
+        }
+        foreach ($person as $person_day) {
+            $time = $person_day['time'];
+            if ($time > $max) {
+                $max = $time;
+            }
+        }
+
+        $VIEW_DATA['max'] = $max;
         $VIEW_DATA['videos'] = $videos;
         $VIEW_DATA['averages'] = $averages;
         $VIEW_DATA['person'] = $person;

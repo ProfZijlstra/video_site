@@ -125,7 +125,7 @@ class ViewDao
     {
         $stmt = $this->db->prepare(
             'SELECT v.user_id,
-                FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
+                CAST(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600 AS DECIMAL(10,2)) AS time 
                 FROM view AS v 
                 JOIN day AS d ON v.day_id = d.id 
                 WHERE d.offering_id = :offering_id 
