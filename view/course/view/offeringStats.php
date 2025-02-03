@@ -35,7 +35,7 @@
         <main>
             <nav class="areas">
                 <div title="Back">
-                    <a href="../<?= $block ?>/">
+                    <a href="<?= "{$MY_BASE}/$course/$block/" ?>">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                 </div>

@@ -59,14 +59,41 @@ class ViewCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/chart$", sec: 'observer')]
-    public function overviewStats(): string
+    public function myOverviewStats()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $block = $URI_PARAMS[2];
+        $user_id = $_SESSION['user']['id'];
+
+        $VIEW_DATA['title'] = "$block My View Stats";
+
+        return $this->overviewStats($user_id);
+    }
+
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/chart/(\d+)$", sec: 'instructor')]
+    public function studentOverviewStats()
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $block = $URI_PARAMS[2];
+        $user_id = $URI_PARAMS[3];
+        $user = $this->userDao->retrieve($user_id);
+
+        $VIEW_DATA['title'] = "$block {$user['knownAs']} View Stats";
+
+        return $this->overviewStats($user_id);
+    }
+
+    private function overviewStats($user_id): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $course_num = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $user_id = $_SESSION['user']['id'];
 
         $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
         $days = $this->dayDao->getDays($offering['id']);
@@ -105,8 +132,7 @@ class ViewCtrl
         $VIEW_DATA['person'] = $person;
         $VIEW_DATA['total'] = $total;
         $VIEW_DATA['offering'] = $offering;
-        $VIEW_DATA['course'] = strtoupper($course_num);
-        $VIEW_DATA['title'] = "$block View Stats";
+        $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
 
         return 'course/view/offeringStats.php';
@@ -159,7 +185,37 @@ class ViewCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/chart$", sec: 'observer')]
-    public function dayStats(): string
+    public function myDayStats(): string
+    {
+        global $VIEW_DATA;
+        global $URI_PARAMS;
+
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+        $user_id = $_SESSION['user']['id'];
+
+        $VIEW_DATA['title'] = "$block $day My View Stats";
+
+        return $this->dayStats($user_id);
+    }
+
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/chart/(\d+)$", sec: 'instructor')]
+    public function studentDayStats(): string
+    {
+        global $VIEW_DATA;
+        global $URI_PARAMS;
+
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+        $user_id = $URI_PARAMS[4];
+        $user = $this->userDao->retrieve($user_id);
+
+        $VIEW_DATA['title'] = "$block $day {$user['knownAs']} View Stats";
+
+        return $this->dayStats($user_id);
+    }
+
+    private function dayStats($user_id): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -208,8 +264,7 @@ class ViewCtrl
         $VIEW_DATA['total'] = $total;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['day'] = $day;
-        $VIEW_DATA['course'] = strtoupper($course_num);
-        $VIEW_DATA['title'] = "$block $day View Stats";
+        $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
 
         return 'course/view/dayStats.php';

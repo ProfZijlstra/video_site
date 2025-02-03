@@ -16,7 +16,7 @@
         <main>
             <nav class="areas">
                 <div title="Back">
-                    <a href="../chart">
+                    <a href="<?= "{$MY_BASE}/$course/$block/chart" ?>">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                 </div>

@@ -42,7 +42,9 @@
                     <?php if (isset($students[$view['user_id']])) { ?>
                     <tr>
                         <th scope="row" title="<?= $students[$view['user_id']]['firstname'].' '.$students[$view['user_id']]['lastname'] ?>">
-                            <?= explode(' ', $students[$view['user_id']]['knownAs'])[0] ?>
+                            <a href="chart/<?= $view['user_id']?>">
+                                <?= explode(' ', $students[$view['user_id']]['knownAs'])[0] ?>
+                            </a>
                         </th>
                         <td style="--size: calc(<?= $view['time']?> / <?= $max ?>)" title="<?= $view['time'] ?>"></td>
                     </tr>
@@ -64,7 +66,9 @@
                     <?php if (isset($observers[$view['user_id']])) { ?>
                     <tr>
                         <th scope="row" title="<?= $observers[$view['user_id']]['firstname'].' '.$observers[$view['user_id']]['lastname']?>">
-                            <?= explode(' ', $observers[$view['user_id']]['knownAs'])[0] ?>
+                            <a href="chart/<?= $view['user_id']?>">
+                                <?= explode(' ', $observers[$view['user_id']]['knownAs'])[0] ?>
+                            </a>
                         </th>
                         <td style="--size: calc(<?= $view['time']?> / <?= $max ?>)" title="<?= $view['time'] ?>"></td>
                     </tr>
