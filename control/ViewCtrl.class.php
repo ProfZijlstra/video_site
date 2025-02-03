@@ -134,11 +134,15 @@ class ViewCtrl
         }
 
         $no_view = [];
+        $active_observers = [];
         foreach ($students as $student) {
             $no_view[$student['id']] = true;
         }
         foreach ($views as $view) {
             unset($no_view[$view['user_id']]);
+            if ($observers[$view['user_id']]) {
+                $active_observers[$view['user_id']] = $observers[$view['user_id']];
+            }
         }
 
         $VIEW_DATA['max'] = $max;
@@ -147,7 +151,7 @@ class ViewCtrl
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['students'] = $students;
-        $VIEW_DATA['observers'] = $observers;
+        $VIEW_DATA['observers'] = $active_observers;
         $VIEW_DATA['views'] = $views;
         $VIEW_DATA['no_view'] = $no_view;
 
@@ -235,11 +239,15 @@ class ViewCtrl
         }
 
         $no_view = [];
+        $active_observers = [];
         foreach ($students as $student) {
             $no_view[$student['id']] = true;
         }
         foreach ($views as $view) {
             unset($no_view[$view['user_id']]);
+            if ($observers[$view['user_id']]) {
+                $active_observers[$view['user_id']] = $observers[$view['user_id']];
+            }
         }
 
         $VIEW_DATA['max'] = $max;
@@ -248,7 +256,7 @@ class ViewCtrl
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['students'] = $students;
-        $VIEW_DATA['observers'] = $observers;
+        $VIEW_DATA['observers'] = $active_observers;
         $VIEW_DATA['views'] = $views;
         $VIEW_DATA['no_view'] = $no_view;
 
