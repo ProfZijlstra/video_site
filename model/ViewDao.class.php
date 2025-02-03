@@ -105,6 +105,85 @@ class ViewDao
         return $data;
     }
 
+    public function offeringTotal($offering_id)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT COUNT(DISTINCT v.user_id) AS users, 
+                        FORMAT(COUNT(v.id), 0) AS views, 
+                        FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
+                        FROM view as v 
+                        JOIN day AS d ON v.day_id = d.id 
+                        WHERE d.offering_id = :offering_id 
+                        GROUP BY d.offering_id;'
+        );
+        $stmt->execute([':offering_id' => $offering_id]);
+
+        return $stmt->fetch();
+    }
+
+    public function dayAverages($offering_id, $day_abbr)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT v.video, 
+                COUNT(DISTINCT v.user_id) AS users, 
+                FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
+                FROM view AS v 
+                JOIN day AS d ON v.day_id = d.id 
+                WHERE d.offering_id = :offering_id 
+                AND d.abbr = :day_abbr
+            GROUP BY v.video
+            ORDER BY v.video'
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[substr($row['video'], 0, 2)] = $row;
+        }
+
+        return $data;
+    }
+
+    public function dayPerson($offering_id, $day_abbr, $user_id)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT v.video, 
+                FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
+                FROM view AS v 
+                JOIN day AS d ON v.day_id = d.id 
+                WHERE d.offering_id = :offering_id 
+                AND d.abbr = :day_abbr
+                AND v.user_id = :user_id 
+                GROUP BY v.video
+                ORDER BY v.video'
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr, 'user_id' => $user_id]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[substr($row['video'], 0, 2)] = $row;
+        }
+
+        return $data;
+    }
+
+    public function dayTotal($offering_id, $day_abbr)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT COUNT(DISTINCT user_id) AS users, 
+                        COUNT(v.id) AS views, 
+                        FORMAT(SUM(TIME_TO_SEC(TIMEDIFF(stop, start)))/3600, 2) AS time 
+                        FROM view AS v
+                        JOIN day AS d ON v.day_id = d.id 
+                        WHERE d.offering_id = :offering_id
+                        AND d.abbr = :day_abbr
+                        GROUP BY day_id'
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
+
+        return $stmt->fetch();
+    }
+
     /* Everything below this is going to be replaced */
     public function offering($offering_id)
     {

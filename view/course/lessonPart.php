@@ -1,5 +1,5 @@
 <article id="a<?= $idx ?>" class="<?= $idx == $file_idx ? 'selected' : '' ?>" 
-    data-name="<?= $part ?>">
+    data-name="<?= $idx.'_'.$part ?>">
     <h2><?= $part ?></h2>
 
     <div class="media <?= $config ? 'hide' : '' ?>">

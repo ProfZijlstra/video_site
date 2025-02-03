@@ -73,11 +73,13 @@ class ViewCtrl
         $videos = $this->videoDao->forOffering($course_num, $block);
         $averages = $this->viewDao->offeringAverages($offering['id']);
         $person = $this->viewDao->offeringPerson($offering['id'], $user_id);
+        $total = $this->viewDao->offeringTotal($offering['id']);
 
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['videos'] = $videos;
         $VIEW_DATA['averages'] = $averages;
         $VIEW_DATA['person'] = $person;
+        $VIEW_DATA['total'] = $total;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['course'] = strtoupper($course_num);
         $VIEW_DATA['title'] = "$block View Stats";
@@ -85,6 +87,37 @@ class ViewCtrl
         $VIEW_DATA['block'] = $block;
 
         return 'course/view/offeringStats.php';
+    }
+
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/chart$", sec: 'observer')]
+    public function dayStats(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+        $user_id = $_SESSION['user']['id'];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $videos = $this->videoDao->forDay($course_num, $block, $day);
+        $averages = $this->viewDao->dayAverages($offering['id'], $day);
+        $person = $this->viewDao->dayPerson($offering['id'], $day, $user_id);
+        $total = $this->viewDao->dayTotal($offering['id'], $day);
+
+        $VIEW_DATA['videos'] = $videos;
+        $VIEW_DATA['averages'] = $averages;
+        $VIEW_DATA['person'] = $person;
+        $VIEW_DATA['total'] = $total;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['course'] = strtoupper($course_num);
+        $VIEW_DATA['title'] = "$block $day View Stats";
+        $VIEW_DATA['area'] = 'course';
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['day'] = $day;
+
+        return 'course/view/dayStats.php';
     }
 
     /* Everything below this is going to be replaced by the new view system */
