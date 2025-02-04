@@ -199,6 +199,8 @@ window.addEventListener("load", () => {
                 div.querySelector("i.deliverable").addEventListener("click", MARKDOWN.toggleMarkDown);
                 div.querySelector("button.previewBtn").addEventListener("click", MARKDOWN.getHtmlForMarkdown);
                 div.querySelector("select.zipAttachment")?.addEventListener("change", updateZipAttachment);
+                div.querySelector("i.attachBtn").addEventListener("click", clickAttachBtn);
+                div.querySelector("input.attachment").addEventListener("change", uploadAttachment);
                 const delivs = document.getElementById("deliverables");
                 delivs.appendChild(div);
                 document.getElementById("addDelivDialog").close();
