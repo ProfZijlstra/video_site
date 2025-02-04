@@ -223,7 +223,6 @@ class ViewCtrl
         $course_num = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $day = $URI_PARAMS[3];
-        $user_id = $_SESSION['user']['id'];
 
         $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
         $videos = $this->videoDao->forDay($course_num, $block, $day);

@@ -25,7 +25,7 @@
                 const last = parts.pop();
                 let location = `${this.getAttribute('data-href')}/chart`;
                 if (last.match(/^\d+$/)) {
-                    location += "../" + location + `/${last}`;
+                    location = "../" + location + `/${last}`;
                 }
                 window.location.href = location;
             }
@@ -63,8 +63,8 @@
                 <div class="stats">
                     <?php for ($week = 1; $week <= $offering['lessonParts']; $week++) { ?>
                     <div>
-                        <table class="charts-css column multiple show-heading">
-                            <caption><?= "Week $week" ?></caption>
+                        <table class="charts-css column multiple show-heading show-labels">
+                            <caption><?= "W$week" ?></caption>
                             <?php for ($day = 1; $day <= $offering['lessonsPerPart']; $day++) { ?>
                             <?php
                                 $duration = number_format($videos["W{$week}D{$day}"]['totalDuration'] / 360000, 2);
@@ -72,6 +72,7 @@
                                 $viewed = number_format($person["W{$week}D{$day}"]['time'], 2);
                                 ?>
                             <tr data-href="<?= "W{$week}D{$day}" ?>"}>
+                                <th><?= "D$day" ?></th>
                                 <td style="--size: calc(<?= $duration ?> / <?= $max ?>)" title="<?= $duration ?>"> 
                                 </td>
                                 <td style="--size: calc(<?= $average ?> / <?= $max ?>)"  title="<?= $average ?>" > 

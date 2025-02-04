@@ -9,6 +9,11 @@
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/charts.css">
         <link rel="stylesheet" href="res/css/colCharts.css">
+        <style>
+        table.charts-css.column {
+            --labels-size: 75px;
+        }
+        </style>
     </head>
 
     <body>
