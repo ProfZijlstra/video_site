@@ -21,7 +21,13 @@
         <script>
         window.addEventListener('load', () => {
             function clickRow() {
-                window.location.href = `${this.getAttribute('data-href')}/chart`;
+                const parts = window.location.href.split('/');
+                const last = parts.pop();
+                let location = `${this.getAttribute('data-href')}/chart`;
+                if (last.match(/^\d+$/)) {
+                    location += "../" + location + `/${last}`;
+                }
+                window.location.href = location;
             }
             document.querySelectorAll('tr').forEach(tr => {
                 tr.addEventListener('click', clickRow);

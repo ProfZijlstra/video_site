@@ -67,7 +67,7 @@ class ViewCtrl
         $block = $URI_PARAMS[2];
         $user_id = $_SESSION['user']['id'];
 
-        $VIEW_DATA['title'] = "$block My View Stats";
+        $VIEW_DATA['title'] = "$block View Stats";
 
         return $this->overviewStats($user_id);
     }
@@ -194,7 +194,7 @@ class ViewCtrl
         $day = $URI_PARAMS[3];
         $user_id = $_SESSION['user']['id'];
 
-        $VIEW_DATA['title'] = "$block $day My View Stats";
+        $VIEW_DATA['title'] = "$block $day View Stats";
 
         return $this->dayStats($user_id);
     }
