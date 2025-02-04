@@ -68,6 +68,7 @@ class ViewCtrl
         $user_id = $_SESSION['user']['id'];
 
         $VIEW_DATA['title'] = "$block View Stats";
+        $VIEW_DATA['type'] = 'normal';
 
         return $this->overviewStats($user_id);
     }
@@ -83,6 +84,7 @@ class ViewCtrl
         $user = $this->userDao->retrieve($user_id);
 
         $VIEW_DATA['title'] = "$block {$user['knownAs']} View Stats";
+        $VIEW_DATA['type'] = 'student';
 
         return $this->overviewStats($user_id);
     }

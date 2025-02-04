@@ -76,7 +76,7 @@
                                 <td style="--size: calc(<?= $duration ?> / <?= $max ?>)" title="<?= $duration ?>"> 
                                 </td>
                                 <td style="--size: calc(<?= $average ?> / <?= $max ?>)"  title="<?= $average ?>" > 
-                                    <?php if (hasMinAuth('instructor') && $averages["W{$week}D{$day}"]['users']) { ?>
+                                    <?php if ($type == 'normal' && hasMinAuth('instructor') && $averages["W{$week}D{$day}"]['users']) { ?>
                                     <span><a title="Amount of users for average" href="<?= "W{$week}D{$day}/userChart" ?>"}>
                                     <?= $averages["W{$week}D{$day}"]['users'] ?>
                                     </a></span>
