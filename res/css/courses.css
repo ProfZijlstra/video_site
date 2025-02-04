@@ -19,19 +19,22 @@ div.offering span.number {
 div.offering span.block { 
     min-width: 80px;
 }
-span.faculty {
+span.faculty, span.actions {
     float: right;
+}
+span.actions {
+    margin-left: 10px;
 }
 span.number {
     position: inherit !important;
 }
-div#overlay div.modal label {
-    width: 150px;
-}
-
-div#overlay div.modal input,
-div#overlay div.modal select {
-    width: 530px;
+dialog#createDialog, dialog#cloneDialog div.line {
+    label {
+        width: 150px;
+    }
+    input, select {
+        width: 530px;
+    }
 }
 
 @media screen and (max-width: 900px) {
