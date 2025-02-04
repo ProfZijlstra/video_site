@@ -137,6 +137,21 @@ class ViewDao
         return $stmt->fetchAll();
     }
 
+    public function offeringData($offering_id)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT v.start, v.user_id, d.abbr, v.video, v.speed,
+                TIMEDIFF(stop, start) AS time 
+                FROM view AS v 
+                JOIN day AS d ON v.day_id = d.id 
+            WHERE d.offering_id = :offering_id
+            ORDER BY v.id DESC'
+        );
+        $stmt->execute(['offering_id' => $offering_id]);
+
+        return $stmt->fetchAll();
+    }
+
     public function dayAverages($offering_id, $day_abbr)
     {
         $stmt = $this->db->prepare(
@@ -211,6 +226,22 @@ class ViewDao
                 AND d.abbr = :day_abbr
                 GROUP BY v.user_id
                 ORDER BY time DESC'
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function dayData($offering_id, $day_abbr)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT v.start, v.user_id, d.abbr, v.video, v.speed,
+                TIMEDIFF(stop, start) AS time 
+                FROM view AS v 
+                JOIN day AS d ON v.day_id = d.id 
+            WHERE d.offering_id = :offering_id
+            AND d.abbr = :day_abbr
+            ORDER BY v.id DESC'
         );
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
 

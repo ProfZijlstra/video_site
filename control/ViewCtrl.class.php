@@ -186,6 +186,34 @@ class ViewCtrl
         return 'course/view/userStats.php';
     }
 
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/data$", sec: 'instructor')]
+    public function overviewData(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $data = $this->viewDao->offeringData($offering['id']);
+        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
+        $users = [];
+        foreach ($enrolled as $user) {
+            $users[$user['id']] = $user;
+        }
+
+        $VIEW_DATA['type'] = 'overview';
+        $VIEW_DATA['title'] = "$block View Data";
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['course'] = $course_num;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['data'] = $data;
+        $VIEW_DATA['users'] = $users;
+
+        return 'course/view/data.php';
+    }
+
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/chart$", sec: 'observer')]
     public function myDayStats(): string
     {
@@ -317,5 +345,34 @@ class ViewCtrl
         $VIEW_DATA['no_view'] = $no_view;
 
         return 'course/view/userStats.php';
+    }
+
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/data$", sec: 'instructor')]
+    public function dayData(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $data = $this->viewDao->dayData($offering['id'], $day);
+        $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering['id']);
+        $users = [];
+        foreach ($enrolled as $user) {
+            $users[$user['id']] = $user;
+        }
+
+        $VIEW_DATA['type'] = 'day';
+        $VIEW_DATA['title'] = "$block $day View Data";
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['course'] = $course_num;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['data'] = $data;
+        $VIEW_DATA['users'] = $users;
+
+        return 'course/view/data.php';
     }
 }
