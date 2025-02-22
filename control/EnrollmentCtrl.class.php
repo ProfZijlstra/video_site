@@ -2,23 +2,25 @@
 
 /**
  * Enrollment Controller Class
+ *
  * @author mzijlstra 2023-01-04
  */
-
 #[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)")]
 class EnrollmentCtrl
 {
     #[Inject('OfferingDao')]
     public $offeringDao;
+
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
+
     #[Inject('UserDao')]
     public $userDao;
+
     #[Inject('MailHlpr')]
     public $mailHlpr;
 
-
-    #[Get(uri: "/enrolled$", sec: "instructor")]
+    #[Get(uri: '/enrolled$', sec: 'instructor')]
     public function viewEnrollment()
     {
         global $URI_PARAMS;
@@ -36,11 +38,11 @@ class EnrollmentCtrl
         $observers = [];
 
         foreach ($enrollment as $person) {
-            if ($person['auth'] == "instructor") {
+            if ($person['auth'] == 'instructor') {
                 $instructors[] = $person;
-            } else if ($person['auth'] == "assistant") {
+            } elseif ($person['auth'] == 'assistant') {
                 $assistants[] = $person;
-            } else if ($person['auth'] == "student") {
+            } elseif ($person['auth'] == 'student') {
                 $students[] = $person;
             } else {
                 $observers[] = $person;
@@ -52,32 +54,31 @@ class EnrollmentCtrl
         $VIEW_DATA['students'] = $students;
         $VIEW_DATA['observers'] = $observers;
         $VIEW_DATA['offering'] = $offering;
-        $VIEW_DATA["course"] = $course_number;
-        $VIEW_DATA["block"] = $block;
-        $VIEW_DATA["offering_id"] = $offering["id"];
-        $VIEW_DATA["title"] = "Enrollment";
-        $VIEW_DATA['area'] = "enrollment";
-        return "course/enrollment.php";
+        $VIEW_DATA['course'] = $course_number;
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering_id'] = $offering['id'];
+        $VIEW_DATA['title'] = 'Enrollment';
+        $VIEW_DATA['area'] = 'enrollment';
+
+        return 'course/enrollment.php';
     }
 
-
-    #[Post(uri: "/enrolled$", sec: "instructor")]
+    #[Post(uri: '/enrolled$', sec: 'instructor')]
     public function replaceEnrollment()
     {
-        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-        if ($offering_id && $_FILES["list"]) {
+        $offering_id = filter_input(INPUT_POST, 'offering_id', FILTER_SANITIZE_NUMBER_INT);
+        if ($offering_id && $_FILES['list']) {
             // delete current enrollment
             $this->enrollmentDao->deleteStudentEnrollment($offering_id);
 
             // parse file for new students
-            $this->enrollStudentsInFile($_FILES["list"]["tmp_name"], $offering_id);
+            $this->enrollStudentsInFile($_FILES['list']['tmp_name'], $offering_id);
         }
 
-        return "Location: enrolled";
+        return 'Location: enrolled';
     }
 
-
-    #[Post(uri: "/observe$", sec: "login")]
+    #[Post(uri: '/observe$', sec: 'login')]
     public function requestObserve()
     {
         global $URI_PARAMS;
@@ -88,7 +89,7 @@ class EnrollmentCtrl
         $last = $_SESSION['user']['last'];
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $oid = $offering['id'];
-        //$this->enrollmentDao->enroll($user_id, $offering['id'], "observer");
+        // $this->enrollmentDao->enroll($user_id, $offering['id'], "observer");
 
         $msg = <<<EOD
 $first $last would like to join $course $block as observer.
@@ -99,7 +100,7 @@ https://manalabs.org/videos/$course/$block/observeReq?uid=$user_id&oid=$oid
 EOD;
         $ins = $this->enrollmentDao->getTopInstructorFor($course, $block);
         $to = [$ins['email'], $ins['teamsName']];
-        $this->mailHlpr->mail($to, "Observer Request", $msg);
+        $this->mailHlpr->mail($to, 'Observer Request', $msg);
 
         $msg = <<<EOD
 Your request to join $course $block as observer has been emailed to the
@@ -112,18 +113,18 @@ EOD;
         $email = $_SESSION['user']['email'];
         $name = "{$first} {$last}";
         $to = [$email, $name];
-        $this->mailHlpr->mail($to, "Observer Request", $msg);
+        $this->mailHlpr->mail($to, 'Observer Request', $msg);
 
-        return "course/msgSent.php";
+        return 'course/msgSent.php';
     }
 
-    #[Get(uri: "/observeReq$", sec: "instructor")]
+    #[Get(uri: '/observeReq$', sec: 'instructor')]
     public function showRequest()
     {
         global $VIEW_DATA;
 
-        $offering_id = filter_input(INPUT_GET, "oid", FILTER_SANITIZE_NUMBER_INT);
-        $user_id = filter_input(INPUT_GET, "uid", FILTER_SANITIZE_NUMBER_INT);
+        $offering_id = filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_NUMBER_INT);
+        $user_id = filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_NUMBER_INT);
 
         $user = $this->userDao->retrieve($user_id);
         $offering = $this->offeringDao->getOfferingById($offering_id);
@@ -134,19 +135,19 @@ EOD;
         $VIEW_DATA['block'] = $offering['block'];
         $VIEW_DATA['offering_id'] = $offering_id;
         $VIEW_DATA['user_id'] = $user_id;
-        $VIEW_DATA['title'] = "Review Request";
-        return "course/reviewRequest.php";
+        $VIEW_DATA['title'] = 'Review Request';
+
+        return 'course/reviewRequest.php';
     }
 
-
-    #[Post(uri: "/observeReq$", sec: "instructor")]
+    #[Post(uri: '/observeReq$', sec: 'instructor')]
     public function observerAllowDeny()
     {
         global $MY_BASE;
 
-        $offering_id = filter_input(INPUT_POST, "oid", FILTER_SANITIZE_NUMBER_INT);
-        $user_id = filter_input(INPUT_POST, "uid", FILTER_SANITIZE_NUMBER_INT);
-        $allow = filter_input(INPUT_POST, "allow", FILTER_SANITIZE_NUMBER_INT);
+        $offering_id = filter_input(INPUT_POST, 'oid', FILTER_SANITIZE_NUMBER_INT);
+        $user_id = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_NUMBER_INT);
+        $allow = filter_input(INPUT_POST, 'allow', FILTER_SANITIZE_NUMBER_INT);
 
         $user = $this->userDao->retrieve($user_id);
         $offering = $this->offeringDao->getOfferingById($offering_id);
@@ -158,61 +159,62 @@ EOD;
         $to = [$email, $teamsName];
 
         if ($allow) {
-            $this->enrollmentDao->enroll($user_id, $offering_id, "observer");
-            $subject = "Request Accepted";
+            $this->enrollmentDao->enroll($user_id, $offering_id, 'observer');
+            $subject = 'Request Accepted';
             $msg = "Your request to join $course $block has been accepted.";
         } else {
-            $subject = "Request Denied";
+            $subject = 'Request Denied';
             $msg = "Your request to join $course $block has been denied.";
         }
 
         $this->mailHlpr->mail($to, $subject, $msg);
 
-        return "Location: {$MY_BASE}"; 
+        return "Location: {$MY_BASE}";
     }
 
-
-
-    #[Post(uri: "/enroll$", sec: "instructor")]
+    #[Post(uri: '/enroll$', sec: 'instructor')]
     public function enroll()
     {
         global $VIEW_DATA;
         // receive offering_id, email and auth
-        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-        $auth = filter_input(INPUT_POST, "auth");
-        $email = filter_input(INPUT_POST, "email");
+        $offering_id = filter_input(INPUT_POST, 'offering_id', FILTER_SANITIZE_NUMBER_INT);
+        $auth = filter_input(INPUT_POST, 'auth');
+        $email = filter_input(INPUT_POST, 'email');
 
         // if email missing return "missing email"
-        if (!$email) {
-            $VIEW_DATA['msg'] = "Error: Missing Email Address";
-            return "Location: enrolled";
+        if (! $email) {
+            $VIEW_DATA['msg'] = 'Error: Missing Email Address';
+
+            return 'Location: enrolled';
         }
 
         // check if user exists by email (receive user_id)
         $user_id = $this->userDao->getUserId($email);
         if ($user_id) {
             // check if this user is already enrolled
-            if (!$this->enrollmentDao->isEnrolled($user_id, $offering_id)) {
+            if (! $this->enrollmentDao->isEnrolled($user_id, $offering_id)) {
                 $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
                 $VIEW_DATA['msg'] = "Existing user {$email} enrolled";
             } else {
                 $VIEW_DATA['msg'] = "User {$email} was already enrolled";
             }
-            return "Location: enrolled";
+
+            return 'Location: enrolled';
         }
 
-        // receive first, last, knownAs, studentId, teamsName, pass 
-        $first = filter_input(INPUT_POST, "first");
-        $last = filter_input(INPUT_POST, "last");
-        $knownAs = filter_input(INPUT_POST, "knownAs");
-        $pass = filter_input(INPUT_POST, "pass");
-        $studentID = filter_input(INPUT_POST, "studentID");
-        $teamsName = filter_input(INPUT_POST, "teamsName");
-        if (!$first || !$last || !$pass) {
-            $VIEW_DATA['msg'] = "Error: Missing given names, family names, or password";
-            return "Location: enrolled";
+        // receive first, last, knownAs, studentId, teamsName, pass
+        $first = filter_input(INPUT_POST, 'first');
+        $last = filter_input(INPUT_POST, 'last');
+        $knownAs = filter_input(INPUT_POST, 'knownAs');
+        $pass = filter_input(INPUT_POST, 'pass');
+        $studentID = filter_input(INPUT_POST, 'studentID');
+        $teamsName = filter_input(INPUT_POST, 'teamsName');
+        if (! $first || ! $last || ! $pass) {
+            $VIEW_DATA['msg'] = 'Error: Missing given names, family names, or password';
+
+            return 'Location: enrolled';
         }
-        if ($studentID == "" || !is_numeric($studentID)) {
+        if ($studentID == '' || ! is_numeric($studentID)) {
             $studentID = 0;
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
@@ -231,63 +233,64 @@ EOD;
         $this->enrollmentDao->enroll($user_id, $offering_id, $auth);
 
         $VIEW_DATA['msg'] = "Enrolled new user {$email}";
-        return "Location: enrolled";
+
+        return 'Location: enrolled';
     }
 
-
-    #[Post(uri: "/config_enroll$", sec: "instructor")]
+    #[Post(uri: '/config_enroll$', sec: 'instructor')]
     public function update()
     {
-        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-        $user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
-        $auth = filter_input(INPUT_POST, "auth");
-        $group = filter_input(INPUT_POST, "group");
+        $offering_id = filter_input(INPUT_POST, 'offering_id', FILTER_SANITIZE_NUMBER_INT);
+        $user_id = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+        $auth = filter_input(INPUT_POST, 'auth');
+        $group = filter_input(INPUT_POST, 'group');
 
         $this->enrollmentDao->update($user_id, $offering_id, $auth, $group);
-        return "Location: enrolled";
+
+        return 'Location: enrolled';
     }
 
-
-    #[Post(uri: "/unenroll$", sec: "instructor")]
+    #[Post(uri: '/unenroll$', sec: 'instructor')]
     public function unenroll()
     {
-        $offering_id = filter_input(INPUT_POST, "offering_id", FILTER_SANITIZE_NUMBER_INT);
-        $enrollment_id = filter_input(INPUT_POST, "eid", FILTER_SANITIZE_NUMBER_INT);
+        $offering_id = filter_input(INPUT_POST, 'offering_id', FILTER_SANITIZE_NUMBER_INT);
+        $enrollment_id = filter_input(INPUT_POST, 'eid', FILTER_SANITIZE_NUMBER_INT);
         $this->enrollmentDao->unenroll($enrollment_id, $offering_id);
-        return "Location: enrolled";
+
+        return 'Location: enrolled';
     }
 
     private function enrollStudentsInFile($file, $offering_id)
     {
         $lines = file($file);
 
-        # The CSV file should be formatted like a copy pasted infosys classlist
+        // The CSV file should be formatted like a copy pasted infosys classlist
         foreach ($lines as $line) {
 
-            # lines that do not start with an index and a studentId are ignored
-            if (preg_match("/^\d+\s*,\s*0{3}-\d{2}-\d{4}/", $line)) {
-                list($idx, $sid, $first, $middle, $last, $email) = str_getcsv($line);
+            // lines that do not start with an index and a studentId are ignored
+            if (preg_match("/^\d+\s*,\s*\d{6}/", $line)) {
+                [$idx, $sid, $first, $middle, $last, $email] = str_getcsv($line);
 
-                # create user if not already in DB
+                // create user if not already in DB
                 $user_id = $this->userDao->getUserId($email);
-                if (!$user_id) {
+                if (! $user_id) {
                     $user_id = $this->createAccount($sid, $first, $middle, $last, $email);
                 }
 
-                # enroll in the offering
-                $this->enrollmentDao->enroll($user_id, $offering_id, "student");
+                // enroll in the offering
+                $this->enrollmentDao->enroll($user_id, $offering_id, 'student');
             }
         }
     }
 
     private function createAccount($sid, $first, $middle, $last, $email)
     {
-        $given = trim($first) . " " . trim($middle);
-        $teamsName = trim($given) . " " . trim($last);
-        # transform social security formatted student ID into 6 digit 
-        $matches = array();
+        $given = trim($first).' '.trim($middle);
+        $teamsName = trim($given).' '.trim($last);
+        // transform social security formatted student ID into 6 digit
+        $matches = [];
         preg_match("/0{3}-([169]\d)-(\d{4})/", $sid, $matches);
-        $id6 = $matches[1] . $matches[2];
+        $id6 = $matches[1].$matches[2];
         // make initial password be the 6 digit student ID
         $hash = password_hash($id6, PASSWORD_DEFAULT);
 
@@ -304,7 +307,7 @@ EOD;
             0
         );
 
-        # create custom welcome message
+        // create custom welcome message
         $message =
             "Dear $first $middle $last,
 
@@ -322,9 +325,10 @@ Enjoy your course,
 Manalabs.org Automated Account Creator
 ";
 
-        #email the user about his newly created account
+        // email the user about his newly created account
         $to = [$email, $teamsName];
         $this->mailHlpr->mail($to, "Prof Zijlstra's manalabs.org account", $message);
+
         return $user_id;
     }
 }

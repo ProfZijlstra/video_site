@@ -47,26 +47,26 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="tools">
             <i id="addUser" title="Add Existing User" class="fa-solid fa-user-plus"></i>
             <i id="upload" title="Uplad Replacement List" class="fas fa-upload"></i>
         </nav>
 
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <div id="content">
-            <?php if ($msg) : ?>
+            <?php if ($msg) { ?>
                 <p class="error"><?= $msg ?></p>
-            <?php endif; ?>
+            <?php } ?>
 
             <?php function showList($type, $list, $showNoneMsg = false)
             { ?>
-                <?php if ($showNoneMsg && !$list) : ?>
+                <?php if ($showNoneMsg && ! $list) { ?>
                     <h2>No <?= $type ?>(s) Yet</h2>
-                <?php elseif (count($list) == 0 && !$showNoneMsg) : ?>
+                <?php } elseif (count($list) == 0 && ! $showNoneMsg) { ?>
                     <!-- do nothing -->
-                <?php else : ?>
+                <?php } else { ?>
                     <h2><?= count($list) ?> <?= $type ?>(s)</h2>
                     <table>
                         <tr>
@@ -78,30 +78,30 @@
                             <th></th>
                             <th></th>
                         </tr>
-                        <?php foreach ($list as $person) : ?>
+                        <?php foreach ($list as $person) { ?>
                             <tr>
                                 <td class="center studentID">
-                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
-                                        <?= $person["studentID"] ?>
+                                    <a title="Edit Student details" href="../../user/<?= $person['id'] ?>">
+                                        <?= $person['studentID'] ?>
                                     </a>
                                 </td>
                                 <td class="name">
-                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
-                                        <?= $person["knownAs"] ?>
+                                    <a title="Edit Student details" href="../../user/<?= $person['id'] ?>">
+                                        <?= $person['knownAs'] ?>
                                     </a>
                                 </td>
                                 <td>
-                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
-                                        <?= $person["lastname"] ?>
+                                    <a title="Edit Student details" href="../../user/<?= $person['id'] ?>">
+                                        <?= $person['lastname'] ?>
                                     </a>
                                 </td>
                                 <td>
-                                    <a title="Edit Student details" href="../../user/<?= $person["id"] ?>">
-                                        <?= $person["email"] ?>
+                                    <a title="Edit Student details" href="../../user/<?= $person['id'] ?>">
+                                        <?= $person['email'] ?>
                                     </a>
                                 </td>
                                 <td class="center group">
-                                    <?= $person["group"] ?>
+                                    <?= $person['group'] ?>
                                 </td>
                                 <td class="center">
                                     <i class="fa-solid fa-gear config" title="Configure Enrollment" data-uid="<?= $person['id'] ?>" data-auth="<?= $person['auth'] ?>" data-eid="<?= $person['eid'] ?>"></i>
@@ -112,15 +112,15 @@
                                     </a>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php } ?>
                     </table>
-                <?php endif; ?>
-            <?php } // end showList 
-            ?>
-            <?php showList("Instructor", $instructors, true); ?>
-            <?php showList("Assistant", $assistants, false); ?>
-            <?php showList("Student", $students, true); ?>
-            <?php showList("Observer", $observers, false); ?>
+                <?php } ?>
+            <?php } // end showList
+    ?>
+            <?php showList('Instructor', $instructors, true); ?>
+            <?php showList('Assistant', $assistants, false); ?>
+            <?php showList('Student', $students, true); ?>
+            <?php showList('Observer', $observers, false); ?>
 
         </div>
     </main>
@@ -128,7 +128,7 @@
         <i id="close-overlay" class="fas fa-times-circle"></i>
         <div id="upload_modal" class="modal hide">
             <h3>Upload Replacement</h3>
-            <p>Expected format is an infosys class list as .csv</p>
+            <p>Expected format is an infosys / harmony class list as .csv</p>
             <form action="" method="post" enctype="multipart/form-data" id="upload_form">
                 <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
                 <input type="file" id="list_file" name="list" />
