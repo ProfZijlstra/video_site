@@ -287,19 +287,15 @@ EOD;
     {
         $given = trim($first).' '.trim($middle);
         $teamsName = trim($given).' '.trim($last);
-        // transform social security formatted student ID into 6 digit
-        $matches = [];
-        preg_match("/0{3}-([169]\d)-(\d{4})/", $sid, $matches);
-        $id6 = $matches[1].$matches[2];
         // make initial password be the 6 digit student ID
-        $hash = password_hash($id6, PASSWORD_DEFAULT);
+        $hash = password_hash($sid, PASSWORD_DEFAULT);
 
         $user_id = $this->userDao->insert(
             $given,
             $last,
             $first,
             $email,
-            $id6,
+            $sid,
             $teamsName,
             $hash,
             1,
