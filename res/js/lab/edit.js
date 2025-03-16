@@ -40,8 +40,6 @@ window.addEventListener("load", () => {
 
     // markdown related functions
     function mdToggle() {
-        const descMarkDown = document.getElementById("descMarkDown");
-        descMarkDown.value = descMarkDown.value == "1" ? "0" : "1";
         if (this.classList.contains("details")) {
             updateDetails();
         } else if (this.classList.contains("deliverable")) {
