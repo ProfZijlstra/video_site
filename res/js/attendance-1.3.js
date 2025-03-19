@@ -1,18 +1,7 @@
 window.addEventListener("load", () => {
-    const overlay = document.getElementById("overlay");
-
-    // everything for hiding the overloay
-    function hide() {
-        overlay.classList.remove("visible");
-        document.querySelectorAll(".modal").forEach(
-            e => e.classList.add('hide')
-        );
-    }
-    document.getElementById("close-overlay").onclick = hide;
-    document.getElementById("overlay").onclick = function (evt) {
-        if (evt.target == this) {
-            hide();
-        }
+    // close the addMeeting modal
+    document.getElementById("closeAddMeeting").onclick = function() {
+        document.getElementById('addMeeting').close();
     };
 
     // showing the add_meeting overlay
@@ -23,11 +12,11 @@ window.addEventListener("load", () => {
     const PM_stop = days.dataset.pmstop ? days.dataset.pmstop : '15:20';
     function addMeeting() {
         const session_id = this.parentNode.dataset.session_id;
-        const date= this.parentNode.parentNode.dataset.date;
-        const day = this.parentNode.parentNode.dataset.day; 
+        const date = this.parentNode.parentNode.dataset.date;
+        const day = this.parentNode.parentNode.dataset.day;
         const stype = this.parentNode.dataset.stype;
         let day_part = " Morning";
-        let start =  AM_start;
+        let start = AM_start;
         let stop = AM_stop;
         if (stype == "PM") {
             day_part = " Afternoon";
@@ -40,8 +29,7 @@ window.addEventListener("load", () => {
         document.getElementById("manual_start").value = start;
         document.getElementById("manual_stop").value = stop;
 
-        document.getElementById('add_meeting').classList.remove('hide');
-        overlay.classList.add("visible");
+        document.getElementById('addMeeting').showModal();
     }
     const addBtns = document.getElementsByClassName("fa-plus-square");
     for (const btn of addBtns) {
@@ -53,6 +41,9 @@ window.addEventListener("load", () => {
     document.getElementById("manual_stop").validationMessage = timeValidationMsg;
 
     // excused modal
+    document.getElementById("closeAddExcused").onclick = function() {
+        document.getElementById('addExcused').close();
+    };
     function addExcused() {
         const session_id = this.parentNode.dataset.session_id;
         document.getElementById("excused_session_id").value = session_id;
@@ -90,8 +81,7 @@ window.addEventListener("load", () => {
             document.getElementById('excused_list').classList.add('hidden');
         }
 
-        document.getElementById('add_excused').classList.remove('hide');
-        overlay.classList.add("visible");
+        document.getElementById('addExcused').showModal();
     }
     function removeExcused() {
         const li = this.parentNode;
@@ -101,10 +91,10 @@ window.addEventListener("load", () => {
         const teamsNameTxt = span.textContent;
         const teamsName = encodeURIComponent(teamsNameTxt);
         fetch('delExcuse', {
-            method : 'POST',
-            body : `session_id=${session_id}&teamsName=${teamsName}`,
-            headers :
-                {'Content-Type' : 'application/x-www-form-urlencoded'},
+            method: 'POST',
+            body: `session_id=${session_id}&teamsName=${teamsName}`,
+            headers:
+                { 'Content-Type': 'application/x-www-form-urlencoded' },
         })
         ul.removeChild(li);
     }
@@ -115,11 +105,13 @@ window.addEventListener("load", () => {
 
     // physical attendance modal
     document.getElementById("physical_icon").onclick = function() {
-        document.getElementById('physical_modal').classList.remove('hide');
-        overlay.classList.add("visible");
+        document.getElementById('physicalModal').showModal();
+    };
+    document.getElementById("closePhysicalModal").onclick = function() {
+        document.getElementById('physicalModal').close();
     };
 
-    document.getElementById("physical_btn").onclick = function() {
+    document.getElementById("physicalBtn").onclick = function() {
         const week = document.getElementById("week").value;
         window.location = "physical/W" + week;
     };

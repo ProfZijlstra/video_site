@@ -13,7 +13,7 @@
     <script src="res/js/attendance-1.3.js"></script>
     <style>
         div#days {
-            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) : ?>auto <?php endfor; ?>;
+            grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) { ?>auto <?php } ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
 
@@ -28,11 +28,20 @@
         i.fa-cloud-upload-alt.EXPORTED {
             color: green;
         }
+        .modal h4 {
+            margin-bottom: 5px;
+        }
+        #offset {
+            width: 50px;
+        }
+        #file {
+            width: auto;
+        }
     </style>
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="tools">
             <a href="attendance/config">
@@ -40,55 +49,53 @@
             </a>
             <i id="physical_icon" title="Physical Classroom Attendance" class="fas fa-chalkboard-teacher"></i>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
 
 
         <div id="days" data-amstart="<?= $defaults['AM_start'] ?>" data-amstop="<?= $defaults['AM_stop'] ?>" data-pmstart="<?= $defaults['PM_start'] ?>" data-pmstop="<?= $defaults['PM_stop'] ?>">
-            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
-                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) : ?>
-                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering["daysPerLesson"]; ?>
+            <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) { ?>
+                <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) { ?>
+                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering['daysPerLesson']; ?>
 
-                    <div class="data <?= $w == 1 ? "w1" : "" ?> <?= $d == 1 ? "d1 " : "" ?><?= $date < $now ? "done" : "" ?> <?= date("z", $date) == date("z", $now) ? "curr" : "" ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]["id"] ?>" data-date="<?= date("Y-m-d", $date) ?>">
+                    <div class="data <?= $w == 1 ? 'w1' : '' ?> <?= $d == 1 ? 'd1 ' : '' ?><?= $date < $now ? 'done' : '' ?> <?= date('z', $date) == date('z', $now) ? 'curr' : '' ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]['id'] ?>" data-date="<?= date('Y-m-d', $date) ?>">
 
-                        <?php foreach (["AM", "PM"] as $stype) : ?>
+                        <?php foreach (['AM', 'PM'] as $stype) { ?>
                             <?php $session = $days["W{$w}D{$d}"][$stype]; ?>
-                            <div class="session <?= $stype ?>" data-session_id="<?= $session["id"] ?>" data-stype="<?= $stype ?>">
+                            <div class="session <?= $stype ?>" data-session_id="<?= $session['id'] ?>" data-stype="<?= $stype ?>">
                                 <?= $stype ?>
                                 <i title="Add Meeting" class="far fa-plus-square"></i>
-                                <i title="Excused Absences" class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? "" : "inactive" ?>" data-excused='<?= json_encode($excused[$session['id']]) ?>'>
+                                <i title="Excused Absences" class="fa-solid fa-user-xmark <?= isset($excused[$session['id']]) ? '' : 'inactive' ?>" data-excused='<?= json_encode($excused[$session['id']]) ?>'>
                                 </i>
-                                <?php if ($session["meetings"]) : ?>
+                                <?php if ($session['meetings']) { ?>
                                     <a href="<?= "attendance/W{$w}D{$d}/{$stype}#export" ?>">
-                                        <i title="Export Attendance <?= $session["status"] ?>" class="fas fa-cloud-upload-alt <?= $session["status"] ?>"></i>
+                                        <i title="Export Attendance <?= $session['status'] ?>" class="fas fa-cloud-upload-alt <?= $session['status'] ?>"></i>
                                     </a>
-                                <?php endif; ?>
+                                <?php } ?>
 
-                                <?php foreach ($session["meetings"] as $meeting) : ?>
+                                <?php foreach ($session['meetings'] as $meeting) { ?>
                                     <div class="meeting">
-                                        <a href="meeting/<?= $meeting["id"] ?>">
-                                            <?= $meeting["title"] ?>
+                                        <a href="meeting/<?= $meeting['id'] ?>">
+                                            <?= $meeting['title'] ?>
                                         </a>
                                     </div>
-                                <?php endforeach; ?>
+                                <?php } ?>
                             </div>
-                        <?php endforeach; ?>
+                        <?php } ?>
 
                         <time>
-                            <?= date("M j Y", $date); ?>
+                            <?= date('M j Y', $date); ?>
                         </time>
                     </div>
-                <?php endfor ?>
-            <?php endfor ?>
+                <?php } ?>
+            <?php } ?>
         </div>
     </main>
 
-    <div id="overlay">
-        <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div id="add_meeting" class="modal hide">
+        <dialog id="addMeeting" class="modal">
+            <i id="closeAddMeeting" class="fas fa-times-circle close"></i>
             <h3>Add a Meeting</h3>
 
-            <h4>Manually Create a Meeting</h4>
-            <form name="create" action="meeting" method="post">
+            <form name="create" action="meeting" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="manual_session_id" name="session_id" />
                 <div>
                     <label>Title</label>
@@ -106,13 +113,20 @@
                     <label>Stop</label>
                     <input type="text" name="stop" id="manual_stop" required pattern="([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?" title="24 hour time using colon separated hours, minutes and optionally seconds. Eg: 13:37" />
                 </div>
+                <h4>Teams Meeting (optional)</h4>
+                <div>
+                    <label>File</label>
+                    <input type="text" name="offset" id="offset" value="00:00" pattern="(-?[01]\d|2[0-3]):[0-5]\d" title="Timezone difference. Eg: -01:00" />
+                    <input type="file" name="file" id="file" > 
+                </div>
                 <div class="btn">
                     <button type="submit">Create Meeting</button>
                 </div>
             </form>
-        </div>
+        </dialog>
 
-        <div id="add_excused" class="modal hide">
+        <dialog id="addExcused" class="modal">
+            <i id="closeAddExcused" class="fas fa-times-circle close"></i>
             <h3>Excused Absences</h3>
             <div id="none">None so far</div>
             <div id="excused_list" class="hidden"></div>
@@ -123,9 +137,9 @@
                 <div>
                     <label>Add Student</label>
                     <select name="teamsName">
-                        <?php foreach ($enrollment as $student) : ?>
-                            <option><?= $student["teamsName"] ?></option>
-                        <?php endforeach; ?>
+                        <?php foreach ($enrollment as $student) { ?>
+                            <option><?= $student['teamsName'] ?></option>
+                        <?php } ?>
                     </select>
                 </div>
                 <div>
@@ -136,23 +150,23 @@
                     <button type="submit">Mark Excused</button>
                 </div>
             </form>
-        </div>
+        </dialog>
 
-        <div id="physical_modal" class="modal hide">
+        <dialog id="physicalModal" class="modal">
+            <i id="closePhysicalModal" class="fas fa-times-circle close"></i>
             <h3>Physical Attendance Report</h3>
             <div>
                 <label>Week</label>
                 <select id="week">
-                    <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) : ?>
+                    <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) { ?>
                         <option value="<?= $w ?>">Week <?= $w ?></option>
-                    <?php endfor; ?>
+                    <?php } ?>
                 </select>
             </div>
             <div class="btn">
-                <button type="button" id="physical_btn">Get Report</button>
+                <button type="button" id="physicalBtn">Get Report</button>
             </div>
-        </div>
-    </div>
+        </dialog>
 
 </body>
 

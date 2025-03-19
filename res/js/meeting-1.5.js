@@ -10,25 +10,20 @@ window.addEventListener("load", () => {
 
     // back logic is different from other pages
     // we don't want background clicks to trigger a back
-    document.querySelector("body > main").addEventListener("click", function (evt) {
-        if (evt.target.classList.contains('back') || 
+    document.querySelector("body > main").addEventListener("click", function(evt) {
+        if (evt.target.classList.contains('back') ||
             evt.target.classList.contains('fa-arrow-left')) {
-                window.location = "../attendance";
+            window.location = "../attendance";
         }
     });
-
-    // enable regen meeting button
-    document.getElementById("regen_meeting").onclick = function() {
-        document.getElementById("regen_form").submit();
-    };
 
     // enable delete meeting button
     document.getElementById("delete_meeting").onclick =
         function() {
-        if (confirm("Delete this meeting and all related data?")) {
-            document.getElementById("delete_form").submit();
+            if (confirm("Delete this meeting and all related data?")) {
+                document.getElementById("delete_form").submit();
+            }
         }
-    }
 
     // make POST on change meeting details
     function saveSettings() {
@@ -41,9 +36,9 @@ window.addEventListener("load", () => {
         update.start = form.start.value;
         update.stop = form.stop.value;
         fetch(`${id}`, {
-            method : 'POST',
-            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-            body : new URLSearchParams(update)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(update)
         });
     }
     const inps = document.querySelectorAll("#meeting_form input");
@@ -59,7 +54,7 @@ window.addEventListener("load", () => {
         }
         // find which column is clicked
         let idx = 0;
-        for(const th of ths) {
+        for (const th of ths) {
             if (th == evt.target) {
                 break;
             }
@@ -108,14 +103,14 @@ window.addEventListener("load", () => {
         const stopFields = tr.getElementsByClassName("stop");
         const stop = stopFields[0].value;
         const update = {
-            "id" : id,
-            "start" : start,
-            "stop" : stop,
-            "late" : 0,
-            "mid" : 0,
-            "left" : 0,
-            "excu" : 0,
-            "phys" : 0
+            "id": id,
+            "start": start,
+            "stop": stop,
+            "late": 0,
+            "mid": 0,
+            "left": 0,
+            "excu": 0,
+            "phys": 0
         };
         for (const box of boxes) {
             if (box.checked) {
@@ -126,18 +121,18 @@ window.addEventListener("load", () => {
         console.log(update);
 
         fetch(`attend/${id}`, {
-            method : 'POST',
-            headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify(update)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(update)
         });
     }
 
     function registerBadge(studentID, badge) {
-        const data = {"studentID": studentID, "badge": badge};
+        const data = { "studentID": studentID, "badge": badge };
         fetch(`/videos/user/registerBadge`, {
-            method : 'POST',
-            headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify(data)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         }).then(clearRegisterMsg);
     }
 
@@ -155,7 +150,7 @@ window.addEventListener("load", () => {
                 "Regenerate and delete all physical attendance and manually excused?")) {
             return false;
         }
-        return true;
+        document.getElementById("regen_form").submit();
     };
 
     function markPresent(evt) {
@@ -184,20 +179,20 @@ window.addEventListener("load", () => {
         const id = evt.target.parentNode.parentNode.dataset.id;
         const excu = evt.target.checked ? 1 : 0;
         const update = {
-            "id" : id,
-            "late" : 0,
-            "mid" : 0,
-            "left" : 0,
-            "excu" : excu,
-            "phys" : 0,
+            "id": id,
+            "late": 0,
+            "mid": 0,
+            "left": 0,
+            "excu": excu,
+            "phys": 0,
             "start": null,
             "stop": null
         };
 
         fetch(`attend/${id}`, {
-            method : 'POST',
-            headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify(update)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(update)
         });
     }
     const excuses = document.querySelectorAll("input.absent_excused");
@@ -210,9 +205,9 @@ window.addEventListener("load", () => {
         if (confirm("Email Unexcused Absent?")) {
             const meeting_id = document.getElementById("meeting_id").value;
             fetch(`${meeting_id}/emailAbsent`, {
-                method : 'POST',
-            }).then(() => {alert("Emails sent")});
-        }    
+                method: 'POST',
+            }).then(() => { alert("Emails sent") });
+        }
     });
 
     // enable email tardy
@@ -220,8 +215,8 @@ window.addEventListener("load", () => {
         if (confirm("Email Unexcused Tardy?")) {
             const meeting_id = document.getElementById("meeting_id").value;
             fetch(`${meeting_id}/emailTardy`, {
-                method : 'POST',
-            }).then(() => {alert("Emails sent")});
+                method: 'POST',
+            }).then(() => { alert("Emails sent") });
         }
     });
 
@@ -236,7 +231,7 @@ window.addEventListener("load", () => {
 
     // input field for the laser barcode scanner
     input.onkeyup = function(evt) {
-        if (evt.key ===  "Enter") {
+        if (evt.key === "Enter") {
             processCode(this.value);
             this.value = "";
         }
@@ -319,9 +314,11 @@ window.addEventListener("load", () => {
                     // this will also trigger a user permissions check
                     html5QrCode
                         .start(
-                            cameraId, 
-                            {fps : 10, qrbox: {width: 800, height: 300 }, 
-                            formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128 ]},
+                            cameraId,
+                            {
+                                fps: 10, qrbox: { width: 800, height: 300 },
+                                formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128]
+                            },
                             processCode
                         )
                         .catch(err => {
@@ -359,7 +356,7 @@ window.addEventListener("load", () => {
             msg.classList.remove('hidden');
             SOUNDS.present();
             setTimeout(() => {
-                box.classList.add("hidden"); 
+                box.classList.add("hidden");
                 msg.classList.add("hidden")
             }, 7000);
         } else {
