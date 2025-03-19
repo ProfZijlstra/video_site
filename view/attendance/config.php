@@ -79,7 +79,7 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back">
             <div title="Back">
@@ -88,7 +88,7 @@
                 </a>
             </div>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
 
         <div id="content">
             <div class="error">
@@ -123,11 +123,19 @@
                 <div>
                     <input type="time" name="PM_stop" id="PM_stop" value="<?= substr($defaults['PM_stop'], 0, 5) ?>" />
                 </div>
+                <div title="Timezone Offset for Teams Attendance Files">
+                    <label for="tz_offset">TZ Offset</label>
+                </div>
+                <div>
+                    <input type="text" name="tz_offset" value="<?= $defaults['tz_offset']?>" >
+                </div>
+                <div></div>
+                <div></div>
                 <div title="Do students default to physically being in class?">
                     <label for="inClass">In Class</label>
                 </div>
                 <div id="physical" title="Do students default to physically being in class?">
-                    <input type="checkbox" name="inClass" id="inClass" value="1" <?= $defaults['inClass'] ? "checked" : "" ?> />
+                    <input type="checkbox" name="inClass" id="inClass" value="1" <?= $defaults['inClass'] ? 'checked' : '' ?> />
                 </div>
             </div>
             <h3 id="CAMSheader">

@@ -653,3 +653,8 @@ UPDATE `answer` SET text = REPLACE(text, 'res/', 'res/course/') WHERE text LIKE 
 UPDATE `question` SET modelAnswer = REPLACE(modelAnswer, 'res/', 'res/course/') WHERE modelAnswer LIKE 'res/%';
 UPDATE `delivery` SET file = REPLACE(file, 'res/', 'res/course/') WHERE file LIKE 'res/%';
 UPDATE `attachment` SET file = REPLACE(file, 'res/', 'res/course/') WHERE file LIKE 'res/%';
+
+-- 19 mar 2025
+ALTER TABLE `attendance_config` ADD COLUMN `tz_offset` varchar(7) NOT NULL DEFAULT '00:00';
+UPDATE attendance_config SET tz_offset = '00:00';
+

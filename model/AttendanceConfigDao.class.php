@@ -3,7 +3,6 @@
 /**
  * @author mzijlstra 14 May 2024
  */
-
 #[Repository]
 class AttendanceConfigDao
 {
@@ -13,9 +12,10 @@ class AttendanceConfigDao
     public function byId($offering_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM attendance_config WHERE offering_id = :offering_id"
+            'SELECT * FROM attendance_config WHERE offering_id = :offering_id'
         );
-        $stmt->execute(array("offering_id" => $offering_id));
+        $stmt->execute(['offering_id' => $offering_id]);
+
         return $stmt->fetch();
     }
 
@@ -25,25 +25,28 @@ class AttendanceConfigDao
         $AM_stop,
         $PM_start,
         $PM_stop,
-        $inClass
+        $inClass,
+        $tz_offset,
     ) {
         $stmt = $this->db->prepare(
-            "INSERT INTO attendance_config 
+            'INSERT INTO attendance_config 
             VALUES(:offering_id, :AM_start, :AM_stop, :PM_start, :PM_stop, :inClass)
             ON DUPLICATE KEY UPDATE 
             inClass = :inClass, 
             AM_start = :AM_start, 
             AM_stop = :AM_stop, 
             PM_start = :PM_start, 
-            PM_stop = :PM_stop"
+            PM_stop = :PM_stop,
+            tz_offset = :tz_offset'
         );
-        $stmt->execute(array(
-            "offering_id" => $offering_id,
-            "inClass" => $inClass,
-            "AM_start" => $AM_start,
-            "AM_stop" => $AM_stop,
-            "PM_start" => $PM_start,
-            "PM_stop" => $PM_stop
-        ));
+        $stmt->execute([
+            'offering_id' => $offering_id,
+            'inClass' => $inClass,
+            'AM_start' => $AM_start,
+            'AM_stop' => $AM_stop,
+            'PM_start' => $PM_start,
+            'PM_stop' => $PM_stop,
+            'tz_offset' => $tz_offset,
+        ]);
     }
 }
