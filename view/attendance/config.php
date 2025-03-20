@@ -50,12 +50,14 @@
                 const pmStart = document.querySelector("#PM_start").value;
                 const pmStop = document.querySelector("#PM_stop").value;
                 const inClass = document.querySelector("#inClass").checked ? 1 : 0;
+                const tz_offset = document.querySelector("#tz_offset").value;
                 const data = new FormData();
                 data.append("AM_start", amStart);
                 data.append("AM_stop", amStop);
                 data.append("PM_start", pmStart);
                 data.append("PM_stop", pmStop);
                 data.append("inClass", inClass);
+                data.append("tz_offset", tz_offset);
                 fetch("defaults", {
                     method: "POST",
                     body: data
@@ -127,7 +129,7 @@
                     <label for="tz_offset">TZ Offset</label>
                 </div>
                 <div>
-                    <input type="text" name="tz_offset" value="<?= $defaults['tz_offset']?>" >
+                    <input type="text" name="tz_offset" id="tz_offset" value="<?= $defaults['tz_offset']?>" >
                 </div>
                 <div></div>
                 <div></div>

@@ -37,6 +37,14 @@
         #file {
             width: auto;
         }
+        #addExcused {
+            label {
+                width: 100px;
+            }
+            input, select {
+                width: 585px;
+            }
+        }
     </style>
 </head>
 
@@ -116,7 +124,7 @@
                 <h4>Teams Meeting (optional)</h4>
                 <div>
                     <label>File</label>
-                    <input type="text" name="offset" id="offset" value="00:00" pattern="(-?[01]\d|2[0-3]):[0-5]\d" title="Timezone difference. Eg: -01:00" />
+                    <input type="text" name="offset" id="offset" value="<?= $defaults['tz_offset'] ?>" pattern="(-?[01]\d|2[0-3]):[0-5]\d" title="Timezone difference. Eg: -01:00" />
                     <input type="file" name="file" id="file" > 
                 </div>
                 <div class="btn">

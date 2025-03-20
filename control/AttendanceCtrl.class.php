@@ -137,6 +137,7 @@ class AttendanceCtrl
         $PM_stop = filter_input(INPUT_POST, 'PM_stop');
         $inClass = filter_input(INPUT_POST, 'inClass', FILTER_SANITIZE_NUMBER_INT);
         $inClass = $inClass ? '1' : '0';
+        $tz_offset = filter_input(INPUT_POST, 'tz_offset');
 
         $this->AttendanceConfigDao->saveOrUpdate(
             $offering['id'],
@@ -144,7 +145,8 @@ class AttendanceCtrl
             $AM_stop,
             $PM_start,
             $PM_stop,
-            $inClass
+            $inClass,
+            $tz_offset,
         );
     }
 
@@ -379,7 +381,9 @@ Manalabs Attendance System.
             }
             $hlpr->submitAttendance($students, $stype, $date, $start, $stop);
             $hlpr->logout();
-        } catch (Exception) {
+        } catch (Exception $e) {
+            echo 'Is https://fac.miu.edu/ down?';
+
             return 'error/500.php';
         }
 

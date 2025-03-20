@@ -30,7 +30,14 @@ class AttendanceConfigDao
     ) {
         $stmt = $this->db->prepare(
             'INSERT INTO attendance_config 
-            VALUES(:offering_id, :AM_start, :AM_stop, :PM_start, :PM_stop, :inClass)
+            VALUES(:offering_id, 
+                :AM_start, 
+                :AM_stop, 
+                :PM_start, 
+                :PM_stop, 
+                :inClass, 
+                :tz_offset
+            )
             ON DUPLICATE KEY UPDATE 
             inClass = :inClass, 
             AM_start = :AM_start, 

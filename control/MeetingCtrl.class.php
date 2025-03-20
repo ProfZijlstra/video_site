@@ -236,7 +236,7 @@ We noticed you were tardy for the '.$tardy['title'].' meeting that started at:
         $start = filter_input(INPUT_POST, 'start');
         $stop = filter_input(INPUT_POST, 'stop');
 
-        if (isset($_FILES['file'])) {
+        if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
             $offset = filter_input(INPUT_POST, 'offset');
             $meeting_id = $this->parseMeetingFile(
                 $_FILES['file']['tmp_name'],

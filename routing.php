@@ -5,7 +5,7 @@
  */
 
 // check for redirect flash attributes
-if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
+if ($MY_METHOD === 'GET' && isset($_SESSION['redirect'])) {
 
     foreach ($_SESSION['flash_data'] as $key => $val) {
         $VIEW_DATA[$key] = $val;
@@ -18,11 +18,11 @@ if ($MY_METHOD === "GET" && isset($_SESSION['redirect'])) {
 // populate $_PUT for PUT requests
 // ideas from https://stackoverflow.com/questions/6805570/
 // implementation from Copilot
-if ($MY_METHOD === "PUT") {
-    $_PUT = array();
-    parse_str(file_get_contents("php://input"), $_PUT);
+if ($MY_METHOD === 'PUT') {
+    $_PUT = [];
+    parse_str(file_get_contents('php://input'), $_PUT);
     foreach ($_PUT as $key => $value) {
-        $_PUT[$key] = str_replace(' ', "+", urldecode($value));;
+        $_PUT[$key] = str_replace(' ', '+', urldecode($value));
     }
 }
 
@@ -38,37 +38,38 @@ foreach ($uris as $pattern => $mapping) {
 // If there was no mapping send out a 404
 if ($MY_MAPPING === []) {
     if (DEVELOPMENT) {
-        print("Mapping not found");
+        echo 'Mapping not found';
     }
-    require "view/error/404.php";
+    require 'view/error/404.php';
     exit();
 }
 
-/* ****************************** 
- * Check Authorization based on the security level in the mapping 
+/* ******************************
+ * Check Authorization based on the security level in the mapping
  * **************************** */
 require 'security.php';
 
-
 // do the actual routing process
-list($class, $method) = explode("@",  $MY_MAPPING['route']);
+[$class, $method] = explode('@', $MY_MAPPING['route']);
 try {
-    $db = $context->get("DB");
+    $db = $context->get('DB');
     $controler = $context->get($class);
 
     $db->beginTransaction();
-    $db->exec("SET time_zone = '" . TIMEZONE . "'");
+    $db->exec("SET time_zone = '".TIMEZONE."'");
     $output = $controler->{$method}();
     $db->commit();
 
     view($output);
 } catch (PDOException $e) {
+    echo 'DB error';
     $db->rollBack();
     error_log($e); // log the whole trace
-    require "view/error/500.php";
+    require 'view/error/500.php';
 } catch (Exception $e) {
+    echo 'Not a DB error';
     error_log($e->getMessage()); // log only the message
-    require "view/error/500.php";
+    require 'view/error/500.php';
 }
 
 // always exit after displaying the view
@@ -76,30 +77,31 @@ exit();
 
 /**
  * Helper function to check what kind of view should be displayed
- * 
- * @param type $data either string for HTML view or data for JSON
+ *
+ * @param  type  $data  either string for HTML view or data for JSON
  */
 function view($data)
 {
     if (is_string($data)) {
         htmlView($data);
-    } else if ($data || is_array($data)) {
-        print json_encode($data);
+    } elseif ($data || is_array($data)) {
+        echo json_encode($data);
     }
     // some web service calls don't generate a view / data
 }
 
 /**
  * Helper function to redirect to a GET or display an HTML page
- * 
+ *
  * @global array $VIEW_DATA any data that the view may need in order to render
- * @param string $view the name of the view file to include before exiting, 
- * or alternately for redirects a location header string
+ *
+ * @param  string  $view  the name of the view file to include before exiting,
+ *                        or alternately for redirects a location header string
  */
 function htmlView($view)
 {
     global $VIEW_DATA;
-    if (preg_match("/^Location: /", $view)) {
+    if (preg_match('/^Location: /', $view)) {
         if ($VIEW_DATA) {
             $_SESSION['redirect'] = $view;
             $_SESSION['flash_data'] = $VIEW_DATA;

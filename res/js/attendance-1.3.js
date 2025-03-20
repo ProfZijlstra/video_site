@@ -59,7 +59,7 @@ window.addEventListener("load", () => {
                 // text parts
                 const span = document.createElement("span");
                 span.classList.add("teamsName");
-                const teamsNameTxt = document.createTextNode(student.teamsName);
+                const teamsNameTxt = document.createTextNode(student.teamsName + " ");
                 span.appendChild(teamsNameTxt);
                 const excuseTxt = document.createTextNode(student.reason);
                 // remove icon
