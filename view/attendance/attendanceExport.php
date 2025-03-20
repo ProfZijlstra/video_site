@@ -43,12 +43,12 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
             <a href="../../attendance"><i class="fa-solid fa-arrow-left"></i></a>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <div id="content">
             <div class="error">
                 <?= $error ?>
@@ -58,11 +58,11 @@
                 <h3>Session Details:</h3>
                 <div>
                     <label>Status</label>
-                    <input disabled type="text" name="title" value="<?= $session["status"] ?>" />
+                    <input disabled type="text" name="title" value="<?= $session['status'] ?>" />
                 </div>
                 <div>
                     <label>Meetings</label>
-                    <input disabled type="text" name="generated" value="<?= $session["generated"] ?>" />
+                    <input disabled type="text" name="generated" value="<?= $session['generated'] ?>" />
                 </div>
                 <div>
                     <label>Date</label>
@@ -70,11 +70,11 @@
                 </div>
                 <div>
                     <label>Start</label>
-                    <input disabled type="text" name="start" value="<?= $session["start"] ?>" />
+                    <input disabled type="text" name="start" value="<?= $session['start'] ?>" />
                 </div>
                 <div>
                     <label>Stop</label>
-                    <input disabled type="text" name="stop" value="<?= $session["stop"] ?>" />
+                    <input disabled type="text" name="stop" value="<?= $session['stop'] ?>" />
                 </div>
             </div>
             <form name="regenForm" method="post" action="<?= $stype ?>"></form>
@@ -95,11 +95,11 @@
                     <th>InClass</th>
                     <th>Comments</th>
                 </tr>
-                <?php foreach ($exports as $export) : ?>
+                <?php foreach ($exports as $export) { ?>
                     <tr data-id="<?= $export['id'] ?>">
                         <td><?= $export['studentID'] ?></td>
                         <td title="<?= $export['knownAs'] ?>">
-                            <?= trim($export['lastname']) . ', ' . $export['firstname'] ?>
+                            <?= trim($export['lastname']).', '.$export['firstname'] ?>
                         </td>
                         <td><?= $export['status'] ?></td>
                         <td class="cbox">
@@ -109,13 +109,13 @@
                             <input class="comment" type="text" value="<?= $export['comment'] ?>">
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php } ?>
             </table>
         </div>
     </main>
-    <div id="overlay">
-        <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div id="exportModal" class="modal">
+
+        <dialog id="exportDialog" class="modal">
+            <i id="closeExportDialog" class="fas fa-times-circle close"></i>
             <h3>Export Attendance to CAMS</h3>
             <form action="export" method="post">
                 <div>
@@ -136,11 +136,11 @@
                 </div>
                 <div>
                     <label>Start</label>
-                    <input id="start" type="time" name="start" value="<?= $session["start"] ?>" />
+                    <input id="start" type="time" name="start" value="<?= $session['start'] ?>" />
                 </div>
                 <div>
                     <label>Stop</label>
-                    <input id="stop" type="time" name="stop" value="<?= $session["stop"] ?>" />
+                    <input id="stop" type="time" name="stop" value="<?= $session['stop'] ?>" />
                 </div>
 
                 <div id="doExport" class="btn">
@@ -148,8 +148,7 @@
                     <button>Export</button>
                 </div>
             </form>
-        </div>
-    </div>
+        </dialog>
 
 </body>
 

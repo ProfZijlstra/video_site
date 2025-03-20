@@ -89,7 +89,7 @@ div.modal.hide {
 .modal label.checkbox {
     display: inline;
 }
-.modal input, div.modal select {
+.modal input, .modal select {
     width: 575px;
     height: 25px;
 }

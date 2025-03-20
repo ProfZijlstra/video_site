@@ -35,40 +35,25 @@ window.addEventListener("load", () => {
     };
 
     // show modal when exportBtn clicked
-    const overlay = document.getElementById("overlay");
+    const exportModal = document.getElementById("exportDialog");
     document.getElementById("exportBtn").onclick = function() {
-        overlay.classList.add('visible');
         const select = document.getElementById('stype');
         if (dayAbbr.match(/W\dD6/)) {
             select.value = "SAT";
         } else {
-            select.value = stype; 
+            select.value = stype;
         }
         document.getElementById("camsPwd").focus();
-        const modals = document.querySelectorAll(".modal");
-        for (const modal of modals) {
-            modal.classList.remove("hide");
-        }
+        exportModal.showModal();
     };
-    
+
     // when page opens show the export modal if the URL has #export
     if (window.location.hash == "#export") {
         document.getElementById("exportBtn").click();
     }
 
-    // hide overlay and any/all modal(s)
-    function hide() {
-        overlay.classList.remove("visible");
-        const modals = document.querySelectorAll(".modal");
-        for (const modal of modals) {
-            modal.classList.add("hide");
-        }
-    }
-    document.getElementById("close-overlay").onclick = hide;
-    document.getElementById("overlay").onclick = function (evt) {
-        if (evt.target == this) {
-            hide();
-        }
+    document.getElementById("closeExportDialog").onclick = () => {
+        exportModal.close();
     };
 
     document.getElementById("doExport").onclick = function() {
