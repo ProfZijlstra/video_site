@@ -55,6 +55,9 @@
             <a href="attendance/config">
                 <i title="Configure" class="fa-solid fa-gear"></i>
             </a>
+            <a href="professionalism">
+                <i title="Professionalism Report" class="fab fa-black-tie"></i>
+            </a>
             <i id="physical_icon" title="Physical Classroom Attendance" class="fas fa-chalkboard-teacher"></i>
         </nav>
         <?php include 'areas.php'; ?>
