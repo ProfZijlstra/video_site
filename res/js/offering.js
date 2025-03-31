@@ -6,31 +6,18 @@ window.addEventListener("load", () => {
     }
 
     // beyond here is instructor / admin code
-    const clone = document.getElementById("clone");
-    if (!clone) {
+    const showEditButton = document.querySelector(".tools i.far.fa-edit");
+    if (!showEditButton) {
         return;
     }
 
-    // clone dialog
-    document.getElementById("clone").onclick = function() {
-        document.getElementById("cloneDialog").showModal();
-    }
-    document.getElementById("closeCloneDialog").onclick = function() {
-        document.getElementById("cloneDialog").close();
-    }
-
-    // delete dialog
-    document.getElementById("delete").onclick = function() {
-        document.getElementById("deleteDialog").showModal();
-    }
-    document.getElementById("closeDeleteDialog").onclick = function() {
-        document.getElementById("deleteDialog").close();
-    }
-    document.getElementById("cancel_delete").onclick = function() {
-        document.getElementById("deleteDialog").close();
-    }
-
     // edit dialog
+    showEditButton.onclick = function() {
+        const editIcons = document.querySelectorAll("div#days i.far.fa-edit");
+        editIcons.forEach((edit) => {
+            edit.classList.toggle("hide");
+        });
+    };
     let dayId = null;
     function showEditDialog() {
         dayId = this.closest("div.data").id; // Like W1D1
