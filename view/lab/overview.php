@@ -44,7 +44,7 @@
             <?php } ?>
             <?php for ($w = 1; $w <= $offering['lessonParts']; $w++) { ?>
                 <?php for ($d = 1; $d <= $offering['lessonsPerPart']; $d++) { ?>
-                    <?php $date = $start + 79200 + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering['daysPerLesson']; // 79200 is 10pm?>
+                    <?php $date = $start + ($w - 1) * 60 * 60 * 24 * $offering['daysPerLesson'] * $offering['lessonsPerPart'] + ($d - 1) * 60 * 60 * 24 * $offering['daysPerLesson']; // 79200 is 10pm?>
                     <?php $next = $date + 60 * 60 * 24 * $offering['daysPerLesson']; ?>
 
                     <div class="data <?= $w == 1 ? 'w1' : '' ?> <?= $d == 1 ? 'd1 ' : '' ?><?= $date < $now ? 'done' : '' ?> <?= date('z', $date) == date('z', $now) ? 'curr' : '' ?>" id="<?= "W{$w}D{$d}" ?>" data-day="<?= "W{$w}D{$d}" ?>" data-day_id="<?= $days["W{$w}D{$d}"]['id'] ?>" data-date="<?= date('Y-m-d', $date) ?>" data-next="<?= date('Y-m-d', $next) ?>">
