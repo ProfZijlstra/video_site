@@ -269,7 +269,7 @@ We noticed you were tardy for the '.$tardy['title'].' meeting that started at:
             $excused[$attendant['teamsName']] = true;
         }
 
-        // attach all enrolled students as 'present', no tardies
+        // attach all enrolled students
         $offering_id = $this->classSessionDao->getOfferingId($session_id);
         $enrolled = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
         $attendance = [];
@@ -283,7 +283,7 @@ We noticed you were tardy for the '.$tardy['title'].' meeting that started at:
                 'arriveLate' => 0,
                 'leaveEarly' => 0,
                 'middleMissing' => 0,
-                'inClass' => 1,
+                'inClass' => 0,
                 'excused' => isset($excused[$attendant['teamsName']]) ? 1 : 0,
                 'start' => $start,
                 'stop' => $stop,
