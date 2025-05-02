@@ -36,11 +36,17 @@ window.addEventListener("load", () => {
         switchDeliv(1);
         window.localStorage.setItem("view", "multi");
         window.scrollTo(0, 0);
+        document.querySelectorAll("div.qcontainer, div.dcontainer").forEach(e => {
+            e.classList.add("spa");
+        });
 
         if (!hist) {
             return;
         }
-        window.history.pushState({ "id": 1 }, '', window.location + "/1");
+        const loc = window.location + "";
+        if (!loc.match(/\/\d+\/\d+$/)) {
+            window.history.pushState({ "id": 1 }, '', window.location + "/1");
+        }
         if (finForm) { // for the quiz
             const action = finForm.getAttribute("action");
             finForm.setAttribute("action", "../" + action);
@@ -58,6 +64,9 @@ window.addEventListener("load", () => {
         keyShortCuts.classList.add('hide');
         delivs.forEach(e => e.classList.remove('hide'));
         window.localStorage.setItem("view", "single");
+        document.querySelectorAll("div.qcontainer, div.dcontainer").forEach(e => {
+            e.classList.remove("spa")
+        });
 
         if (!hist) {
             return;
@@ -147,8 +156,7 @@ window.addEventListener("load", () => {
 
     // switch to SPA if user preference indicates it
     const view = window.localStorage.getItem("view");
-    const selected = document.querySelector("body").dataset.selected;
-    if (view && view == "multi" && !selected) {
+    if (!view || view == "multi") {
         toSpa();
     }
 

@@ -52,7 +52,7 @@ body.lab {
             width: 100%;
 
             textarea {
-                width: 100%;
+                width: 98%;
                 height: 100px;
                 resize: vertical;
             }
@@ -93,6 +93,19 @@ body.lab {
         border-top: 1px solid var(--border);
         .textContainer .fa-markdown {
             top: 8px;
+        }
+    }
+    div.dcontainer.deliverables.spa {
+        border-bottom: 1px solid var(--border);
+        div.deliverable {
+            height: 70vh;
+        }
+        div.deliverable, div.delivery {
+            max-height: 70vh;
+            overflow: auto;
+        }
+        textarea {
+            max-height: 60vh;
         }
     }
     div.listing {
