@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <style>
         div#content {
+            width: 900px;
+
             table {
                 width: 100%;
                 border-collapse: collapse;
