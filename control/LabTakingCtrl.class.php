@@ -187,7 +187,7 @@ class LabTakingCtrl
         return 'lab/doLab.php';
     }
 
-    #[Get(uri: "/(\d+)/download/(\d+)$", sec: 'student')]
+    #[Get(uri: "/(\d+/)?(\d+)/download/(\d+)$", sec: 'student')]
     public function downloadFile()
     {
         global $URI_PARAMS;
@@ -195,7 +195,8 @@ class LabTakingCtrl
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
         $lab_id = $URI_PARAMS[3];
-        $attachment_id = $URI_PARAMS[4];
+        $length = count($URI_PARAMS);
+        $attachment_id = $URI_PARAMS[$length - 1];
 
         $lab = $this->labDao->byId($lab_id);
         $attachment = $this->attachmentDao->byId($attachment_id);

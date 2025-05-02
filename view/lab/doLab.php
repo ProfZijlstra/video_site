@@ -123,14 +123,6 @@
                         </div>
 
                         <div class="deliverable" data-id="<?= $deliverable['id'] ?>">
-                            <div class="description">
-                                <?php if ($deliverable['hasMarkDown']) { ?>
-                                <?= $parsedown->text($deliverable['desc']) ?>
-                            <?php } else { ?>
-                            <pre><?= htmlspecialchars($deliverable['desc']) ?></pre>
-                                <?php } ?>
-                            </div>
-
                             <div class="attachments">
                                 <?php foreach ($attachments as $attachment) { ?>
                                 <?php if ($attachment['deliverable_id'] == $deliverable['id']) { ?>
@@ -147,6 +139,15 @@
                                 <?php } ?>
                                 <?php } ?>
                             </div>
+
+                            <div class="description">
+                                <?php if ($deliverable['hasMarkDown']) { ?>
+                                <?= $parsedown->text($deliverable['desc']) ?>
+                            <?php } else { ?>
+                            <pre><?= htmlspecialchars($deliverable['desc']) ?></pre>
+                                <?php } ?>
+                            </div>
+
                         </div> <!-- close deliverable -->
 
                         <?php include 'delivery.php'?>
