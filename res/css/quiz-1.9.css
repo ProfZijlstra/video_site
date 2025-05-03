@@ -138,19 +138,6 @@ div.qcontainer {
         width: 100%;
     }
 }
-div.qcontainer.spa {
-    border-bottom: 1px solid var(--border);
-    div.question {
-        height: 70vh;
-    }
-    div.question, div.answer {
-        max-height: 70vh;
-        overflow: auto;
-    }
-    textarea.answer {
-        max-height: 67vh;
-    }
-}
 div.qcontainer div.about {
     grid-row: 1 / span 2;
     border-right: 1px solid var(--border);
@@ -417,10 +404,10 @@ body#gradeQuestion {
 * Copy / pasted from lab.css
 * TODO: extract out common parts
 */
-@media screen and (min-width: 1550px) {
+@media screen and (min-width: 900px) {
     body#doQuiz {
         main div#content {
-            width: 1450px;
+            width: 76vw;
         }
 
         div.qcontainer {
@@ -435,6 +422,19 @@ body#gradeQuestion {
             }
             div.textContainer textarea {
                 max-width: initial;
+            }
+        }
+        div.qcontainer.spa {
+            border-bottom: 1px solid var(--border);
+            div.question {
+                height: 70vh;
+            }
+            div.question, div.answer {
+                max-height: 70vh;
+                overflow: auto;
+            }
+            textarea.answer {
+                max-height: 67vh;
             }
         }
     }

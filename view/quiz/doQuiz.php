@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.8.css">
+    <link rel="stylesheet" href="res/css/quiz-1.9.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/camera-1.4.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.8.js"></script>
+    <script src="res/js/quiz/quiz-1.9.js"></script>
     <script src="res/js/ensureSaved.js"></script>
     <script src="res/js/lab_quiz_spa-1.1.js"></script>
 </head>
