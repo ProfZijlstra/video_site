@@ -3,34 +3,34 @@
 /**
  * @author mzijlstra 08/17/2022
  */
-
 #[Repository]
 class QuestionDao
 {
     #[Inject('DB')]
     public $db;
 
-    public function add($quiz_id, $type, $text, $model_answer, $points, $seq)
+    public function add($quiz_id, $type, $text, $modelAnswer, $points, $seq)
     {
         $stmt = $this->db->prepare(
-            "INSERT INTO question 
-			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
-                    1, 0)"
+            'INSERT INTO question 
+			VALUES(NULL, :quiz_id, :text, :modelAnswer, :points, :seq, :type,
+                    1, 0)'
         );
-        $stmt->execute(array(
-            "quiz_id" => $quiz_id,
-            "type" => $type,
-            "text" => $text,
-            "model_answer" => $model_answer,
-            "points" => $points,
-            "seq" => $seq,
-        ));
+        $stmt->execute([
+            'quiz_id' => $quiz_id,
+            'type' => $type,
+            'text' => $text,
+            'modelAnswer' => $modelAnswer,
+            'points' => $points,
+            'seq' => $seq,
+        ]);
+
         return $this->db->lastInsertId();
     }
 
     public function forQuiz($quiz_id)
     {
-        $stmt = $this->db->prepare("
+        $stmt = $this->db->prepare('
             SELECT q.*, COUNT(a.id) AS answers, COUNT(a2.id) AS ungraded,
             AVG(a.points) AS avgPoints
             FROM question AS q
@@ -39,86 +39,88 @@ class QuestionDao
             WHERE q.quiz_id = :quiz_id
             GROUP BY q.id
             ORDER BY seq
-        ");
-        $stmt->execute(array("quiz_id" => $quiz_id));
+        ');
+        $stmt->execute(['quiz_id' => $quiz_id]);
+
         return $stmt->fetchAll();
     }
 
     public function get($id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM question
-            WHERE id = :id "
+            'SELECT * FROM question
+            WHERE id = :id '
         );
-        $stmt->execute(array("id" => $id));
+        $stmt->execute(['id' => $id]);
+
         return $stmt->fetch();
     }
 
     public function update(
         $id,
         $text,
-        $model_answer,
+        $modelAnswer,
         $points,
         $hasMarkDown,
         $mdlAnsHasMD
     ) {
         $stmt = $this->db->prepare(
-            "UPDATE question 
+            'UPDATE question 
             SET `text` = :text, 
-                modelAnswer = :model_answer, 
+                modelAnswer = :modelAnswer, 
                 points = :points,
                 hasMarkDown = :hasMarkDown,
                 mdlAnsHasMD = :mdlAnsHasMD
-            WHERE id = :id "
+            WHERE id = :id '
         );
-        $stmt->execute(array(
-            "id" =>  $id,
-            "text" => $text,
-            "model_answer" => $model_answer,
-            "points" => $points,
-            "hasMarkDown" => $hasMarkDown,
-            "mdlAnsHasMD" => $mdlAnsHasMD,
-        ));
+        $stmt->execute([
+            'id' => $id,
+            'text' => $text,
+            'modelAnswer' => $modelAnswer,
+            'points' => $points,
+            'hasMarkDown' => $hasMarkDown,
+            'mdlAnsHasMD' => $mdlAnsHasMD,
+        ]);
     }
 
-    public function updateModelAnswer($id, $model_answer, $mdlAnsHasMD)
+    public function updateModelAnswer($id, $modelAnswer, $mdlAnsHasMD)
     {
         $stmt = $this->db->prepare(
-            "UPDATE question 
-            SET `modelAnswer` = :model_answer,
+            'UPDATE question 
+            SET `modelAnswer` = :modelAnswer,
                 mdlAnsHasMd = :mdlAnsHasMd
-            WHERE id = :id "
+            WHERE id = :id '
         );
-        $stmt->execute(array(
-            "id" =>  $id,
-            "model_answer" => $model_answer,
-            "mdlAnsHasMd" => $mdlAnsHasMD,
-        ));
+        $stmt->execute([
+            'id' => $id,
+            'modelAnswer' => $modelAnswer,
+            'mdlAnsHasMd' => $mdlAnsHasMD,
+        ]);
     }
 
     public function delete($id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM question 
-            WHERE id = :id"
+            'SELECT * FROM question 
+            WHERE id = :id'
         );
-        $stmt->execute(array("id" =>  $id));
+        $stmt->execute(['id' => $id]);
         $question = $stmt->fetch();
 
         $stmt = $this->db->prepare(
-            "DELETE FROM question
-            WHERE id = :id "
+            'DELETE FROM question
+            WHERE id = :id '
         );
-        $stmt->execute(array("id" =>  $id));
+        $stmt->execute(['id' => $id]);
 
         $stmt = $this->db->prepare(
-            "UPDATE question SET seq = seq - 1
+            'UPDATE question SET seq = seq - 1
             WHERE quiz_id = :quiz_id 
-            AND seq > :seq"
+            AND seq > :seq'
         );
         $stmt->execute([
-            "seq" => $question['seq'],
-            "quiz_id" => $question['id']
+            'seq' => $question['seq'],
+            'quiz_id' => $question['id'],
         ]);
     }
 
@@ -128,28 +130,28 @@ class QuestionDao
     public function clone($quiz_id, $new_quiz_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM question 
-            WHERE quiz_id = :quiz_id"
+            'SELECT * FROM question 
+            WHERE quiz_id = :quiz_id'
         );
-        $stmt->execute(array("quiz_id" =>  $quiz_id));
+        $stmt->execute(['quiz_id' => $quiz_id]);
         $questions = $stmt->fetchAll();
 
         $stmt = $this->db->prepare(
-            "INSERT INTO question 
-			VALUES(NULL, :quiz_id, :text, :model_answer, :points, :seq, :type,
-                    :hasMarkDown, :mdlAnsHasMD)"
+            'INSERT INTO question 
+			VALUES(NULL, :quiz_id, :text, :modelAnswer, :points, :seq, :type,
+                    :hasMarkDown, :mdlAnsHasMD)'
         );
         foreach ($questions as $question) {
-            $stmt->execute(array(
-                "quiz_id" => $new_quiz_id,
-                "text" => $question['text'],
-                "model_answer" => $question['model_answer'],
-                "points" => $question['points'],
-                "seq" => $question['seq'],
-                "type" => $question['type'],
-                "hasMarkDown" => $question['hasMarkDown'],
-                "mdlAnsHasMD" => $question['mdlAnsHasMD'],
-            ));
+            $stmt->execute([
+                'quiz_id' => $new_quiz_id,
+                'text' => $question['text'],
+                'modelAnswer' => $question['modelAnswer'],
+                'points' => $question['points'],
+                'seq' => $question['seq'],
+                'type' => $question['type'],
+                'hasMarkDown' => $question['hasMarkDown'],
+                'mdlAnsHasMD' => $question['mdlAnsHasMD'],
+            ]);
         }
     }
 }
