@@ -209,7 +209,9 @@ window.addEventListener("load", () => {
                         throw new Error(data.error);
                     }
                 } else {
-                    check.classList.add("show");
+                    delivery.querySelectorAll('.zipCheck').forEach(check => {
+                        check.classList.remove("error");
+                    });
                 }
                 submission_id = data.submission_id;
                 delivery.dataset.id = data.id;

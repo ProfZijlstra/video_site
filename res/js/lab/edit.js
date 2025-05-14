@@ -199,6 +199,10 @@ window.addEventListener("load", () => {
                 div.querySelector("select.zipAttachment")?.addEventListener("change", updateZipAttachment);
                 div.querySelector("i.attachBtn").addEventListener("click", clickAttachBtn);
                 div.querySelector("input.attachment").addEventListener("change", uploadAttachment);
+                const conf = div.querySelector("i.zipCheckConfig");
+                if (conf) {
+                    conf.addEventListener("click", openZipCheckDialog);
+                }
                 const delivs = document.getElementById("deliverables");
                 delivs.appendChild(div);
                 document.getElementById("addDelivDialog").close();
@@ -431,13 +435,23 @@ window.addEventListener("load", () => {
         document.getElementById("zipCheckDialog").close();
     };
     const byteField = document.getElementById("byteField");
+    const fileField = document.getElementById("fileField");
+    const checkByte = document.getElementById("checkByte");
     document.getElementById("checkType").addEventListener("change", function() {
         const blockTxt = document.getElementById('block');
         if (this.value.endsWith("wm")) {
+            fileField.classList.remove("hide");
             byteField.classList.remove("hide");
             blockTxt.classList.remove("active");
+            checkByte.setAttribute("placeholder", "Check at Byte");
+        } else if (this.value.startsWith("size")) {
+            fileField.classList.add("hide");
+            byteField.classList.remove("hide");
+            blockTxt.classList.add("active");
+            checkByte.setAttribute("placeholder", "Size in Bytes");
         } else {
             byteField.classList.add("hide");
+            fileField.classList.remove("hide");
             blockTxt.classList.add("active");
         }
     });

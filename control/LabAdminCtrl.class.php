@@ -2,9 +2,9 @@
 
 /**
  * Lab Controller Class
+ *
  * @author mzijlstra 01/08/2024
  */
-
 #[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/lab")]
 class LabAdminCtrl
 {
@@ -50,8 +50,8 @@ class LabAdminCtrl
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
 
-    #[Get(uri: "$", sec: "student")]
-    public function courseOverview() : string
+    #[Get(uri: '$', sec: 'student')]
+    public function courseOverview(): string
     {
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
@@ -60,7 +60,7 @@ class LabAdminCtrl
         global $VIEW_DATA;
 
         // get all labs for this offering
-        $oid = $VIEW_DATA["offering_id"];
+        $oid = $VIEW_DATA['offering_id'];
         if (
             $_SESSION['user']['isAdmin'] ||
             $_SESSION['user']['isFaculty']
@@ -80,9 +80,9 @@ class LabAdminCtrl
         $labTimes = [];
         foreach ($labs as $lab) {
             $labTimes[] = [
-                "lab" => $lab, 
-                "start" => strtotime($lab['start']),
-                "stop" => strtotime($lab['stop']),
+                'lab' => $lab,
+                'start' => strtotime($lab['start']),
+                'stop' => strtotime($lab['stop']),
             ];
         }
 
@@ -90,19 +90,20 @@ class LabAdminCtrl
         $VIEW_DATA['title'] = 'Labs';
         $VIEW_DATA['area'] = 'lab';
         $VIEW_DATA['graded'] = $graded;
-        $VIEW_DATA["isRemembered"] = $_SESSION['user']['isRemembered'];
-        return "lab/overview.php";
+        $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
+
+        return 'lab/overview.php';
     }
 
-    #[Post(uri: "$", sec: "instructor")]
-    public function addLab() : string
+    #[Post(uri: '$', sec: 'instructor')]
+    public function addLab(): string
     {
-        $day_id = filter_input(INPUT_POST, "day_id", FILTER_SANITIZE_NUMBER_INT);
-        $name = filter_input(INPUT_POST, "name");
-        $startdate = filter_input(INPUT_POST, "startdate");
-        $stopdate = filter_input(INPUT_POST, "stopdate");
-        $starttime = filter_input(INPUT_POST, "starttime");
-        $stoptime = filter_input(INPUT_POST, "stoptime");
+        $day_id = filter_input(INPUT_POST, 'day_id', FILTER_SANITIZE_NUMBER_INT);
+        $name = filter_input(INPUT_POST, 'name');
+        $startdate = filter_input(INPUT_POST, 'startdate');
+        $stopdate = filter_input(INPUT_POST, 'stopdate');
+        $starttime = filter_input(INPUT_POST, 'starttime');
+        $stoptime = filter_input(INPUT_POST, 'stoptime');
 
         $start = "{$startdate} {$starttime}";
         $stop = "{$stopdate} {$stoptime}";
@@ -111,8 +112,8 @@ class LabAdminCtrl
         return "Location: lab/{$id}/edit"; // edit lab view
     }
 
-    #[Get(uri: "/(\d+)/edit$", sec: "instructor")]
-    public function editLab() : string
+    #[Get(uri: "/(\d+)/edit$", sec: 'instructor')]
+    public function editLab(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -128,7 +129,7 @@ class LabAdminCtrl
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
         }
-        $labzips = $this->attachmentDao->forOffering($offering['id'], "zip");
+        $labzips = $this->attachmentDao->forOffering($offering['id'], 'zip');
 
         $VIEW_DATA['days'] = $days;
         $VIEW_DATA['course'] = $course_num;
@@ -139,36 +140,36 @@ class LabAdminCtrl
         $VIEW_DATA['deliverables'] = $deliverables;
         $VIEW_DATA['attachments'] = $this->attachmentDao->forLab($lab_id);
         $VIEW_DATA['labzips'] = $labzips;
-        $VIEW_DATA['title'] = "Edit Lab";
+        $VIEW_DATA['title'] = 'Edit Lab';
 
-        return "lab/edit.php";
+        return 'lab/edit.php';
     }
 
-    #[Get(uri: "/preview$", sec: "instructor")]
-    public function previewLab() : string
+    #[Get(uri: '/preview$', sec: 'instructor')]
+    public function previewLab(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $lab_id = filter_input(INPUT_GET, "l", FILTER_SANITIZE_NUMBER_INT);
+        $lab_id = filter_input(INPUT_GET, 'l', FILTER_SANITIZE_NUMBER_INT);
         $user_id = $_SESSION['user']['id'];
-        
+
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);
-        $stopDiff = new DateInterval("PT1H"); // 1 hour
+        $stopDiff = new DateInterval('PT1H'); // 1 hour
 
-        require_once("lib/Parsedown.php");
-        $parsedown = new Parsedown();
+        require_once 'lib/Parsedown.php';
+        $parsedown = new Parsedown;
         $parsedown->setSafeMode(true);
 
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['lab'] = $lab;
-        $VIEW_DATA["parsedown"] = $parsedown;
-        $VIEW_DATA['title'] = "Lab: " . $lab['name'];
+        $VIEW_DATA['parsedown'] = $parsedown;
+        $VIEW_DATA['title'] = 'Lab: '.$lab['name'];
         $VIEW_DATA['stop'] = $stopDiff;
         $VIEW_DATA['group'] = 'instructor';
 
@@ -177,7 +178,7 @@ class LabAdminCtrl
         $zips = [];
         foreach ($deliverables as $deliv) {
             $labPoints += $deliv['points'];
-            if ($deliv['type'] == "zip") {
+            if ($deliv['type'] == 'zip') {
                 $zips[] = $deliv['id'];
             }
         }
@@ -195,32 +196,32 @@ class LabAdminCtrl
         $VIEW_DATA['checks'] = $checks;
         $VIEW_DATA['submission'] = $submission;
         $VIEW_DATA['deliveries'] = $deliveries;
-        return "lab/doLab.php";
+
+        return 'lab/doLab.php';
     }
 
     /**
      * Expects AJAX
      */
-    #[Put(uri: "/(\d+)$", sec: "instructor")]
-    public function updateLab() : void
+    #[Put(uri: "/(\d+)$", sec: 'instructor')]
+    public function updateLab(): void
     {
         global $URI_PARAMS;
         global $_PUT;
 
         $id = $URI_PARAMS[3];
-        $visible = $_PUT["visible"];
-        $shifted = $_PUT["name"];
+        $visible = $_PUT['visible'];
+        $shifted = $_PUT['name'];
         $name = $this->markdownCtrl->ceasarShift($shifted);
-        $day_id = $_PUT["day_id"];
-        $startdate = $_PUT["startdate"];
-        $stopdate = $_PUT["stopdate"];
-        $starttime = $_PUT["starttime"];
-        $stoptime = $_PUT["stoptime"];
-        $type = $_PUT["type"];
-        $hasMarkDown = $_PUT["hasMarkDown"];
-        $shifted = $_PUT["desc"];
+        $day_id = $_PUT['day_id'];
+        $startdate = $_PUT['startdate'];
+        $stopdate = $_PUT['stopdate'];
+        $starttime = $_PUT['starttime'];
+        $stoptime = $_PUT['stoptime'];
+        $type = $_PUT['type'];
+        $hasMarkDown = $_PUT['hasMarkDown'];
+        $shifted = $_PUT['desc'];
         $desc = $this->markdownCtrl->ceasarShift($shifted);
-
 
         $visible = $visible ? 1 : 0;
         $hasMarkDown = $hasMarkDown ? 1 : 0;
@@ -233,17 +234,18 @@ class LabAdminCtrl
     /**
      * Expects AJAX
      */
-    #[Delete(uri: "/(\d+)$", sec: "instructor")]
-    public function deleteLab() : array
+    #[Delete(uri: "/(\d+)$", sec: 'instructor')]
+    public function deleteLab(): array
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
 
-        // fail if lab has submissions 
+        // fail if lab has submissions
         $subs = $this->submissionDao->forLab($id);
         if ($subs) {
             http_response_code(400);
-            return ["error" => "Lab has submissions"];
+
+            return ['error' => 'Lab has submissions'];
         }
 
         // delete attachments
@@ -262,22 +264,22 @@ class LabAdminCtrl
     /**
      * Expects AJAX / HTMX
      */
-    #[Post(uri: "/(\d+)/attach$", sec: "instructor")]
-    public function addAttachment() : array|string
+    #[Post(uri: "/(\d+)/attach$", sec: 'instructor')]
+    public function addAttachment(): array|string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $lab_id = $URI_PARAMS[3];
-        $deliverable_id = filter_input(INPUT_POST, "deliverable_id", FILTER_SANITIZE_NUMBER_INT);
+        $deliverable_id = filter_input(INPUT_POST, 'deliverable_id', FILTER_SANITIZE_NUMBER_INT);
         $lab = $this->labDao->byId($lab_id);
         $deliverable = $this->deliverableDao->byId($deliverable_id);
 
         try {
             $res = $this->attachmentHlpr->process('attachment', $lab, $deliverable);
-            $type = "simple";
+            $type = 'simple';
             if ($res['zip']) {
-                $type = "zip";
+                $type = 'zip';
                 $res['type'] = $type;
             }
             $file = $res['file'];
@@ -287,19 +289,20 @@ class LabAdminCtrl
         } catch (Exception $e) {
             error_log($e);
             http_response_code(500);
-            return ["error" => "Failed to add attachment"];
+
+            return ['error' => 'Failed to add attachment'];
         }
 
         $VIEW_DATA['attachment'] = $res;
 
-        return "lab/attachment.php";  // attachment view
+        return 'lab/attachment.php';  // attachment view
     }
 
     /**
      * Expects AJAX
      */
-    #[Delete(uri: "/(\d+)/attach/(\d+)$", sec: "instructor")]
-    public function delAttachment() : array
+    #[Delete(uri: "/(\d+)/attach/(\d+)$", sec: 'instructor')]
+    public function delAttachment(): array
     {
         global $URI_PARAMS;
 
@@ -314,41 +317,44 @@ class LabAdminCtrl
             $this->attachmentHlpr->delete($attachment);
         } catch (Exception $e) {
             error_log($e);
-            return ["error" => "Failed to remove attachment"];
+
+            return ['error' => 'Failed to remove attachment'];
         }
-        return ["id" => $id];
+
+        return ['id' => $id];
     }
 
     /**
      * Expects AJAX / HTMX
      */
-    #[Post(uri: "/(\d+)/deliverable$", sec: "instructor")]
-    public function addDliverable() : array|string
+    #[Post(uri: "/(\d+)/deliverable$", sec: 'instructor')]
+    public function addDliverable(): array|string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $lab_id = $URI_PARAMS[3];
-        $type = filter_input(INPUT_POST, "type");
-        $seq = filter_input(INPUT_POST, "seq", FILTER_SANITIZE_NUMBER_INT);
+        $type = filter_input(INPUT_POST, 'type');
+        $seq = filter_input(INPUT_POST, 'seq', FILTER_SANITIZE_NUMBER_INT);
 
         try {
             $id = $this->deliverableDao->add($lab_id, $type, $seq);
         } catch (Exception $e) {
             error_log($e);
-            return ["error" => "Failed to add deliverable"];
+
+            return ['error' => 'Failed to add deliverable'];
         }
 
         $VIEW_DATA['deliv'] = $this->deliverableDao->byId($id);
 
-        return "lab/deliverable.php";  // deliverable view
+        return 'lab/deliverable.php';  // deliverable view
     }
 
     /**
      * Expects AJAX
      */
-    #[Delete(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
-    public function delDeliverable() : array
+    #[Delete(uri: "/(\d+)/deliverable/(\d+)$", sec: 'instructor')]
+    public function delDeliverable(): array
     {
         global $URI_PARAMS;
 
@@ -359,27 +365,28 @@ class LabAdminCtrl
             $this->deliverableDao->delete($id, $lab_id);
         } catch (Exception $e) {
             error_log($e);
-            return ["error" => "Failed to remove deliverable"];
+
+            return ['error' => 'Failed to remove deliverable'];
         }
-        return ["id" => $id];
+
+        return ['id' => $id];
     }
 
     /**
      * Expects AJAX
      */
-    #[Put(uri: "/(\d+)/deliverable/(\d+)$", sec: "instructor")]
-    public function updateDeliverable() : void
+    #[Put(uri: "/(\d+)/deliverable/(\d+)$", sec: 'instructor')]
+    public function updateDeliverable(): void
     {
         global $URI_PARAMS;
         global $_PUT;
 
         $lab_id = $URI_PARAMS[3];
         $id = $URI_PARAMS[4];
-        $points = $_PUT["points"];
-        $shifted = $_PUT["desc"];
+        $points = $_PUT['points'];
+        $shifted = $_PUT['desc'];
         $desc = $this->markdownCtrl->ceasarShift($shifted);
-        $hasMarkDown = $_PUT["hasMarkDown"];
-
+        $hasMarkDown = $_PUT['hasMarkDown'];
 
         $this->deliverableDao->update($id, $lab_id, $points, $desc, $hasMarkDown, null, null);
     }
@@ -388,21 +395,21 @@ class LabAdminCtrl
      * Expects AJAX
      *
      * This sets the Zip Attachment for a zip type deliverable.
-     * With this relationship we can check if a submission is based on a the 
+     * With this relationship we can check if a submission is based on a the
      * zip attachment that the student downloaded (themselves).
      *
      * Once they upload the deliverable we go through the zip_actions to see if
      * the watermarks these actions created during download are present.
      */
-    #[Put(uri: "/(\d+)/deliverable/(\d+)/zipAttachment$", sec: "instructor")]
-    public function setZipAttachment() : void
+    #[Put(uri: "/(\d+)/deliverable/(\d+)/zipAttachment$", sec: 'instructor')]
+    public function setZipAttachment(): void
     {
         global $URI_PARAMS;
         global $_PUT;
 
         $lab_id = $URI_PARAMS[3];
         $id = $URI_PARAMS[4];
-        $zipAttachment_id = $_PUT["zipAttachment_id"];
+        $zipAttachment_id = $_PUT['zipAttachment_id'];
 
         $this->deliverableDao->setZipAttachment($id, $lab_id, $zipAttachment_id);
     }
@@ -410,8 +417,8 @@ class LabAdminCtrl
     /**
      * Zip Action related code
      */
-    #[Get(uri: "/(\d+)/attachment/(\d+)$", sec: "instructor")]
-    public function getZipFiles() : string
+    #[Get(uri: "/(\d+)/attachment/(\d+)$", sec: 'instructor')]
+    public function getZipFiles(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -419,11 +426,12 @@ class LabAdminCtrl
         $attachment_id = $URI_PARAMS[4];
 
         $output = [];
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         $attachment = $this->attachmentDao->byId($attachment_id);
-        if ($zip->open($attachment['file']) !== TRUE) {
-            $output[] = "Error: Zip file could not be opened";
-            return "lab/options.php";
+        if ($zip->open($attachment['file']) !== true) {
+            $output[] = 'Error: Zip file could not be opened';
+
+            return 'lab/options.php';
         }
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $name = $zip->getNameIndex($i);
@@ -431,11 +439,12 @@ class LabAdminCtrl
         }
         $zip->close();
         $VIEW_DATA['output'] = $output;
-        return "lab/options.php";
+
+        return 'lab/options.php';
     }
 
-    #[Get(uri: "/(\d+)/(\d+)/zipActions$", sec: "instructor")]
-    public function getZipActions() : string
+    #[Get(uri: "/(\d+)/(\d+)/zipActions$", sec: 'instructor')]
+    public function getZipActions(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -444,28 +453,30 @@ class LabAdminCtrl
         $actions = $this->zipDlActionDao->forAttachment($attachment_id);
 
         $VIEW_DATA['actions'] = $actions;
-        return "lab/zipActions.php";
+
+        return 'lab/zipActions.php';
     }
 
-    #[Post(uri: "/(\d+)/(\d+)/zipActions$", sec: "instructor")]
-    public function addZipAction() : string
+    #[Post(uri: "/(\d+)/(\d+)/zipActions$", sec: 'instructor')]
+    public function addZipAction(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $attachment_id = $URI_PARAMS[4];
-        $type = filter_input(INPUT_POST, "type");
-        $file = filter_input(INPUT_POST, "file");
-        $byte = filter_input(INPUT_POST, "byte", FILTER_SANITIZE_NUMBER_INT);
+        $type = filter_input(INPUT_POST, 'type');
+        $file = filter_input(INPUT_POST, 'file');
+        $byte = filter_input(INPUT_POST, 'byte', FILTER_SANITIZE_NUMBER_INT);
 
         $this->zipDlActionDao->add($attachment_id, $type, $file, $byte);
 
         $VIEW_DATA['actions'] = $this->zipDlActionDao->forAttachment($attachment_id);
-        return "lab/zipActions.php";  // zipAction view
+
+        return 'lab/zipActions.php';  // zipAction view
     }
 
-    #[Delete(uri: "/(\d+)/zipActions/(\d+)$", sec: "instructor")]
-    public function deleteZipAction() : void
+    #[Delete(uri: "/(\d+)/zipActions/(\d+)$", sec: 'instructor')]
+    public function deleteZipAction(): void
     {
         global $URI_PARAMS;
 
@@ -476,8 +487,8 @@ class LabAdminCtrl
     /**
      * Zip check related code
      */
-    #[Get(uri: "/(\d+)/(\d+)/zipChecks$", sec: "instructor")]
-    function getZipChecks() : string
+    #[Get(uri: "/(\d+)/(\d+)/zipChecks$", sec: 'instructor')]
+    public function getZipChecks(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -486,42 +497,55 @@ class LabAdminCtrl
         $checks = $this->zipUlCheckDao->forDeliverable($deliverable_id);
 
         $VIEW_DATA['checks'] = $checks;
-        return "lab/zipChecks.php";
+
+        return 'lab/zipChecks.php';
     }
 
-    #[Post(uri: "/(\d+)/(\d+)/zipChecks$", sec: "instructor")]
-    function addZipCheck() : string
+    #[Post(uri: "/(\d+)/(\d+)/zipChecks$", sec: 'instructor')]
+    public function addZipCheck(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $deliverable_id = $URI_PARAMS[4];
-        $type = filter_input(INPUT_POST, "type");
-        $file = filter_input(INPUT_POST, "file");
-        $byte = filter_input(INPUT_POST, "byte", FILTER_SANITIZE_NUMBER_INT);
-        $block = filter_input(INPUT_POST, "block", FILTER_SANITIZE_NUMBER_INT);
+        $type = filter_input(INPUT_POST, 'type');
+        $file = filter_input(INPUT_POST, 'file');
+        $byte = filter_input(INPUT_POST, 'byte', FILTER_SANITIZE_NUMBER_INT);
+        $block = filter_input(INPUT_POST, 'block', FILTER_SANITIZE_NUMBER_INT);
 
-        if (!$byte || $byte < 0) {
+        if (! $byte || $byte < 0) {
             $byte = 0;
-        } 
+        }
+        if (! $file || $file == '') {
+            $size = $byte;
+            $power = 0;
+            while ($size >= 1024) {
+                $size /= 1024;
+                $power++;
+            }
+            $size = round($size, 2);
+            $units = ['B', 'KB', 'MB', 'GB'];
+            $file = "{$size} {$units[$power]}";
+        }
 
         $this->zipUlCheckDao->add($deliverable_id, $type, $file, $byte, $block);
 
         $VIEW_DATA['checks'] = $this->zipUlCheckDao->forDeliverable($deliverable_id);
-        return "lab/zipChecks.php";  // zipCheck view
+
+        return 'lab/zipChecks.php';  // zipCheck view
     }
 
-    #[Delete(uri: "/(\d+)/zipChecks/(\d+)$", sec: "instructor")]
-    function deleteZipCheck() : void
+    #[Delete(uri: "/(\d+)/zipChecks/(\d+)$", sec: 'instructor')]
+    public function deleteZipCheck(): void
     {
         global $URI_PARAMS;
 
         $id = $URI_PARAMS[4];
         $this->zipUlCheckDao->delete($id);
     }
-    
-    #[Get(uri: "/report$", sec: "student")]
-    public function resultsReport() : string
+
+    #[Get(uri: '/report$', sec: 'student')]
+    public function resultsReport(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -559,19 +583,19 @@ class LabAdminCtrl
 
         $labs = $this->labDao->allForOffering($offering['id']);
 
-        // build CSV header and query for data fetching 
+        // build CSV header and query for data fetching
         $count = 1;
         $header = '"studentId","firstName","lastName",';
         foreach ($labs as $lab) {
             // build CSV header line
-            $header .= '"' . $lab['abbr'] . '",';
+            $header .= '"'.$lab['abbr'].'",';
 
             if ($lab['type'] == 'individual') {
                 $pts = $this->labDao->getIndividuallabTotals($lab['id'], $offering['id']);
-            } else if ($lab['type'] == 'group') {
+            } elseif ($lab['type'] == 'group') {
                 $pts = $this->labDao->getGroupLabTotals($lab['id'], $offering['id']);
             }
-            
+
             // build data column for this lab
             foreach ($pts as $pt) {
                 if (isset($data[$pt['user_id']])) {
@@ -581,13 +605,13 @@ class LabAdminCtrl
             $count++;
         }
 
-        $VIEW_DATA['course'] =  $course;
+        $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;
         $VIEW_DATA['type'] = 'lab';
         $VIEW_DATA['colCount'] = $count + 3; // 3 are sid, first, last
         $VIEW_DATA['header'] = $header;
         $VIEW_DATA['data'] = $data;
 
-        return "csv.php";
+        return 'csv.php';
     }
 }

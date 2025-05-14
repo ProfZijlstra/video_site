@@ -147,10 +147,12 @@
                         <option value="not_present">Is Not Present</option>
                         <option value="txt_wm">Text Watermark</option>
                         <option value="png_wm">.png Watermark</option>
+                        <option value="size_lt">Size Less Than</option>
+                        <option value="size_gt">Size Greater Than</option>
                 </select>
             </div>
 
-            <div>
+            <div id="fileField">
                 <label>File:</label>
                 <input id="checkFile" type="text" name="file">
             </div>

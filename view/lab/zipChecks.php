@@ -4,6 +4,8 @@ $desc['present'] = 'File present: ';
 $desc['not_present'] = 'File not present: ';
 $desc['txt_wm'] = 'Text WM: ';
 $desc['png_wm'] = '.png WM: ';
+$desc['size_lt'] = 'Size less than: ';
+$desc['size_gt'] = 'Size greater than: ';
 ?>
 <?php if ($checks == null) { ?>
     <h4>No Zip Checks Yet!</h4>

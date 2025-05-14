@@ -886,9 +886,10 @@ class LabTakingCtrl
         $listing_count = 0;
 
         // get the size of the zip file
-        $size = filesize($_FILES['file']['tmp_name']);
+        $filesize = filesize($_FILES['file']['tmp_name']);
+        $size = $filesize;
         $power = 0;
-        while ($size > 1024) {
+        while ($size >= 1024) {
             $size /= 1024;
             $power++;
         }
@@ -902,7 +903,25 @@ class LabTakingCtrl
         $timeFail = false;
         $results = []; // -1 is not seen, 0 is seen and bad, 1 is seen and good
         foreach ($zipChecks as $zipCheck) {
-            $results[$zipCheck['id']] = -1;
+            if ($zipCheck['type'] == 'size_lt') {
+                if ($filesize < $zipCheck['byte']) {
+                    $results[$zipCheck['id']] = 1;
+                } else {
+                    $results[$zipCheck['id']] = 0;
+                    $cmt = 'Zip file too large';
+                    $this->zipUlStatDao->add($delivery_id, $now, $zipCheck['type'], '', $cmt);
+                }
+            } elseif ($zipCheck['type'] == 'size_gt') {
+                if ($filesize > $zipCheck['byte']) {
+                    $results[$zipCheck['id']] = 1;
+                } else {
+                    $results[$zipCheck['id']] = 0;
+                    $cmt = 'Zip file too small';
+                    $this->zipUlStatDao->add($delivery_id, $now, $zipCheck['type'], '', $cmt);
+                }
+            } else {
+                $results[$zipCheck['id']] = -1;
+            }
         }
 
         // look through the files in the zip
@@ -1048,6 +1067,12 @@ class LabTakingCtrl
                         $msg = '- Identity check failed. Did you write this code?';
                         // because we want to avoid showing multiple ID checks
                         $id = $deliverable_id;
+                        break;
+                    case 'size_lt':
+                        $msg = '- Zip file is too large';
+                        break;
+                    case 'size_gt':
+                        $msg = '- Zip file is too small';
                         break;
                 }
                 $blocked[$id] = $msg;

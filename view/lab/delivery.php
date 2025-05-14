@@ -41,6 +41,7 @@
         $identity = false;
             $presents = [];
             $not_presents = [];
+            $sizes = [];
             foreach ($checks[$deliverable['id']] as $check) {
                 switch ($check['type']) {
                     case 'present':
@@ -53,7 +54,10 @@
                     case 'png_wm':
                         $identity = true;
                         break;
-
+                    case 'size_lt':
+                    case 'size_gt':
+                        $sizes[] = $check;
+                        break;
                 }
             }
             ?>
@@ -93,6 +97,17 @@
             </div>
             <?php } ?>
         </div>
+        <?php } ?>
+        <?php if ($sizes) { ?>
+        <div class="checks sizes">
+            <h3>File size checks:</h3>
+            <?php foreach ($sizes as $check) { ?>
+            <div class="zipCheck size" id="c<?= $check['id']?>"
+                title="Your zip should be">
+                <i class="fa-regular fa-zipper"></i>
+                <?= $check['file'] ?> <?= $check['type'] == 'size_lt' ? 'or less' : 'or more' ?>
+            </div>
+            <?php } ?>
         <?php } ?>
         <?php } ?>
 
