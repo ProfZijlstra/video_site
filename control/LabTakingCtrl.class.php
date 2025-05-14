@@ -895,7 +895,7 @@ class LabTakingCtrl
         $size = round($size, 2);
         $units = ['B', 'KB', 'MB', 'GB'];
         $listing .= "<div class='zFile'>"
-            ."<span class='name'>Zip File Size: {$size} {$units[$power]}</span>"
+            ."<span class='name'>{$size} {$units[$power]} Zip File</span>"
             .'</div>';
 
         // initialize checks
