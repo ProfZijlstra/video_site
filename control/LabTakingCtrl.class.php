@@ -885,6 +885,19 @@ class LabTakingCtrl
         $listing_limit = 50;
         $listing_count = 0;
 
+        // get the size of the zip file
+        $size = filesize($_FILES['file']['tmp_name']);
+        $power = 0;
+        while ($size > 1024) {
+            $size /= 1024;
+            $power++;
+        }
+        $size = round($size, 2);
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $listing .= "<div class='zFile'>"
+            ."<span class='name'>Zip File Size: {$size} {$units[$power]}</span>"
+            .'</div>';
+
         // initialize checks
         $timeFail = false;
         $results = []; // -1 is not seen, 0 is seen and bad, 1 is seen and good
@@ -907,7 +920,7 @@ class LabTakingCtrl
             ) {
                 continue;
             }
-            $name = strtolower($name); // for case insensitive comparison
+            $lname = strtolower($name); // for case insensitive comparison
 
             foreach ($zipChecks as $zipCheck) {
                 $id = $zipCheck['id'];
@@ -918,12 +931,12 @@ class LabTakingCtrl
                 $file = strtolower($zipCheck['file']); // for lowercase compare
                 $byte = $zipCheck['byte'];
 
-                if ($type == 'present' && $file == $name) {
+                if ($type == 'present' && $file == $lname) {
                     $results[$id] = 1;
 
                     continue;
                 }
-                if ($type == 'not_present' && $file == $name) {
+                if ($type == 'not_present' && $file == $lname) {
                     $results[$id] = 0;
                     $cmt = 'Was present';
                     $this->zipUlStatDao->add($delivery_id, $now, $type, $file, $cmt);
@@ -938,10 +951,10 @@ class LabTakingCtrl
                 $data = $zip->getFromIndex($i);
 
                 // get the WM
-                if ($type == 'txt_wm' && $file == $name) {
+                if ($type == 'txt_wm' && $file == $lname) {
                     $wm = intval($this->labAttachmentHlpr->readTxtWm($data, $byte));
                 }
-                if ($type == 'png_wm' && $file == $name) {
+                if ($type == 'png_wm' && $file == $lname) {
                     $wm = $this->labAttachmentHlpr->readPngWm($data, $byte);
                 }
 
@@ -990,6 +1003,7 @@ class LabTakingCtrl
                 $listing_count++;
             } elseif ($listing_count == $listing_limit) {
                 $listing .= "<div class='zFile'>... [Max {$listing_limit}: "
+                    ."of {$zip->numFiles} "
                     .'Listing Truncated]</div>';
                 $listing_count++;
             }
