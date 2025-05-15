@@ -108,6 +108,7 @@
                 <?= $check['file'] ?> <?= $check['type'] == 'size_lt' ? 'or less' : 'or more' ?>
             </div>
             <?php } ?>
+        </div>
         <?php } ?>
         <?php } ?>
 
