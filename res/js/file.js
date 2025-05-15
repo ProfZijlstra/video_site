@@ -174,21 +174,30 @@ window.addEventListener("load", () => {
         fetch("file/upload", {
             method: "POST",
             body: data,
+            redirect: "error",
         })
             .then(response => {
                 spinner.classList.remove('rotate');
                 if (!response.ok) {
-                    alert("Uploading file failed.");
+                    throw new Error("Uploading file failed.");
                 }
                 return response.json();
             })
             .then(data => {
                 if (data.error) {
-                    alert(data.error);
+                    throw new Error(data.error);
                 } else {
                     // get listing again
                     refresh(dir);
                 }
+            })
+            .catch(error => {
+                spinner.classList.remove('rotate');
+                if (error.name == "TypeError") {
+                    alert("Network error.\n\nDid your session expire?");
+                    return;
+                }
+                alert(error);
             });
     }
     document.getElementById("uploadFile").onchange = sendFile;
