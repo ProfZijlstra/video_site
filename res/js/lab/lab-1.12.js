@@ -62,19 +62,6 @@ window.addEventListener("load", () => {
             check = url ? true : false;
         } // all other types are files (and have own event listener)
 
-        // alert if duration and completion are not set 
-        if ((check || stuComment)
-            && (duration == "00:00" || completion == "0")
-            && !this.classList.contains("duration")
-            && !this.classList.contains("completion")) {
-            alert("Please set duration and completion before continuing.");
-            if (duration == "00:00") {
-                durSel.focus();
-            } else {
-                comSel.focus();
-            }
-        }
-
         const delivery_id = delivery.dataset.id;
         let url = `${lab_id}/${type}`;
         let method = "POST";
@@ -159,18 +146,6 @@ window.addEventListener("load", () => {
             data.append("stuComment", stuShifted);
             const stuMD = delivery.querySelector("i.cmt").classList.contains("active") ? 1 : 0;
             data.append("stuCmntHasMD", stuMD);
-        }
-
-        // alert if duration and completion are not set 
-        if ((duration == "00:00" || completion == "0")
-            && !this.classList.contains("duration")
-            && !this.classList.contains("completion")) {
-            alert("Please set duration and completion before continuing.");
-            if (duration == "00:00") {
-                durSel.focus();
-            } else {
-                comSel.focus();
-            }
         }
 
         spinner.classList.add("rotate");
@@ -271,9 +246,6 @@ window.addEventListener("load", () => {
                 link.removeAttribute("href");
                 link.textContent = "";
                 this.classList.add("hide");
-
-                // remove the previous delivery id
-                this.closest("div.delivery").dataset.id = "";
 
                 // for images, remove the image
                 const img = parent.querySelector("img.answer");
