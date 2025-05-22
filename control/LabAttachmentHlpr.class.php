@@ -24,7 +24,7 @@ class LabAttachmentHlpr
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $lname = str_replace(' ', '_', $lab['name']);
+        $lab_id = $lab['id'];
         $dseq = $deliverable['seq'];
         if (strlen($dseq) == 1) {
             $dseq = '0'.$dseq;
@@ -40,7 +40,7 @@ class LabAttachmentHlpr
 
         $curr = $_FILES[$key]['tmp_name'];
         $name = $_FILES[$key]['name'];
-        $dst = "res/course/{$course}/{$block}/lab/{$lname}/{$dseq}/";
+        $dst = "res/course/{$course}/{$block}/lab/{$lab_id}/{$dseq}/";
         $zip = false;
         $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         if ($extension == 'zip' && $this->isZipFile($curr)) {

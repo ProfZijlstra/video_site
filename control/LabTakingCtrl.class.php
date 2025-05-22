@@ -200,13 +200,12 @@ class LabTakingCtrl
 
         $lab = $this->labDao->byId($lab_id);
         $attachment = $this->attachmentDao->byId($attachment_id);
-        $lname = str_replace(' ', '_', $lab['name']);
         $deliverable = $this->deliverableDao->byId($attachment['deliverable_id']);
         $dseq = $deliverable['seq'];
         if (strlen($dseq) == 1) {
             $dseq = '0'.$dseq;
         }
-        $zfile = "res/course/{$course}/{$block}/lab/{$lname}/{$dseq}/download/{$attachment_id}/";
+        $zfile = "res/course/{$course}/{$block}/lab/{$lab_id}/{$dseq}/download/{$attachment_id}/";
 
         // determine the donwload_id
         $user_id = $_SESSION['user']['id'];
@@ -647,7 +646,6 @@ class LabTakingCtrl
         }
 
         $lab = $this->labDao->byId($lab_id);
-        $lname = str_replace(' ', '_', $lab['name']);
         $deliverable = $this->deliverableDao->byId($deliverable_id);
         $dseq = $deliverable['seq'];
         if (strlen($dseq) == 1) {
@@ -659,7 +657,7 @@ class LabTakingCtrl
         $listing = null;
         if ($type == 'img') {
             $name = $_FILES['file']['name'];
-            $path = "res/course/{$course}/{$block}/lab/{$lname}/{$dseq}/submit/";
+            $path = "res/course/{$course}/{$block}/lab/{$lab_id}/{$dseq}/submit/";
             $res = $this->imageHlpr->process('file', $path);
             if ($res['error']) {
                 return ['error' => $res['error']];
@@ -698,7 +696,7 @@ class LabTakingCtrl
             $name = $_FILES['file']['name'];
             $time = new DateTimeImmutable('now', new DateTimeZone(TIMEZONE));
             $ts = $time->format('Y-m-d_H:i:s');
-            $dst = "res/course/{$course}/{$block}/lab/{$lname}/{$dseq}/submit/"
+            $dst = "res/course/{$course}/{$block}/lab/{$lab_id}/{$dseq}/submit/"
                 ."{$submission_id}";
             if (! file_exists($dst) && ! is_dir($dst)) {
                 mkdir($dst, 0777, true);
@@ -800,12 +798,11 @@ class LabTakingCtrl
         }
 
         $deliverable = $this->deliverableDao->byId($deliverable_id);
-        $lname = str_replace(' ', '_', $lab['name']);
         $dseq = $deliverable['seq'];
         if (strlen($dseq) == 1) {
             $dseq = '0'.$dseq;
         }
-        $path = "res/course/{$course}/{$block}/lab/{$lname}/{$dseq}/submit/";
+        $path = "res/course/{$course}/{$block}/lab/{$lab_id}/{$dseq}/submit/";
         $dst = $this->imageHlpr->save($img, $path);
         $name = basename($dst);
 
