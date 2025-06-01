@@ -297,7 +297,6 @@ body.labDeliverables {
     }
 
     div.stats {
-        display: inline-block;
         margin: 5px 0px;
 
         label.completion {
@@ -667,7 +666,7 @@ body#gradeDeliverable {
                 max-width: initial;
             }
         }
-        div.dcontainer.deliverables.spa {
+        div.dcontainer.deliverables {
             border-bottom: 1px solid var(--border);
             div.deliverable {
                 height: 70vh;

@@ -67,15 +67,12 @@ window.addEventListener("load", () => {
         let method = "POST";
         let action = "Creating";
         if (delivery_id) {
-            url += `/${delivery_id}`;
+            url += `../${delivery_id}`;
             method = "PUT";
             action = "Updating";
         }
         if (user_id) {
             url += `?student=${user_id}`;
-        }
-        if (window.localStorage.view == "multi") {
-            url = "../" + url;
         }
 
         fetch(url, {
@@ -149,12 +146,9 @@ window.addEventListener("load", () => {
         }
 
         spinner.classList.add("rotate");
-        let url = `${lab_id}/${type}/file`;
+        let url = `../${lab_id}/${type}/file`;
         if (user_id) {
             url += `?student=${user_id}`;
-        }
-        if (window.localStorage.view == "multi") {
-            url = "../" + url;
         }
         fetch(url, {
             method: "POST",
@@ -202,6 +196,7 @@ window.addEventListener("load", () => {
                     const img = delivery.querySelector("img");
                     img.setAttribute("src", data.file);
                     img.classList.add("show");
+                    img.classList.remove("hide");
                 } else if (type == "zip") {
                     const listing = delivery.querySelector(".listing");
                     listing.innerHTML = data.text;
@@ -222,10 +217,7 @@ window.addEventListener("load", () => {
     });
     function deleteFile() {
         const id = this.dataset.id;
-        url = `${lab_id}/delivery/${id}`;
-        if (window.localStorage.view == "multi") {
-            url = '../' + url;
-        }
+        let url = `../${lab_id}/delivery/${id}`;
         fetch(url, {
             method: "DELETE",
         })

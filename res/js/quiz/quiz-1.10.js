@@ -24,12 +24,9 @@ window.addEventListener("load", () => {
         const hasMD = text.parentNode.querySelector("i")
             .classList.contains("active") ? 1 : 0;
 
-        let url = `${quiz_id}/question/${qid}/text`;
+        let url = `../${quiz_id}/question/${qid}/text`;
         if (user_id) {
-            url += `?student=${user_id}`;
-        }
-        if (window.localStorage.view == "multi") {
-            url = "../" + url;
+            url += `../?student=${user_id}`;
         }
         fetch(url, {
             method: "POST",
@@ -64,12 +61,9 @@ window.addEventListener("load", () => {
         data.append("answer_id", aid);
         data.append("image", this.files[0]);
 
-        let url = `${quiz_id}/question/${qid}/image`;
+        let url = `../${quiz_id}/question/${qid}/image`;
         if (user_id) {
             url += `?student=${user_id}`;
-        }
-        if (window.localStorage.view == "multi") {
-            url = "../" + url;
         }
         fetch(url, {
             method: "POST",
@@ -124,10 +118,7 @@ window.addEventListener("load", () => {
     });
     function deleteFile() {
         const id = this.dataset.id;
-        let url = `${quiz_id}/delivery/${id}`;
-        if (window.localStorage.view == "multi") {
-            url = "../" + url;
-        }
+        let url = `../${quiz_id}/delivery/${id}`;
         fetch(url, {
             method: "DELETE",
         })
@@ -159,4 +150,4 @@ window.addEventListener("load", () => {
                 }
             });
     }
-});            
+});

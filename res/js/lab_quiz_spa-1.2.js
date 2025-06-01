@@ -1,84 +1,15 @@
 window.addEventListener("load", () => {
     // global state in this module
-    let delivId = 1;
+    // get the deliveryId from the URL
+    const url = window.location.pathname;
+    const lastSlash = url.lastIndexOf('/');
+    const urlNoDelivNum = url.substring(0, lastSlash);
+    let delivId = parseInt(url.substring(lastSlash + 1));
 
-    // aquire emelents onto which we're going to hook
-    const multiPageBtn = document.getElementById('multiPage');
-    const singlePageBtn = document.getElementById('singlePage');
-    const keyShortCuts = document.getElementById("keyShortCuts");
-    const multiHeader = document.querySelector("h2.multi");
-    const singleHeader = document.querySelector("h2.single");
-    const backLink = document.getElementById("back");
-    const navBack = document.querySelectorAll("nav.back")[1];
     const delivBtns = document.querySelectorAll('span.delivNum, span.questNum');
     const delivs = document.querySelectorAll('div.deliverables, div.qcontainer');
     const chevLeft = document.getElementById("chevLeft");
     const chevRight = document.getElementById("chevRight");
-    const finish = document.querySelector("div.finish");
-    const finForm = document.getElementById("finishQuiz");
-
-    // helper functions to work with the URL
-    function urlNoDelivNum() {
-        const url = window.location + "";
-        const i = url.lastIndexOf('/');
-        return url.substring(0, i);
-    }
-
-    // actual switching logic starts here
-    function toSpa(e, hist = true) {
-        multiPageBtn.classList.add('hide');
-        singlePageBtn.classList.remove('hide');
-        multiHeader.classList.remove('hide');
-        singleHeader.classList.add('hide');
-        backLink.setAttribute("href", "../../lab");
-        navBack?.classList.add('hide');
-        keyShortCuts.classList.remove('hide');
-        switchDeliv(1);
-        window.localStorage.setItem("view", "multi");
-        window.scrollTo(0, 0);
-        document.querySelectorAll("div.qcontainer, div.dcontainer").forEach(e => {
-            e.classList.add("spa");
-        });
-
-        if (!hist) {
-            return;
-        }
-        const loc = window.location + "";
-        if (!loc.match(/\/\d+\/\d+$/)) {
-            window.history.pushState({ "id": 1 }, '', window.location + "/1");
-        }
-        if (finForm) { // for the quiz
-            const action = finForm.getAttribute("action");
-            finForm.setAttribute("action", "../" + action);
-        }
-    };
-    multiPageBtn.onmousedown = toSpa;
-
-    function fromSpa(e, hist = true) {
-        multiPageBtn.classList.remove('hide');
-        singlePageBtn.classList.add('hide');
-        multiHeader.classList.add('hide');
-        singleHeader.classList.remove('hide');
-        backLink.setAttribute("href", "../lab");
-        navBack?.classList.remove('hide');
-        keyShortCuts.classList.add('hide');
-        delivs.forEach(e => e.classList.remove('hide'));
-        window.localStorage.setItem("view", "single");
-        document.querySelectorAll("div.qcontainer, div.dcontainer").forEach(e => {
-            e.classList.remove("spa")
-        });
-
-        if (!hist) {
-            return;
-        }
-        window.history.pushState(null, '', urlNoDelivNum());
-        if (finForm) { // for the quiz
-            const action = finForm.getAttribute("action");
-            finForm.setAttribute("action", action.substring(3));
-            finish.classList.remove("hide");
-        }
-    };
-    singlePageBtn.onmousedown = fromSpa;
 
     function switchDeliv(id) {
         delivId = parseInt(id);
@@ -115,17 +46,12 @@ window.addEventListener("load", () => {
                 d.classList.add('hide');
             }
         }
-        // quiz finish button
-        if (id < delivs.length) {
-            finish?.classList.add("hide");
-        } else {
-            finish?.classList.remove("hide");
-        }
     }
+
     function clickDeliv() {
         const id = this.textContent;
         switchDeliv(id);
-        window.history.pushState({ "id": id }, '', urlNoDelivNum() + '/' + id);
+        window.history.pushState({ "id": id }, '', urlNoDelivNum + '/' + id);
     }
     delivBtns.forEach(e => e.onmousedown = clickDeliv);
 
@@ -146,27 +72,11 @@ window.addEventListener("load", () => {
     // make browser back button work properly
     window.addEventListener('popstate', (e) => {
         const state = e.state;
-        if (state && state.id) {
-            toSpa(null, false);
-            switchDeliv(state.id);
-        } else {
-            fromSpa(null, false);
-        }
+        switchDeliv(state.id);
     });
 
-    // switch to SPA if user preference indicates it
-    const view = window.localStorage.getItem("view");
-    if (!view || view == "multi") {
-        toSpa();
-    }
-
-    // keyboard shortcuts in SPA mode
+    // keyboard shortcuts
     document.addEventListener('keydown', (e) => {
-        if (window.localStorage.getItem("view") != "multi"
-            || !e.ctrlKey) {
-            return;
-        }
-
         switch (e.code) {
             case "Period":
                 goClickDeliv(delivId + 1);

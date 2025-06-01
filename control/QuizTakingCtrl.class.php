@@ -49,6 +49,9 @@ class QuizTakingCtrl
         $quiz_id = $URI_PARAMS[3];
         $selected = $URI_PARAMS[5];
 
+        if (! $selected) {
+            return "Location: {$quiz_id}/1";
+        }
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $quiz = $this->quizDao->byId($quiz_id);
         $tz = new DateTimeZone(TIMEZONE);
@@ -175,14 +178,13 @@ class QuizTakingCtrl
         $answer_id = filter_input(INPUT_POST, 'answer_id', FILTER_VALIDATE_INT);
 
         $quiz = $this->quizDao->byId($quiz_id);
-        $qname = str_replace(' ', '_', $quiz['name']);
         $question = $this->questionDao->get($question_id);
         $qseq = $question['seq'];
         if (strlen($qseq) == 1) {
             $qseq = '0'.$qseq;
         }
 
-        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}";
+        $path = "res/course/{$course}/{$block}/quiz/{$quiz_id}/{$qseq}";
         $res = $this->imageHlpr->process('image', $path);
 
         if (isset($res['error'])) {
@@ -229,14 +231,13 @@ class QuizTakingCtrl
         $answer_id = filter_input(INPUT_POST, 'answer_id', FILTER_VALIDATE_INT);
 
         $quiz = $this->quizDao->byId($quiz_id);
-        $qname = str_replace(' ', '_', $quiz['name']);
         $question = $this->questionDao->get($question_id);
         $qseq = $question['seq'];
         if (strlen($qseq) == 1) {
             $qseq = '0'.$qseq;
         }
 
-        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}";
+        $path = "res/course/{$course}/{$block}/quiz/{$quiz_id}/{$qseq}";
         $img = filter_input(INPUT_POST, 'image');
         $dst = $this->imageHlpr->save($img, $path);
 

@@ -276,7 +276,7 @@ class QuizAdminCtrl
     }
 
     // Pictures are taken with camera, images are uploaded from the FS
-    #[Post(uri: "/(\d+)/question/(\d+)/picture", sec: 'instructor')]
+    #[Post(uri: "/(\d+)/question/modelAns/(\d+)/picture", sec: 'instructor')]
     public function uploadModelPicture(): array
     {
         global $URI_PARAMS;
@@ -288,13 +288,12 @@ class QuizAdminCtrl
         $img = filter_input(INPUT_POST, 'image');
 
         $quiz = $this->quizDao->byId($quiz_id);
-        $qname = str_replace(' ', '_', $quiz['name']);
         $question = $this->questionDao->get($question_id);
         $qseq = $question['seq'];
         if (strlen($qseq) == 1) {
             $qseq = '0'.$qseq;
         }
-        $path = "res/course/{$course}/{$block}/quiz/{$qname}/{$qseq}/model";
+        $path = "res/course/{$course}/{$block}/quiz/{$quiz_id}/{$qseq}/model";
         $dst = $this->imageHlpr->save($img, $path);
         $this->questionDao->updateModelAnswer($question_id, $dst, 0);
 

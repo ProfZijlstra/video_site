@@ -17,6 +17,7 @@
     </div>
     <?php } else { /* type is: img, pdf, zip */ ?>
     <div class="fileContainer camContainer" data-id="<?= $deliverable['id']?>">
+        <?php stats($delivery)  ?>
         <i title="<?= $delivery['text'] ? 'Replace' : 'Upload' ?> <?= $deliverable['type'] ?>" class="upload fa-solid fa-upload"></i>
         <i class="spinner fa-solid fa-circle-notch"></i>
         <?php if ($deliverable['type'] == 'img') { ?>
@@ -34,7 +35,6 @@
         <a class="fileLink" href="<?= $delivery['file'] ?>" target="_blank"><?= $delivery['name'] ?></a>
         <i title="Delete" class="fa-solid fa-trash-can <?= $delivery['file'] ? '' : 'hide' ?>" data-id="<?= $delivery['id']?>"></i>
         <span class="check"><i class="fa-solid fa-check"></i></span>
-        <?php stats($delivery)  ?>
 
         <?php if ($deliverable['type'] == 'zip' && $checks[$deliverable['id']]) { ?>
         <?php

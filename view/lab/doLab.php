@@ -1,6 +1,10 @@
 <?php require 'view/lab/typeDesc.php'; ?>
-<?php function stats($delivery) // used inside the delivery include
-{?>
+<?php
+// helper function to display time and completion stats
+// declared here instead of inisde the delivery.php file so that it doesn't
+// get redeclared for each deliverable
+function stats($delivery)
+{ ?>
 <div class="stats">
     <label title="Time spent creating this deliverable">Time Spent:
         <select class="duration" autofocus>
@@ -15,6 +19,12 @@
                 <?= $time ?>
             </option>
             <?php $now->add($interval); ?>
+            <?php } ?>
+            <option value="24:00" <?= $delivery['duration'] == '24:00' ? 'selected' : '' ?>>1 day</option>
+            <?php for ($i = 2; $i <= 14; $i++) { ?>
+            <option value="<?= $i * 24 ?>:00" <?= $delivery['duration'] == ($i * 24).':00' ? 'selected' : '' ?>>
+                <?= $i ?> days
+            </option>
             <?php } ?>
         </select>
     </label>
@@ -42,14 +52,14 @@
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/lab-1.8.css">
+        <link rel="stylesheet" href="res/css/lab-1.9.css">
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown-1.8.js"></script>
         <script src="res/js/countdown-1.1.js"></script>
-        <script src="res/js/camera-1.4.js"></script>
-        <script src="res/js/lab/lab-1.12.js"></script>
+        <script src="res/js/camera-1.5.js"></script>
+        <script src="res/js/lab/lab-1.13.js"></script>
         <script src="res/js/ensureSaved.js"></script>
-        <script src="res/js/lab_quiz_spa-1.1.js"></script>
+        <script src="res/js/lab_quiz_spa-1.2.js"></script>
     </head>
 
     <body id="doLab" class="lab labDeliverables" data-selected="<?= $selected ?>">
@@ -62,11 +72,7 @@
             </nav>
             <?php include 'areas.php'; ?>
             <nav class="tools">
-                <i id="multiPage" title="Switch to multi-page" class="fa-solid fa-expand <?= $selected ? 'hide' : '' ?>"></i>
-                <i id="keyShortCuts"
-                    title="CTRL+> next, CTRL+< previous"
-                    class="fa-regular fa-keyboard <?= $selected ? '' : 'hide' ?>"></i>
-                <i id="singlePage" title="Switch to single-page" class="fa-solid fa-compress <?= $selected ? '' : 'hide' ?>"></i>
+                <i id="keyShortCuts" title="CTRL+> next, CTRL+< previous" class="fa-regular fa-keyboard"></i>
             </nav>
             <div id="content">
                 <div class="about">
@@ -93,17 +99,13 @@
 
                 <div id="submission"
                     data-id="<?= isset($submission) ? $submission['id'] : ''  ?>">
-                    <h2 class="single <?= $selected ? 'hide' : '' ?>">
-                        <?= count($deliverables) ?> Deliverable(s)
-                    </h2>
-                    <h2 class="multi <?= $selected ? '' : 'hide' ?>">
+                    <h2 class="multi">
                         <span class="mobileBlock">Deliverable</span>
                         <i id="chevLeft" class="fa-solid fa-chevron-left <?= $selected && $selected > 1 ? 'active' : '' ?>"></i>
                         <?php for ($i = 1; $i <= count($deliverables); $i++) { ?>
                         <span id="db<?= $i ?>" class="delivNum <?= $i == $selected ? 'active' : '' ?>"><?= $i ?></span>
                         <?php } ?>
                         <i id="chevRight" class="fa-solid fa-chevron-right <?= $selected && $selected < count($deliverables) ? 'active' : '' ?>"></i>
-                        <span>of <?= count($deliverables) ?></span>
                     </h2>
                     <?php $i = 0; ?>
                     <?php foreach ($deliverables as $deliverable) { ?>
@@ -158,8 +160,7 @@
 
                 <div class="done">
                     <div class="note">Deliverables are saved automatically</div>
-                    <nav class="back <?= $selected ? 'hide' : '' ?>" title="Back">
-                        <a href="../lab">
+                        <a href="../../lab" title="Back to overview">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </nav>

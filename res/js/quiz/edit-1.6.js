@@ -128,7 +128,7 @@ window.addEventListener("load", () => {
     MARKDOWN.activateButtons(saveQuestionChange);
 
     // enable taking pictures
-    CAMERA.init('question', false);
+    CAMERA.init('question/modelAns', false);
 
     // automatically save changes to points, text and model answer
     function saveQuestionChange() {

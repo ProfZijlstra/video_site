@@ -18,7 +18,7 @@ div.questionText, div.answerText {
     overflow: auto;
 }
 div.done {
-    margin-top: 50px;
+    border-top: 1px solid var(--border);
     margin-bottom: 300px;
     text-align: center;
 }
@@ -92,7 +92,6 @@ div.qcontainer {
     display: grid;
     grid-template-columns: 150px 1fr;
     border-top: 1px solid var(--border);
-    margin-bottom: 30px;
 
     a {
         text-decoration: underline;
@@ -424,7 +423,7 @@ body#gradeQuestion {
                 max-width: initial;
             }
         }
-        div.qcontainer.spa {
+        div.qcontainer {
             border-bottom: 1px solid var(--border);
             div.question {
                 height: 70vh;

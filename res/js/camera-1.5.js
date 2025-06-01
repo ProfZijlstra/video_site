@@ -170,7 +170,7 @@ const CAMERA = (function() {
         if (user_id) {
             url += `?user_id=${user_id}`;
         }
-        if (multiPageable && window.localStorage.view == "multi") {
+        if (multiPageable) {
             url = "../" + url;
         }
         fetch(url, {

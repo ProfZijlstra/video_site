@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.9.css">
+    <link rel="stylesheet" href="res/css/quiz-1.10.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
-    <script src="res/js/camera-1.4.js"></script>
+    <script src="res/js/camera-1.5.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.9.js"></script>
+    <script src="res/js/quiz/quiz-1.10.js"></script>
     <script src="res/js/ensureSaved.js"></script>
-    <script src="res/js/lab_quiz_spa-1.1.js"></script>
+    <script src="res/js/lab_quiz_spa-1.2.js"></script>
 </head>
 
 <body id="doQuiz" data-selected="<?= $selected ?>">
@@ -28,25 +28,19 @@
         <nav class="tools">
             <h3><span id="hours"><?= $stop->format('%H') ?></span>:<span id="minutes"><?= $stop->format('%I') ?></span>:<span id="seconds"><?= $stop->format('%S') ?></span></h3>
             <div class="icons">
-                <i id="multiPage" title="Switch to multi-page" class="fa-solid fa-expand <?= $selected ? 'hide' : '' ?>"></i>
-                <i id="keyShortCuts"
-                    title="CTRL+> next, CTRL+< previous"
-                    class="fa-regular fa-keyboard <?= $selected ? '' : 'hide' ?>"></i>
-                <i id="singlePage" title="Switch to single-page" class="fa-solid fa-compress <?= $selected ? '' : 'hide' ?>"></i>
+                <i id="keyShortCuts" title="CTRL+> next, CTRL+< previous" class="fa-regular fa-keyboard"></i>
             </div>
         </nav>
         <div id="content">
             <div class="quiz">
                 <div id="quiz_id" class="status" data-id="<?= $quiz['id'] ?>">
-                    <h2 class="single <?= $selected ? 'hide' : '' ?>"><?= count($questions) ?> Question(s)</h2>
-                    <h2 class="multi <?= $selected ? '' : 'hide' ?>">
+                    <h2 class="multi">
                         <span class="mobileBlock">Question</span>
                         <i id="chevLeft" class="fa-solid fa-chevron-left <?= $selected && $selected > 1 ? 'active' : '' ?>"></i>
                         <?php for ($i = 1; $i <= count($questions); $i++) { ?>
                         <span id="db<?= $i ?>" class="questNum <?= $i == $selected ? 'active' : '' ?>"><?= $i ?></span>
                         <?php } ?>
                         <i id="chevRight" class="fa-solid fa-chevron-right <?= $selected && $selected < count($questions) ? 'active' : '' ?>"></i>
-                        <span>of <?= count($questions) ?></span>
                     </h2>
                     <?php if ($user_id) { ?>
                         <input type="hidden" id="user_id" value="<?= $user_id ?>">
@@ -133,8 +127,8 @@
             <?php } ?>
             <div class="done">
                 <div class="note">Answers are saved automatically</div>
-                    <div class="finish <?= $selected ? ($selected != count($questions) ? 'hide' : '') : '' ?>">
-                        <form id="finishQuiz" method="POST" action="<?= $selected ? '../' : ''?><?= $quiz['id'] ?>/finish">
+                    <div class="finish">
+                        <form id="finishQuiz" method="POST" action="../<?= $quiz['id'] ?>/finish">
                         <button id="finish">Finish Quiz</button>
                     </form>
                 </div>

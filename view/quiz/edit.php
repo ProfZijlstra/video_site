@@ -8,11 +8,11 @@
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/quiz-1.9.css">
+        <link rel="stylesheet" href="res/css/quiz-1.10.css">
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown-1.8.js"></script>
-        <script src="res/js/camera-1.4.js"></script>
-        <script src="res/js/quiz/edit-1.5.js"></script>
+        <script src="res/js/camera-1.5.js"></script>
+        <script src="res/js/quiz/edit-1.6.js"></script>
     </head>
     <body id="editQuiz">
         <?php include 'header.php'; ?>

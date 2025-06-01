@@ -75,6 +75,9 @@ class LabTakingCtrl
         $lab_id = $URI_PARAMS[3];
         $selected = $URI_PARAMS[5];
 
+        if (! $selected) {
+            return "Location: {$lab_id}/1";
+        }
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);
 

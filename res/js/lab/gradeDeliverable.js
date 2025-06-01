@@ -96,8 +96,7 @@ window.addEventListener("load", () => {
     const chevLeft = document.getElementById('chevLeft');
     const chevRight = document.getElementById('chevRight');
     document.addEventListener('keydown', (e) => {
-        if (window.localStorage.getItem("view") != "multi"
-            || !e.ctrlKey) {
+        if (!e.ctrlKey) {
             return;
         }
 
