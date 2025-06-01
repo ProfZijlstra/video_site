@@ -361,7 +361,7 @@ We noticed you were tardy for the '.$tardy['title'].' meeting that started at:
             $offset = substr($offset, 1);
         }
         [$hours, $mins] = explode(':', $offset);
-        $interval = new DateInterval("PT${hours}H${mins}M");
+        $interval = new DateInterval("PT{$hours}H{$mins}M");
         if ($neg) {
             $time = $time->sub($interval);
         } else {
