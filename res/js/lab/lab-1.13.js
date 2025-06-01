@@ -63,11 +63,11 @@ window.addEventListener("load", () => {
         } // all other types are files (and have own event listener)
 
         const delivery_id = delivery.dataset.id;
-        let url = `${lab_id}/${type}`;
+        let url = `../${lab_id}/${type}`;
         let method = "POST";
         let action = "Creating";
         if (delivery_id) {
-            url += `../${delivery_id}`;
+            url += `/${delivery_id}`;
             method = "PUT";
             action = "Updating";
         }
