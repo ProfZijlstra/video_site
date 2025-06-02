@@ -59,7 +59,7 @@ function stats($delivery)
         <script src="res/js/camera-1.5.js"></script>
         <script src="res/js/lab/lab-1.13.js"></script>
         <script src="res/js/ensureSaved.js"></script>
-        <script src="res/js/lab_quiz_spa-1.2.js"></script>
+        <script src="res/js/lab_quiz_spa-1.3.js"></script>
     </head>
 
     <body id="doLab" class="lab labDeliverables" data-selected="<?= $selected ?>">

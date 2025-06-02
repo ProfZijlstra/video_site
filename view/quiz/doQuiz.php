@@ -15,7 +15,7 @@
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/quiz/quiz-1.10.js"></script>
     <script src="res/js/ensureSaved.js"></script>
-    <script src="res/js/lab_quiz_spa-1.2.js"></script>
+    <script src="res/js/lab_quiz_spa-1.3.js"></script>
 </head>
 
 <body id="doQuiz" data-selected="<?= $selected ?>">
