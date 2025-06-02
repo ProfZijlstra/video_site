@@ -77,6 +77,9 @@ window.addEventListener("load", () => {
 
     // keyboard shortcuts
     document.addEventListener('keydown', (e) => {
+        if (!e.ctrlKey) {
+            return; // only if ctrl is pressed
+        }
         switch (e.code) {
             case "Period":
                 goClickDeliv(delivId + 1);
