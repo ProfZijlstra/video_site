@@ -83,7 +83,7 @@ class ViewCtrl
         $user_id = $URI_PARAMS[3];
         $user = $this->userDao->retrieve($user_id);
 
-        $VIEW_DATA['title'] = "$block {$user['knownAs']} View Stats";
+        $VIEW_DATA['title'] = "$block View Stats: {$user['knownAs']}";
         $VIEW_DATA['type'] = 'student';
 
         return $this->overviewStats($user_id);
@@ -240,7 +240,7 @@ class ViewCtrl
         $user_id = $URI_PARAMS[4];
         $user = $this->userDao->retrieve($user_id);
 
-        $VIEW_DATA['title'] = "$block $day {$user['knownAs']} View Stats";
+        $VIEW_DATA['title'] = "$block $day View Stats: {$user['knownAs']}";
 
         return $this->dayStats($user_id);
     }
