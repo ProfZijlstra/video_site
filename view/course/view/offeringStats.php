@@ -48,10 +48,10 @@
             </nav>
             <?php if (hasMinAuth('instructor')) { ?>
             <nav class="tools">
-                <a href="userChart">
+                <a href="<?= $type == 'normal' ? 'userChart' : '../userChart'?> ">
                     <i title="User Statistics" class="fa-solid fa-users"></i>
                 </a>
-                <a href="data">
+                <a href="<?= $type == 'normal' ? 'data' : '../data'?> ">
                     <i title="Raw View Data" class="fa-solid fa-database"></i>
                 </a>
             </nav>
