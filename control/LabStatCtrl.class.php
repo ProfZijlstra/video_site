@@ -115,6 +115,40 @@ class LabStatCtrl
         $VIEW_DATA['offering'] = $offering;
         $VIEW_DATA['students'] = $students;
         $VIEW_DATA['points'] = $studentsPoints;
+        $VIEW_DATA['type'] = 'normal';
+
+        return 'lab/userStats.php';
+    }
+
+    #[Get(uri: "/(W\dD\d)/userChart$", sec: 'instructor')]
+    public function dayUserStats(): string
+    {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $course_num = $URI_PARAMS[1];
+        $block = $URI_PARAMS[2];
+        $day = $URI_PARAMS[3];
+
+        $offering = $this->offeringDao->getOfferingByCourse($course_num, $block);
+        $students = $this->enrollmentDao->getStudentsForOffering($offering['id']);
+        $studentsPoints = $this->deliveryDao->dayUsers($offering['id'], $day);
+
+        $max = 0;
+        foreach ($studentsPoints as $points) {
+            if ($points > $max) {
+                $max = $points;
+            }
+        }
+
+        $VIEW_DATA['max'] = $max;
+        $VIEW_DATA['course'] = strtoupper($course_num);
+        $VIEW_DATA['title'] = "$block $day User Lab Stats";
+        $VIEW_DATA['block'] = $block;
+        $VIEW_DATA['offering'] = $offering;
+        $VIEW_DATA['students'] = $students;
+        $VIEW_DATA['points'] = $studentsPoints;
+        $VIEW_DATA['type'] = 'student';
 
         return 'lab/userStats.php';
     }

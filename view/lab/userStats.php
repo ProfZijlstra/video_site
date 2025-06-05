@@ -29,7 +29,7 @@
         <main>
             <nav class="areas">
                 <div title="Back">
-                    <a href="chart">
+                    <a href="<?= $type == 'normal' ? 'chart' : '../chart' ?>">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                 </div>
@@ -42,7 +42,7 @@
                         <?php if (isset($students[$user_id])) { ?>
                         <tr>
                             <th scope="row" title="<?= $students[$user_id]['firstname'].' '.$students[$user_id]['lastname'] ?>">
-                                <a href="chart/<?= $user_id ?>">
+                                <a href="<?= $type == 'normal' ? '' : '../' ?>chart/<?= $user_id ?>">
                                     <?= explode(' ', $students[$user_id]['knownAs'])[0] ?>
                                 </a>
                             </th>

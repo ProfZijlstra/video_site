@@ -566,6 +566,9 @@ class DeliveryDao
         ]);
     }
 
+    /**
+    * The functions below are all to retrieve data for the lab statistics pages
+    */
     function offeringPossible($offering_id) : array
     {
         $stmt = $this->db->prepare(
@@ -714,6 +717,57 @@ class DeliveryDao
             WHERE d.offering_id = :offering_id"
         );
         $stmt->execute(['offering_id' => $offering_id]);
+        $deliveries = $stmt->fetchAll();
+
+        // if lab_type is group then apply to all users in group
+        // else only apply add the points to the user
+        foreach ($deliveries as $delivery) {
+            if ($delivery['type'] == 'group') {
+                // add points to all users in the group
+                foreach ($users as $user) {
+                    if ($user['group'] == $delivery['group']) {
+                        $userPoints[$user['user_id']] += $delivery['points'];
+                    }
+                }
+            } else {
+                // add points to the user
+                $userPoints[$delivery['user_id']] += $delivery['points'];
+            }
+        }
+        arsort($userPoints);
+
+        return $userPoints;
+    }
+
+    function dayUsers($offering_id, $day) : array
+    {
+        // get all the students
+        $stmt = $this->db->prepare(
+            "SELECT e.user_id, e.group
+            FROM enrollment AS e
+            WHERE (e.auth = 'student' OR e.auth = 'assistant')
+            AND e.offering_id = :offering_id"
+        );
+        $stmt->execute(['offering_id' => $offering_id]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // create an associative array with user_id to points
+        $userPoints = [];
+        foreach ($users as $user) {
+            $userPoints[$user['user_id']] = 0;
+        }
+
+        // get all deliveries along with user_id, group_id, lab_type
+        $stmt = $this->db->prepare(
+            "SELECT s.user_id, s.group, del.points, l.type
+            FROM delivery AS del
+            JOIN submission AS s ON del.submission_id = s.id
+            JOIN lab AS l ON s.lab_id = l.id
+            JOIN day AS d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            AND d.abbr = :day_abbr"
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day]);
         $deliveries = $stmt->fetchAll();
 
         // if lab_type is group then apply to all users in group

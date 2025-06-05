@@ -23,9 +23,9 @@
             function clickRow() {
                 const parts = window.location.href.split('/');
                 const last = parts.pop();
-                let location = `${this.getAttribute('data-href')}/chart`;
+                let location = `${this.getAttribute('data-href')}/userChart`;
                 if (last.match(/^\d+$/)) {
-                    location = "../" + location + `/${last}`;
+                    location = "../" + location;
                 }
                 window.location.href = location;
             }
