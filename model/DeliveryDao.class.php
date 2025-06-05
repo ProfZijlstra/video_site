@@ -565,4 +565,174 @@ class DeliveryDao
             "id" => $id
         ]);
     }
+
+    function offeringPossible($offering_id) : array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                SUM(del.points) AS points
+            FROM deliverable AS del
+            JOIN lab AS l ON del.lab_id = l.id
+            JOIN day AS d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id
+        ]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[$row['abbr']] = $row;
+        }
+
+        return $data;
+    }
+
+    function offeringAverages($offering_id) : array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                COUNT(DISTINCT s.id) AS users,
+                SUM(del.points) / COUNT(DISTINCT s.id) AS points
+            FROM delivery AS del
+            JOIN submission AS s ON del.submission_id = s.id
+            JOIN lab AS l ON s.lab_id = l.id
+            JOIN day AS d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id
+        ]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[$row['abbr']] = $row;
+        }
+
+        return $data;
+    }
+
+    function offeringPerson($offering_id, $user_id)
+    {
+        // get indivual points per day for a user
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                SUM(del.points) AS points
+            FROM delivery AS del
+            JOIN submission AS s ON del.submission_id = s.id
+            JOIN lab AS l ON s.lab_id = l.id
+            JOIN day AS d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            AND s.user_id = :user_id
+            AND l.type = 'individual'
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id,
+            "user_id" => $user_id
+        ]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[$row['abbr']] = $row;
+        }
+
+        // get the person's group
+        $stmt = $this->db->prepare(
+            "SELECT e.group 
+            FROM enrollment AS e
+            WHERE e.offering_id = :offering_id
+            AND e.user_id = :user_id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id,
+            "user_id" => $user_id
+        ]);
+        $group = $stmt->fetchColumn();
+
+        if (!$group) {
+            return $data; // no group found, return only individual points
+        }
+
+        // get group points per day for user
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                SUM(del.points) AS points
+            FROM delivery AS del
+            JOIN submission AS s ON del.submission_id = s.id
+            JOIN lab AS l ON s.lab_id = l.id
+            JOIN day AS d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            AND s.group = :group
+            AND l.type = 'group'
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id,
+            "group" => $group
+        ]);
+
+        // merge individual and group points
+        foreach ($stmt->fetchAll() as $row) {
+            if (isset($data[$row['abbr']])) {
+                $data[$row['abbr']]['points'] += $row['points'];
+            } else {
+                $data[$row['abbr']] = $row; // add new entry for group points
+            }
+        }
+
+        return $data;
+    }
+
+    function offeringUsers($offering_id) 
+    {
+        // get all the students
+        $stmt = $this->db->prepare(
+            "SELECT e.user_id, e.group 
+            FROM enrollment AS e
+            WHERE (e.auth = 'student' OR e.auth = 'assistant')
+            AND e.offering_id = :offering_id"
+        );
+        $stmt->execute(['offering_id' => $offering_id]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // create an associative array with user_id to points
+        $userPoints = [];
+        foreach ($users as $user) {
+            $userPoints[$user['user_id']] = 0;
+        }
+
+        // get all deliveries along with user_id, group_id, lab_type
+        $stmt = $this->db->prepare(
+            "SELECT s.user_id, s.group, del.points, l.type
+            FROM delivery AS del
+            JOIN submission AS s ON del.submission_id = s.id
+            JOIN lab AS l ON s.lab_id = l.id
+            JOIN day AS d ON l.day_id = d.id
+            WHERE d.offering_id = :offering_id"
+        );
+        $stmt->execute(['offering_id' => $offering_id]);
+        $deliveries = $stmt->fetchAll();
+
+        // if lab_type is group then apply to all users in group
+        // else only apply add the points to the user
+        foreach ($deliveries as $delivery) {
+            if ($delivery['type'] == 'group') {
+                // add points to all users in the group
+                foreach ($users as $user) {
+                    if ($user['group'] == $delivery['group']) {
+                        $userPoints[$user['user_id']] += $delivery['points'];
+                    }
+                }
+            } else {
+                // add points to the user
+                $userPoints[$delivery['user_id']] += $delivery['points'];
+            }
+        }
+        arsort($userPoints);
+
+        return $userPoints;
+    }
 }
