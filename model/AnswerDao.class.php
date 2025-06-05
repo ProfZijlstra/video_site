@@ -160,4 +160,136 @@ class AnswerDao
         );
         $stmt->execute(array("id" => $id));
     }
+
+    /**
+    * The functions below are all to retrieve data for the quiz statistics pages
+    */
+    function offeringPossible($offering_id) : array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                SUM(quest.points) AS points
+            FROM question AS quest
+            JOIN quiz AS q ON quest.quiz_id = q.id
+            JOIN day AS d ON q.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id
+        ]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[$row['abbr']] = $row;
+        }
+
+        return $data;
+    }
+
+    function offeringAverages($offering_id) : array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                COUNT(DISTINCT ans.user_id) AS users,
+                SUM(ans.points) / COUNT(DISTINCT ans.user_id) AS points
+            FROM answer AS ans
+            JOIN question AS quest ON ans.question_id = quest.id
+            JOIN quiz AS q ON quest.quiz_id = q.id
+            JOIN day AS d ON q.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id
+        ]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[$row['abbr']] = $row;
+        }
+
+        return $data;
+    }
+
+    function offeringPerson($offering_id, $user_id)
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.abbr,
+                SUM(ans.points) AS points
+            FROM answer AS ans
+            JOIN question AS quest ON ans.question_id = quest.id
+            JOIN quiz AS q ON quest.quiz_id = q.id
+            JOIN day AS d ON q.day_id = d.id
+            WHERE d.offering_id = :offering_id
+            AND ans.user_id = :user_id
+            GROUP BY d.id"
+        );
+        $stmt->execute([
+            "offering_id" => $offering_id,
+            "user_id" => $user_id
+        ]);
+
+        $data = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $data[$row['abbr']] = $row;
+        }
+
+        return $data;
+    }
+
+    function offeringUsers($offering_id) 
+    {
+        $stmt = $this->db->prepare(
+            "SELECT ans.user_id, SUM(ans.points) AS points
+            FROM answer AS ans
+            JOIN question AS quest ON ans.question_id = quest.id
+            JOIN quiz AS q ON quest.quiz_id = q.id
+            JOIN day AS d ON q.day_id = d.id
+            JOIN enrollment AS e ON ans.user_id = e.user_id
+            WHERE (e.auth = 'student' OR e.auth = 'assistant')
+            AND e.offering_id = :offering_id
+            AND d.offering_id = :offering_id
+            GROUP BY ans.user_id
+            ORDER BY points DESC"
+        );
+        $stmt->execute(['offering_id' => $offering_id]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // create an associative array with user_id to points
+        $userPoints = [];
+        foreach ($users as $user) {
+            $userPoints[$user['user_id']] = $user['points'];
+        }
+
+        return $userPoints;
+    }
+
+    function dayUsers($offering_id, $day) : array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT ans.user_id, SUM(ans.points) AS points
+            FROM answer AS ans
+            JOIN question AS quest ON ans.question_id = quest.id
+            JOIN quiz AS q ON quest.quiz_id = q.id
+            JOIN day AS d ON q.day_id = d.id
+            JOIN enrollment AS e ON ans.user_id = e.user_id
+            WHERE (e.auth = 'student' OR e.auth = 'assistant')
+            AND e.offering_id = :offering_id
+            AND d.offering_id = :offering_id
+            AND d.abbr = :day
+            GROUP BY ans.user_id
+            ORDER BY points DESC"
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'day' => $day]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // create an associative array with user_id to points
+        $userPoints = [];
+        foreach ($users as $user) {
+            $userPoints[$user['user_id']] = $user['points'];
+        }
+
+        return $userPoints;
+    }
 }

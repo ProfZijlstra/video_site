@@ -26,6 +26,9 @@
 
         <?php if (hasMinAuth('student')) { ?>
             <nav class="tools">
+                <a href="quiz/chart">
+                    <i title="Score Statistics" class="fa-solid fa-chart-column"></i>
+                </a>
                 <a href="quiz/report">
                     <i title="Download Quiz Totals Report" class="fa-solid fa-square-poll-vertical"></i>
                 </a>
