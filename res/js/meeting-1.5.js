@@ -48,10 +48,7 @@ window.addEventListener("load", () => {
 
     // select all checkboxes for column on header click
     const ths = document.querySelectorAll("#present th");
-    function checkAll(evt) {
-        if (!confirm("Check all boxes in this column?")) {
-            return;
-        }
+    function invertAll(evt) {
         // find which column is clicked
         let idx = 0;
         for (const th of ths) {
@@ -65,13 +62,14 @@ window.addEventListener("load", () => {
         for (const tr of trs) {
             const tds = tr.querySelectorAll("td");
             const box = tds[idx]?.querySelector("input[type=checkbox]");
-            if (box && !box.checked) {
-                box.click();
+            // invert the checkbox
+            if (box) {
+                box.checked = !box.checked;
             }
         }
     }
     for (const th of ths) {
-        th.onclick = checkAll;
+        th.onclick = invertAll;
     }
 
 
