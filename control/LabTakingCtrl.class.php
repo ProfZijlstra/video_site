@@ -75,8 +75,13 @@ class LabTakingCtrl
         $lab_id = $URI_PARAMS[3];
         $selected = $URI_PARAMS[5];
 
-        if (! $selected && $selected !== "0") {
-            return "Location: {$lab_id}/1";
+        if (! $selected && $selected !== '0') {
+            $out = "Location: {$lab_id}/1";
+            if ($student_user_id) {
+                $out .= "?student={$student_user_id}";
+            }
+
+            return $out;
         }
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);

@@ -49,9 +49,6 @@ class QuizTakingCtrl
         $quiz_id = $URI_PARAMS[3];
         $selected = $URI_PARAMS[5];
 
-        if (! $selected && $selected !== "0") {
-            return "Location: {$quiz_id}/1";
-        }
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $quiz = $this->quizDao->byId($quiz_id);
         $tz = new DateTimeZone(TIMEZONE);
@@ -67,6 +64,14 @@ class QuizTakingCtrl
         if ($student_user_id && $_SESSION['user']['isFaculty']) {
             $user_id = $student_user_id;
             $fac_upd = true;
+        }
+        if (! $selected && $selected !== '0') {
+            $out = "Location: {$quiz_id}/1";
+            if ($student_user_id) {
+                $out .= "?student={$student_user_id}";
+            }
+
+            return $out;
         }
         $VIEW_DATA['course'] = $course;
         $VIEW_DATA['block'] = $block;

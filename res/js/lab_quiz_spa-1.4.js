@@ -2,15 +2,18 @@ window.addEventListener("load", () => {
     // global state in this module
     // get the deliveryId from the URL
     const w = window;
-    const url = window.location.pathname;
-    const lastSlash = url.lastIndexOf('/');
-    const urlNoDelivNum = url.substring(0, lastSlash);
-    let delivId = parseInt(url.substring(lastSlash + 1));
-
     const delivBtns = document.querySelectorAll('span.delivNum, span.questNum');
     const delivs = document.querySelectorAll('div.deliverables, div.qcontainer');
     const chevLeft = document.getElementById("chevLeft");
     const chevRight = document.getElementById("chevRight");
+
+    const url = w.location.pathname;
+    const lastSlash = url.lastIndexOf('/');
+    const urlNoDelivNum = url.substring(0, lastSlash);
+    let delivId = parseInt(url.substring(lastSlash + 1));
+    if (!delivId || isNaN(delivId)) {
+        delivId = 1; // default to first deliverable
+    }
 
     // switch to overview if the URL indicates it
     if (delivId == 0) {
@@ -57,7 +60,7 @@ window.addEventListener("load", () => {
     function clickDeliv() {
         const id = this.textContent;
         switchDeliv(id);
-        window.history.pushState({ "id": id }, '', urlNoDelivNum + '/' + id);
+        w.history.pushState({ "id": id }, '', urlNoDelivNum + '/' + id);
     }
     delivBtns.forEach(e => e.onmousedown = clickDeliv);
 
@@ -76,9 +79,13 @@ window.addEventListener("load", () => {
     };
 
     // make browser back button work properly
-    window.addEventListener('popstate', (e) => {
+    w.addEventListener('popstate', (e) => {
         const state = e.state;
-        switchDeliv(state.id);
+        let id = state?.id;
+        if (!id) {
+            id = 1; // default to first deliverable
+        }
+        switchDeliv(id);
     });
 
     // keyboard shortcuts
@@ -115,7 +122,7 @@ window.addEventListener("load", () => {
         w.enterOverviewBtn.classList.remove('hide');
         w.exitOverviewBtn.classList.add('hide');
         w.content.classList.remove('overview');
-        if (delivId ==  0) {
+        if (delivId == 0) {
             delivId = 1;
         }
         switchDeliv(delivId);

@@ -26,7 +26,7 @@ window.addEventListener("load", () => {
 
         let url = `../${quiz_id}/question/${qid}/text`;
         if (user_id) {
-            url += `../?student=${user_id}`;
+            url += `?student=${user_id}`;
         }
         fetch(url, {
             method: "POST",
