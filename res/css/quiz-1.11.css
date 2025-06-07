@@ -234,9 +234,7 @@ body#gradeQuestion {
         text-align: right;
     }
 
-    /* copy / pasted to lab.css
-     * TODO: extract to common file
-     */
+    /* copy / pasted to lab.css */
     div.gradeContainer {
         display: grid;
         grid-template-columns: 300px auto 350px 70px;
@@ -401,39 +399,33 @@ body#gradeQuestion {
 }
 /**
 * Copy / pasted from lab.css
-* TODO: extract out common parts
 */
 @media screen and (min-width: 900px) {
     body#doQuiz {
         main div#content {
             width: 76vw;
         }
+        main div#content.overview div.qcontainer div.question {
+            height: auto;
+        }
 
         div.qcontainer {
             grid-template-columns: 150px 1fr 1fr;
 
             div.question {
+                height: 70vh;
                 grid-column: 2;
             }
             div.answer {
                 grid-column: 3;
                 border-left: 1px solid var(--border);
-            }
-            div.textContainer textarea {
-                max-width: initial;
-            }
-        }
-        div.qcontainer {
-            border-bottom: 1px solid var(--border);
-            div.question {
-                height: 70vh;
-            }
-            div.question, div.answer {
                 max-height: 70vh;
                 overflow: auto;
             }
-            textarea.answer {
-                max-height: 67vh;
+            div.textContainer textarea {
+                max-width: 33vw;
+                min-height: 128px;
+                max-height: 65vh;
             }
         }
     }

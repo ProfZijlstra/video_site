@@ -9,7 +9,6 @@ body.lab {
         position: relative;
         display: grid;
         grid-template-columns: 150px 1fr;
-        margin-bottom: 25px;
 
         .about {
             grid-row: 1 / span 2;
@@ -379,7 +378,7 @@ body.labDeliverables {
         }
     }
     div.done {
-        margin-top: 30px;
+        border-top: 1px solid var(--border);
         text-align: center;
         position: relative;
 
@@ -394,6 +393,9 @@ body.labDeliverables {
 body#doLab{
     .hide {
         display: none;
+    }
+    h2 {
+        margin-top: 0px;
     }
     h2 span.delivNum, h2 i {
         color: lightgray;
@@ -644,38 +646,33 @@ body#gradeDeliverable {
 
 /**
 * Copy / pasted to quiz.css
-* TODO: extract out common parts
 */
 @media screen and (min-width: 900px) {
     body#doLab  {
         main div#content {
             width: 76vw;
         }
+        main div#content.overview div.dcontainer div.deliverable {
+            height: auto;
+        }
 
         div.dcontainer {
             grid-template-columns: 150px 1fr 1fr;
 
+            div.deliverable {
+                height: 50vh;
+            }
             div.about {
                 grid-row: 1;
             }
             div.delivery {
                 grid-column: 3;
                 border-left: 1px solid var(--border);
-            }
-            div.textContainer textarea {
-                max-width: initial;
-            }
-        }
-        div.dcontainer.deliverables {
-            border-bottom: 1px solid var(--border);
-            div.deliverable {
-                height: 70vh;
-            }
-            div.deliverable, div.delivery {
                 max-height: 70vh;
                 overflow: auto;
             }
-            textarea {
+            div.textContainer textarea {
+                max-width: initial;
                 max-height: 60vh;
             }
         }

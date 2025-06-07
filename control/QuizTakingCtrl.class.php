@@ -49,7 +49,7 @@ class QuizTakingCtrl
         $quiz_id = $URI_PARAMS[3];
         $selected = $URI_PARAMS[5];
 
-        if (! $selected) {
+        if (! $selected && $selected !== "0") {
             return "Location: {$quiz_id}/1";
         }
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);

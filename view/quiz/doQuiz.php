@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="res/css/common-1.3.css">
     <link rel="stylesheet" href="res/css/adm-1.0.css">
     <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.10.css">
+    <link rel="stylesheet" href="res/css/quiz-1.11.css">
     <script src="res/js/lib/prism.js"></script>
     <script src="res/js/markdown-1.8.js"></script>
     <script src="res/js/camera-1.5.js"></script>
     <script src="res/js/countdown-1.1.js"></script>
     <script src="res/js/quiz/quiz-1.10.js"></script>
     <script src="res/js/ensureSaved.js"></script>
-    <script src="res/js/lab_quiz_spa-1.3.js"></script>
+    <script src="res/js/lab_quiz_spa-1.4.js"></script>
 </head>
 
 <body id="doQuiz" data-selected="<?= $selected ?>">
@@ -28,6 +28,8 @@
         <nav class="tools">
             <h3><span id="hours"><?= $stop->format('%H') ?></span>:<span id="minutes"><?= $stop->format('%I') ?></span>:<span id="seconds"><?= $stop->format('%S') ?></span></h3>
             <div class="icons">
+                <i id="exitOverviewBtn" title="Exit Overview" class="fa-solid fa-compress hide"></i>
+                <i id="enterOverviewBtn" title="Enter Overview" class="fa-solid fa-expand"></i>
                 <i id="keyShortCuts" title="CTRL+> next, CTRL+< previous" class="fa-regular fa-keyboard"></i>
             </div>
         </nav>

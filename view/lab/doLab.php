@@ -52,14 +52,14 @@ function stats($delivery)
         <link rel="stylesheet" href="res/css/common-1.3.css">
         <link rel="stylesheet" href="res/css/adm-1.0.css">
         <link rel="stylesheet" href="res/css/lib/prism.css">
-        <link rel="stylesheet" href="res/css/lab-1.9.css">
+        <link rel="stylesheet" href="res/css/lab-1.10.css">
         <script src="res/js/lib/prism.js"></script>
         <script src="res/js/markdown-1.8.js"></script>
         <script src="res/js/countdown-1.1.js"></script>
         <script src="res/js/camera-1.5.js"></script>
         <script src="res/js/lab/lab-1.13.js"></script>
         <script src="res/js/ensureSaved.js"></script>
-        <script src="res/js/lab_quiz_spa-1.3.js"></script>
+        <script src="res/js/lab_quiz_spa-1.4.js"></script>
     </head>
 
     <body id="doLab" class="lab labDeliverables" data-selected="<?= $selected ?>">
@@ -73,9 +73,11 @@ function stats($delivery)
             <?php include 'areas.php'; ?>
             <nav class="tools">
                 <i id="keyShortCuts" title="CTRL+> next, CTRL+< previous" class="fa-regular fa-keyboard"></i>
+                <i id="exitOverviewBtn" title="Exit Overview" class="fa-solid fa-compress hide"></i>
+                <i id="enterOverviewBtn" title="Enter Overview" class="fa-solid fa-expand"></i>
             </nav>
             <div id="content">
-                <div class="about">
+                <div class="about" id="lab_id" data-id="<?= $lab['id'] ?>">
                     <?php if ($user_id) { ?>
                     <input type="hidden" id="user_id" value="<?= $user_id ?>">
                     <?php } ?>
@@ -91,11 +93,6 @@ function stats($delivery)
                     </div>
                     <?php } ?>
                 </div>
-
-                <h1 id="lab_id" data-id="<?= $lab['id'] ?>">
-                    <?= $lab['name'] ?>
-                </h1>
-
 
                 <div id="submission"
                     data-id="<?= isset($submission) ? $submission['id'] : ''  ?>">

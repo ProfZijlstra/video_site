@@ -1,6 +1,7 @@
 window.addEventListener("load", () => {
     // global state in this module
     // get the deliveryId from the URL
+    const w = window;
     const url = window.location.pathname;
     const lastSlash = url.lastIndexOf('/');
     const urlNoDelivNum = url.substring(0, lastSlash);
@@ -10,6 +11,11 @@ window.addEventListener("load", () => {
     const delivs = document.querySelectorAll('div.deliverables, div.qcontainer');
     const chevLeft = document.getElementById("chevLeft");
     const chevRight = document.getElementById("chevRight");
+
+    // switch to overview if the URL indicates it
+    if (delivId == 0) {
+        enterOverview();
+    }
 
     function switchDeliv(id) {
         delivId = parseInt(id);
@@ -89,4 +95,29 @@ window.addEventListener("load", () => {
                 break;
         }
     });
+
+    function enterOverview() {
+        w.enterOverviewBtn.classList.add('hide');
+        w.exitOverviewBtn.classList.remove('hide');
+        w.content.classList.add('overview');
+        w.history.pushState({ "id": 0 }, '', urlNoDelivNum + '/0');
+        for (const d of delivs) {
+            d.classList.remove('hide');
+        }
+        chevLeft.classList.remove('active');
+        chevRight.classList.remove('active');
+        for (const d of delivBtns) {
+            d.classList.add('active');
+        }
+    };
+    w.enterOverviewBtn.onclick = enterOverview;
+    w.exitOverviewBtn.onclick = function() {
+        w.enterOverviewBtn.classList.remove('hide');
+        w.exitOverviewBtn.classList.add('hide');
+        w.content.classList.remove('overview');
+        if (delivId ==  0) {
+            delivId = 1;
+        }
+        switchDeliv(delivId);
+    };
 });
