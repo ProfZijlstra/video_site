@@ -41,24 +41,78 @@ class AttendanceCtrl
     #[Inject('AttendanceConfigDao')]
     public $AttendanceConfigDao;
 
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$", sec: 'assistant')]
+    #[Inject('UserDao')]
+    public $userDao;
+
+    /**
+     * This function is really two in one. If the user is a student, or a user_id
+     * is provided as a query parameter, it will show the student's attendance overview.
+     *
+     * If the user is an instructor or assistant, it will show the attendance overview.
+     */
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$", sec: 'student')]
     public function overview()
     {
+        global $VIEW_DATA;
+
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
         $this->overviewCtr->overview();
 
-        global $VIEW_DATA;
-
         $offering_id = $VIEW_DATA['offering_id'];
         $days = $VIEW_DATA['days'];
-        $defaults = $this->AttendanceConfigDao->byId($offering_id);
+        $course = $VIEW_DATA['course'];
+        $block = $VIEW_DATA['block'];
 
         // get sessions for these days
         $sessions = $this->classSessionDao->allForOffering($offering_id);
         foreach ($sessions as $session) {
             $session['meetings'] = [];
             $days[$session['abbr']][$session['type']] = $session;
+            $days[$session['abbr']][$session['type']]['meetings'] = [];
+        }
+
+        $isFaculty = false;
+        $user_id = filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+        if ($user_id && ! hasMinAuth('instructor')) {
+            // if user_id is given, but not an instructor, return 403
+            return 'error/403.php';
+        } else {
+            $isFaculty = true;
+        }
+        if (! $user_id) {
+            // if no user_id is given, use the current user
+            $user_id = $_SESSION['user']['id'];
+        }
+
+        // get enrollment for this user
+        $course = strtoupper($course);
+        $auth = $this->enrollmentDao->checkEnrollmentAuth($user_id, $course, $block);
+
+        $VIEW_DATA['title'] = 'Attendance';
+        $VIEW_DATA['area'] = 'attendance';
+        if ($auth['auth'] == 'student') {
+            // get user data
+            $user = $this->userDao->retrieve($user_id);
+            $teamsName = $user['teamsName'];
+            $attendance = $this->attendanceDao->getStudentOffering($teamsName, $offering_id);
+            foreach ($attendance as $meeting) {
+                $days[$meeting['abbr']][$meeting['stype']]['meetings'][] = $meeting;
+            }
+
+            if ($isFaculty) {
+                $VIEW_DATA['title'] = "Attendance for {$user['knownAs']} {$user['lastname']}";
+            } else {
+                $VIEW_DATA['title'] = 'My Attendance';
+            }
+            $VIEW_DATA['days'] = $days;
+
+            // show the student view:
+            // red is absent
+            // green is present
+            // orange is late, middle missing, or left early
+            // blue is excused
+            return 'attendance/studentOverview.php';
         }
 
         // Add attendance data
@@ -76,13 +130,12 @@ class AttendanceCtrl
             }
             $excused[$student['class_session_id']][] = $student;
         }
+        $defaults = $this->AttendanceConfigDao->byId($offering_id);
 
-        $VIEW_DATA['days'] = $days;
-        $VIEW_DATA['title'] = 'Attendance';
-        $VIEW_DATA['area'] = 'attendance';
         $VIEW_DATA['enrollment'] = $enrollment;
         $VIEW_DATA['excused'] = $excused;
         $VIEW_DATA['defaults'] = $defaults;
+        $VIEW_DATA['days'] = $days;
 
         return 'attendance/attendance.php';
     }

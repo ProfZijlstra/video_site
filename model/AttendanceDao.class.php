@@ -2,9 +2,9 @@
 
 /**
  * Attendance Dao Class
+ *
  * @author mzijlstra 2021-11-29
  */
-
 #[Repository]
 class AttendanceDao
 {
@@ -13,29 +13,29 @@ class AttendanceDao
 
     public function remove($meeting_id)
     {
-        $stmt = $this->db->prepare("DELETE FROM attendance 
-            WHERE meeting_id = :meeting_id");
-        $stmt->execute(["meeting_id" => $meeting_id]);
+        $stmt = $this->db->prepare('DELETE FROM attendance 
+            WHERE meeting_id = :meeting_id');
+        $stmt->execute(['meeting_id' => $meeting_id]);
     }
 
     public function addReport($meeting_id, $report)
     {
-        $stmt = $this->db->prepare("INSERT INTO attendance VALUES(NULL, :meeting_id, 
+        $stmt = $this->db->prepare('INSERT INTO attendance VALUES(NULL, :meeting_id, 
             :teamsName, :notEnrolled, :absent, :arriveLate, :leaveEarly, 
-            :middleMissing, :inClass, :excused, :start, :stop)");
+            :middleMissing, :inClass, :excused, :start, :stop)');
         foreach ($report as $teamsName => $attend) {
             $stmt->execute([
-                "meeting_id" => $meeting_id,
-                "teamsName" => $teamsName,
-                "notEnrolled" => $attend["notEnrolled"],
-                "absent" => $attend["absent"],
-                "arriveLate" => $attend["arriveLate"],
-                "leaveEarly" => $attend["leaveEarly"],
-                "middleMissing" => $attend["middleMissing"],
-                "inClass" => $attend["inClass"],
-                "excused" => $attend["excused"],
-                "start" => $attend["start"],
-                "stop" => $attend["stop"],
+                'meeting_id' => $meeting_id,
+                'teamsName' => $teamsName,
+                'notEnrolled' => $attend['notEnrolled'],
+                'absent' => $attend['absent'],
+                'arriveLate' => $attend['arriveLate'],
+                'leaveEarly' => $attend['leaveEarly'],
+                'middleMissing' => $attend['middleMissing'],
+                'inClass' => $attend['inClass'],
+                'excused' => $attend['excused'],
+                'start' => $attend['start'],
+                'stop' => $attend['stop'],
             ]);
         }
     }
@@ -43,7 +43,7 @@ class AttendanceDao
     public function forMeeting($meeting_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT a.id, a.teamsName, u.studentID,
+            'SELECT a.id, a.teamsName, u.studentID,
                     u.knownAs, u.lastname,
                     a.arriveLate, a.middleMissing, a.leaveEarly, a.inClass,
                     a.notEnrolled, a.absent, a.excused, a.meeting_id,
@@ -51,28 +51,30 @@ class AttendanceDao
                 FROM attendance AS a
                 LEFT JOIN user AS u on a.teamsName = u.teamsName
                 WHERE a.meeting_id = :meeting_id
-                ORDER BY a.id DESC");
-        $stmt->execute(["meeting_id" => $meeting_id]);
+                ORDER BY a.id DESC');
+        $stmt->execute(['meeting_id' => $meeting_id]);
+
         return $stmt->fetchAll();
     }
 
     public function unexcusedAbsentForMeeting($meeting_id)
     {
-        $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
+        $stmt = $this->db->prepare('SELECT u.email, u.knownAs, 
                     m.title, m.start, m.stop, a.teamsName
                 FROM attendance AS a
                 JOIN meeting AS m ON a.meeting_id = m.id
                 JOIN user AS u on a.teamsName = u.teamsName
                 WHERE a.meeting_id = :meeting_id
                 AND a.absent = 1
-                AND a.excused = 0");
-        $stmt->execute(["meeting_id" => $meeting_id]);
+                AND a.excused = 0');
+        $stmt->execute(['meeting_id' => $meeting_id]);
+
         return $stmt->fetchAll();
     }
 
     public function unexcusedTardyForMeeting($meeting_id)
     {
-        $stmt = $this->db->prepare("SELECT u.email, u.knownAs, 
+        $stmt = $this->db->prepare('SELECT u.email, u.knownAs, 
                     m.title, m.start, m.stop, a.teamsName,
                     a.arriveLate, a.leaveEarly, a.middleMissing,
                     a.start as `arrive`, a.stop as `left`
@@ -81,15 +83,15 @@ class AttendanceDao
                 JOIN user AS u on a.teamsName = u.teamsName
                 WHERE a.meeting_id = :meeting_id
                 AND (a.arriveLate = 1 OR a.leaveEarly = 1 OR a.middleMissing = 1)
-                AND a.excused = 0");
-        $stmt->execute(["meeting_id" => $meeting_id]);
+                AND a.excused = 0');
+        $stmt->execute(['meeting_id' => $meeting_id]);
+
         return $stmt->fetchAll();
     }
 
-
     public function update($data)
     {
-        $stmt = $this->db->prepare("UPDATE attendance SET 
+        $stmt = $this->db->prepare('UPDATE attendance SET 
             arriveLate = :late,
             leaveEarly = :left, 
             middleMissing = :mid, 
@@ -97,30 +99,30 @@ class AttendanceDao
             excused = :excu, 
             `start` = :start,
             `stop` = :stop
-            WHERE id = :id");
+            WHERE id = :id');
         $stmt->execute($data);
     }
 
     public function markAbsent($id, $absent)
     {
-        $stmt = $this->db->prepare("UPDATE attendance SET 
+        $stmt = $this->db->prepare('UPDATE attendance SET 
             `absent` = :absent,
             `inClass` = 0
-            WHERE id = :id");
-        $stmt->execute(["id" => $id, "absent" => $absent]);
+            WHERE id = :id');
+        $stmt->execute(['id' => $id, 'absent' => $absent]);
     }
 
     public function deleteForMeeting($meeting_id)
     {
-        $stmt = $this->db->prepare("DELETE FROM attendance
-                WHERE meeting_id = :meeting_id ");
-        $stmt->execute(["meeting_id" => $meeting_id]);
+        $stmt = $this->db->prepare('DELETE FROM attendance
+                WHERE meeting_id = :meeting_id ');
+        $stmt->execute(['meeting_id' => $meeting_id]);
     }
 
     public function getExportData($session_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT u.studentID, u.teamsName,
+            'SELECT u.studentID, u.teamsName,
             SUM(a.absent) AS `absent`, 
             SUM(a.arriveLate) AS late, 
             SUM(a.leaveEarly) AS leaveEarly, 
@@ -137,16 +139,17 @@ class AttendanceDao
             JOIN meeting AS m ON a.meeting_id = m.id
             JOIN user AS u ON a.teamsName = u.teamsName
             WHERE m.session_id = :session_id
-            GROUP BY u.id"
+            GROUP BY u.id'
         );
-        $stmt->execute(["session_id" => $session_id]);
+        $stmt->execute(['session_id' => $session_id]);
+
         return $stmt->fetchAll();
     }
 
     public function professionalism($offering_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT u.studentID, u.knownAs, u.lastname,
+            'SELECT u.studentID, u.knownAs, u.lastname,
             SUM(a.absent) AS `absent`, 
             SUM(a.arriveLate) AS late, 
             SUM(a.leaveEarly) AS leaveEarly, 
@@ -167,9 +170,58 @@ class AttendanceDao
             WHERE d.offering_id = :offering_id
             AND e.offering_id = :offering_id
             AND a.excused = 0
-            GROUP BY u.id"
+            GROUP BY u.id'
         );
-        $stmt->execute(["offering_id" => $offering_id]);
+        $stmt->execute(['offering_id' => $offering_id]);
+
         return $stmt->fetchAll();
+    }
+
+    // gets the student attendance for a specific offering
+    public function getStudentOffering($teamsName, $offering_id)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT m.id, m.title, a.absent, a.arriveLate,
+            a.leaveEarly, a.middleMissing, a.inClass, a.excused,
+            a.start, a.stop, s.type as stype, d.abbr
+            FROM day as d
+            JOIN `class_session` AS s ON d.id = s.day_id
+            JOIN meeting AS m ON s.id = m.session_id
+            LEFT JOIN attendance AS a ON m.id = a.meeting_id
+            WHERE d.offering_id = :offering_id
+            AND a.teamsName = :teamsName'
+        );
+        $stmt->execute(['offering_id' => $offering_id, 'teamsName' => $teamsName]);
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $attendance = [];
+        foreach ($data as $row) {
+            $meeting = [
+                'id' => $row['id'],
+                'title' => $row['title'],
+                'absent' => $row['absent'],
+                'arriveLate' => $row['arriveLate'],
+                'leaveEarly' => $row['leaveEarly'],
+                'middleMissing' => $row['middleMissing'],
+                'inClass' => $row['inClass'],
+                'excused' => $row['excused'],
+                'start' => $row['start'],
+                'stop' => $row['stop'],
+                'stype' => $row['stype'],
+                'abbr' => $row['abbr'],
+            ];
+
+            $meeting['status'] = 'present';
+            if ($row['excused']) {
+                $meeting['status'] = 'excused';
+            } elseif ($row['absent']) {
+                $meeting['status'] = 'absent';
+            } elseif ($row['arriveLate'] || $row['leaveEarly'] || $row['middleMissing']) {
+                $meeting['status'] = 'tardy';
+            }
+            $attendance[] = $meeting;
+        }
+
+        return $attendance;
     }
 }

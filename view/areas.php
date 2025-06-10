@@ -18,7 +18,7 @@
                 <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/file"><i class="fa-solid fa-hard-drive"></i></a>
             </div>
             <?php } ?>
-            <?php if (hasMinAuth('assistant')) { ?>
+            <?php if (hasMinAuth('student')) { ?>
             <div title="Attendance" class="<?= $area == 'attendance' ? 'active' : ''?>">
                 <a href="<?= "{$MY_BASE}/{$course}/{$block}" ?>/attendance"><i class="fas fa-user-check"></i></a>
             </div>

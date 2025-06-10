@@ -178,7 +178,7 @@ class EnrollmentDao
         ]);
     }
 
-    public function checkEnrollmentAuth($user_id, $course, $block)
+    public function checkEnrollmentAuth($user_id, $course, $block = 'none')
     {
         $select =
             'SELECT e.auth FROM enrollment AS e 
