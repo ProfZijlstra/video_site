@@ -26,7 +26,7 @@ class AttendanceImportDao
         $stmt = $this->db->prepare("SELECT * FROM attendance_import 
             WHERE meeting_id = :meeting_id ");
         $stmt->execute(["meeting_id" => $meeting_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function uniqueUsersForMeeting($meeting_id)
@@ -36,7 +36,7 @@ class AttendanceImportDao
                     FROM attendance_import WHERE meeting_id = :meeting_id 
                     GROUP BY teamsName");
         $stmt->execute(["meeting_id" => $meeting_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function multiEntryForMeeting($meeting_id)
@@ -48,7 +48,7 @@ class AttendanceImportDao
                 GROUP BY teamsName
                 HAVING `count` > 1");
         $stmt->execute(["meeting_id" => $meeting_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function deleteForMeeting($meeting_id)

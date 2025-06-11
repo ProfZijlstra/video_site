@@ -112,7 +112,7 @@ class OfferingDao
         );
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function enrolled($user_id)
@@ -130,7 +130,7 @@ class OfferingDao
         );
         $stmt->execute(['user_id' => $user_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function allForCourse($course_num)
@@ -143,7 +143,7 @@ class OfferingDao
         );
         $stmt->execute(['course_num' => $course_num]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -163,7 +163,7 @@ class OfferingDao
         );
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

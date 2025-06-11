@@ -29,7 +29,7 @@ class EnrollmentDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -61,7 +61,7 @@ class EnrollmentDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['id']] = $row;
         }
 
@@ -79,7 +79,7 @@ class EnrollmentDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['id']] = $row;
         }
 
@@ -98,7 +98,7 @@ class EnrollmentDao
         );
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getTopInstructorFor($course, $block)
@@ -288,6 +288,6 @@ class EnrollmentDao
             'group' => $group,
         ]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

@@ -42,7 +42,7 @@ class QuestionDao
         ');
         $stmt->execute(['quiz_id' => $quiz_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get($id)
@@ -134,7 +134,7 @@ class QuestionDao
             WHERE quiz_id = :quiz_id'
         );
         $stmt->execute(['quiz_id' => $quiz_id]);
-        $questions = $stmt->fetchAll();
+        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt = $this->db->prepare(
             'INSERT INTO question 

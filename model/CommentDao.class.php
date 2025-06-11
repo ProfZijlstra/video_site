@@ -26,7 +26,7 @@ class CommentDao
                         ORDER BY vote_total DESC'
         );
         $stmt->execute(['day_id' => $day_id, 'user_id' => $user_id]);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $out = [];
         foreach ($result as $row) {
             if (! isset($out[$row['vid_pdf']])) {
@@ -87,7 +87,7 @@ class CommentDao
         // deleting the reply votes related to this comment takes more work
         $stmt = $this->db->prepare('SELECT id FROM reply WHERE comment_id = :qid');
         $stmt->execute(['qid' => $id]);
-        $rids_data = $stmt->fetchAll();
+        $rids_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($rids_data) {
             $rids = [];
             foreach ($rids_data as $row) {
@@ -141,7 +141,7 @@ class CommentDao
             ORDER BY c.day_id'
         );
         $commentStmt->execute(['offering_id' => $offering_id]);
-        $commentResult = $commentStmt->fetchAll();
+        $commentResult = $commentStmt->fetchAll(PDO::FETCH_ASSOC);
 
         $dayStmt = $this->db->prepare(
             'SELECT id FROM day
@@ -201,7 +201,7 @@ class CommentDao
 
             // clone all votes
             $getVoteStmt->execute(['comment_id' => $comment['id']]);
-            $votes = $getVoteStmt->fetchAll();
+            $votes = $getVoteStmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($votes as $vote) {
                 $cloneVoteStmt->execute(
                     [
@@ -214,7 +214,7 @@ class CommentDao
 
             // clone all replies
             $getReplyStmt->execute(['comment_id' => $comment['id']]);
-            $replies = $getReplyStmt->fetchAll();
+            $replies = $getReplyStmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($replies as $reply) {
                 $cloneReplyStmt->execute(
                     [
@@ -229,7 +229,7 @@ class CommentDao
 
                 // clone all reply votes
                 $getRVoteStmt->execute(['reply_id' => $reply['id']]);
-                $rvotes = $getRVoteStmt->fetchAll();
+                $rvotes = $getRVoteStmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($rvotes as $rvote) {
                     $cloneRVoteStmt->execute(
                         [

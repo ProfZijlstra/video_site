@@ -53,7 +53,7 @@ class QuizEventDao
             "quiz_id" => $quiz_id
         ));
         $result =  [];
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $row) {
             $result[$row['user_id']] = $row['start'];
         }
@@ -73,7 +73,7 @@ class QuizEventDao
             "quiz_id" => $quiz_id
         ));
         $result =  [];
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $row) {
             $result[$row['user_id']] = $row['stop'];
         }
@@ -92,7 +92,7 @@ class QuizEventDao
             "quiz_id" => $quiz_id,
             "user_id" => $user_id
         ));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 

@@ -32,7 +32,7 @@ class ZipDlActionDao
             WHERE attachment_id = :attachment_id
         ");
         $stmt->execute(array("attachment_id" => $attachment_id));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete($id) {

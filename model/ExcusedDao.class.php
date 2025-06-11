@@ -33,7 +33,7 @@ class ExcusedDao
             WHERE d.offering_id = :offering_id"
         );
         $stmt->execute(["offering_id" => $offering_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function forClassSession($session_id)
@@ -44,7 +44,7 @@ class ExcusedDao
             WHERE e.class_session_id = :session_id"
         );
         $stmt->execute(["session_id" => $session_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete($session_id, $teamsName)

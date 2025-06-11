@@ -52,7 +52,7 @@ class UserDao
         // maybe add parameters for constraints and order by
         $stmt = $this->db->prepare("SELECT * FROM user ORDER BY accessed DESC");
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -67,7 +67,7 @@ class UserDao
             AND active = 1"
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -222,6 +222,6 @@ class UserDao
             WHERE q.quiz_id = :quiz_id"
         );
         $stmt->execute(array("quiz_id" => $quiz_id));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

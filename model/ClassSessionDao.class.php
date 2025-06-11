@@ -58,7 +58,7 @@ class ClassSessionDao
             WHERE d.offering_id = :offering_id "
         );
         $stmt->execute(["offering_id" => $offering_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getOfferingId($session_id)
@@ -81,7 +81,7 @@ class ClassSessionDao
             WHERE offering_id = :offering_id"
         );
         $stmt->execute(["offering_id" => $offering_id]);
-        $days = $stmt->fetchAll();
+        $days = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt = $this->db->prepare(
             "INSERT INTO `class_session` 

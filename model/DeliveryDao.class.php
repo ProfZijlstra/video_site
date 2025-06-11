@@ -19,7 +19,7 @@ class DeliveryDao
         $stmt->execute([
             "submission_id" => $submission_id
         ]);
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($rows as $row) {
             $result[$row['deliverable_id']] = $row;
@@ -44,7 +44,7 @@ class DeliveryDao
         $stmt->execute([
             "deliverable_id" => $deliverable_id
         ]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function byId($id) : array|bool
@@ -585,7 +585,7 @@ class DeliveryDao
         ]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -610,7 +610,7 @@ class DeliveryDao
         ]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -638,7 +638,7 @@ class DeliveryDao
         ]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -678,7 +678,7 @@ class DeliveryDao
         ]);
 
         // merge individual and group points
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             if (isset($data[$row['abbr']])) {
                 $data[$row['abbr']]['points'] += $row['points'];
             } else {
@@ -717,7 +717,7 @@ class DeliveryDao
             WHERE d.offering_id = :offering_id"
         );
         $stmt->execute(['offering_id' => $offering_id]);
-        $deliveries = $stmt->fetchAll();
+        $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // if lab_type is group then apply to all users in group
         // else only apply add the points to the user
@@ -768,7 +768,7 @@ class DeliveryDao
             AND d.abbr = :day_abbr"
         );
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day]);
-        $deliveries = $stmt->fetchAll();
+        $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // if lab_type is group then apply to all users in group
         // else only apply add the points to the user

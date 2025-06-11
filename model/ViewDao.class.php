@@ -77,7 +77,7 @@ class ViewDao
         $stmt->execute(['offering_id' => $offering_id]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -98,7 +98,7 @@ class ViewDao
         $stmt->execute(['offering_id' => $offering_id, 'user_id' => $user_id]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -134,7 +134,7 @@ class ViewDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function offeringData($offering_id)
@@ -149,7 +149,7 @@ class ViewDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function dayAverages($offering_id, $day_abbr)
@@ -168,7 +168,7 @@ class ViewDao
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[substr($row['video'], 0, 2)] = $row;
         }
 
@@ -191,7 +191,7 @@ class ViewDao
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr, 'user_id' => $user_id]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[substr($row['video'], 0, 2)] = $row;
         }
 
@@ -229,7 +229,7 @@ class ViewDao
         );
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function dayData($offering_id, $day_abbr)
@@ -245,6 +245,6 @@ class ViewDao
         );
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day_abbr]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

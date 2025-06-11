@@ -87,7 +87,7 @@ class SubmissionDao
                 GROUP BY s.id
         ");
         $stmt->execute(["lab_id" => $lab_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function idsForLab($lab_id)
@@ -97,7 +97,7 @@ class SubmissionDao
                 WHERE lab_id = :lab_id"
         );
         $stmt->execute(["lab_id" => $lab_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function byId($id)

@@ -80,7 +80,7 @@ class AnswerDao
             ORDER BY a.text, a.created "
         );
         $stmt->execute(array("question_id" => $question_id));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function grade($answer_ids, $points, $comment, $cmntHasMD)
@@ -125,7 +125,7 @@ class AnswerDao
             ORDER BY q.seq "
         );
         $stmt->execute(array("user_id" => $user_id, "quiz_id" => $quiz_id));
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($rows as $row) {
             $result[$row['question_id']] = $row;
@@ -151,7 +151,7 @@ class AnswerDao
         $stmt->execute(array(
             "quiz_id" => $quiz_id
         ));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete($id) {
@@ -180,7 +180,7 @@ class AnswerDao
         ]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -205,7 +205,7 @@ class AnswerDao
         ]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 
@@ -231,7 +231,7 @@ class AnswerDao
         ]);
 
         $data = [];
-        foreach ($stmt->fetchAll() as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $data[$row['abbr']] = $row;
         }
 

@@ -22,7 +22,7 @@ class DayDao
 		$stmt = $this->db->prepare("SELECT * FROM day
 			WHERE offering_id = :offering_id ORDER BY abbr");
 		$stmt->execute(array("offering_id" => $offering_id));
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function getDayId($course, $block, $day)
@@ -54,7 +54,7 @@ class DayDao
 		$stmt = $this->db->prepare("SELECT * FROM day
 		WHERE offering_id = :offering_id");
 		$stmt->execute(array("offering_id" => $offering_id));
-		$days = $stmt->fetchAll();
+		$days = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		// clone days
 		$stmt = $this->db->prepare(

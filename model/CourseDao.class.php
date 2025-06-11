@@ -29,7 +29,7 @@ class CourseDao
 	{
 		$stmt = $this->db->prepare("SELECT * FROM course ORDER BY `number` DESC");
 		$stmt->execute();
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function create($number, $name)

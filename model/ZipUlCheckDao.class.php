@@ -18,7 +18,7 @@ class ZipUlCheckDao
         ');
         $stmt->execute(['deliverable_id' => $deliverable_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function add($deliverable_id, $type, $file, $byte, $block): int

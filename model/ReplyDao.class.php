@@ -29,7 +29,7 @@ class ReplyDao
 			ORDER BY vote_total DESC"
         );
         $stmt->execute(array("user_id" => $user_id));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get($id)

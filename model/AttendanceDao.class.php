@@ -54,7 +54,7 @@ class AttendanceDao
                 ORDER BY a.id DESC');
         $stmt->execute(['meeting_id' => $meeting_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function unexcusedAbsentForMeeting($meeting_id)
@@ -69,7 +69,7 @@ class AttendanceDao
                 AND a.excused = 0');
         $stmt->execute(['meeting_id' => $meeting_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function unexcusedTardyForMeeting($meeting_id)
@@ -86,7 +86,7 @@ class AttendanceDao
                 AND a.excused = 0');
         $stmt->execute(['meeting_id' => $meeting_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function update($data)
@@ -143,7 +143,7 @@ class AttendanceDao
         );
         $stmt->execute(['session_id' => $session_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function professionalism($offering_id)
@@ -174,7 +174,7 @@ class AttendanceDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // gets the student attendance for a specific offering

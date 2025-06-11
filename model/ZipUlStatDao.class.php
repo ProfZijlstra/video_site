@@ -35,7 +35,7 @@ class ZipUlStatDao
             ');
         $stmt->execute(['id' => $deliverable_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function forSubmission($submission_id): array|bool
@@ -47,7 +47,7 @@ class ZipUlStatDao
             ');
         $stmt->execute(['id' => $submission_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 

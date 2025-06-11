@@ -24,7 +24,7 @@ class LabDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function visibleForOffering(int $offering_id): array
@@ -40,7 +40,7 @@ class LabDao
         );
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getInstructorGradingStatus($offering_id)
@@ -59,7 +59,7 @@ class LabDao
         ');
         $stmt->execute(['offering_id' => $offering_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getStudentGradingStatus($offering_id, $user_id)
@@ -82,7 +82,7 @@ class LabDao
             'user_id' => $user_id,
         ]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function add(string $name, int $day_id, string $start, string $stop): int
@@ -156,7 +156,7 @@ class LabDao
             ORDER BY `start`"
         );
         $stmt->execute();
-        $dates = $stmt->fetchAll();
+        $dates = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $earlier = new DateTime(substr($dates[0]['start'], 0, 10));
         $later = new DateTime(substr($dates[1]['start'], 0, 10));
         $daysDiff = $earlier->diff($later)->format('%r%a');
@@ -168,7 +168,7 @@ class LabDao
             WHERE offering_id = :offering_id'
         );
         $stmt->execute(['offering_id' => $new_offering_id]);
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $days = [];
         foreach ($rows as $row) {
@@ -184,7 +184,7 @@ class LabDao
             WHERE d.offering_id = :offering_id'
         );
         $stmt->execute(['offering_id' => $offering_id]);
-        $labs = $stmt->fetchAll();
+        $labs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // create a clone for each on the same day in the new offering
         $stmt = $this->db->prepare(
@@ -234,7 +234,7 @@ class LabDao
             'offering_id' => $offering_id,
         ]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getGroupLabTotals($lab_id, $offering_id)
@@ -257,6 +257,6 @@ class LabDao
             'offering_id' => $offering_id,
         ]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

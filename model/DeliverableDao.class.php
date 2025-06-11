@@ -23,7 +23,7 @@ class DeliverableDao
             ORDER BY seq
         ");
         $stmt->execute(array("lab_id" => $lab_id));
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function add($lab_id, $type, $seq)
@@ -124,7 +124,7 @@ class DeliverableDao
             WHERE lab_id = :lab_id"
         );
         $stmt->execute(array("lab_id" =>  $lab_id));
-        $deliverables = $stmt->fetchAll();
+        $deliverables = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt = $this->db->prepare(
             "INSERT INTO deliverable 

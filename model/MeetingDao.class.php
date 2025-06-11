@@ -31,7 +31,7 @@ class MeetingDao
                 JOIN `day` AS d ON s.day_id = d.id 
                 WHERE d.offering_id = :offering_id ");
         $stmt->execute(["offering_id" => $offering_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get($id)

@@ -46,7 +46,7 @@ class AttendanceExportDao
             ORDER BY u.lastname"
         );
         $stmt->execute(["session_id" => $session_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function update($data)
@@ -74,7 +74,7 @@ class AttendanceExportDao
 			ORDER BY inClass"
         );
         $stmt->execute(["offering_id" => $offering_id, "week" => "$week%"]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function internationalPhysicalBelow($offering_id, $week, $min)
@@ -99,7 +99,7 @@ class AttendanceExportDao
             "week" => "$week%",
             "min" => $min
         ]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 

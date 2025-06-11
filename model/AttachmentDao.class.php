@@ -45,7 +45,7 @@ class AttachmentDao
         );
         $stmt->execute(['lab_id' => $lab_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function forDeliverable($deliverable_id)
@@ -56,7 +56,7 @@ class AttachmentDao
         );
         $stmt->execute(['deliverable_id' => $deliverable_id]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function forOffering($offering_id, $type)
@@ -74,7 +74,7 @@ class AttachmentDao
             'type' => $type,
         ]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete($id)
