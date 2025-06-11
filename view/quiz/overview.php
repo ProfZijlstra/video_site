@@ -1,21 +1,21 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
 <head>
     <title><?= $block ?> Quizzes</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/offering-1.3.css">
-    <link rel="stylesheet" href="res/css/adm-1.0.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/offering-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) { ?>auto <?php } ?>;
             width: <?= 9 * $offering['lessonsPerPart'] ?>vw;
         }
     </style>
-    <script src="res/js/addDialog.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/addDialog.js"></script>
 </head>
 
 <body>

@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
 <head>
     <title><?= $block ?> Settings</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/adm-1.0.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
     <style>
         #content h2,
         #content h3 {
@@ -40,7 +40,7 @@
             margin-top: 10px;
         }
     </style>
-    <script src="res/js/ensureSaved.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/ensureSaved.js"></script>
     <script>
         window.addEventListener("load", function() {
             const defaults = document.querySelector(".defaults");

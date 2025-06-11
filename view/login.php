@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <!--
     Created on : Aug 29, 2014, 13:00:01 PM
     Author     : mzijlstra 

@@ -2,18 +2,18 @@
  Created on : August 30, 2014, 7:30:00 PM
  Author     : mzijlstra
 -->
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
 <head>
     <title>User Details</title>
     <meta name=viewport content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/user.css">
-    <script src="res/js/user.js"></script>
-    <script src="res/js/userDetails-1.0.js"></script>
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/user.css">
+    <script src="<?= $MY_BASE ?>/res/js/user.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/userDetails-1.0.js"></script>
 </head>
 
 <body>

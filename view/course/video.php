@@ -1,18 +1,18 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
     <head>
         <title><?= strtoupper($course) ?> <?= $day ?> Lecture</title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css" />
-        <link rel="stylesheet" href="res/css/common-1.3.css">
-        <link rel="stylesheet" type="text/css" href="res/css/video-1.9.css" />
-        <link rel="stylesheet" href="res/css/lib/prism.css" />
-        <link rel="stylesheet" href="res/css/adm-1.0.css" />
-        <script src="res/js/markdown-1.8.js"></script>
-        <script src="res/js/video-1.18.js"></script>
-        <script src="res/js/lib/prism.js"></script>
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css" />
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+        <link rel="stylesheet" type="text/css" href="<?= $MY_BASE ?>/res/css/video-1.9.css" />
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/prism.css" />
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css" />
+        <script src="<?= $MY_BASE ?>/res/js/markdown-1.8.js"></script>
+        <script src="<?= $MY_BASE ?>/res/js/video-1.18.js"></script>
+        <script src="<?= $MY_BASE ?>/res/js/lib/prism.js"></script>
     </head>
 
     <body>

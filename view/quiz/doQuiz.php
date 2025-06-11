@@ -1,21 +1,21 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html> <?php global $MY_BASE ?><html>
 
 <head>
     <title>Quiz: <?= $quiz['name'] ?></title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/adm-1.0.css">
-    <link rel="stylesheet" href="res/css/lib/prism.css">
-    <link rel="stylesheet" href="res/css/quiz-1.11.css">
-    <script src="res/js/lib/prism.js"></script>
-    <script src="res/js/markdown-1.8.js"></script>
-    <script src="res/js/camera-1.5.js"></script>
-    <script src="res/js/countdown-1.1.js"></script>
-    <script src="res/js/quiz/quiz-1.10.js"></script>
-    <script src="res/js/ensureSaved.js"></script>
-    <script src="res/js/lab_quiz_spa-1.4.js"></script>
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/prism.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/quiz-1.11.css">
+    <script src="<?= $MY_BASE ?>/res/js/lib/prism.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/markdown-1.8.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/camera-1.5.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/countdown-1.1.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/quiz/quiz-1.10.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/ensureSaved.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/lab_quiz_spa-1.4.js"></script>
 </head>
 
 <body id="doQuiz" data-selected="<?= $selected ?>">

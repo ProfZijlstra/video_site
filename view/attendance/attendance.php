@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
 <head>
     <title><?= $block ?> Attendance</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/offering-1.3.css">
-    <link rel="stylesheet" href="res/css/adm-1.0.css">
-    <link rel="stylesheet" href="res/css/attendance-1.0.css">
-    <script src="res/js/attendance-1.3.js"></script>
+    <link rel="stylesheet" href="/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/offering-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/attendance-1.0.css">
+    <script src="<?= $MY_BASE ?>/res/js/attendance-1.3.js"></script>
     <style>
         div#days {
             grid-template-columns: <?php for ($i = 0; $i < $offering['lessonsPerPart']; $i++) { ?>auto <?php } ?>;

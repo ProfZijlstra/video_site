@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
     <head>
         <title><?= $title ?></title>
         <meta charset="utf-8" />
         <meta name=viewport content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-        <link rel="stylesheet" href="res/css/common-1.3.css">
-        <link rel="stylesheet" href="res/css/adm-1.0.css">
-        <link rel="stylesheet" href="res/css/lib/charts.css">
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
+        <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/charts.css">
         <style>
         table.charts-css.bar {
             --labels-size: 150px;

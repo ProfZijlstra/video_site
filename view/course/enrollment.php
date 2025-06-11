@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
 <head>
     <title><?= $block ?> Enrollment</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/adm-1.0.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
     <style>
         #content {
             width: 1200px;
@@ -42,8 +42,8 @@
             width: 560px;
         }
     </style>
-    <script src="res/js/enrollment-1.4.js"></script>
-    <script src="res/js/user.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/enrollment-1.4.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/user.js"></script>
 </head>
 
 <body>

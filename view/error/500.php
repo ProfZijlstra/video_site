@@ -1,10 +1,10 @@
 <?php http_response_code(500); ?>
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
     <head>
         <title>500</title>
         <meta charset="UTF-8" />
-        <link rel="stylesheet" type="text/css" href="res/css/error/style.css" />
+        <link rel="stylesheet" type="text/css" href="<?= $MY_BASE ?>/res/css/error/style.css" />
     </head>
     <body>
         <div class="error">

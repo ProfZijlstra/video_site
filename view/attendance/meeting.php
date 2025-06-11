@@ -1,18 +1,18 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <?php global $MY_BASE ?>
 <html>
 
 <head>
     <title>Meeting: <?= $meeting['title'] ?></title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="res/css/lib/font-awesome-all.min.css">
-    <link rel="stylesheet" href="res/css/common-1.3.css">
-    <link rel="stylesheet" href="res/css/adm-1.0.css">
-    <link rel="stylesheet" href="res/css/meeting-1.2.css">
-    <script src="res/js/meeting-1.5.js"></script>
-    <script src="res/js/lib/html5-qrcode.min.js"></script>
-    <script src="res/js/sounds.js"></script>
-    <script src="res/js/ensureSaved.js"></script>
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/common-1.3.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/adm-1.0.css">
+    <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/meeting-1.2.css">
+    <script src="<?= $MY_BASE ?>/res/js/meeting-1.5.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/lib/html5-qrcode.min.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/sounds.js"></script>
+    <script src="<?= $MY_BASE ?>/res/js/ensureSaved.js"></script>
 </head>
 
 <body>
