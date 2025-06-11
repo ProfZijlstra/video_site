@@ -23,103 +23,103 @@ window.addEventListener("load", () => {
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../quiz">
+            <a href="../../quiz">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <div id="content">
             <div id="total2">
 
             </div>
             <!-- For erach question show -->
-            <?php foreach ($questions as $question) : ?>
+            <?php foreach ($questions as $question) { ?>
                 <div class="qcontainer">
                     <div class="about">
                         <div class="seq"><?= $question['seq'] ?></div>
                         <div class="points">
-                            <?php if ($answers[$question['id']] && !is_null($answers[$question['id']]['points'])) : ?>
+                            <?php if ($answers[$question['id']] && ! is_null($answers[$question['id']]['points'])) { ?>
                                 Points Received: <br />
                                 <strong><?= $answers[$question['id']]['points'] ?></strong>
                                 of <?= $question['points'] ?>
-                            <?php else : ?>
+                            <?php } else { ?>
                                 <?php $not_graded = true; ?>
                                 Points Possible: <?= $question['points'] ?>
                                 <h3>Not Graded</h3>
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="question" data-id="<?= $question['id'] ?>">
                         <div>Question Text:</div>
                         <div class="questionText">
-                            <?php if ($question['hasMarkDown']) : ?>
+                            <?php if ($question['hasMarkDown']) { ?>
                                 <?= $parsedown->text($question['text']) ?>
-                            <?php else : ?>
+                            <?php } else { ?>
                                 <pre><?= htmlspecialchars($question['text']) ?></pre>
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
-                        <?php if ($question['modelAnswer']) : ?>
+                        <?php if ($question['modelAnswer']) { ?>
                             <div>Model Answer:</div>
 
-                            <?php if ($question['type'] == "text") : ?>
+                            <?php if ($question['type'] == 'text') { ?>
                                 <div class="answerText">
-                                    <?php if ($question['mdlAnsHasMD']) : ?>
+                                    <?php if ($question['mdlAnsHasMD']) { ?>
                                         <?= $parsedown->text($question['modelAnswer']) ?>
-                                    <?php else : ?>
+                                    <?php } else { ?>
                                         <pre><?= htmlspecialchars($question['modelAnswer']) ?></pre>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </div>
-                            <?php elseif ($question['type'] == "image") : ?>
+                            <?php } elseif ($question['type'] == 'image') { ?>
                                 <img src="<?= $question['modelAnswer'] ?>" />
-                            <?php endif; ?>
-                        <?php endif; ?>
+                            <?php } ?>
+                        <?php } ?>
 
-                        <?php if ($answers[$question['id']] && $answers[$question['id']]['text']) : ?>
+                        <?php if ($answers[$question['id']] && $answers[$question['id']]['text']) { ?>
 
                             <div>
                                 <strong>Your Answer:</strong>
-                                <?php if ($answers[$question['id']]['updated']) : ?>
+                                <?php if ($answers[$question['id']]['updated']) { ?>
                                     <span class="timestamp"><?= $answers[$question['id']]['updated'] ?></span>
-                                <?php else : ?>
+                                <?php } else { ?>
                                     <span class="timestamp"><?= $answers[$question['id']]['created'] ?></span>
-                                <?php endif; ?>
+                                <?php } ?>
                             </div>
-                            <?php if ($question['type'] == "text") : ?>
+                            <?php if ($question['type'] == 'text') { ?>
                                 <div class="answerText">
-                                    <?php if ($answers[$question['id']]['hasMarkDown']) : ?>
+                                    <?php if ($answers[$question['id']]['hasMarkDown']) { ?>
                                         <?= $parsedown->text($answers[$question['id']]['text']) ?>
-                                    <?php else : ?>
+                                    <?php } else { ?>
                                         <pre><?= htmlspecialchars($answers[$question['id']]['text']) ?></pre>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </div>
-                            <?php elseif ($question['type'] == "image") : ?>
+                            <?php } elseif ($question['type'] == 'image') { ?>
                                 <img src="<?= $answers[$question['id']]['text'] ?>" />
-                            <?php endif; ?>
+                            <?php } ?>
 
-                        <?php else : ?>
+                        <?php } else { ?>
                             <h3>Not Answered</h3>
-                        <?php endif; ?>
+                        <?php } ?>
 
-                        <?php if ($answers[$question['id']] && $answers[$question['id']]['comment']) : ?>
+                        <?php if ($answers[$question['id']] && $answers[$question['id']]['comment']) { ?>
                             <div>Grading Comment:</div>
                             <div class="answerText">
                                 <?= $parsedown->text($answers[$question['id']]['comment']) ?>
                             </div>
-                        <?php endif; ?>
+                        <?php } ?>
 
 
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php } ?>
 
             <!-- Total points received out of total possible -->
             <div id="total">
-                <?php if ($not_graded) : ?>
+                <?php if ($not_graded) { ?>
                     <div>Not all questions have been graded yet</div>
-                <?php endif; ?>
+                <?php } ?>
                 <strong>Total Score:</strong> <?= $received ?> out of <?= $possible ?>
             </div>
         </div>

@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/prism.css">
     <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lab-1.10.css">
     <script src="<?= $MY_BASE ?>/res/js/lib/prism.js"></script>
-    <script src="<?= $MY_BASE ?>/res/js/back.js"></script>
     <script src="<?= $MY_BASE ?>/res/js/markdown-1.8.js"></script>
     <script>
 window.addEventListener("load", () => {    
@@ -25,7 +24,9 @@ window.addEventListener("load", () => {
     <?php include 'header.php'; ?>
     <main>
         <nav id="back" class="back" title="Back">
-            <i class="fa-solid fa-arrow-left"></i>
+            <a href="../../lab">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
         </nav>
         <?php include 'areas.php'; ?>
         <nav class="tools">
