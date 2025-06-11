@@ -410,13 +410,12 @@ Manalabs Attendance System.
         );
         $status = $this->classSessionDao->calcStatus($session['id']);
 
-        if (
-            $session['generated'] != $status['meetings'] ||
-            $session['status'] != 'EXPORTED'
-        ) {
-            $this->generateExportReport($session['id']);
-            $session = $this->classSessionDao->getSessionById($session['id']);
-        }
+        // always regenerate the export report. Initially I didn't do so
+        // as a form of 'optimization'. But not doing it just makes the
+        // user experience worse, and it happens so rarely that it is not
+        // worth the effort.
+        $this->generateExportReport($session['id']);
+        $session = $this->classSessionDao->getSessionById($session['id']);
         $exports = $this->attendanceExportDao->forSession($session['id']);
 
         $VIEW_DATA['day_abbr'] = $day_abbr;
@@ -495,28 +494,6 @@ Manalabs Attendance System.
         $this->classSessionDao->setStatus($stats);
 
         return 'Location: ../../attendance';
-    }
-
-    #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$", sec: 'assistant')]
-    public function regenExportReport()
-    {
-        global $URI_PARAMS;
-
-        $course_number = $URI_PARAMS[1];
-        $block = $URI_PARAMS[2];
-        $day_abbr = $URI_PARAMS[3];
-        $stype = $URI_PARAMS[4]; // AM or  PM
-
-        $session = $this->classSessionDao->getSession(
-            $course_number,
-            $block,
-            $day_abbr,
-            $stype
-        );
-
-        $this->generateExportReport($session['id']);
-
-        return "Location: $stype";
     }
 
     /**

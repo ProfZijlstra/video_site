@@ -29,11 +29,6 @@ window.addEventListener("load", () => {
         });
     }
 
-    // 500 ms delay to ensure save is sent
-    document.getElementById("regenBtn").onclick = function() {
-        setTimeout(() => document.forms.regenForm.submit(), 500);
-    };
-
     // show modal when exportBtn clicked
     const exportModal = document.getElementById("exportDialog");
     document.getElementById("exportBtn").onclick = function() {

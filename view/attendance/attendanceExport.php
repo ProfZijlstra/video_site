@@ -77,13 +77,11 @@
                     <input disabled type="text" name="stop" value="<?= $session['stop'] ?>" />
                 </div>
             </div>
-            <form name="regenForm" method="post" action="<?= $stype ?>"></form>
 
 
             <h3>
                 Export Data
                 <span>
-                    <i id="regenBtn" title="Regenerate Report" class="fa-solid fa-rotate-right"></i>
                     <i id="exportBtn" title="Export to CAMS" class="fa-solid fa-cloud-arrow-up"></i>
                 </span>
             </h3>
