@@ -1,4 +1,11 @@
 window.addEventListener("load", () => {
+    const configureModal = document.getElementById("configureModal");
+    const uploadModal = document.getElementById("uploadModal");
+    const enrollModal = document.getElementById("enrollModal");
+    const closeConfigureDialog = document.getElementById("closeConfigureDialog");
+    const closeUploadDialog = document.getElementById("closeUploadDialog");
+    const closeEnrollDialog = document.getElementById("closeEnrollDialog");
+
     // update enrollment auth and show delete button
     function configure() {
         const uid = this.dataset.uid;
@@ -14,14 +21,16 @@ window.addEventListener("load", () => {
         const group = tds[4].innerText;
         document.getElementById("config_group").value = group;
 
-        overlay.classList.add("visible");
-        document.getElementById("configure_modal").classList.remove("hide");
-        document.getElementById("config_group").focus();
+        configureModal.showModal();
     }
     const configs = document.querySelectorAll("i.config");
     for (const config of configs) {
         config.addEventListener('click', configure);
     }
+    closeConfigureDialog.onclick = function() {
+        configureModal.close();
+    };
+
     function goToConfig() {
         this.nextElementSibling.querySelector("i.config").click();
     }
@@ -33,39 +42,26 @@ window.addEventListener("load", () => {
 
     document.getElementById('remove_icon').onclick = function() {
         if (confirm("Remove this enrollment?")) {
-            document.forms["removeStudent"].submit();        }
+            document.forms["removeStudent"].submit();
+        }
     }
 
-
     // show upload class list modal
-    const overlay = document.getElementById("overlay");
     document.getElementById("upload").addEventListener("click", () => {
         ensureLoggedIn();
-        overlay.classList.add("visible");
-        document.getElementById("upload_modal").classList.remove("hide");
+        document.getElementById("uploadModal").showModal();
     });
+    closeUploadDialog.onclick = function() {
+        uploadModal.close();
+    };
 
     // show enroll user modal
     document.getElementById("addUser").addEventListener("click", () => {
         ensureLoggedIn();
-        overlay.classList.add("visible");
-        document.getElementById("enroll_modal").classList.remove("hide");
-        document.getElementById("emailField").focus();
+        document.getElementById("enrollModal").showModal();
     });
-
-    // hide overlay and any/all modal(s)
-    function hide() {
-        overlay.classList.remove("visible");
-        const modals = document.querySelectorAll(".modal");
-        for (const modal of modals) {
-            modal.classList.add("hide");
-        }
-    }
-    document.getElementById("close-overlay").onclick = hide;
-    document.getElementById("overlay").onclick = function (evt) {
-        if (evt.target == this) {
-            hide();
-        }
+    closeEnrollDialog.onclick = function() {
+        enrollModal.close();
     };
 
     // validate the upload form before submit
@@ -81,10 +77,10 @@ window.addEventListener("load", () => {
     function ensureLoggedIn() {
         fetch('hasSession')
             .then(response => response.json())
-            .then(function (json) { 
+            .then(function(json) {
                 if (!json.session) {
                     window.location = "reAuth";
                 }
-            });        
+            });
     }
 });

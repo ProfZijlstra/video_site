@@ -27,7 +27,7 @@
 
         i.fa-trash-can {
             position: absolute;
-            top: 50px;
+            top: 80px;
             right: 35px;
             font-size: 20px;
             cursor: pointer;
@@ -106,9 +106,9 @@
                                 <td class="center">
                                     <i class="fa-solid fa-gear config" title="Configure Enrollment" data-uid="<?= $person['id'] ?>" data-auth="<?= $person['auth'] ?>" data-eid="<?= $person['eid'] ?>"></i>
                                 </td>
-                                <td class="center" title="Video Views">
-                                    <a href="views/<?= $person['id'] ?>">
-                                        <i class="fa-solid fa-eye"></i>
+                                <td class="center" title="Attendance">
+                                    <a href="attendance?user_id=<?= $person['id'] ?>">
+                                        <i class="fa-solid fa-user-check"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -116,7 +116,7 @@
                     </table>
                 <?php } ?>
             <?php } // end showList
-    ?>
+?>
             <?php showList('Instructor', $instructors, true); ?>
             <?php showList('Assistant', $assistants, false); ?>
             <?php showList('Student', $students, true); ?>
@@ -124,25 +124,27 @@
 
         </div>
     </main>
-    <div id="overlay">
-        <i id="close-overlay" class="fas fa-times-circle"></i>
-        <div id="upload_modal" class="modal hide">
+
+        <dialog id="uploadModal" class="modal">
+            <i id="closeUploadDialog" class="fas fa-times-circle close"></i>
             <h3>Upload Replacement</h3>
             <p>Expected format is an infosys / harmony class list as .csv</p>
             <form action="" method="post" enctype="multipart/form-data" id="upload_form">
                 <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
-                <input type="file" id="list_file" name="list" />
+                <input type="file" id="list_file" name="list" autofocus />
                 <div class="btn"><button>Upload Replacement</button></div>
             </form>
-        </div>
-        <div id="enroll_modal" class="modal hide">
+        </dialog>
+
+        <dialog id="enrollModal" class="modal">
+            <i id="closeEnrollDialog" class="fas fa-times-circle close"></i>
             <h3>Enroll User</h3>
             <p>Only email and auth are needed for previously enrolled users</a></p>
             <form action="enroll" method="post" id="enroll_form">
                 <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
                 <div>
                     <label>Email</label>
-                    <input type="text" name="email" id="emailField" />
+                    <input type="text" name="email" id="emailField" autofocus />
                 </div>
                 <div>
                     <label>Auth:</label>
@@ -181,8 +183,10 @@
                     <button type="submit">Enroll</button>
                 </div>
             </form>
-        </div>
-        <div id="configure_modal" class="modal hide">
+        </dialog>
+
+        <dialog id="configureModal" class="modal">
+            <i id="closeConfigureDialog" class="fas fa-times-circle close"></i>
             <h3>Configure Enrollment</h3>
             <p id="configure_for"></p>
             <i id="remove_icon" class="fa-solid fa-trash-can"></i>
@@ -199,17 +203,17 @@
                     </select>
                 </div>
                 <label>Group:</label>
-                <input name="group" type="text" id="config_group" />
+                <input name="group" type="text" id="config_group" autofocus />
                 <div class="btn">
                     <button type="submit">Update</button>
                 </div>
             </form>
-        </div>
-    </div> <!-- overlay -->
-    <form id="removeStudent" action="unenroll" method="post">
-        <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
-        <input type="hidden" name="eid" value="" id="remove_eid" />
-    </form>
+        </dialog>
+
+        <form id="removeStudent" action="unenroll" method="post">
+            <input type="hidden" name="offering_id" value="<?= $offering_id ?>" />
+            <input type="hidden" name="eid" value="" id="remove_eid" />
+        </form>
 </body>
 
 </html>
