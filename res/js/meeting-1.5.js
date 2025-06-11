@@ -64,7 +64,7 @@ window.addEventListener("load", () => {
             const box = tds[idx]?.querySelector("input[type=checkbox]");
             // invert the checkbox
             if (box) {
-                box.checked = !box.checked;
+                box.click();
             }
         }
     }
