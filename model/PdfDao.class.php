@@ -26,7 +26,7 @@ class PdfDao
         foreach ($parts as $part) {
             $deep = chdir($part);
             $files = glob('*.[pP][dD][fF]'); // pdf files
-            $latest = array_pop($files);
+            $latest = array_shift($files);
             if (! $latest) {
                 if ($deep) {
                     chdir('..');
