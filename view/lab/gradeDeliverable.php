@@ -174,7 +174,7 @@
                     </div>
 
                     <div class="comment" data-delivery_id="<?= $delivery['id'] ?>">
-                        <textarea autofocus class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
+                        <textarea class="comment" placeholder="Use **markdown** syntax in your text like:&#10;&#10;```javascript&#10;const code = &quot;highlighted&quot;&semi;&#10;```"><?= $delivery['gradeComment'] ?></textarea>
 
                         <i title="Markdown" class="txt fa-brands fa-markdown <?= $delivery['gradeCmntHasMD'] ? 'active' : ''?>"></i>
                         <div class="mdContainer <?= $delivery['gradeCmntHasMD'] ? 'active' : ''?>">
@@ -183,7 +183,7 @@
                         </div>
                     </div>
                     <div class="points">
-                        <input type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
+                        <input autofocus type="number" value="<?= $delivery['points'] ?? '' ?>" step="0.01" max="<?= $deliv['points'] ?>" min="0" name="points" class="points" />
                     </div>
                 <?php } ?>
             </div>
