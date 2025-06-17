@@ -1,4 +1,3 @@
-
 window.addEventListener("load", () => {
     // close dialog
     document.getElementById("closeAddDialog").onclick = () => {

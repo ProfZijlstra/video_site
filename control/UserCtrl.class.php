@@ -175,7 +175,7 @@ class UserCtrl
      *
      * @return string name of view file
      */
-    #[Get(uri: "^/user/(\d+)$", sec: 'admin')]
+    #[Get(uri: "^/user/(\d+)$", sec: 'instructor')]
     public function details()
     {
         global $VIEW_DATA;
@@ -192,7 +192,98 @@ class UserCtrl
         return 'user/userDetails.php';
     }
 
-    #[Get(uri: "^/user/(\D.*)$", sec: 'admin')]
+    /**
+     * Shows the profile page for a user
+     *
+     * @global array $VIEW_DATA empty array that we populate with view data
+     */
+    #[Get(uri: '^/user/profile$', sec: 'login')]
+    public function profile()
+    {
+        global $VIEW_DATA;
+
+        if (! isset($_SESSION['user'])) {
+            return 'Location: login';
+        }
+
+        $uid = $_SESSION['user']['id'];
+        $user = $this->userDao->retrieve($uid);
+        if (! $user) {
+            return 'Location: login';
+        }
+
+        $VIEW_DATA['user'] = $user;
+        $VIEW_DATA['title'] = 'Profile';
+
+        return 'user/profile.php';
+    }
+
+    /**
+     * Fallback for manual form submission
+     *
+     * @global array $VIEW_DATA empty array that we populate with view data
+     */
+    #[Post(uri: '^/user/resetPassword$', sec: 'login')]
+    public function resetPassForm()
+    {
+        global $VIEW_DATA;
+        $result = $this->resetPass();
+        $VIEW_DATA['msg'] = $result['msg'];
+
+        return 'Location: user/profile';
+    }
+
+    /**
+     * Resets the password for a user
+     *
+     * Expects AJAX
+     */
+    #[Post(uri: '^/user/resetPass$', sec: 'login')]
+    public function resetPass()
+    {
+        $user_id = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_NUMBER_INT);
+        $currentPassword = filter_input(INPUT_POST, 'currentPassword');
+        $newPassword = filter_input(INPUT_POST, 'newPassword');
+        $confirmPassword = filter_input(INPUT_POST, 'confirmPassword');
+
+        if (strlen($newPassword) < 8) {
+            return ['msg' => 'New password must be at least 8 characters long', success => false];
+        }
+        if ($newPassword !== $confirmPassword) {
+            return ['msg' => 'New password and confirmation do not match', 'success' => false];
+        }
+
+        $row = $this->userDao->retrieve($user_id);
+        if ($row && password_verify($currentPassword, $row['password'])) {
+            // update the password
+            $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+            $this->userDao->updatePass($user_id, $hash);
+
+            return ['msg' => 'Password updated successfully', 'success' => true];
+        } else {
+            return ['msg' => 'Current password is incorrect', 'success' => false];
+        }
+    }
+
+    #[Post(uri: '^/user/changeKnownAs$', sec: 'login')]
+    public function knownAsChange()
+    {
+        $knownAs = filter_input(INPUT_POST, 'knownAs', FILTER_UNSAFE_RAW);
+        if (! $knownAs) {
+            return ['msg' => 'Known As cannot be empty', 'success' => false];
+        }
+
+        if (! isset($_SESSION['user'])) {
+            return ['msg' => 'Not logged in', 'success' => false];
+        }
+
+        $uid = $_SESSION['user']['id'];
+        $this->userDao->updateKnownAs($uid, $knownAs);
+
+        return ['msg' => 'Known As updated successfully', 'success' => true];
+    }
+
+    #[Get(uri: "^/user/(\D.*)$", sec: 'instructor')]
     public function teamsName()
     {
         global $URI_PARAMS;
