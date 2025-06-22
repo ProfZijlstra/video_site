@@ -24,7 +24,7 @@
             </nav>
             <?php include 'areas.php'; ?>
             <nav class="tools">
-                <a title="Preview" href="../preview?q=<?= $quiz['id'] ?>">
+                <a title="Preview" href="../preview/<?= $quiz['id'] ?>/1">
                     <i id="previewBtn" class="fa-solid fa-eye"></i>
                 </a>
                 <form id="delQuiz" data-qcount="<?= $questions ? count($questions) : 0 ?>" action="del" method="POST"><i id="delBtn" title="Delete Quiz" class="far fa-trash-alt"></i></form>

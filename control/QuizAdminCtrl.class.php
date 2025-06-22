@@ -120,7 +120,7 @@ class QuizAdminCtrl
         return 'quiz/edit.php';
     }
 
-    #[Get(uri: '/preview$', sec: 'instructor')]
+    #[Get(uri: '/preview/(\d+)(/(\d+))?$', sec: 'instructor')]
     public function previewQuiz()
     {
         global $URI_PARAMS;
@@ -128,8 +128,13 @@ class QuizAdminCtrl
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $quiz_id = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_NUMBER_INT);
         $user_id = $_SESSION['user']['id'];
+        $quiz_id = $URI_PARAMS[3];
+        $selected = $URI_PARAMS[5];
+
+        if (! $selected && $selected !== '0') {
+            return "Location: {$quiz_id}/1";
+        }
 
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $quiz = $this->quizDao->byId($quiz_id);
@@ -148,6 +153,7 @@ class QuizAdminCtrl
         $VIEW_DATA['answers'] = $this->answerDao->forUser($user_id, $quiz_id);
         $VIEW_DATA['title'] = 'Quiz: '.$quiz['name'];
         $VIEW_DATA['stop'] = $stopDiff;
+        $VIEW_DATA['selected'] = $selected;
 
         return 'quiz/doQuiz.php';
     }

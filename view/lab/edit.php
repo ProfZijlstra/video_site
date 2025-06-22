@@ -25,7 +25,7 @@
         </nav>
         <?php include 'areas.php'; ?>
         <nav class="tools">
-            <a title="Preview" href="../preview?l=<?= $lab['id'] ?>">
+            <a title="Preview" href="../preview/<?= $lab['id'] ?>/1">
                 <i id="previewBtn" class="fa-solid fa-eye"></i>
             </a>
             <form id="delLab" data-id="<?= $lab['id'] ?>" action="del" method="POST"><i id="delBtn" title="Delete Lab" class="far fa-trash-alt"></i></form>

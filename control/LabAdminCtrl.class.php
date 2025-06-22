@@ -145,7 +145,7 @@ class LabAdminCtrl
         return 'lab/edit.php';
     }
 
-    #[Get(uri: '/preview$', sec: 'instructor')]
+    #[Get(uri: '/preview/(\d+)/((\d+))?$', sec: 'instructor')]
     public function previewLab(): string
     {
         global $URI_PARAMS;
@@ -153,8 +153,13 @@ class LabAdminCtrl
 
         $course = $URI_PARAMS[1];
         $block = $URI_PARAMS[2];
-        $lab_id = filter_input(INPUT_GET, 'l', FILTER_SANITIZE_NUMBER_INT);
+        $lab_id = $URI_PARAMS[3];
+        $selected = $URI_PARAMS[5];
         $user_id = $_SESSION['user']['id'];
+
+        if (! $selected && $selected !== '0') {
+            return "Location: {$lab_id}/1";
+        }
 
         $offering = $this->offeringDao->getOfferingByCourse($course, $block);
         $lab = $this->labDao->byId($lab_id);
@@ -172,6 +177,7 @@ class LabAdminCtrl
         $VIEW_DATA['title'] = 'Lab: '.$lab['name'];
         $VIEW_DATA['stop'] = $stopDiff;
         $VIEW_DATA['group'] = 'instructor';
+        $VIEW_DATA['selected'] = $selected;
 
         $deliverables = $this->deliverableDao->forLab($lab_id);
         $labPoints = 0;
