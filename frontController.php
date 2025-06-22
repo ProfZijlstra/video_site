@@ -7,8 +7,6 @@
  * Configuration variables
  * **************************** */
 require 'settings.php';
-define('DEVELOPMENT', true);
-define('TIMEZONE', 'America/Chicago');
 date_default_timezone_set(TIMEZONE);
 $SEC_LVLS = ['none', 'login', 'observer', 'student', 'assistant', 'instructor', 'admin'];
 error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
