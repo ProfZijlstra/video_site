@@ -1,5 +1,8 @@
 <?php
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 /**
  * User Controller Class
  *
@@ -13,6 +16,9 @@ class UserCtrl
 
     #[Inject('OfferingDao')]
     public $offeringDao;
+
+    #[Inject('MailHlpr')]
+    public $mailHlpr;
 
     /**
      * Simple mapping to the login page
@@ -445,6 +451,167 @@ class UserCtrl
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         $this->userDao->setBadge($data['studentID'], $data['badge']);
+    }
+
+    // forgot password
+    #[Get(uri: '^/forgot$', sec: 'none')]
+    public function forgot()
+    {
+        global $VIEW_DATA;
+        $VIEW_DATA['title'] = 'Forgot Password';
+
+        return 'forgot.php';
+    }
+
+    #[Post(uri: '^/forgot$', sec: 'none')]
+    public function requestReset()
+    {
+        global $MY_BASE;
+        global $VIEW_DATA;
+
+        $email = filter_input(INPUT_POST, 'email', FILTER_UNSAFE_RAW);
+        if (! $email) {
+            return ['msg' => 'Email is required', 'success' => false];
+        }
+
+        $user = $this->userDao->checkLogin($email);
+        if (! $user) {
+            // email this email address that it is not registered
+            $this->mailHlpr->mail(
+                $email,
+                'Password Reset Request',
+                'Your email address is not registered with our system. Please register first.'
+            );
+        } else {
+            require_once 'lib/Firebase/JWT/JWT.php';
+            require_once 'lib/Firebase/JWT/Key.php';
+
+            $payload = [
+                'sub' => $email,
+                'exp' => time() + 3600, // 1 hour expiration
+            ];
+
+            $jwt = JWT::encode($payload, JWT_SECRET, 'HS256');
+
+            // email the user with a link to reset their password
+            $this->mailHlpr->mail(
+                $email,
+                'Password Reset Request',
+                "To reset your password, please click the link below:\n".
+                SERVER."{$MY_BASE}/reset?token={$jwt}"
+            );
+        }
+
+        $VIEW_DATA['error'] = 'Reset Email Sent';
+
+        return 'Location: login';
+    }
+
+    #[Get(uri: '^/reset$', sec: 'none')]
+    public function reset()
+    {
+        global $VIEW_DATA;
+
+        $token = filter_input(INPUT_GET, 'token', FILTER_UNSAFE_RAW);
+        if (! $token) {
+            $VIEW_DATA['msg'] = 'Invalid, missing, or expired token';
+
+            return 'Location: forgot';
+        }
+
+        require_once 'lib/Firebase/JWT/JWT.php';
+        require_once 'lib/Firebase/JWT/Key.php';
+        require_once 'lib/Firebase/JWT/SignatureInvalidException.php';
+        require_once 'lib/Firebase/JWT/JWTExceptionWithPayloadInterface.php';
+        require_once 'lib/Firebase/JWT/ExpiredException.php';
+
+        try {
+            $decoded = JWT::decode($token, new Key(JWT_SECRET, 'HS256'));
+            if ($decoded->exp < time()) {
+                throw new Exception('Token expired');
+            }
+        } catch (Exception) {
+            $VIEW_DATA['msg'] = 'Invalid, missing, or expired token';
+
+            return 'Location: forgot';
+        }
+
+        $VIEW_DATA['token'] = $token;
+        $VIEW_DATA['title'] = 'Reset Password';
+
+        return 'reset.php';
+    }
+
+    #[Post(uri: '^/reset$', sec: 'none')]
+    public function resetPassword()
+    {
+        global $VIEW_DATA;
+        global $MY_BASE;
+
+        $token = filter_input(INPUT_POST, 'token', FILTER_UNSAFE_RAW);
+        $newPassword = filter_input(INPUT_POST, 'newPassword');
+        $confirmPassword = filter_input(INPUT_POST, 'confirmPassword');
+
+        if (! $newPassword || ! $confirmPassword || ! $token) {
+            $VIEW_DATA['msg'] = 'Incorrect input';
+
+            return 'Location: /reset';
+        }
+        if (strlen($newPassword) < 8) {
+            $VIEW_DATA['msg'] = 'New password must be at least 8 characters long';
+
+            return 'Location: reset';
+        }
+        if ($newPassword !== $confirmPassword) {
+            $VIEW_DATA['msg'] = 'New password and confirmation do not match';
+
+            return 'Location: reset';
+        }
+
+        require_once 'lib/Firebase/JWT/JWT.php';
+        require_once 'lib/Firebase/JWT/Key.php';
+        require_once 'lib/Firebase/JWT/ExpiredException.php';
+
+        try {
+            $decoded = JWT::decode($token, new Key(JWT_SECRET, 'HS256'));
+            $email = $decoded->sub;
+            $exp = $decoded->exp;
+            if ($exp < time()) {
+                $VIEW_DATA['msg'] = 'Invalid, missing, or expired token';
+                throw new Exception('Token expired');
+            }
+            $user = $this->userDao->checkLogin($email);
+            if (! $user) {
+                $VIEW_DATA['msg'] = 'Unknown email address';
+                throw new Exception('Unknown email address');
+            }
+        } catch (Exception) {
+            return 'Location: reset';
+        }
+
+        // update the password
+        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        $this->userDao->updatePassByEmail($email, $hash);
+
+        // email the user that their password has been reset
+        $this->mailHlpr->mail(
+            $email,
+            'Password Reset Confirmation',
+            'Your password has been successfully reset.'
+        );
+
+        // set current user details
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'first' => $user['firstname'],
+            'last' => $user['lastname'],
+            'email' => $user['email'],
+            'isAdmin' => $user['isAdmin'],
+            'isFaculty' => $user['isFaculty'],
+            'isRemembered' => false,
+        ];
+
+        return "Location: /{$MY_BASE}/";
     }
 
     /* This is not a good location for this function

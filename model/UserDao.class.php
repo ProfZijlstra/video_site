@@ -177,6 +177,13 @@ class UserDao
         $reset->execute(['pass' => $hash, 'uid' => $id]);
     }
 
+    public function updatePassByEmail($email, $hash)
+    {
+        $reset = $this->db->prepare('UPDATE user SET password = :pass 
+                                        WHERE email = :email');
+        $reset->execute(['pass' => $hash, 'email' => $email]);
+    }
+
     public function getUserId($email)
     {
         $stmt = $this->db->prepare('SELECT * FROM user WHERE email = :email');

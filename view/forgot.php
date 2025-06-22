@@ -1,31 +1,24 @@
 <!DOCTYPE html> <?php global $MY_BASE ?>
-<!--
-    Created on : Aug 29, 2014, 13:00:01 PM
-    Author     : mzijlstra 
--->
 <html>
     <head>
-        <title>Login</title>
+        <title>Forgot Password</title>
         <meta charset="UTF-8">
         <meta name=viewport content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/login.css">
     </head>
     <body>
         <div class="central">
-            <h1>Lecture Videos</h1>
+            <h1>Forgot Password</h1>
             <div class="container">
-                <form action="login" method="post">
-                    <?php if (isset($error)) { ?>
-                        <div class="error"><?= $error ?></div>
+                <form action="forgot" method="post">
+                    <?php if (isset($msg)) { ?>
+                        <div class="error"><?= $msg ?></div>
                         <br />
                     <?php } ?>
                     <input type="text" name="email" placeholder="Email Address" autofocus />
                     <br />
-                    <input type="password" name="pass" placeholder="Password" />
-                    <br />
-                    <div id="lgn_right"><input type="submit" value="Login" /></div>
+                    <div id="lgn_right"><input type="submit" value="Forgot" /></div>
                 </form>
-                <a id="forgot" href="<?= $MY_BASE ?>/forgot">Forgot Password</a>
             </div>
         </div>
     </body>
