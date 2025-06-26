@@ -11,7 +11,7 @@ a:hover {
 i#bars.fa-bars {
     top: 92px;
     position: absolute;
-    left: 330px;
+    left: 18vw;
     z-index: 20;
     font-size: 25px;
     cursor: pointer;
