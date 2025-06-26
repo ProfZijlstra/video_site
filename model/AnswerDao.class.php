@@ -3,7 +3,6 @@
 /**
  * @author mzijlstra 08/21/2022
  */
-
 #[Repository]
 class AnswerDao
 {
@@ -13,73 +12,89 @@ class AnswerDao
     public function byId($id)
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM answer WHERE id = :id"
+            'SELECT * FROM answer WHERE id = :id'
         );
-        $stmt->execute(array("id" => $id));
+        $stmt->execute(['id' => $id]);
+
         return $stmt->fetch();
+    }
+
+    public function forQuiz($quiz_id)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT a.id
+            FROM answer AS a
+            JOIN question AS q ON a.question_id = q.id
+            WHERE q.quiz_id = :quiz_id'
+        );
+        $stmt->execute(['quiz_id' => $quiz_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function add($text, $question_id, $user_id, $hasMarkDown)
     {
         $stmt = $this->db->prepare(
-            "SELECT id FROM answer 
+            'SELECT id FROM answer 
             WHERE question_id = :question_id
             AND user_id = :user_id
-        ");
-        $stmt->execute(array(
-            "question_id" => $question_id,
-            "user_id" => $user_id
-        ));
+        ');
+        $stmt->execute([
+            'question_id' => $question_id,
+            'user_id' => $user_id,
+        ]);
         $row = $stmt->fetch();
         if ($row) {
             return $row['id'];
         }
 
         $stmt = $this->db->prepare(
-            "INSERT INTO answer 
+            'INSERT INTO answer 
 			VALUES(NULL, :text, :question_id, :user_id, 
-            NOW(), NULL, NULL, NULL, :hasMarkDown, 0)"
+            NOW(), NULL, NULL, NULL, :hasMarkDown, 0)'
         );
-        $stmt->execute(array(
-            "text" => $text,
-            "question_id" => $question_id,
-            "user_id" => $user_id,
-            "hasMarkDown" => $hasMarkDown,
-        ));
+        $stmt->execute([
+            'text' => $text,
+            'question_id' => $question_id,
+            'user_id' => $user_id,
+            'hasMarkDown' => $hasMarkDown,
+        ]);
+
         return $this->db->lastInsertId();
     }
 
     public function update($id, $text, $user_id, $hasMarkDown)
     {
         $stmt = $this->db->prepare(
-            "UPDATE answer 
+            'UPDATE answer 
             SET `text` = :text,
             `hasMarkDown` = :hasMarkDown, 
             `updated` = NOW()
             WHERE id = :id 
-            AND user_id = :user_id "
+            AND user_id = :user_id '
         );
-        $stmt->execute(array(
-            "id" =>  $id,
-            "text" => $text,
-            "user_id" => $user_id,
-            "hasMarkDown" => $hasMarkDown,
-        ));
+        $stmt->execute([
+            'id' => $id,
+            'text' => $text,
+            'user_id' => $user_id,
+            'hasMarkDown' => $hasMarkDown,
+        ]);
     }
 
     public function forQuestion($question_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT a.id, a.text, a.user_id, a.points, a.comment, a.cmntHasMD,
+            'SELECT a.id, a.text, a.user_id, a.points, a.comment, a.cmntHasMD,
                 u.knownAs, u.lastname,
                 a.created, a.updated,
                 a.hasMarkDown
             FROM answer AS a
             JOIN user AS u ON a.user_id = u.id
             WHERE a.question_id = :question_id
-            ORDER BY a.text, a.created "
+            ORDER BY a.text, a.created '
         );
-        $stmt->execute(array("question_id" => $question_id));
+        $stmt->execute(['question_id' => $question_id]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -90,11 +105,11 @@ class AnswerDao
             SET `points` = :points, `comment` = :comment, cmntHasMD = :cmntHasMD
             WHERE id IN ({$answer_ids})"
         );
-        $stmt->execute(array(
-            "points" => $points,
-            "comment" => $comment,
-            "cmntHasMD" => $cmntHasMD
-        ));
+        $stmt->execute([
+            'points' => $points,
+            'comment' => $comment,
+            'cmntHasMD' => $cmntHasMD,
+        ]);
     }
 
     public function gradeUnanswered($user_id, $question_id, $comment, $points, $cmntHasMD)
@@ -104,39 +119,41 @@ class AnswerDao
 			VALUES(NULL, '', :question_id, :user_id, NOW(), NULL, 
                 :points, :comment, 0, :cmntHasMD)"
         );
-        $stmt->execute(array(
-            "question_id" => $question_id,
-            "user_id" => $user_id,
-            "comment" => $comment,
-            "points" => $points,
-            "cmntHasMD" => $cmntHasMD
-        ));
+        $stmt->execute([
+            'question_id' => $question_id,
+            'user_id' => $user_id,
+            'comment' => $comment,
+            'points' => $points,
+            'cmntHasMD' => $cmntHasMD,
+        ]);
+
         return $this->db->lastInsertId();
     }
 
     public function forUser($user_id, $quiz_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT a.*
+            'SELECT a.*
             FROM answer AS a
             JOIN question AS q on a.question_id = q.id
             WHERE q.quiz_id = :quiz_id
             AND a.user_id = :user_id
-            ORDER BY q.seq "
+            ORDER BY q.seq '
         );
-        $stmt->execute(array("user_id" => $user_id, "quiz_id" => $quiz_id));
+        $stmt->execute(['user_id' => $user_id, 'quiz_id' => $quiz_id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($rows as $row) {
             $result[$row['question_id']] = $row;
         }
+
         return $result;
     }
 
     public function overview($quiz_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT u.id, u.knownAs, u.firstname, u.lastname, 
+            'SELECT u.id, u.knownAs, u.firstname, u.lastname, 
                 count(a.id) AS answers, 
                 sum(a.points) AS points,
                 count(a2.id) AS ungraded
@@ -146,37 +163,39 @@ class AnswerDao
                 AND q.quiz_id = :quiz_id 
             LEFT JOIN answer AS a2 ON a.id = a2.id 
                 AND a2.points IS NULL
-            GROUP BY a.user_id "
+            GROUP BY a.user_id '
         );
-        $stmt->execute(array(
-            "quiz_id" => $quiz_id
-        ));
+        $stmt->execute([
+            'quiz_id' => $quiz_id,
+        ]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $stmt = $this->db->prepare(
-            "DELETE FROM answer WHERE id = :id"
+            'DELETE FROM answer WHERE id = :id'
         );
-        $stmt->execute(array("id" => $id));
+        $stmt->execute(['id' => $id]);
     }
 
     /**
-    * The functions below are all to retrieve data for the quiz statistics pages
-    */
-    function offeringPossible($offering_id) : array
+     * The functions below are all to retrieve data for the quiz statistics pages
+     */
+    public function offeringPossible($offering_id): array
     {
         $stmt = $this->db->prepare(
-            "SELECT d.abbr,
+            'SELECT d.abbr,
                 SUM(quest.points) AS points
             FROM question AS quest
             JOIN quiz AS q ON quest.quiz_id = q.id
             JOIN day AS d ON q.day_id = d.id
             WHERE d.offering_id = :offering_id
-            GROUP BY d.id"
+            GROUP BY d.id'
         );
         $stmt->execute([
-            "offering_id" => $offering_id
+            'offering_id' => $offering_id,
         ]);
 
         $data = [];
@@ -187,10 +206,10 @@ class AnswerDao
         return $data;
     }
 
-    function offeringAverages($offering_id) : array
+    public function offeringAverages($offering_id): array
     {
         $stmt = $this->db->prepare(
-            "SELECT d.abbr,
+            'SELECT d.abbr,
                 COUNT(DISTINCT ans.user_id) AS users,
                 SUM(ans.points) / COUNT(DISTINCT ans.user_id) AS points
             FROM answer AS ans
@@ -198,10 +217,10 @@ class AnswerDao
             JOIN quiz AS q ON quest.quiz_id = q.id
             JOIN day AS d ON q.day_id = d.id
             WHERE d.offering_id = :offering_id
-            GROUP BY d.id"
+            GROUP BY d.id'
         );
         $stmt->execute([
-            "offering_id" => $offering_id
+            'offering_id' => $offering_id,
         ]);
 
         $data = [];
@@ -212,10 +231,10 @@ class AnswerDao
         return $data;
     }
 
-    function offeringPerson($offering_id, $user_id)
+    public function offeringPerson($offering_id, $user_id)
     {
         $stmt = $this->db->prepare(
-            "SELECT d.abbr,
+            'SELECT d.abbr,
                 SUM(ans.points) AS points
             FROM answer AS ans
             JOIN question AS quest ON ans.question_id = quest.id
@@ -223,11 +242,11 @@ class AnswerDao
             JOIN day AS d ON q.day_id = d.id
             WHERE d.offering_id = :offering_id
             AND ans.user_id = :user_id
-            GROUP BY d.id"
+            GROUP BY d.id'
         );
         $stmt->execute([
-            "offering_id" => $offering_id,
-            "user_id" => $user_id
+            'offering_id' => $offering_id,
+            'user_id' => $user_id,
         ]);
 
         $data = [];
@@ -238,7 +257,7 @@ class AnswerDao
         return $data;
     }
 
-    function offeringUsers($offering_id) 
+    public function offeringUsers($offering_id)
     {
         $stmt = $this->db->prepare(
             "SELECT ans.user_id, SUM(ans.points) AS points
@@ -265,7 +284,7 @@ class AnswerDao
         return $userPoints;
     }
 
-    function dayUsers($offering_id, $day) : array
+    public function dayUsers($offering_id, $day): array
     {
         $stmt = $this->db->prepare(
             "SELECT ans.user_id, SUM(ans.points) AS points

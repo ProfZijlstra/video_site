@@ -124,6 +124,15 @@ class QuestionDao
         ]);
     }
 
+    public function deleteForQuiz($quiz_id)
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM question
+            WHERE quiz_id = :quiz_id'
+        );
+        $stmt->execute(['quiz_id' => $quiz_id]);
+    }
+
     /**
      * Clones all questions for a quiz, adding them to the new quiz
      */

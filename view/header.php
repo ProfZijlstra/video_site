@@ -13,11 +13,13 @@
         <a href="<?= $MY_BASE ?>/">
             <i class="fa-solid fa-flask-vial" title="Manalabs Videos"></i>&nbsp;
         </a>
+        <?php if (isset($course) && $course) { ?>
         <a title="Back to Course Overview" href="<?= $MY_BASE ?>/<?= strtolower($course ?: '') ?>/<?= $block ?>/">
             <span id="course_num"><?= strtoupper($course ?: '') ?></span>
             <span data-id="<?= $offering_id ?>" id="offering"> <?= $block ?> </span>
             <i class="fa-regular fa-calendar"></i>
         </a>
+        <?php } ?>
     </div>
     <h1>
         <span class="title">

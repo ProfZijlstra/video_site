@@ -8,8 +8,8 @@
 #[Controller]
 class AttendanceCtrl
 {
-    #[Inject('OverviewHlpr')]
-    public $overviewCtr;
+    #[Inject('OverviewCtrl')]
+    public $overviewCtrl;
 
     #[Inject('ClassSessionDao')]
     public $classSessionDao;
@@ -44,20 +44,70 @@ class AttendanceCtrl
     #[Inject('UserDao')]
     public $userDao;
 
-    /**
-     * This function is really two in one. If the user is a student, or a user_id
-     * is provided as a query parameter, it will show the student's attendance overview.
-     *
-     * If the user is an instructor or assistant, it will show the attendance overview.
-     */
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$", sec: 'student')]
-    public function overview()
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance$", sec: 'instructor')]
+    public function overview(): string
     {
         global $VIEW_DATA;
 
         // We're building on top of  overview -- run it first
         // this populates $VIEW_DATA with the overview related data
-        $this->overviewCtr->overview();
+        $this->overviewCtrl->overview();
+
+        $offering_id = $VIEW_DATA['offering_id'];
+        $days = $VIEW_DATA['days'];
+        $course = $VIEW_DATA['course'];
+        $block = $VIEW_DATA['block'];
+
+        // get sessions for these days
+        $sessions = $this->classSessionDao->allForOffering($offering_id);
+        foreach ($sessions as $session) {
+            $session['meetings'] = [];
+            $days[$session['abbr']][$session['type']] = $session;
+            $days[$session['abbr']][$session['type']]['meetings'] = [];
+        }
+
+        // Add attendance data
+        $meetings = $this->meetingDao->allForOffering($offering_id);
+        foreach ($meetings as $meeting) {
+            $days[$meeting['abbr']][$meeting['stype']]['meetings'][] = $meeting;
+        }
+
+        $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
+        $excused_raw = $this->excusedDao->allForOffering($offering_id);
+        $excused = [];
+        foreach ($excused_raw as $student) {
+            if (! isset($excused[$student['class_session_id']])) {
+                $excused[$student['class_session_id']] = [];
+            }
+            $excused[$student['class_session_id']][] = $student;
+        }
+        $defaults = $this->AttendanceConfigDao->byId($offering_id);
+
+        $VIEW_DATA['title'] = 'Attendance';
+        $VIEW_DATA['area'] = 'attendance';
+        $VIEW_DATA['enrollment'] = $enrollment;
+        $VIEW_DATA['excused'] = $excused;
+        $VIEW_DATA['defaults'] = $defaults;
+        $VIEW_DATA['days'] = $days;
+
+        return 'attendance/attendance.php';
+    }
+
+    /**
+     * This function is really two in one.
+     *
+     * Normal students get to see their own stats
+     *
+     * Faculty can view stats for a given user_id
+     **/
+    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/chart$", sec: 'student')]
+    public function stats(): string
+    {
+        global $VIEW_DATA;
+
+        // We're building on top of  overview -- run it first
+        // this populates $VIEW_DATA with the overview related data
+        $this->overviewCtrl->overview();
 
         $offering_id = $VIEW_DATA['offering_id'];
         $days = $VIEW_DATA['days'];
@@ -91,57 +141,33 @@ class AttendanceCtrl
 
         $VIEW_DATA['title'] = 'Attendance';
         $VIEW_DATA['area'] = 'attendance';
-        if ($auth['auth'] == 'student') {
-            // get user data
-            $user = $this->userDao->retrieve($user_id);
-            $teamsName = $user['teamsName'];
-            $attendance = $this->attendanceDao->getStudentOffering($teamsName, $offering_id);
-            foreach ($attendance as $meeting) {
-                $days[$meeting['abbr']][$meeting['stype']]['meetings'][] = $meeting;
-            }
 
-            if ($isFaculty) {
-                $VIEW_DATA['title'] = "Attendance for {$user['knownAs']} {$user['lastname']}";
-            } else {
-                $VIEW_DATA['title'] = 'My Attendance';
-            }
-            $VIEW_DATA['days'] = $days;
-
-            // show the student view:
-            // red is absent
-            // green is present
-            // orange is late, middle missing, or left early
-            // blue is excused
-            return 'attendance/studentOverview.php';
-        }
-
-        // Add attendance data
-        $meetings = $this->meetingDao->allForOffering($offering_id);
-        foreach ($meetings as $meeting) {
+        // get user data
+        $user = $this->userDao->retrieve($user_id);
+        $teamsName = $user['teamsName'];
+        $attendance = $this->attendanceDao->getStudentOffering($teamsName, $offering_id);
+        foreach ($attendance as $meeting) {
             $days[$meeting['abbr']][$meeting['stype']]['meetings'][] = $meeting;
         }
 
-        $enrollment = $this->enrollmentDao->getEnrollmentForOffering($offering_id);
-        $excused_raw = $this->excusedDao->allForOffering($offering_id);
-        $excused = [];
-        foreach ($excused_raw as $student) {
-            if (! isset($excused[$student['class_session_id']])) {
-                $excused[$student['class_session_id']] = [];
-            }
-            $excused[$student['class_session_id']][] = $student;
+        if ($isFaculty) {
+            $VIEW_DATA['title'] = "Attendance for {$user['knownAs']} {$user['lastname']}";
+        } else {
+            $VIEW_DATA['title'] = 'My Attendance';
         }
-        $defaults = $this->AttendanceConfigDao->byId($offering_id);
-
-        $VIEW_DATA['enrollment'] = $enrollment;
-        $VIEW_DATA['excused'] = $excused;
-        $VIEW_DATA['defaults'] = $defaults;
+        // replace days with updated data
         $VIEW_DATA['days'] = $days;
 
-        return 'attendance/attendance.php';
+        // show the student view:
+        // red is absent
+        // green is present
+        // orange is late, middle missing, or left early
+        // blue is excused
+        return 'attendance/studentOverview.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/config$", sec: 'assistant')]
-    public function getConfig()
+    public function getConfig(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -177,7 +203,7 @@ class AttendanceCtrl
      * Expects AJAX
      */
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/defaults$", sec: 'assistant')]
-    public function updateDefaults()
+    public function updateDefaults(): void
     {
         global $URI_PARAMS;
 
@@ -204,7 +230,7 @@ class AttendanceCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/config$", sec: 'assistant')]
-    public function updateConfig()
+    public function updateConfig(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -255,7 +281,7 @@ class AttendanceCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/excuse$", sec: 'assistant')]
-    public function excuseAbsence()
+    public function excuseAbsence(): string
     {
         $session_id = filter_input(INPUT_POST, 'session_id', FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, 'teamsName');
@@ -269,7 +295,7 @@ class AttendanceCtrl
      * Expects AJAX
      */
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/delExcuse$", sec: 'assistant')]
-    public function deleteExcuse()
+    public function deleteExcuse(): void
     {
         $session_id = filter_input(INPUT_POST, 'session_id', FILTER_SANITIZE_NUMBER_INT);
         $teamsName = filter_input(INPUT_POST, 'teamsName');
@@ -277,7 +303,7 @@ class AttendanceCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)$", sec: 'assistant')]
-    public function physicalAttendanceReport()
+    public function physicalAttendanceReport(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -300,7 +326,7 @@ class AttendanceCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/professionalism$", sec: 'assistant')]
-    public function professionalismReport()
+    public function professionalismReport(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -343,6 +369,12 @@ class AttendanceCtrl
         return 'attendance/professionalism.php';
     }
 
+    /**
+     * Sort by total seconds
+     *
+     * @param  array  $a
+     * @param  array  $b
+     */
     private static function byTotal($a, $b): int
     {
         return $a['totalSecs'] - $b['totalSecs'];
@@ -352,7 +384,7 @@ class AttendanceCtrl
      * Expects AJAX
      */
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/physical/(W\d+)/email$", sec: 'assistant')]
-    public function emailLowPhysical()
+    public function emailLowPhysical(): void
     {
         global $URI_PARAMS;
 
@@ -389,7 +421,7 @@ Manalabs Attendance System.
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/(AM|PM|SAT)$", sec: 'assistant')]
-    public function exportReport()
+    public function exportReport(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -432,7 +464,7 @@ Manalabs Attendance System.
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/(W\d+D\d+)/export$", sec: 'instructor')]
-    public function export()
+    public function export(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -500,14 +532,22 @@ Manalabs Attendance System.
      * Expects AJAX
      */
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/attendance/W[1-4]D[1-6]/(AM|PM|SAT)/(\d+)$", sec: 'assistant')]
-    public function updateExportRow()
+    public function updateExportRow(): void
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         $this->attendanceExportDao->update($data);
     }
 
-    private function generateExportReport($session_id)
+    /**
+     * Generate the export report for a class session
+     *
+     * This is called after the attendance has been taken, and it will generate
+     * the export report for the session.
+     *
+     * @param  int  $session_id
+     */
+    private function generateExportReport($session_id): void
     {
         // update session with status, start, stop, meetings
         $stats = $this->classSessionDao->calcStatus($session_id);
@@ -561,7 +601,12 @@ Manalabs Attendance System.
         $this->attendanceExportDao->create($session_id, $exports);
     }
 
-    private function getStatus($attendant)
+    /**
+     * Get the status of the attendant
+     *
+     * @param  array  $attendant
+     */
+    private function getStatus($attendant): string
     {
         if ($attendant['excused']) {
             return 'Excused';
@@ -578,7 +623,12 @@ Manalabs Attendance System.
         }
     }
 
-    private function getComment($attendant)
+    /**
+     * Get comment for the attendant
+     *
+     * @param  array  $attendant
+     */
+    private function getComment($attendant): string
     {
         $comments = [];
         if ($attendant['excused']) {
@@ -604,7 +654,12 @@ Manalabs Attendance System.
         return implode(', ', $comments);
     }
 
-    private function timePos($time)
+    /**
+     * Get the position of the first non-zero character in a time string
+     *
+     * @param  string  $time
+     */
+    private function timePos($time): int
     {
         $i = 0;
         while ($time[$i] == '0' || $time[$i] == ':') {

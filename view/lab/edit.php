@@ -19,7 +19,7 @@
     <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../../lab">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>

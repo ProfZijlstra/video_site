@@ -107,7 +107,7 @@
                                     <i class="fa-solid fa-gear config" title="Configure Enrollment" data-uid="<?= $person['id'] ?>" data-auth="<?= $person['auth'] ?>" data-eid="<?= $person['eid'] ?>"></i>
                                 </td>
                                 <td class="center" title="Attendance">
-                                    <a href="attendance?user_id=<?= $person['id'] ?>">
+                                    <a href="attendance/chart?user_id=<?= $person['id'] ?>">
                                         <i class="fa-solid fa-user-check"></i>
                                     </a>
                                 </td>

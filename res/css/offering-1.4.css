@@ -11,21 +11,21 @@ div#days {
     }
 }
 div#days div.data {
-    cursor: pointer;
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     min-height: 8vw;
     width: 8vw;
     padding: 15px;
-    text-align: center;
     position: relative;
     background: linear-gradient(to bottom, #eee 0%,#ddd 100%);
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 div#days div.data a {
-    width: 100%;
+    font-size: 125%;
+}
+div#days div.data a.invisible {
+    color: var(--light-gray);
 }
 div#days div.data.w1 {
     border-top: 1px solid var(--border);
@@ -39,14 +39,25 @@ div#days div.data.done {
 div#days div.data.curr {
     background: linear-gradient(to bottom, #ffc 0%,#cca 100%); 
 }
+div.data i.fa-square-plus {
+    position: absolute;
+    bottom: 45px;
+    left: 10px;
+}
+div.data div.icons {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
 div.data time {
     display: block;
     font-size: 75%;
     position: absolute;
-    left: 0px;
+    right: 6px;
     bottom: 3px;
-    width: 100%;
-    text-align: center;
+    span.date {
+        font-size: 175%;
+    }
 }
 div.data .users {
     position: absolute;
@@ -91,6 +102,10 @@ div#days.lab div.data i.fa-plus-square {
     width: auto;
 }
 
+dialog#add_modal h3 select {
+    width: inherit;
+    height: inherit;
+}
 #add_modal {
     width: 425px;
 }
@@ -100,7 +115,7 @@ div#days.lab div.data i.fa-plus-square {
     width: 150px;
 }
 
-#add_modal input#name {
+#add_modal input.name {
     width: 310px;
 }
 

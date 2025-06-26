@@ -24,12 +24,20 @@ window.addEventListener("load", () => {
     <?php include 'header.php'; ?>
     <main>
         <nav id="back" class="back" title="Back">
-            <a href="../../lab">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
         <?php include 'areas.php'; ?>
         <nav class="tools">
+            <?php if (hasMinAuth('instructor')) { ?>
+                <a href="edit">
+                    <i title="Configure Lab" class="fa-solid fa-gear"></i>
+                </a>
+                <a href="grade">
+                    <i title="Grade Lab" class="fa-solid fa-magnifying-glass"></i>
+                </a>
+            <?php } ?>
         </nav>
         <div id="content">
             <div id="total2" class="done">

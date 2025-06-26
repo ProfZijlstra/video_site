@@ -17,9 +17,6 @@ class VideoCtrl
     #[Inject('DayDao')]
     public $dayDao;
 
-    #[Inject('EnrollmentDao')]
-    public $enrollmentDao;
-
     #[Inject('CommentDao')]
     public $commentDao;
 
@@ -29,12 +26,6 @@ class VideoCtrl
     #[Inject('VideoDao')]
     public $videoDao;
 
-    #[Inject('OverviewHlpr')]
-    public $overviewHlpr;
-
-    #[Inject('UserDao')]
-    public $userDao;
-
     #[Inject('PdfDao')]
     public $pdfDao;
 
@@ -42,70 +33,16 @@ class VideoCtrl
     public $lessonPartDao;
 
     /**
-     * Redirects to latest offering for a course
-     */
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/?$", sec: 'observer')]
-    public function loggedIn()
-    {
-        global $URI_PARAMS;
-        global $MY_BASE;
-
-        $course_num = $URI_PARAMS[1];
-        $user_id = $_SESSION['user']['id'];
-
-        // check enrollment
-        $enrolled = $this->enrollmentDao->getEnrollmentForStudent($user_id);
-        $offering = $this->offeringDao->getOfferingById($enrolled['offering_id']);
-        $course = $offering['course_number'];
-        if ($enrolled && $course_num == $course) {
-            $block = $offering['block'];
-
-            return "Location: $MY_BASE/{$course}/{$block}/";
-        } else {
-            // default to latest offering
-            $data = $this->offeringDao->getLatestForCourse($course_num);
-
-            return "Location: $MY_BASE/{$data['number']}/{$data['block']}/";
-        }
-    }
-
-    /**
      * If the URL doesn't contain a video selection, just a day
      */
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/([A-Z][1-4][A-Z][1-7])/$", sec: 'observer')]
-    public function only_day()
+    public function only_day(): string
     {
         return 'Location: 01';
     }
 
-    #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/$", sec: 'observer')]
-    public function overview()
-    {
-        // We're building on top of  overview -- run it first
-        // this populates $VIEW_DATA with the overview related data
-        $this->overviewHlpr->overview();
-
-        global $URI_PARAMS;
-        global $VIEW_DATA;
-
-        $course_num = $URI_PARAMS[1];
-        $course_detail = $this->courseDao->getCourse($course_num);
-
-        if (! $course_detail) {
-            return 'error/404.php';
-        }
-
-        $VIEW_DATA['course'] = strtoupper($course_num);
-        $VIEW_DATA['title'] = $course_detail['name'];
-        $VIEW_DATA['area'] = 'course';
-        $VIEW_DATA['faculty'] = $this->userDao->faculty();
-        $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
-
-        return 'course/overview.php';
-    }
-
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/(\d{2})$", sec: 'observer')]
-    public function video()
+    public function video(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -199,7 +136,7 @@ class VideoCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/title$", sec: 'instructor')]
-    public function title()
+    public function title(): void
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];
@@ -221,7 +158,7 @@ class VideoCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/add$", sec: 'instructor')]
-    public function addLessonPart()
+    public function addLessonPart(): string
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];
@@ -233,7 +170,7 @@ class VideoCtrl
         if (strpos($title, '_') !== false) {
             http_response_code(400);
 
-            return;
+            return '';
         }
         $res = $this->lessonPartDao->add($course_num, $block, $day, $title);
         if ($res == false) {
@@ -244,7 +181,7 @@ class VideoCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/delete$", sec: 'instructor')]
-    public function deleteLessonPart()
+    public function deleteLessonPart(): string
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];
@@ -261,7 +198,7 @@ class VideoCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/reorder$", sec: 'instructor')]
-    public function reorderLessonParts()
+    public function reorderLessonParts(): void
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];
@@ -277,7 +214,7 @@ class VideoCtrl
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/upload$", sec: 'instructor')]
-    public function uploadVidPdf()
+    public function uploadVidPdf(): string
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];
@@ -288,7 +225,7 @@ class VideoCtrl
         if ($_FILES['file']['error']) {
             echo 'Error uploading file (exceeded max file size?)';
 
-            return;
+            return '';
         }
 
         $file = $_FILES['file']['tmp_name'];
@@ -309,13 +246,13 @@ class VideoCtrl
         } else {
             echo 'Uploaded file does not appear to be a video or pdf';
 
-            return;
+            return '';
         }
 
     }
 
     #[Post(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/reencode$", sec: 'instructor')]
-    public function reencode()
+    public function reencode(): void
     {
         global $URI_PARAMS;
         $course_num = $URI_PARAMS[1];

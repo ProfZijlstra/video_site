@@ -15,7 +15,7 @@
     <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../../lab">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
@@ -51,7 +51,7 @@
                     <?php foreach ($absent as $student) { ?>
                         <tr>
                             <td>
-                                <?php if ($lab['type'] == 'individual') { ?>
+                                <?php if (strtolower($lab['type']) == 'individual') { ?>
                                 <a href="user/<?= $student['id'] ?>">
                                     <?= $student['knownAs'] ?> <?= $student['lastname'] ?>
                                 </a>

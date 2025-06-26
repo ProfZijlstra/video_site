@@ -1,9 +1,5 @@
 window.addEventListener('load', () => {
-    // Instructor part of the code
     const cloneDialog = document.getElementById('cloneDialog');
-    if (!cloneDialog) {
-        return;
-    }
     function clickClone() {
         const parent = this.closest('div.offering');
         cloneDialog.querySelector('input[name="offering_id"]').value =
@@ -14,10 +10,7 @@ window.addEventListener('load', () => {
         document.getElementById('daysPerLesson').value = parent.dataset.daysperlesson;
         document.getElementById('lessonsPerPart').value = parent.dataset.lessonsperpart;
         document.getElementById('parts').value = parent.dataset.lessonparts;
-        document.getElementById('hasQuiz').checked = parent.dataset.hasquiz;
-        document.getElementById('hasLab').checked = parent.dataset.haslab;
         document.getElementById('showDates').checked = parent.dataset.showdates;
-        document.getElementById('usesFlowcharts').checked = parent.dataset.usesflowcharts;
 
         cloneDialog.showModal();
     }

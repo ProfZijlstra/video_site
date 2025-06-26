@@ -59,7 +59,7 @@ window.addEventListener("load", () => {
             })
                 .then(htmlOrError("Deleting lab failed (probably has submissions)."))
                 .then(() => {
-                    window.location = "../../lab";
+                    window.location = "../../";
                 })
                 .catch(alertError);
         }

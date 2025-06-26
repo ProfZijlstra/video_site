@@ -30,15 +30,20 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../lab">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <nav class="tools">
+            <?php if (hasMinAuth('instructor')) { ?>
+                <a href="edit">
+                    <i title="Configure Lab" class="fa-solid fa-gear"></i>
+                </a>
+            <?php } ?>
         </nav>
         <div id="content">
             <h1>Lab: <?= $lab['name'] ?></h1>
@@ -51,7 +56,7 @@
             <div id="countdown">
                 <div>Start in <span id="days"><?= $start->days ?></span> day(s)</div>
                 <div>
-                    and <span id="hours"><?= $start->format("%H") ?></span>:<span id="minutes"><?= $start->format("%I") ?></span>:<span id="seconds"><?= $start->format("%S") ?></span>
+                    and <span id="hours"><?= $start->format('%H') ?></span>:<span id="minutes"><?= $start->format('%I') ?></span>:<span id="seconds"><?= $start->format('%S') ?></span>
                 </div>
             </div>
         </div>

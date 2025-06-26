@@ -26,9 +26,19 @@ window.addEventListener("load", () => {
     <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../../quiz">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
+        </nav>
+        <nav class="tools">
+            <?php if (hasMinAuth('instructor')) { ?>
+            <a href="edit">
+                <i title="Configure Quiz" class="fa-solid fa-gear"></i>
+            </a>
+            <a href="grade">
+                <i title="Grade Quiz" class="fa-solid fa-magnifying-glass"></i>
+            </a>
+            <?php } ?>
         </nav>
         <?php include 'areas.php'; ?>
         <div id="content">

@@ -660,3 +660,8 @@ UPDATE attendance_config SET tz_offset = '00:00';
 
 -- 31 mar 2025
 ALTER TABLE zip_ul_check MODIFY `file` varchar(255) DEFAULT NULL;
+
+-- 26 jun 2025
+ALTER TABLE `offering` DROP COLUMN `hasLab`;
+ALTER TABLE `offering` DROP COLUMN `hasQuiz`;
+ALTER TABLE `offering` DROP COLUMN `usesFlowcharts`;

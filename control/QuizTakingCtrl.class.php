@@ -39,7 +39,7 @@ class QuizTakingCtrl
      * 3. If between start and stop the user can give answers
      */
     #[Get(uri: "/(\d+)(/(\d+))?$", sec: 'student')]
-    public function viewQuiz()
+    public function viewQuiz(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -126,7 +126,7 @@ class QuizTakingCtrl
      * Expects AJAX
      */
     #[Post(uri: "/(\d+)/question/(\d+)/text$", sec: 'student')]
-    public function answerTextQuestion()
+    public function answerTextQuestion(): array
     {
         global $URI_PARAMS;
 
@@ -161,7 +161,7 @@ class QuizTakingCtrl
      * Expects AJAX
      **/
     #[Post(uri: "/(\d+)/question/(\d+)/image$", sec: 'student')]
-    public function answerImageQuestion()
+    public function answerImageQuestion(): array
     {
         global $URI_PARAMS;
 
@@ -214,7 +214,7 @@ class QuizTakingCtrl
      * Expects AJAX
      **/
     #[Post(uri: "/(\d+)/question/(\d+)/picture$", sec: 'student')]
-    public function takePicture()
+    public function takePicture(): array
     {
         global $URI_PARAMS;
 
@@ -259,7 +259,7 @@ class QuizTakingCtrl
     }
 
     #[Post(uri: "/(\d+)/finish$", sec: 'student')]
-    public function finishQuiz()
+    public function finishQuiz(): string
     {
         global $URI_PARAMS;
 
@@ -267,14 +267,14 @@ class QuizTakingCtrl
         $user_id = $_SESSION['user']['id'];
         $this->quizEventDao->add($quiz_id, $user_id, 'stop');
 
-        return 'Location: ../../quiz';
+        return 'Location: ../../';
     }
 
     /**
      * Expects AJAX
      */
     #[Delete(uri: "/(\d+)/delivery/(\d+)$", sec: 'student')]
-    public function deletePicture()
+    public function deletePicture(): array
     {
         global $URI_PARAMS;
 
@@ -294,7 +294,7 @@ class QuizTakingCtrl
         return ['success' => true];
     }
 
-    private function quizEnded($quiz_id, $leewaySecs = 0)
+    private function quizEnded($quiz_id, $leewaySecs = 0): bool
     {
         $quiz = $this->quizDao->byId($quiz_id);
         $tz = new DateTimeZone(TIMEZONE);
@@ -307,7 +307,12 @@ class QuizTakingCtrl
         return $stopDiff->invert == 1; // is it in the past?
     }
 
-    private function sumPoints($array)
+    /**
+     * Sums the points of the given array
+     *
+     * @param  array  $array
+     */
+    private function sumPoints($array): int
     {
         $result = 0;
         foreach ($array as $item) {

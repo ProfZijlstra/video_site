@@ -44,10 +44,7 @@
                     data-daysperlesson="<?= $offering['daysPerLesson'] ?>"
                     data-lessonsperpart="<?= $offering['lessonsPerPart'] ?>"
                     data-lessonparts="<?= $offering['lessonParts'] ?>"
-                    data-hasquiz="<?= $offering['hasQuiz'] ?>"
-                    data-haslab="<?= $offering['hasLab'] ?>"
                     data-showdates="<?= $offering['showDates'] ?>"
-                    data-usesflowcharts="<?= $offering['usesFlowcharts'] ?>"
                     >
                     <a href="<?= $offering['number'].'/'.$offering['block'].'/' ?>">
                         <span class="number"><?= strtoupper($offering['number']) ?></span>
@@ -107,24 +104,9 @@
                 </div>
                 <div class="indent">
                     <label class="checkbox">
-                        <input id="hasQuiz" type="checkbox" name="hasQuiz" value="1"  />
-                        Has Quiz
-                    </label>
-                    <label class="checkbox">
-                        <input id="hasLab" type="checkbox" name="hasLab" value="1"  />
-                        Has Lab
-                    </label>
-                    <label class="checkbox">
                         <input id="showDates" type="checkbox" name="showDates" value="1"  />
                         Show Dates
                     </label>
-                    <label class="checkbox">
-                        <input id="usesFlowcharts" type="checkbox" name="usesFlowcharts" value="1"  />
-                        Flowcharts
-                    </label>
-
-                </div>
-                <div class="indent">
                     <label class="checkbox">
                         <input type="checkbox" name="cloneFiles" value="1" checked />
                         Clone Public Files

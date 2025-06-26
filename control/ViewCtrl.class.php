@@ -59,7 +59,7 @@ class ViewCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/chart$", sec: 'observer')]
-    public function myOverviewStats()
+    public function myOverviewStats(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -74,7 +74,7 @@ class ViewCtrl
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/chart/(\d+)$", sec: 'instructor')]
-    public function studentOverviewStats()
+    public function studentOverviewStats(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -89,6 +89,10 @@ class ViewCtrl
         return $this->overviewStats($user_id);
     }
 
+    /** * Helper function for overview (used both by general overview and attendance)
+     *
+     * @param  int  $user_id
+     */
     private function overviewStats($user_id): string
     {
         global $URI_PARAMS;
@@ -137,7 +141,7 @@ class ViewCtrl
         $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
 
-        return 'course/view/offeringStats.php';
+        return 'stat/offeringStats.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/userChart$", sec: 'instructor')]
@@ -183,7 +187,7 @@ class ViewCtrl
         $VIEW_DATA['views'] = $views;
         $VIEW_DATA['no_view'] = $no_view;
 
-        return 'course/view/userStats.php';
+        return 'stat/userStats.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/data$", sec: 'instructor')]
@@ -211,7 +215,7 @@ class ViewCtrl
         $VIEW_DATA['data'] = $data;
         $VIEW_DATA['users'] = $users;
 
-        return 'course/view/data.php';
+        return 'stat/data.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/chart$", sec: 'observer')]
@@ -245,6 +249,11 @@ class ViewCtrl
         return $this->dayStats($user_id);
     }
 
+    /**
+     * Helper function for day stats
+     *
+     * @param  int  $user_id
+     */
     private function dayStats($user_id): string
     {
         global $URI_PARAMS;
@@ -296,7 +305,7 @@ class ViewCtrl
         $VIEW_DATA['course'] = $course_num;
         $VIEW_DATA['block'] = $block;
 
-        return 'course/view/dayStats.php';
+        return 'stat/dayStats.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/userChart$", sec: 'instructor')]
@@ -344,7 +353,7 @@ class ViewCtrl
         $VIEW_DATA['views'] = $views;
         $VIEW_DATA['no_view'] = $no_view;
 
-        return 'course/view/userStats.php';
+        return 'stat/userStats.php';
     }
 
     #[Get(uri: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/(W\dD\d)/data$", sec: 'instructor')]
@@ -373,6 +382,6 @@ class ViewCtrl
         $VIEW_DATA['data'] = $data;
         $VIEW_DATA['users'] = $users;
 
-        return 'course/view/data.php';
+        return 'stat/data.php';
     }
 }

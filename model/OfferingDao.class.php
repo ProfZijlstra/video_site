@@ -22,9 +22,9 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT * FROM offering
-			WHERE course_number = :course_number 
-			AND active = 1
-			AND block = :block'
+            WHERE course_number = :course_number 
+            AND active = 1
+            AND block = :block'
         );
         $stmt->execute(['course_number' => $course_number, 'block' => $block]);
 
@@ -41,9 +41,9 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT * 
-			FROM offering
-			WHERE id = :id
-			AND active = 1'
+            FROM offering
+            WHERE id = :id
+            AND active = 1'
         );
         $stmt->execute(['id' => $id]);
 
@@ -59,12 +59,12 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT * 
-			FROM offering AS o
-			JOIN course AS c ON o.course_number = c.number
-			WHERE o.active = 1
-			ORDER BY o.block DESC
-			LIMIT 1
-			'
+            FROM offering AS o
+            JOIN course AS c ON o.course_number = c.number
+            WHERE o.active = 1
+            ORDER BY o.block DESC
+            LIMIT 1
+            '
         );
         $stmt->execute();
 
@@ -81,13 +81,13 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT * 
-			FROM offering AS o
-			JOIN course AS c ON o.course_number = c.number
-			WHERE o.course_number = :course_number
-			AND o.active = 1
-			ORDER BY o.block DESC
-			LIMIT 1
-			'
+            FROM offering AS o
+            JOIN course AS c ON o.course_number = c.number
+            WHERE o.course_number = :course_number
+            AND o.active = 1
+            ORDER BY o.block DESC
+            LIMIT 1
+            '
         );
         $stmt->execute(['course_number' => $course_num]);
 
@@ -103,12 +103,12 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT c.number, c.name, o.block, o.id,
-			o.daysPerLesson, o.lessonsPerPart, o.lessonParts,
-			o.hasQuiz, o.hasLab, o.showDates, o.usesFlowcharts
-			FROM offering AS o 
-			JOIN course AS c ON c.number = o.course_number
-			WHERE o.active = 1
-			ORDER BY o.block DESC'
+            o.daysPerLesson, o.lessonsPerPart, 
+            o.lessonParts, o.showDates
+            FROM offering AS o 
+            JOIN course AS c ON c.number = o.course_number
+            WHERE o.active = 1
+            ORDER BY o.block DESC'
         );
         $stmt->execute();
 
@@ -119,14 +119,14 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT c.number, c.name, o.block, o.id,
-			o.daysPerLesson, o.lessonsPerPart, o.lessonParts, 
-			o.hasQuiz, o.hasLab, o.showDates, o.usesFlowcharts
-			FROM offering AS o 
-			JOIN course AS c ON c.number = o.course_number
-			JOIN enrollment AS e ON o.id = e.offering_id
-			WHERE e.user_id = :user_id
-			AND o.active = 1
-			ORDER BY o.block DESC'
+            o.daysPerLesson, o.lessonsPerPart, o.lessonParts, 
+            o.showDates
+            FROM offering AS o 
+            JOIN course AS c ON c.number = o.course_number
+            JOIN enrollment AS e ON o.id = e.offering_id
+            WHERE e.user_id = :user_id
+            AND o.active = 1
+            ORDER BY o.block DESC'
         );
         $stmt->execute(['user_id' => $user_id]);
 
@@ -137,9 +137,9 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT * FROM offering 
-			WHERE course_number = :course_num 
-			AND active = 1
-			ORDER BY `block`'
+            WHERE course_number = :course_num 
+            AND active = 1
+            ORDER BY `block`'
         );
         $stmt->execute(['course_num' => $course_num]);
 
@@ -155,11 +155,11 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'SELECT MAX(id) AS id, course_number, MAX(`block`) AS `block`, 
-			MAX(`start`) AS start, MAX(`stop`) as `stop` 
-			FROM offering
-			WHERE active = 1
-			GROUP BY course_number
-		'
+            MAX(`start`) AS start, MAX(`stop`) as `stop` 
+            FROM offering
+            WHERE active = 1
+            GROUP BY course_number
+            '
         );
         $stmt->execute();
 
@@ -176,16 +176,13 @@ class OfferingDao
         $daysPerLesson,
         $lessonsPerPart,
         $lessonParts,
-        $hasQuiz,
-        $hasLab,
         $showDates,
-        $usesFlowcharts,
-    ) {
+    ): int {
         $stmt = $this->db->prepare(
             'INSERT INTO offering 
-			VALUES(NULL, :course_number, :block, :start,
-					:daysPerLesson, :lessonsPerPart, :lessonParts, 
-					:hasQuiz, :hasLab, 1, :showDates, :usesFlowcharts)'
+            VALUES(NULL, :course_number, :block, :start,
+            :daysPerLesson, :lessonsPerPart, :lessonParts, 
+            1, :showDates)'
         );
         $stmt->execute([
             'course_number' => $course_number,
@@ -194,10 +191,7 @@ class OfferingDao
             'daysPerLesson' => $daysPerLesson,
             'lessonsPerPart' => $lessonsPerPart,
             'lessonParts' => $lessonParts,
-            'hasQuiz' => $hasQuiz,
-            'hasLab' => $hasLab,
             'showDates' => $showDates,
-            'usesFlowcharts' => $usesFlowcharts,
         ]);
 
         return $this->db->lastInsertId();
@@ -213,18 +207,15 @@ class OfferingDao
         $daysPerLesson,
         $lessonsPerPart,
         $lessonParts,
-        $hasQuiz,
-        $hasLab,
         $showDates,
-        $usesFlowcharts,
-    ) {
+    ): void {
         $stmt = $this->db->prepare(
             'UPDATE offering 
-			SET `block` = :block, `start` = :start, 
-			daysPerLesson = :daysPerLesson, lessonsPerPart = :lessonsPerPart,
-			lessonParts = :lessonParts, hasQuiz = :hasQuiz, hasLab = :hasLab,
-			showDates = :showDates, usesFlowcharts = :usesFlowcharts
-			WHERE id = :id'
+            SET `block` = :block, `start` = :start, 
+            daysPerLesson = :daysPerLesson, lessonsPerPart = :lessonsPerPart,
+            lessonParts = :lessonParts, 
+            showDates = :showDates
+            WHERE id = :id'
         );
         $stmt->execute([
             'id' => $id,
@@ -233,10 +224,7 @@ class OfferingDao
             'daysPerLesson' => $daysPerLesson,
             'lessonsPerPart' => $lessonsPerPart,
             'lessonParts' => $lessonParts,
-            'hasQuiz' => $hasQuiz,
-            'hasLab' => $hasLab,
             'showDates' => $showDates,
-            'usesFlowcharts' => $usesFlowcharts,
         ]);
     }
 
@@ -247,8 +235,8 @@ class OfferingDao
     {
         $stmt = $this->db->prepare(
             'UPDATE offering 
-			SET `active` = 0
-			WHERE id = :id'
+            SET `active` = 0
+            WHERE id = :id'
         );
         $stmt->execute(['id' => $id]);
     }

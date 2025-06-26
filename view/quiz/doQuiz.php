@@ -28,6 +28,14 @@
         <nav class="tools">
             <h3><span id="hours"><?= $stop->format('%H') ?></span>:<span id="minutes"><?= $stop->format('%I') ?></span>:<span id="seconds"><?= $stop->format('%S') ?></span></h3>
             <div class="icons">
+                <?php if (hasMinAuth('instructor')) { ?>
+                <a href="edit">
+                    <i title="Configure Quiz" class="fa-solid fa-gear"></i>
+                </a>
+                <a href="grade">
+                    <i title="Grade Quiz" class="fa-solid fa-magnifying-glass"></i>
+                </a>
+                <?php } ?>
                 <i id="exitOverviewBtn" title="Exit Overview" class="fa-solid fa-compress hide"></i>
                 <i id="enterOverviewBtn" title="Enter Overview" class="fa-solid fa-expand"></i>
                 <i id="keyShortCuts" title="CTRL+> next, CTRL+< previous" class="fa-regular fa-keyboard"></i>

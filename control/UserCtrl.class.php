@@ -24,7 +24,7 @@ class UserCtrl
      * Simple mapping to the login page
      */
     #[Get(uri: '^/.*login$', sec: 'none')]
-    public function getLogin()
+    public function getLogin(): string
     {
         global $VIEW_DATA;
         if ($_COOKIE['logout']) {
@@ -35,7 +35,7 @@ class UserCtrl
     }
 
     #[Get(uri: '^/.*hasSession$', sec: 'none')]
-    public function hasSession()
+    public function hasSession(): string
     {
         $result = ['session' => true];
         if (! array_key_exists('user', $_SESSION)) {
@@ -46,7 +46,7 @@ class UserCtrl
     }
 
     #[Get(uri: '^/.*reAuth$', sec: 'none')]
-    public function reAuth()
+    public function reAuth(): string
     {
         global $MY_BASE;
         global $VIEW_DATA;
@@ -66,7 +66,7 @@ class UserCtrl
      * @return string appropriate redirect for success or failure
      */
     #[Post(uri: '^/.*login$', sec: 'none')]
-    public function login()
+    public function login(): string
     {
         global $MY_BASE;
         global $VIEW_DATA;
@@ -125,7 +125,7 @@ class UserCtrl
      * @return string redirect back to login page
      */
     #[Get(uri: '^/.*logout$', sec: 'none')]
-    public function logout()
+    public function logout(): string
     {
         session_destroy();
         session_regenerate_id(true);
@@ -143,7 +143,7 @@ class UserCtrl
      * @return string name of view file
      */
     #[Get(uri: '^/user$', sec: 'admin')]
-    public function all()
+    public function all(): string
     {
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
@@ -156,7 +156,7 @@ class UserCtrl
      * Show the create user page
      */
     #[Get(uri: '^/user/add$', sec: 'admin')]
-    public function addUser()
+    public function addUser(): string
     {
         global $VIEW_DATA;
         $VIEW_DATA['title'] = 'Add User';
@@ -168,7 +168,7 @@ class UserCtrl
      * Get faculty memebers
      */
     #[Get(uri: '^/user/faculty$', sec: 'admin')]
-    public function getFaculty()
+    public function getFaculty(): array
     {
         return $this->userDao->faculty();
     }
@@ -182,7 +182,7 @@ class UserCtrl
      * @return string name of view file
      */
     #[Get(uri: "^/user/(\d+)$", sec: 'instructor')]
-    public function details()
+    public function details(): string
     {
         global $VIEW_DATA;
         global $URI_PARAMS;
@@ -204,7 +204,7 @@ class UserCtrl
      * @global array $VIEW_DATA empty array that we populate with view data
      */
     #[Get(uri: '^/user/profile$', sec: 'login')]
-    public function profile()
+    public function profile(): string
     {
         global $VIEW_DATA;
 
@@ -230,7 +230,7 @@ class UserCtrl
      * @global array $VIEW_DATA empty array that we populate with view data
      */
     #[Post(uri: '^/user/resetPassword$', sec: 'login')]
-    public function resetPassForm()
+    public function resetPassForm(): string
     {
         global $VIEW_DATA;
         $result = $this->resetPass();
@@ -243,9 +243,11 @@ class UserCtrl
      * Resets the password for a user
      *
      * Expects AJAX
+     *
+     * @return array<string,string>
      */
     #[Post(uri: '^/user/resetPass$', sec: 'login')]
-    public function resetPass()
+    public function resetPass(): array
     {
         $user_id = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_NUMBER_INT);
         $currentPassword = filter_input(INPUT_POST, 'currentPassword');
@@ -271,8 +273,15 @@ class UserCtrl
         }
     }
 
+    /**
+     * Changes the known as name for a user
+     *
+     * Expects AJAX
+     *
+     * @return array<string,string>
+     */
     #[Post(uri: '^/user/changeKnownAs$', sec: 'login')]
-    public function knownAsChange()
+    public function knownAsChange(): array
     {
         $knownAs = filter_input(INPUT_POST, 'knownAs', FILTER_UNSAFE_RAW);
         if (! $knownAs) {
@@ -290,7 +299,7 @@ class UserCtrl
     }
 
     #[Get(uri: "^/user/(\D.*)$", sec: 'instructor')]
-    public function teamsName()
+    public function teamsName(): string
     {
         global $URI_PARAMS;
 
@@ -311,7 +320,7 @@ class UserCtrl
      * @throws PDOException
      */
     #[Post(uri: '^/user$', sec: 'admin')]
-    public function create()
+    public function create(): string
     {
         global $VIEW_DATA;
 
@@ -380,12 +389,10 @@ class UserCtrl
      *
      * Updates a user
      *
-     * @global array $URI_PARAMS as provided by framework based on request URI
-     *
-     * @return string redirect URI
+     * @return array<string,string>
      */
     #[Post(uri: "^/user/(\d+)$", sec: 'admin')]
-    public function update()
+    public function update(): array
     {
         global $URI_PARAMS;
 
@@ -435,7 +442,7 @@ class UserCtrl
      * Updates Password
      */
     #[Post(uri: "^/user/(\d+)/pass$", sec: 'admin')]
-    public function updatePass()
+    public function updatePass(): void
     {
         global $URI_PARAMS;
 
@@ -446,7 +453,7 @@ class UserCtrl
     }
 
     #[Post(uri: '^/user/registerBadge$', sec: 'admin')]
-    public function updateAttendance()
+    public function updateAttendance(): void
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -455,7 +462,7 @@ class UserCtrl
 
     // forgot password
     #[Get(uri: '^/forgot$', sec: 'none')]
-    public function forgot()
+    public function forgot(): string
     {
         global $VIEW_DATA;
         $VIEW_DATA['title'] = 'Forgot Password';
@@ -464,7 +471,7 @@ class UserCtrl
     }
 
     #[Post(uri: '^/forgot$', sec: 'none')]
-    public function requestReset()
+    public function requestReset(): array|string
     {
         global $MY_BASE;
         global $VIEW_DATA;
@@ -508,7 +515,7 @@ class UserCtrl
     }
 
     #[Get(uri: '^/reset$', sec: 'none')]
-    public function reset()
+    public function reset(): string
     {
         global $VIEW_DATA;
 
@@ -543,7 +550,7 @@ class UserCtrl
     }
 
     #[Post(uri: '^/reset$', sec: 'none')]
-    public function resetPassword()
+    public function resetPassword(): string
     {
         global $VIEW_DATA;
         global $MY_BASE;
@@ -612,19 +619,5 @@ class UserCtrl
         ];
 
         return "Location: /{$MY_BASE}/";
-    }
-
-    /* This is not a good location for this function
-     * TODO: put this in a better location
-     */
-    #[Get(uri: '^/remap$', sec: 'admin')]
-    public function remap()
-    {
-        require 'AnnotationReader.class.php';
-        $ac = new AnnotationReader;
-        $ac->scan()->create_context();
-        $ac->write('context.php');
-
-        return 'Location: ../videos/';
     }
 }

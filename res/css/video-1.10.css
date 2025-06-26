@@ -9,9 +9,9 @@ a:hover {
     text-decoration: none;
 }
 i#bars.fa-bars {
-    position: absolute;
     top: 92px;
-    left: 25px;
+    position: absolute;
+    left: 330px;
     z-index: 20;
     font-size: 25px;
     cursor: pointer;
@@ -58,7 +58,8 @@ div#container {
     transition: all 1s;
     animation: none;
 }
-#bars.theater {
+i#bars.fa-bars.theater {
+    left: 10px;
     transform: rotate(180deg);
 }
 nav#videos {
@@ -78,15 +79,10 @@ nav#videos.hidden {
 nav#videos nav {
     position: relative;
 }
-nav#videos nav #info-btn, #config-btn {
-    position: absolute;
-    font-size: 24px;
-    top: 45px;
-    left: 24px;
-}
 #config-btn {
-    top: 40px;
-    cursor: pointer;
+    position: absolute;
+    left: -30px;
+    font-size: 24px;
 }
 nav#videos div.video_link {
     text-align: center;
@@ -495,6 +491,12 @@ dialog#progressDialog {
 @media screen and (max-width: 900px) {
     h1 {
         display: none;
+    }
+    i#bars.fa-bars {
+        left: 25px;
+    }
+    i#bars.fa-bars.theater {
+        left: 25px;
     }
     div#container nav#videos {
         position: absolute;

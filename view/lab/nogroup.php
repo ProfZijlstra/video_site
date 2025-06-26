@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title><?= $abbr ?> Lab Countdown</title>
+    <title><?= $abbr ?> Lab</title>
     <meta charset="utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="<?= $MY_BASE ?>/res/css/lib/font-awesome-all.min.css">
@@ -18,10 +18,10 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../lab">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>

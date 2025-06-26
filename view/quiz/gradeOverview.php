@@ -50,21 +50,21 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="back" title="Back">
-            <a href="../../quiz">
+            <a href="../../">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </nav>
-        <?php include("areas.php"); ?>
+        <?php include 'areas.php'; ?>
         <div id="content">
             <h2>Quiz: <?= $quiz['name'] ?></h2>
             <!-- Links to grade by question -->
             <div id="questions">
                 <strong>Grade Question:</strong>
                 <?php $count = 1; ?>
-                <?php foreach ($questions as $question) : ?>
+                <?php foreach ($questions as $question) { ?>
                     <?php
                     $gradeStatus = '';
                     if ($question['answers'] != 0) {
@@ -77,24 +77,25 @@
                     <a href="question/<?= $question['id'] ?>" class="<?= $gradeStatus ?>" title="<?= $gradeStatus ?>">
                         Q<?= $count++ ?>(<?= number_format($question['avgPoints'], 1) ?>)
                     </a>
-                <?php endforeach; ?>
+                <?php } ?>
             </div>
 
-            <?php function answerTable($list, $detail, $title, $longTitle, $starts, $stops) { ?>
-                <?php if ($list) : ?>
+            <?php function answerTable($list, $detail, $title, $longTitle, $starts, $stops)
+            { ?>
+                <?php if ($list) { ?>
                     <!-- Table showing results of enrolled students -->
                     <h3 title="<?= $longTitle ?>"><?= $title ?></h3>
                     <table>
                         <tr>
                             <th>Name</th>
-                            <?php if ($detail) : ?>
+                            <?php if ($detail) { ?>
                                 <th>Start</th>
                                 <th>Stop</th>
                                 <th>Answers</th>
                                 <th>Points</th>
-                            <?php endif; ?>
+                            <?php } ?>
                         </tr>
-                        <?php foreach ($list as $result) : ?>
+                        <?php foreach ($list as $result) { ?>
                             <?php
                             $gradeStatus = '';
                             if ($result['answers'] != 0) {
@@ -110,21 +111,21 @@
                                         <?= $result['knownAs'] ?> <?= $result['lastname'] ?>
                                     </a>
                                 </td>
-                                <?php if ($detail) : ?>
+                                <?php if ($detail) { ?>
                                     <td class="start" title="<?= $starts[$result['id']] ?>"><?= substr($starts[$result['id']], 11) ?></td>
                                     <td class="stop" title="<?= $stops[$result['id']] ?>"><?= substr($stops[$result['id']], 11) ?></td>
                                     <td class="answers"><?= $result['answers'] ?></td>
                                     <td class="points"><?= $result['points'] == floor($result['points']) ? $result['points'] : number_format($result['points'], 2) ?></td>
-                                <?php endif; ?>
+                                <?php } ?>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php } ?>
                     </table>
-                <?php endif; ?>
+                <?php } ?>
             <?php }  ?>
 
-            <?php answerTable($absent, false, "No Submission", "", $starts, $stops); ?>
-            <?php answerTable($taken, true, "Results", "Submissions from enrolled students", $starts, $stops); ?>
-            <?php answerTable($extra, true, "Extra", "Submissions from unenrolled students", $starts, $stops); ?>
+            <?php answerTable($absent, false, 'No Submission', '', $starts, $stops); ?>
+            <?php answerTable($taken, true, 'Results', 'Submissions from enrolled students', $starts, $stops); ?>
+            <?php answerTable($extra, true, 'Extra', 'Submissions from unenrolled students', $starts, $stops); ?>
 
         </div>
     </main>

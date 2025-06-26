@@ -101,7 +101,7 @@ class CourseCtrl
         $daysPerLesson = filter_input(INPUT_POST, 'daysPerLesson', FILTER_SANITIZE_NUMBER_INT);
         $lessonsPerRow = filter_input(INPUT_POST, 'lessonsPerPart', FILTER_SANITIZE_NUMBER_INT);
         $lessonRows = filter_input(INPUT_POST, 'lessonParts', FILTER_SANITIZE_NUMBER_INT);
-        $start .= " 12:00:00";
+        $start .= ' 12:00:00';
 
         // only if offering doesn't exists
         $new_offering_id = $this->offeringDao->getOfferingByCourse($number, $block);
@@ -123,10 +123,7 @@ class CourseCtrl
             $daysPerLesson,
             $lessonsPerRow,
             $lessonRows,
-            0,
-            0,
-            1,
-            0
+            1 // show dates
         );
         $this->enrollmentDao->enroll($fac_user_id, $new_offering_id, 'instructor');
         $this->dayDao->create($new_offering_id, $lessonsPerRow, $lessonRows);
@@ -156,25 +153,13 @@ class CourseCtrl
         $daysPerLesson = filter_input(INPUT_POST, 'daysPerLesson', FILTER_SANITIZE_NUMBER_INT);
         $lessonsPerRow = filter_input(INPUT_POST, 'lessonsPerPart', FILTER_SANITIZE_NUMBER_INT);
         $lessonRows = filter_input(INPUT_POST, 'lessonParts', FILTER_SANITIZE_NUMBER_INT);
-        $hasQuiz = filter_input(INPUT_POST, 'hasQuiz', FILTER_SANITIZE_NUMBER_INT);
-        $hasLab = filter_input(INPUT_POST, 'hasLab', FILTER_SANITIZE_NUMBER_INT);
         $showDates = filter_input(INPUT_POST, 'showDates', FILTER_SANITIZE_NUMBER_INT);
-        $usesFlowcharts = filter_input(INPUT_POST, 'usesFlowcharts', FILTER_SANITIZE_NUMBER_INT);
         $cloneFiles = filter_input(INPUT_POST, 'cloneFiles', FILTER_SANITIZE_NUMBER_INT);
         $cloneComments = filter_input(INPUT_POST, 'cloneComments', FILTER_SANITIZE_NUMBER_INT);
-        $start .= " 12:00:00";
+        $start .= ' 12:00:00';
 
-        if ($hasQuiz == null) {
-            $hasQuiz = 0;
-        }
-        if ($hasLab == null) {
-            $hasLab = 0;
-        }
         if ($showDates == null) {
             $showDates = 0;
-        }
-        if ($usesFlowcharts == null) {
-            $usesFlowcharts = 0;
         }
 
         $new_offering_id = $this->offeringDao->getOfferingByCourse($course_number, $block);
@@ -191,10 +176,7 @@ class CourseCtrl
             $daysPerLesson,
             $lessonsPerRow,
             $lessonRows,
-            $hasQuiz,
-            $hasLab,
             $showDates,
-            $usesFlowcharts,
         );
         $this->enrollmentDao->enroll($fac_user_id, $new_offering_id, 'instructor');
         $this->dayDao->cloneDays($offering_id, $new_offering_id);
@@ -264,10 +246,7 @@ class CourseCtrl
         $daysPerLesson = filter_input(INPUT_POST, 'daysPerLesson', FILTER_SANITIZE_NUMBER_INT);
         $lessonsPerPart = filter_input(INPUT_POST, 'lessonsPerPart', FILTER_SANITIZE_NUMBER_INT);
         $lessonParts = filter_input(INPUT_POST, 'lessonParts', FILTER_SANITIZE_NUMBER_INT);
-        $hasQuiz = filter_input(INPUT_POST, 'hasQuiz', FILTER_SANITIZE_NUMBER_INT);
-        $hasLab = filter_input(INPUT_POST, 'hasLab', FILTER_SANITIZE_NUMBER_INT);
         $showDates = filter_input(INPUT_POST, 'showDates', FILTER_SANITIZE_NUMBER_INT);
-        $usesFlowcharts = filter_input(INPUT_POST, 'usesFlowcharts', FILTER_SANITIZE_NUMBER_INT);
 
         $this->offeringDao->update(
             $id,
@@ -276,10 +255,7 @@ class CourseCtrl
             $daysPerLesson,
             $lessonsPerPart,
             $lessonParts,
-            $hasQuiz,
-            $hasLab,
             $showDates,
-            $usesFlowcharts,
         );
     }
 

@@ -3,34 +3,49 @@
 /**
  * @author mzijlstra 14 Jan 2024
  */
-
 #[Repository]
 class DeliveryDao
 {
     #[Inject('DB')]
     public $db;
 
-    public function forSubmission($submission_id) : array|bool
+    public function forLab($lab_id): array|bool
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
-                WHERE submission_id = :submission_id"
+            'SELECT d.id
+            FROM delivery AS d
+            JOIN submission AS s ON d.submission_id = s.id
+            WHERE s.lab_id = :lab_id'
         );
         $stmt->execute([
-            "submission_id" => $submission_id
+            'lab_id' => $lab_id,
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function forSubmission($submission_id): array|bool
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM delivery 
+                WHERE submission_id = :submission_id'
+        );
+        $stmt->execute([
+            'submission_id' => $submission_id,
         ]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($rows as $row) {
             $result[$row['deliverable_id']] = $row;
         }
+
         return $result;
     }
 
-    public function forDeliverable($deliverable_id) : array|bool
+    public function forDeliverable($deliverable_id): array|bool
     {
         $stmt = $this->db->prepare(
-            "SELECT d.id, d.created, d.updated, d.completion, d.duration, 
+            'SELECT d.id, d.created, d.updated, d.completion, d.duration, 
                 d.text, d.hasMarkDown, d.file, d.name, 
                 d.stuComment, d.stuCmntHasMD, 
                 d.points, d.gradeComment, d.gradeCmntHasMD, 
@@ -39,23 +54,25 @@ class DeliveryDao
                 JOIN submission AS s ON d.submission_id = s.id
                 LEFT JOIN user AS u ON d.user_id = u.id
                 WHERE deliverable_id = :deliverable_id
-            ORDER BY d.completion DESC, d.duration DESC"
+            ORDER BY d.completion DESC, d.duration DESC'
         );
         $stmt->execute([
-            "deliverable_id" => $deliverable_id
+            'deliverable_id' => $deliverable_id,
         ]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function byId($id) : array|bool
+    public function byId($id): array|bool
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
-                WHERE id = :id"
+            'SELECT * FROM delivery 
+                WHERE id = :id'
         );
         $stmt->execute([
-            "id" => $id
+            'id' => $id,
         ]);
+
         return $stmt->fetch();
     }
 
@@ -69,18 +86,18 @@ class DeliveryDao
         $hasMarkDown,
         $stuComment,
         $stuCmntHasMD
-    ) : int {
+    ): int {
         // to prevent duplicate entries, check if it's already been made
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
+            'SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
                 AND deliverable_id = :deliverable_id 
-                AND user_id = :user_id"
+                AND user_id = :user_id'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
         ]);
         // update if exists
         $row = $stmt->fetch();
@@ -95,29 +112,31 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
+
             return -1;
         }
         $stmt = $this->db->prepare(
-            "INSERT INTO delivery VALUES (
+            'INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
                 :text, :hasMarkDown, 
                 NULL, NULL, 
                 :stuComment, :stuCmntHasMD, 
-                NULL, NULL, NULL)"
+                NULL, NULL, NULL)'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id,
-            "duration" => $duration,
-            "completion" => $completion,
-            "text" => $text,
-            "hasMarkDown" => $hasMarkDown,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
+            'duration' => $duration,
+            'completion' => $completion,
+            'text' => $text,
+            'hasMarkDown' => $hasMarkDown,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
+
         return $this->db->lastInsertId();
     }
 
@@ -130,9 +149,9 @@ class DeliveryDao
         $hasMarkDown,
         $stuComment,
         $stuCmntHasMD
-    ) : void {
+    ): void {
         $stmt = $this->db->prepare(
-            "UPDATE delivery 
+            'UPDATE delivery 
                 SET updated = NOW(),
                 user_id = :user_id,
                 completion = :completion, 
@@ -141,17 +160,17 @@ class DeliveryDao
                 hasMarkDown = :hasMarkDown,
                 stuComment = :stuComment,
                 stuCmntHasMD = :stuCmntHasMD
-                WHERE id = :id"
+                WHERE id = :id'
         );
         $stmt->execute([
-            "user_id" => $user_id,
-            "completion" => $completion,
-            "duration" => $duration,
-            "text" => $text,
-            "hasMarkDown" => $hasMarkDown,
-            "id" => $id,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'user_id' => $user_id,
+            'completion' => $completion,
+            'duration' => $duration,
+            'text' => $text,
+            'hasMarkDown' => $hasMarkDown,
+            'id' => $id,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
     }
 
@@ -164,17 +183,17 @@ class DeliveryDao
         $url,
         $stuComment,
         $stuCmntHasMD
-    ) : int {
+    ): int {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
+            'SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
                 AND deliverable_id = :deliverable_id 
-                AND user_id = :user_id"
+                AND user_id = :user_id'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
         ]);
         // update if exists
         $row = $stmt->fetch();
@@ -188,28 +207,30 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
+
             return -1;
         }
         $stmt = $this->db->prepare(
-            "INSERT INTO delivery VALUES (
+            'INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
                 :url, NULL, 
                 NULL, NULL, 
                 :stuComment, :stuCmntHasMD, 
-                NULL, NULL, NULL)"
+                NULL, NULL, NULL)'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id,
-            "duration" => $duration,
-            "completion" => $completion,
-            "url" => $url,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
+            'duration' => $duration,
+            'completion' => $completion,
+            'url' => $url,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
+
         return $this->db->lastInsertId();
     }
 
@@ -221,9 +242,9 @@ class DeliveryDao
         $url,
         $stuComment,
         $stuCmntHasMD
-    ) :void {
+    ): void {
         $stmt = $this->db->prepare(
-            "UPDATE delivery 
+            'UPDATE delivery 
                 SET updated = NOW(),
                 user_id = :user_id,
                 completion = :completion, 
@@ -231,16 +252,16 @@ class DeliveryDao
                 text = :url, 
                 stuComment = :stuComment,
                 stuCmntHasMD = :stuCmntHasMD
-                WHERE id = :id"
+                WHERE id = :id'
         );
         $stmt->execute([
-            "user_id" => $user_id,
-            "completion" => $completion,
-            "duration" => $duration,
-            "url" => $url,
-            "id" => $id,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'user_id' => $user_id,
+            'completion' => $completion,
+            'duration' => $duration,
+            'url' => $url,
+            'id' => $id,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
     }
 
@@ -255,18 +276,18 @@ class DeliveryDao
         $name,
         $stuComment,
         $stuCmntHasMD
-    ) :int {
+    ): int {
         // to prevent duplicate entries, check if it's already been made
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
+            'SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
                 AND deliverable_id = :deliverable_id 
-                AND user_id = :user_id"
+                AND user_id = :user_id'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
         ]);
         // update if exists
         $row = $stmt->fetch();
@@ -282,52 +303,54 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
+
             return -1;
         }
         $stmt = $this->db->prepare(
-            "INSERT INTO delivery VALUES (
+            'INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
                 :text, 0, 
                 :file, :name, 
                 :stuComment, :stuCmntHasMD, 
-                NULL, NULL, NULL)"
+                NULL, NULL, NULL)'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id,
-            "duration" => $duration,
-            "completion" => $completion,
-            "text" => $text,
-            "file" => $file,
-            "name" => $name,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
+            'duration' => $duration,
+            'completion' => $completion,
+            'text' => $text,
+            'file' => $file,
+            'name' => $name,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
+
         return $this->db->lastInsertId();
     }
 
     public function createFileStats(
-        $submission_id, 
-        $deliverable_id, 
-        $user_id, 
-        $completion, 
-        $duration, 
-        $stuComment, 
-        $stuCmntHasMD) :int 
+        $submission_id,
+        $deliverable_id,
+        $user_id,
+        $completion,
+        $duration,
+        $stuComment,
+        $stuCmntHasMD): int
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
+            'SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
                 AND deliverable_id = :deliverable_id 
-                AND user_id = :user_id"
+                AND user_id = :user_id'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
         ]);
         // update if exists
         $row = $stmt->fetch();
@@ -339,27 +362,29 @@ class DeliveryDao
                 $stuComment,
                 $stuCmntHasMD
             );
+
             return -1;
         }
         $stmt = $this->db->prepare(
-            "INSERT INTO delivery VALUES (
+            'INSERT INTO delivery VALUES (
                 NULL, :deliverable_id, :submission_id, :user_id,
                 NOW(), NOW(), 
                 :completion, :duration, 
                 NULL, 0, 
                 NULL, NULL, 
                 :stuComment, :stuCmntHasMD, 
-                NULL, NULL, NULL)"
+                NULL, NULL, NULL)'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id,
-            "duration" => $duration,
-            "completion" => $completion,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
+            'duration' => $duration,
+            'completion' => $completion,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
+
         return $this->db->lastInsertId();
     }
 
@@ -369,22 +394,22 @@ class DeliveryDao
         $duration,
         $stuComment,
         $stuCmntHasMD
-    ) : void {
+    ): void {
         $stmt = $this->db->prepare(
-            "UPDATE delivery 
+            'UPDATE delivery 
                 SET updated = NOW(),
                 completion = :completion, 
                 duration = :duration, 
                 stuComment = :stuComment,
                 stuCmntHasMD = :stuCmntHasMD
-                WHERE id = :id"
+                WHERE id = :id'
         );
         $stmt->execute([
-            "completion" => $completion,
-            "duration" => $duration,
-            "id" => $id,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'completion' => $completion,
+            'duration' => $duration,
+            'id' => $id,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
     }
 
@@ -398,9 +423,9 @@ class DeliveryDao
         $name,
         $stuComment,
         $stuCmntHasMD
-    ) : void {
+    ): void {
         $stmt = $this->db->prepare(
-            "UPDATE delivery 
+            'UPDATE delivery 
                 SET updated = NOW(),
                 user_id = :user_id,
                 completion = :completion, 
@@ -410,18 +435,18 @@ class DeliveryDao
                 `name` = :name,
                 stuComment = :stuComment,
                 stuCmntHasMD = :stuCmntHasMD
-                WHERE id = :id"
+                WHERE id = :id'
         );
         $stmt->execute([
-            "user_id" => $user_id,
-            "completion" => $completion,
-            "duration" => $duration,
-            "text" => $text,
-            "file" => $file,
-            "name" => $name,
-            "id" => $id,
-            "stuComment" => $stuComment,
-            "stuCmntHasMD" => $stuCmntHasMD
+            'user_id' => $user_id,
+            'completion' => $completion,
+            'duration' => $duration,
+            'text' => $text,
+            'file' => $file,
+            'name' => $name,
+            'id' => $id,
+            'stuComment' => $stuComment,
+            'stuCmntHasMD' => $stuCmntHasMD,
         ]);
     }
 
@@ -431,17 +456,17 @@ class DeliveryDao
         $user_id,
         $file,
         $name,
-    ) : int {
+    ): int {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
+            'SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
                 AND deliverable_id = :deliverable_id 
-                AND user_id = :user_id"
+                AND user_id = :user_id'
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "user_id" => $user_id
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'user_id' => $user_id,
         ]);
         // update if exists
         $row = $stmt->fetch();
@@ -451,6 +476,7 @@ class DeliveryDao
                 $file,
                 $name
             );
+
             return -1;
         }
         $stmt = $this->db->prepare(
@@ -464,48 +490,48 @@ class DeliveryDao
                 NULL, NULL, NULL)"
         );
         $stmt->execute([
-            "deliverable_id" => $deliverable_id,
-            "submission_id" => $submission_id,
-            "user_id" => $user_id,
-            "file" => $file,
-            "name" => $name,
+            'deliverable_id' => $deliverable_id,
+            'submission_id' => $submission_id,
+            'user_id' => $user_id,
+            'file' => $file,
+            'name' => $name,
         ]);
+
         return $this->db->lastInsertId();
     }
 
-    public function updatePicture($id, $file, $name) : void
+    public function updatePicture($id, $file, $name): void
     {
         $stmt = $this->db->prepare(
-            "UPDATE delivery 
+            'UPDATE delivery 
                 SET updated = NOW(),
                 `file` = :file, 
                 `name` = :name
-                WHERE id = :id"
+                WHERE id = :id'
         );
         $stmt->execute([
-            "file" => $file,
-            "name" => $name,
-            "id" => $id
+            'file' => $file,
+            'name' => $name,
+            'id' => $id,
         ]);
     }
 
-    public function grade($id, $points, $comment, $hasMarkDown) : void
+    public function grade($id, $points, $comment, $hasMarkDown): void
     {
         $stmt = $this->db->prepare(
-            "UPDATE delivery 
+            'UPDATE delivery 
                 SET points = :points, 
                 gradeComment = :comment,
                 gradeCmntHasMD = :hasMarkDown
-                WHERE id = :id"
+                WHERE id = :id'
         );
         $stmt->execute([
-            "points" => $points,
-            "comment" => $comment,
-            "hasMarkDown" => $hasMarkDown,
-            "id" => $id
+            'points' => $points,
+            'comment' => $comment,
+            'hasMarkDown' => $hasMarkDown,
+            'id' => $id,
         ]);
     }
-
 
     public function createGrade(
         $submission_id,
@@ -513,15 +539,15 @@ class DeliveryDao
         $points,
         $comment,
         $hasMarkDown
-    ) : int {
+    ): int {
         $stmt = $this->db->prepare(
-            "SELECT * FROM delivery 
+            'SELECT * FROM delivery 
                 WHERE submission_id = :submission_id 
-                AND deliverable_id = :deliverable_id "
+                AND deliverable_id = :deliverable_id '
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
         ]);
         // update if exists
         $row = $stmt->fetch();
@@ -532,6 +558,7 @@ class DeliveryDao
                 $comment,
                 $hasMarkDown
             );
+
             return -1;
         }
         $stmt = $this->db->prepare(
@@ -545,16 +572,17 @@ class DeliveryDao
                 :points, :comment, :hasMarkDown)"
         );
         $stmt->execute([
-            "submission_id" => $submission_id,
-            "deliverable_id" => $deliverable_id,
-            "points" => $points,
-            "comment" => $comment,
-            "hasMarkDown" => $hasMarkDown
+            'submission_id' => $submission_id,
+            'deliverable_id' => $deliverable_id,
+            'points' => $points,
+            'comment' => $comment,
+            'hasMarkDown' => $hasMarkDown,
         ]);
+
         return $this->db->lastInsertId();
     }
 
-    function delete($id) : void
+    public function delete($id): void
     {
         $stmt = $this->db->prepare(
             'UPDATE delivery 
@@ -562,26 +590,26 @@ class DeliveryDao
             WHERE id = :id'
         );
         $stmt->execute([
-            "id" => $id
+            'id' => $id,
         ]);
     }
 
     /**
-    * The functions below are all to retrieve data for the lab statistics pages
-    */
-    function offeringPossible($offering_id) : array
+     * The functions below are all to retrieve data for the lab statistics pages
+     */
+    public function offeringPossible($offering_id): array
     {
         $stmt = $this->db->prepare(
-            "SELECT d.abbr,
+            'SELECT d.abbr,
                 SUM(del.points) AS points
             FROM deliverable AS del
             JOIN lab AS l ON del.lab_id = l.id
             JOIN day AS d ON l.day_id = d.id
             WHERE d.offering_id = :offering_id
-            GROUP BY d.id"
+            GROUP BY d.id'
         );
         $stmt->execute([
-            "offering_id" => $offering_id
+            'offering_id' => $offering_id,
         ]);
 
         $data = [];
@@ -592,10 +620,10 @@ class DeliveryDao
         return $data;
     }
 
-    function offeringAverages($offering_id) : array
+    public function offeringAverages($offering_id): array
     {
         $stmt = $this->db->prepare(
-            "SELECT d.abbr,
+            'SELECT d.abbr,
                 COUNT(DISTINCT s.id) AS users,
                 SUM(del.points) / COUNT(DISTINCT s.id) AS points
             FROM delivery AS del
@@ -603,10 +631,10 @@ class DeliveryDao
             JOIN lab AS l ON s.lab_id = l.id
             JOIN day AS d ON l.day_id = d.id
             WHERE d.offering_id = :offering_id
-            GROUP BY d.id"
+            GROUP BY d.id'
         );
         $stmt->execute([
-            "offering_id" => $offering_id
+            'offering_id' => $offering_id,
         ]);
 
         $data = [];
@@ -617,7 +645,7 @@ class DeliveryDao
         return $data;
     }
 
-    function offeringPerson($offering_id, $user_id)
+    public function offeringPerson($offering_id, $user_id)
     {
         // get indivual points per day for a user
         $stmt = $this->db->prepare(
@@ -633,8 +661,8 @@ class DeliveryDao
             GROUP BY d.id"
         );
         $stmt->execute([
-            "offering_id" => $offering_id,
-            "user_id" => $user_id
+            'offering_id' => $offering_id,
+            'user_id' => $user_id,
         ]);
 
         $data = [];
@@ -644,18 +672,18 @@ class DeliveryDao
 
         // get the person's group
         $stmt = $this->db->prepare(
-            "SELECT e.group 
+            'SELECT e.group 
             FROM enrollment AS e
             WHERE e.offering_id = :offering_id
-            AND e.user_id = :user_id"
+            AND e.user_id = :user_id'
         );
         $stmt->execute([
-            "offering_id" => $offering_id,
-            "user_id" => $user_id
+            'offering_id' => $offering_id,
+            'user_id' => $user_id,
         ]);
         $group = $stmt->fetchColumn();
 
-        if (!$group) {
+        if (! $group) {
             return $data; // no group found, return only individual points
         }
 
@@ -673,8 +701,8 @@ class DeliveryDao
             GROUP BY d.id"
         );
         $stmt->execute([
-            "offering_id" => $offering_id,
-            "group" => $group
+            'offering_id' => $offering_id,
+            'group' => $group,
         ]);
 
         // merge individual and group points
@@ -689,7 +717,7 @@ class DeliveryDao
         return $data;
     }
 
-    function offeringUsers($offering_id) 
+    public function offeringUsers($offering_id)
     {
         // get all the students
         $stmt = $this->db->prepare(
@@ -709,12 +737,12 @@ class DeliveryDao
 
         // get all deliveries along with user_id, group_id, lab_type
         $stmt = $this->db->prepare(
-            "SELECT s.user_id, s.group, del.points, l.type
+            'SELECT s.user_id, s.group, del.points, l.type
             FROM delivery AS del
             JOIN submission AS s ON del.submission_id = s.id
             JOIN lab AS l ON s.lab_id = l.id
             JOIN day AS d ON l.day_id = d.id
-            WHERE d.offering_id = :offering_id"
+            WHERE d.offering_id = :offering_id'
         );
         $stmt->execute(['offering_id' => $offering_id]);
         $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -739,7 +767,7 @@ class DeliveryDao
         return $userPoints;
     }
 
-    function dayUsers($offering_id, $day) : array
+    public function dayUsers($offering_id, $day): array
     {
         // get all the students
         $stmt = $this->db->prepare(
@@ -759,13 +787,13 @@ class DeliveryDao
 
         // get all deliveries along with user_id, group_id, lab_type
         $stmt = $this->db->prepare(
-            "SELECT s.user_id, s.group, del.points, l.type
+            'SELECT s.user_id, s.group, del.points, l.type
             FROM delivery AS del
             JOIN submission AS s ON del.submission_id = s.id
             JOIN lab AS l ON s.lab_id = l.id
             JOIN day AS d ON l.day_id = d.id
             WHERE d.offering_id = :offering_id
-            AND d.abbr = :day_abbr"
+            AND d.abbr = :day_abbr'
         );
         $stmt->execute(['offering_id' => $offering_id, 'day_abbr' => $day]);
         $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);

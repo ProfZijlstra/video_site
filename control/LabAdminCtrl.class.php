@@ -8,9 +8,6 @@
 #[Controller(path: "^/([a-z]{2,3}\d{3,4})/(20\d{2}-\d{2}[^/]*)/lab")]
 class LabAdminCtrl
 {
-    #[Inject('OverviewHlpr')]
-    public $overviewHlpr;
-
     #[Inject('LabDao')]
     public $labDao;
 
@@ -49,51 +46,6 @@ class LabAdminCtrl
 
     #[Inject('EnrollmentDao')]
     public $enrollmentDao;
-
-    #[Get(uri: '$', sec: 'student')]
-    public function courseOverview(): string
-    {
-        // We're building on top of  overview -- run it first
-        // this populates $VIEW_DATA with the overview related data
-        $this->overviewHlpr->overview();
-
-        global $VIEW_DATA;
-
-        // get all labs for this offering
-        $oid = $VIEW_DATA['offering_id'];
-        if (
-            $_SESSION['user']['isAdmin'] ||
-            $_SESSION['user']['isFaculty']
-        ) {
-            $labs = $this->labDao->allForOffering($oid);
-            $grading = $this->labDao->getInstructorGradingStatus($oid);
-        } else {
-            $labs = $this->labDao->visibleForOffering($oid);
-            $user_id = $_SESSION['user']['id'];
-            $grading = $this->labDao->getStudentGradingStatus($oid, $user_id);
-        }
-
-        $graded = [];
-        foreach ($grading as $grade) {
-            $graded[$grade['id']] = $grade;
-        }
-        $labTimes = [];
-        foreach ($labs as $lab) {
-            $labTimes[] = [
-                'lab' => $lab,
-                'start' => strtotime($lab['start']),
-                'stop' => strtotime($lab['stop']),
-            ];
-        }
-
-        $VIEW_DATA['labTimes'] = $labTimes;
-        $VIEW_DATA['title'] = 'Labs';
-        $VIEW_DATA['area'] = 'lab';
-        $VIEW_DATA['graded'] = $graded;
-        $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
-
-        return 'lab/overview.php';
-    }
 
     #[Post(uri: '$', sec: 'instructor')]
     public function addLab(): string
@@ -241,17 +193,17 @@ class LabAdminCtrl
      * Expects AJAX
      */
     #[Delete(uri: "/(\d+)$", sec: 'instructor')]
-    public function deleteLab(): array
+    public function deleteLab(): array|bool
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
 
         // fail if lab has submissions
-        $subs = $this->submissionDao->forLab($id);
-        if ($subs) {
+        $delivs = $this->deliveryDao->forLab($id);
+        if ($delivs) {
             http_response_code(400);
 
-            return ['error' => 'Lab has submissions'];
+            return ['error' => 'Lab has deliveries, cannot delete'];
         }
 
         // delete attachments
@@ -263,8 +215,13 @@ class LabAdminCtrl
         // delete deliverables
         $this->deliverableDao->deleteAllForLab($id);
 
+        // delete (empty, no delivery) submission records
+        $submissions = $this->submissionDao->deleteForLab($id);
+
         // delete lab
         $this->labDao->delete($id);
+
+        return true;
     }
 
     /**
@@ -306,6 +263,8 @@ class LabAdminCtrl
 
     /**
      * Expects AJAX
+     *
+     * Deletes an attachment and all related downloads and zip actions.
      */
     #[Delete(uri: "/(\d+)/attach/(\d+)$", sec: 'instructor')]
     public function delAttachment(): array

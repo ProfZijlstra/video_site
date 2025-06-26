@@ -66,12 +66,20 @@ function stats($delivery)
         <?php include 'header.php'; ?>
         <main>
             <nav class="back" title="Back">
-                <a id="back" href="<?= $selected ? '../../lab' : '../lab' ?>">
+                <a id="back" href="<?= $selected ? '../../' : '../' ?>">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </nav>
             <?php include 'areas.php'; ?>
             <nav class="tools">
+                <?php if (hasMinAuth('instructor')) { ?>
+                <a href="edit">
+                    <i title="Configure Lab" class="fa-solid fa-gear"></i>
+                </a>
+                <a href="grade">
+                    <i title="Grade Lab" class="fa-solid fa-magnifying-glass"></i>
+                </a>
+                <?php } ?>
                 <i id="keyShortCuts" title="CTRL+> next, CTRL+< previous" class="fa-regular fa-keyboard"></i>
                 <i id="exitOverviewBtn" title="Exit Overview" class="fa-solid fa-compress hide"></i>
                 <i id="enterOverviewBtn" title="Enter Overview" class="fa-solid fa-expand"></i>
@@ -157,7 +165,7 @@ function stats($delivery)
 
                 <div class="done">
                     <div class="note">Deliverables are saved automatically</div>
-                        <a href="../../lab" title="Back to overview">
+                        <a href="../../" title="Back to overview">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </nav>

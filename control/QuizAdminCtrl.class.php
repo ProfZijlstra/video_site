@@ -14,9 +14,6 @@ class QuizAdminCtrl
     #[Inject('QuestionDao')]
     public $questionDao;
 
-    #[Inject('OverviewHlpr')]
-    public $overviewHlpr;
-
     #[Inject('MarkdownHlpr')]
     public $markdownCtrl;
 
@@ -35,52 +32,11 @@ class QuizAdminCtrl
     #[Inject('AnswerDao')]
     public $answerDao;
 
-    #[Get(uri: '$', sec: 'student')]
-    public function courseOverview()
-    {
-        // We're building on top of  overview -- run it first
-        // this populates $VIEW_DATA with the overview related data
-        $this->overviewHlpr->overview();
-
-        global $VIEW_DATA;
-
-        // get all quizzes for this offering
-        $oid = $VIEW_DATA['offering_id'];
-        if (
-            $_SESSION['user']['isAdmin'] ||
-            $_SESSION['user']['isFaculty']
-        ) {
-            $quizzes = $this->quizDao->allForOffering($oid);
-            $grading = $this->quizDao->getInstructorGradingStatus($oid);
-        } else {
-            $quizzes = $this->quizDao->visibleForOffering($oid);
-            $user_id = $_SESSION['user']['id'];
-            $grading = $this->quizDao->getStudentGradingStatus($oid, $user_id);
-        }
-
-        $graded = [];
-        foreach ($grading as $grade) {
-            $graded[$grade['id']] = $grade;
-        }
-
-        // integrate the quizzes data into the days data
-        foreach ($VIEW_DATA['days'] as $day) {
-            $day['quizzes'] = [];
-        }
-        foreach ($quizzes as $quiz) {
-            $VIEW_DATA['days'][$quiz['abbr']]['quizzes'][] = $quiz;
-        }
-
-        $VIEW_DATA['title'] = 'Quizzes';
-        $VIEW_DATA['area'] = 'quiz';
-        $VIEW_DATA['graded'] = $graded;
-        $VIEW_DATA['isRemembered'] = $_SESSION['user']['isRemembered'];
-
-        return 'quiz/overview.php';
-    }
+    #[Inject('QuizEventDao')]
+    public $quizEventDao;
 
     #[Post(uri: '$', sec: 'instructor')]
-    public function addQuiz()
+    public function addQuiz(): string
     {
         $day_id = filter_input(INPUT_POST, 'day_id', FILTER_SANITIZE_NUMBER_INT);
         $name = filter_input(INPUT_POST, 'name');
@@ -97,7 +53,7 @@ class QuizAdminCtrl
     }
 
     #[Get(uri: "/(\d+)/edit$", sec: 'instructor')]
-    public function editQuiz()
+    public function editQuiz(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -121,7 +77,7 @@ class QuizAdminCtrl
     }
 
     #[Get(uri: '/preview/(\d+)(/(\d+))?$', sec: 'instructor')]
-    public function previewQuiz()
+    public function previewQuiz(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -162,7 +118,7 @@ class QuizAdminCtrl
      * Expects AJAX
      */
     #[Post(uri: "/(\d+)$", sec: 'instructor')]
-    public function updateQuiz()
+    public function updateQuiz(): void
     {
         global $URI_PARAMS;
 
@@ -184,7 +140,7 @@ class QuizAdminCtrl
      * Expects AJAX
      */
     #[Post(uri: "/(\d+)/status$", sec: 'instructor')]
-    public function setQuizStatus()
+    public function setQuizStatus(): void
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
@@ -193,17 +149,33 @@ class QuizAdminCtrl
     }
 
     #[Post(uri: "/(\d+)/del$", sec: 'instructor')]
-    public function deleteQuiz()
+    public function deleteQuiz(): string
     {
         global $URI_PARAMS;
         $id = $URI_PARAMS[3];
+
+        // check that there are no answers yet
+        $answers = $this->answerDao->forQuiz($id);
+        if ($answers) {
+            http_response_code(400);
+
+            return ['error' => 'Quiz has answers, cannot delete'];
+        }
+
+        // delete all quiz questions
+        $this->questionDao->deleteForQuiz($id);
+
+        // delete all quiz events
+        $this->quizEventDao->deleteForQuiz($id);
+
+        // delete the quiz itself
         $this->quizDao->delete($id);
 
-        return 'Location: ../../quiz';
+        return 'Location: ../../';
     }
 
     #[Post(uri: "/(\d+)/question$", sec: 'instructor')]
-    public function addQuestion()
+    public function addQuestion(): string
     {
         global $VIEW_DATA;
 
@@ -226,7 +198,7 @@ class QuizAdminCtrl
     }
 
     #[Post(uri: "/\d+/question/(\d+)$", sec: 'instructor')]
-    public function updateQuestion()
+    public function updateQuestion(): void
     {
         global $URI_PARAMS;
 
@@ -307,7 +279,7 @@ class QuizAdminCtrl
     }
 
     #[Post(uri: "/(\d+)/question/(\d+)/del$", sec: 'instructor')]
-    public function delQuestion()
+    public function delQuestion(): string
     {
         global $URI_PARAMS;
         $question_id = $URI_PARAMS[4];
@@ -317,7 +289,7 @@ class QuizAdminCtrl
     }
 
     #[Get(uri: '/report$', sec: 'student')]
-    public function resultsReport()
+    public function resultsReport(): string
     {
         global $URI_PARAMS;
         global $VIEW_DATA;

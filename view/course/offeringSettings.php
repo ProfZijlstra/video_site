@@ -34,7 +34,7 @@
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include 'header.php'; ?>
     <main>
         <nav class="areas">
             <div title="Back">
@@ -78,30 +78,12 @@
                 <div>
                     Lesson Parts (rows in overview)
                 </div>
-                <div>
-                    <input type="checkbox" id="hasQuiz" <?= $offering['hasQuiz'] ? "checked" : "" ?> />
-                </div>
-                <div>
-                    <label for="hasQuiz">Quizzes Enabled for this Offering</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="hasLab" <?= $offering['hasLab'] ? "checked" : "" ?> />
-                </div>
-                <div>
-                    <label for="hasLab">Labs Enabled for this Offering</label>
-                </div>
 
                 <div>
-                    <input type="checkbox" id="showDates" <?= $offering['showDates'] ? "checked" : "" ?> />
+                    <input type="checkbox" id="showDates" <?= $offering['showDates'] ? 'checked' : '' ?> />
                 </div>
                 <div>
                     <label for="showDates">Show Dates for this Offering</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="usesFlowcharts" <?= $offering['usesFlowcharts'] ? "checked" : "" ?> />
-                </div>
-                <div>
-                    <label for="usesFlowcharts">Students in this offering use Manalabs Flowcharts</label>
                 </div>
             </div>
         </div>

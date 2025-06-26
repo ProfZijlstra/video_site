@@ -18,7 +18,7 @@
         <?php include 'header.php'; ?>
         <main>
             <nav class="back" title="Back">
-                <a href="../../quiz">
+                <a href="../../">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </nav>
